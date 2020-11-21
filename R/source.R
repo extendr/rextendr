@@ -80,11 +80,11 @@ get_dynlib_ext <- function() {
   if (!is.null(sysinf)){
     os <- sysinf['sysname']
     if (os == 'Darwin')
-      ".dylib"
-  } else {
-    .Platform$dynlib.ext
-  }
+      return(".dylib")
+  } 
+  .Platform$dynlib.ext
 }
+
 
 the <- new.env(parent = emptyenv())
 the$build_dir <- NULL
