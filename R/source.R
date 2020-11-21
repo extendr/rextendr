@@ -2,7 +2,7 @@
 #'
 #' [rust_source()] compiles and loads a single Rust file for use in R.
 #' @export
-rust_source <- function(file, code = NULL, cache_build = FALSE, quiet = FALSE) {
+rust_source <- function(file, code = NULL, env = parent.frame(), cache_build = TRUE, quiet = FALSE) {
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
     cat(sprintf("build directory: %s\n", dir))
@@ -24,9 +24,9 @@ rust_source <- function(file, code = NULL, cache_build = FALSE, quiet = FALSE) {
     on.exit(clean_build_dir())
   }
 
+  # generate Cargo.toml file and compile shared library
   cargo.toml_content <- generate_cargo.toml()
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
-
 
   system2(
     command = "cargo",
@@ -39,6 +39,14 @@ rust_source <- function(file, code = NULL, cache_build = FALSE, quiet = FALSE) {
     stderr = stdout
   )
 
+  # generate R bindings for shared library
+  funs <- get_exported_functions(rust_file) # extract function declarations
+  r_functions <- generate_r_functions(funs)
+  r_path <- file.path(dir, "R", "rextendr.R")
+  brio::write_lines(r_functions, r_path)
+  source(r_path, local = env)
+
+  # load shared library
   count <- the$count
   the$count <- the$count + 1L
   shared_lib <- file.path(dir, "target", "release", paste0("librextendr", get_dynlib_ext()))

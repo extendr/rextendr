@@ -1,19 +1,36 @@
-# Call Rust code from R using the 'extendr' crate
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+Call Rust code from R using the ‘extendr’ crate
+===============================================
+
+<!-- badges: start -->
+<!-- badges: end -->
 
 Basic use example:
 
-``` r
-library(rextendr)
+    library(rextendr)
 
-code <- "use extendr_api::*;
+    # some simple Rust code with two functions
+    rust_src <- "use extendr_api::*;
 
-#[extendr]
-fn hello() -> &'static str {
-    \"hello\"
-}
-"
+    #[extendr]
+    fn hello() -> &'static str {
+        \"Hello, this string was created by Rust.\"
+    }
 
-rust_source(code = code)
-.Call("wrap__hello")
-```
+    #[extendr]
+    fn add(a: i64, b: i64) -> i64 {
+        a + b
+    }
+    "
 
+    rust_source(code = rust_src, quiet = TRUE)
+
+    # call `hello()` function from R
+    hello()
+    #> [1] "Hello, this string was created by Rust."
+
+    # call `add()` function from R
+    add(14, 23)
+    #> [1] 37
