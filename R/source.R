@@ -2,11 +2,14 @@
 #'
 #' [rust_source()] compiles and loads a single Rust file for use in R.
 #' @export
-rust_source <- function(file, code = NULL, clean = TRUE, quiet = TRUE) {
-  dir <- tempfile()
-  dir.create(dir)
-  dir.create(file.path(dir, "R"))
-  dir.create(file.path(dir, "src"))
+rust_source <- function(file, code = NULL, cache_build = FALSE, quiet = FALSE) {
+  dir <- get_build_dir(cache_build)
+  if (!isTRUE(quiet)) {
+    cat(sprintf("build directory: %s\n", dir))
+    stdout <- "" # to be used by `system2()` below
+  } else {
+    stdout <- NULL
+  }
 
   if (!is.null(code)) {
     rust_file <- file.path(dir, "src", "lib.rs")
@@ -17,17 +20,33 @@ rust_source <- function(file, code = NULL, clean = TRUE, quiet = TRUE) {
 
   package <- tools::file_path_sans_ext(basename(rust_file))
 
-  if (isTRUE(clean)) {
-    on.exit(unlink(dir, recursive = TRUE))
+  if (!isTRUE(cache_build)) {
+    on.exit(clean_build_dir())
   }
 
   cargo.toml_content <- generate_cargo.toml()
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
-  system(sprintf("cargo build --release --manifest-path=%s", file.path(dir, "Cargo.toml")))
 
+  system2(
+    command = "cargo",
+    args = c(
+      "build",
+      "--release",
+      sprintf("--manifest-path=%s", file.path(dir, "Cargo.toml"))
+    ),
+    stdout = stdout,
+    stderr = stdout
+  )
+
+  count <- the$count
+  the$count <- the$count + 1L
   shared_lib <- file.path(dir, "target", "release", paste0("librextendr", get_dynlib_ext()))
-  dyn.load(shared_lib, local = TRUE, now = TRUE)
+
+  # do we need to change the name each time we rebuild? caching doesn't seem to work regardless
+  shared_lib_counted <- file.path(dir, paste0("librextendr", count, get_dynlib_ext()))
+  file.rename(shared_lib, shared_lib_counted)
+  dyn.load(shared_lib_counted, local = TRUE, now = TRUE)
 }
 
 generate_cargo.toml <- function() {
@@ -49,5 +68,31 @@ get_dynlib_ext <- function() {
       ".dylib"
   } else {
     .Platform$dynlib.ext
+  }
+}
+
+the <- new.env(parent = emptyenv())
+the$build_dir <- NULL
+the$count <- 1L
+
+get_build_dir <- function(cache_build) {
+  if (!isTRUE(cache_build)) {
+    clean_build_dir()
+  }
+
+  if (is.null(the$build_dir)) {
+    dir <- tempfile()
+    dir.create(dir)
+    dir.create(file.path(dir, "R"))
+    dir.create(file.path(dir, "src"))
+    the$build_dir <- dir
+  }
+  the$build_dir
+}
+
+clean_build_dir <- function() {
+  if (!is.null(the$build_dir)) {
+    unlink(the$build_dir, recursive = TRUE)
+    the$build_dir <- NULL
   }
 }
