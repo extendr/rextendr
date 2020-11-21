@@ -8,9 +8,21 @@ rust_source(
   file,
   code = NULL,
   env = parent.frame(),
-  clean = TRUE,
-  quiet = TRUE
+  cache_build = TRUE,
+  quiet = FALSE
 )
+}
+\arguments{
+\item{file}{Input rust file to source (not yet implemented).}
+
+\item{code}{Input rust code, to be used instead of \code{file}.}
+
+\item{env}{The R environment in which the wrapping functions will be defined.}
+
+\item{cache_build}{Logical indicating whether builds should be cached between
+calls to \code{\link[=rust_source]{rust_source()}}. Caching may not work yet.}
+
+\item{quiet}{Logical indicating whether compile output should be generated or not.}
 }
 \description{
 \code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R.

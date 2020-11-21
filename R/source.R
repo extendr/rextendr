@@ -1,6 +1,13 @@
 #' Compile Rust code
 #'
 #' [rust_source()] compiles and loads a single Rust file for use in R.
+#'
+#' @param file Input rust file to source (not yet implemented).
+#' @param code Input rust code, to be used instead of `file`.
+#' @param env The R environment in which the wrapping functions will be defined.
+#' @param cache_build Logical indicating whether builds should be cached between
+#'   calls to [rust_source()]. Caching may not work yet.
+#' @param quiet Logical indicating whether compile output should be generated or not.
 #' @export
 rust_source <- function(file, code = NULL, env = parent.frame(), cache_build = TRUE, quiet = FALSE) {
   dir <- get_build_dir(cache_build)
