@@ -65,13 +65,28 @@ rust_source <- function(file, code = NULL, env = parent.frame(), cache_build = T
 }
 
 generate_cargo.toml <- function() {
-  c(
-    '[package]\n  name = "rextendr"\n  version = "0.0.1"\n  edition = "2018"',
-    '[lib]\n  crate-type = ["dylib"]',
-    '[dependencies]\n',
-    '  extendr-api = {path = "/Users/clauswilke/github/extendr/extendr-api"}',
-    '  extendr-macros = {path = "/Users/clauswilke/github/extendr/extendr-macros"}'
+  cargo.toml <- c(
+    '[package]\nname = "rextendr"\nversion = "0.0.1"\nedition = "2018"',
+    '[lib]\ncrate-type = ["dylib"]',
+    '[dependencies]',
+    'extendr-api = {path = "/Users/clauswilke/github/extendr/extendr-api"}',
+    'extendr-macros = {path = "/Users/clauswilke/github/extendr/extendr-macros"}'
   )
+
+  # use locally installed bindings if they exist
+  package_dir <- find.package("rextendr")
+  bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
+  if (isTRUE(file.exists(bindings_file))) {
+    cargo.toml <- c(
+      cargo.toml,
+      glue::glue(
+        '[patch.crates-io]\nlibR-sys = {{ path = "{path}" }}',
+        path = file.path(package_dir, "rust", "libR-sys")
+      )
+    )
+  }
+
+  cargo.toml
 }
 
 get_dynlib_ext <- function() {
@@ -81,7 +96,7 @@ get_dynlib_ext <- function() {
     os <- sysinf['sysname']
     if (os == 'Darwin')
       return(".dylib")
-  } 
+  }
   .Platform$dynlib.ext
 }
 

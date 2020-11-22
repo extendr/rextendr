@@ -8,6 +8,7 @@ Authors@R: c(
   )
 Description: Call Rust code from R using the 'extendr' crate
 License: MIT + file LICENSE
+SystemRequirements: Rust tool chain w/ cargo, libclang/llvm-config
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
