@@ -35,6 +35,10 @@ extract_matches <- function(line, match) {
 }
 
 generate_r_functions <- function(funs) {
+  if (nrow(funs) == 0L) {
+    return("")
+  }
+
   funs$call_args <- ifelse(funs$arguments == "", "", ", ...")
   funs$fun_args <- ifelse(funs$arguments == "", "", "...")
   funs$calls <- ifelse(
@@ -43,11 +47,10 @@ generate_r_functions <- function(funs) {
     glue::glue_data(funs, '.Call("wrap__{name}"{call_args})')
   )
 
-  out <- glue::glue_data(funs, '
-    {name} <- function({fun_args}) {{
-      {calls}
-    }}
-  ')
+  out <- glue::glue_data(funs,
+'{name} <- function({fun_args}) {{
+  {calls}
+}}')
   out <- glue::glue_collapse(out, sep = "\n\n")
   unclass(out)
 }
