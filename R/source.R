@@ -48,8 +48,10 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
     command = "cargo",
     args = c(
       "build",
+      "--lib",
       #"--release",  # release vs debug should be configurable at some point; for now, debug compiles faster
-      sprintf("--manifest-path=%s", file.path(dir, "Cargo.toml"))
+      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
+      sprintf("--target-dir %s", file.path(dir, "target"))
     ),
     stdout = stdout,
     stderr = stdout
@@ -67,7 +69,13 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
   source(r_path, local = env)
 
   # load shared library
-  shared_lib <- file.path(dir, "target", "debug", paste0("lib", libname, get_dynlib_ext()))
+  libfilename <- if (.Platform$OS.type == "windows") {
+    paste0(libname, get_dynlib_ext())
+  } else {
+    paste0("lib", libname, get_dynlib_ext())
+  }
+
+  shared_lib <- file.path(dir, "target", "debug", libfilename)
   dyn.load(shared_lib, local = TRUE, now = TRUE)
 }
 

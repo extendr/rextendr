@@ -4,7 +4,8 @@ Version: 0.0.0.9000
 Authors@R: c(
     person("Andy", "Thomason", , "andy@andythomason.com", c("aut", "cre")),
     person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", "aut",
-      comment = c(ORCID = "0000-0002-7470-9261"))
+      comment = c(ORCID = "0000-0002-7470-9261")),
+    person("Mossa M.", "Reimert", , "mossa@sund.ku.dk", c("aut"))
   )
 Description: Call Rust code from R using the 'extendr' crate
 License: MIT + file LICENSE
