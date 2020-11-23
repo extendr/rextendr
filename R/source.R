@@ -12,6 +12,8 @@
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
+#' @return The result from [dyn.load()], which is an object of class `DLLInfo`. See
+#'   [getLoadedDLLs()] for more details.
 #' @export
 rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io = NULL,
                         env = parent.frame(), cache_build = TRUE, quiet = FALSE) {
@@ -104,6 +106,8 @@ generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch
         path = file.path(package_dir, "rust", "libR-sys")
       )
     )
+  } else {
+    message("Prebuild libR bindings are not available. Run `install_libR_bindings()` to improve future build times.")
   }
 
   # add user-provided patch.crates-io statements

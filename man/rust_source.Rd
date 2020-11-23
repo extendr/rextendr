@@ -32,6 +32,10 @@ calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 }
+\value{
+The result from \code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}. See
+\code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more details.
+}
 \description{
 \code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R.
 }

@@ -1,11 +1,15 @@
 #' Install libR bindings for Rust
 #'
-#' Install libR bindings for Rust.
+#' Call [install_libR_bindings()] once after installing rextendr to locally prebuild and install
+#' libR bindings for Rust. This is not required for any other parts of the package to function
+#' properly, but it will speed up subsequent calls to [rust_source()] as the bindings don't have
+#' to be regenerated over and over.
 #' @param force Logical indicating whether install should be forced
 #'   even if bindings have already been installed previously.
 #' @param quiet Logical indicating whether compile output should be generated or not.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
+#' @return Integer error code as returned by [system2()]. A value of `0L` indicates success.
 #' @export
 install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io = NULL) {
   package_dir <- find.package("rextendr")
@@ -38,6 +42,7 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io 
     'pub const DUMMY: u32 = 0;'
   )
   brio::write_lines(lib.rs, file.path(dir, "src", "lib.rs"))
+  on.exit(unlink(dir, recursive = TRUE))
 
   if (!isTRUE(quiet)) {
     cat(sprintf("build directory: %s\n", dir))

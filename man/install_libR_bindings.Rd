@@ -15,6 +15,9 @@ even if bindings have already been installed previously.}
 \item{patch.crates_io}{Character vector of patch statements for crates.io to
 be added to the \code{Cargo.toml} file.}
 }
+\value{
+Integer error code as returned by \code{\link[=system2]{system2()}}. A value of \code{0L} indicates success.
+}
 \description{
 Install libR bindings for Rust.
 }
