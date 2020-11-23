@@ -4,13 +4,16 @@
 \alias{install_libR_bindings}
 \title{Install libR bindings for Rust}
 \usage{
-install_libR_bindings(force = FALSE, quiet = FALSE)
+install_libR_bindings(force = FALSE, quiet = FALSE, patch.crates_io = NULL)
 }
 \arguments{
 \item{force}{Logical indicating whether install should be forced
 even if bindings have already been installed previously.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
+
+\item{patch.crates_io}{Character vector of patch statements for crates.io to
+be added to the \code{Cargo.toml} file.}
 }
 \description{
 Install libR bindings for Rust.

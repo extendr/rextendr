@@ -4,8 +4,10 @@
 #' @param force Logical indicating whether install should be forced
 #'   even if bindings have already been installed previously.
 #' @param quiet Logical indicating whether compile output should be generated or not.
+#' @param patch.crates_io Character vector of patch statements for crates.io to
+#'   be added to the `Cargo.toml` file.
 #' @export
-install_libR_bindings <- function(force = FALSE, quiet = FALSE) {
+install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io = NULL) {
   package_dir <- find.package("rextendr")
   if (file.access(package_dir, 2) != 0L) {
     stop(
@@ -26,7 +28,9 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE) {
   dir.create(file.path(dir, "src"))
   cargo.toml <- c(
     '[package]\nname = "build-libR-sys"\nversion = "0.0.1"\nedition = "2018"',
-    '[dependencies]\nlibR-sys = {path = "/Users/clauswilke/github/libR-sys"}'
+    '[dependencies]\nlibR-sys = "0.1.10"',
+    '[patch.crates-io]',
+    patch.crates_io
   )
   brio::write_lines(cargo.toml, file.path(dir, "Cargo.toml"))
   lib.rs <- c(

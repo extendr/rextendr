@@ -15,7 +15,7 @@ rust_source(
 )
 }
 \arguments{
-\item{file}{Input rust file to source (not yet implemented).}
+\item{file}{Input rust file to source.}
 
 \item{code}{Input rust code, to be used instead of \code{file}.}
 
@@ -28,7 +28,7 @@ be added to the \code{Cargo.toml} file.}
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
 \item{cache_build}{Logical indicating whether builds should be cached between
-calls to \code{\link[=rust_source]{rust_source()}}. Caching may not work on some systems.}
+calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 }
