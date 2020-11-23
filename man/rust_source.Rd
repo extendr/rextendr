@@ -7,6 +7,8 @@
 rust_source(
   file,
   code = NULL,
+  dependencies = NULL,
+  patch.crates_io = NULL,
   env = parent.frame(),
   cache_build = TRUE,
   quiet = FALSE
@@ -17,10 +19,16 @@ rust_source(
 
 \item{code}{Input rust code, to be used instead of \code{file}.}
 
+\item{dependencies}{Character vector of dependencies lines to be added to the
+\code{Cargo.toml} file.}
+
+\item{patch.crates_io}{Character vector of patch statements for crates.io to
+be added to the \code{Cargo.toml} file.}
+
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
 \item{cache_build}{Logical indicating whether builds should be cached between
-calls to \code{\link[=rust_source]{rust_source()}}. Caching may not work yet.}
+calls to \code{\link[=rust_source]{rust_source()}}. Caching may not work on some systems.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 }

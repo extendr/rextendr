@@ -25,7 +25,15 @@ Basic use example:
     }
     "
 
-    rust_source(code = rust_src, quiet = TRUE)
+    rust_source(
+      code = rust_src,
+      # use `patch.crates_io` argument to override crate locations
+      patch.crates_io = c(
+        'extendr-api = {path = "/Users/clauswilke/github/extendr/extendr-api"}',
+        'extendr-macros = {path = "/Users/clauswilke/github/extendr/extendr-macros"}'
+      ),
+      quiet = TRUE
+    )
 
     # call `hello()` function from R
     hello()
