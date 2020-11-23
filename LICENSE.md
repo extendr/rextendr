@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2020 Andy Thomason, Claus O. Wilke
+Copyright (c) 2020 Claus O. Wilke, Andy Thomason, Mossa M. Reimert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

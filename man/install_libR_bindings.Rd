@@ -19,5 +19,8 @@ be added to the \code{Cargo.toml} file.}
 Integer error code as returned by \code{\link[=system2]{system2()}}. A value of \code{0L} indicates success.
 }
 \description{
-Install libR bindings for Rust.
+Call \code{\link[=install_libR_bindings]{install_libR_bindings()}} once after installing rextendr to locally prebuild and install
+libR bindings for Rust. This is not required for any other parts of the package to function
+properly, but it will speed up subsequent calls to \code{\link[=rust_source]{rust_source()}} as the bindings don't have
+to be regenerated over and over.
 }
