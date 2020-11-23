@@ -39,6 +39,3 @@ vignettes/*.pdf
 .Renviron
 .Rproj.user
 
-# GitHub setup
-.github
-
