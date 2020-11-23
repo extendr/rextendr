@@ -44,7 +44,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
   cargo.toml_content <- generate_cargo.toml(libname, dependencies, patch.crates_io)
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
-  system2(
+  status <- system2(
     command = "cargo",
     args = c(
       "build",
@@ -54,6 +54,10 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
     stdout = stdout,
     stderr = stdout
   )
+  if (status != 0L) {
+    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
+  }
+
 
   # generate R bindings for shared library
   funs <- get_exported_functions(rust_file) # extract function declarations
