@@ -2,3 +2,4 @@
 
 export(install_libR_bindings)
 export(rust_source)
+importFrom(dplyr,mutate)
