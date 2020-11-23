@@ -1,5 +1,5 @@
 Package: rextendr
-Title: Call Rust code from R using the 'extendr' Crate
+Title: Call Rust Code from R using the 'extendr' Crate
 Version: 0.0.0.9000
 Authors@R: c(
     person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", c("aut", "cre"),
