@@ -51,6 +51,10 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io 
     stdout <- NULL
   }
 
+  Sys.setenv(
+    LIBRSYS_BINDINGS_DIR = file.path(package_dir, "rust", "libR-sys", "src")
+  )
+
   system2(
     command = "cargo",
     args = c(
@@ -58,12 +62,6 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io 
       sprintf("--manifest-path=%s", file.path(dir, "Cargo.toml"))
     ),
     stdout = stdout,
-    stderr = stdout,
-    env = c(
-      glue::glue(
-        "LIBRSYS_BINDINGS_DIR={path}",
-        path = file.path(package_dir, "rust", "libR-sys", "src")
-      )
-    )
+    stderr = stdout
   )
 }
