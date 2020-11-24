@@ -1,6 +1,7 @@
-#' Compile Rust code
+#' Compile Rust code and call from R
 #'
-#' [rust_source()] compiles and loads a single Rust file for use in R.
+#' [rust_source()] compiles and loads a single Rust file for use in R. [rust_function()]
+#' compiles and loads a single Rust function for use in R.
 #'
 #' @param file Input rust file to source.
 #' @param code Input rust code, to be used instead of `file`.
@@ -8,15 +9,44 @@
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
+#' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
+#'   `"dev"`, compiles faster but produces slower code.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`. See
 #'   [getLoadedDLLs()] for more details.
+#' @examples
+#' \dontrun{
+#' # creating a single rust function
+#' rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+#' add(2.5, 4.7)
+#'
+#' # creating multiple rust functions at once
+#' code <- r"(
+#' use extendr_api::*;
+#'
+#' #[extendr]
+#' fn hello() -> &'static str {
+#'     "Hello, world!"
+#' }
+#'
+#' #[extendr]
+#' fn test( a: &str, b: i64) {
+#'     println!("Data sent to Rust: {}, {}", a, b);
+#' }
+#' )"
+#'
+#' rust_source(code = code)
+#' hello()
+#' test("a string", 42)
+#' }
 #' @export
 rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io = NULL,
-                        env = parent.frame(), cache_build = TRUE, quiet = FALSE) {
+                        profile = c("dev", "release"), env = parent.frame(),
+                        cache_build = TRUE, quiet = FALSE) {
+  profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
     cat(sprintf("build directory: %s\n", dir))
@@ -51,9 +81,9 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
     args = c(
       "build",
       "--lib",
-      #"--release",  # release vs debug should be configurable at some point; for now, debug compiles faster
       sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target"))
+      sprintf("--target-dir %s", file.path(dir, "target")),
+      if (profile == "release") "--release" else NULL
     ),
     stdout = stdout,
     stderr = stdout
@@ -77,8 +107,16 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
     paste0("lib", libname, get_dynlib_ext())
   }
 
-  shared_lib <- file.path(dir, "target", "debug", libfilename)
+  shared_lib <- file.path(dir, "target", ifelse(profile == "dev", "debug", "release"), libfilename)
   dyn.load(shared_lib, local = TRUE, now = TRUE)
+}
+
+#' @rdname rust_source
+#' @param ... Other parameters handed off to [rust_source()].
+#' @export
+rust_function <- function(code, env = parent.frame(), ...) {
+  code <- paste0("use extendr_api::*;\n\n#[extendr]\n", code)
+  rust_source(code = code, env = env, ...)
 }
 
 generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL) {

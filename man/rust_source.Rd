@@ -2,17 +2,21 @@
 % Please edit documentation in R/source.R
 \name{rust_source}
 \alias{rust_source}
-\title{Compile Rust code}
+\alias{rust_function}
+\title{Compile Rust code and call from R}
 \usage{
 rust_source(
   file,
   code = NULL,
   dependencies = NULL,
   patch.crates_io = NULL,
+  profile = c("dev", "release"),
   env = parent.frame(),
   cache_build = TRUE,
   quiet = FALSE
 )
+
+rust_function(code, env = parent.frame(), ...)
 }
 \arguments{
 \item{file}{Input rust file to source.}
@@ -25,17 +29,49 @@ rust_source(
 \item{patch.crates_io}{Character vector of patch statements for crates.io to
 be added to the \code{Cargo.toml} file.}
 
+\item{profile}{Rust profile. Can be either \code{"dev"} or \code{"release"}. The default,
+\code{"dev"}, compiles faster but produces slower code.}
+
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
 \item{cache_build}{Logical indicating whether builds should be cached between
 calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
+
+\item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }
 \value{
 The result from \code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}. See
 \code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more details.
 }
 \description{
-\code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R.
+\code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R. \code{\link[=rust_function]{rust_function()}}
+compiles and loads a single Rust function for use in R.
+}
+\examples{
+\dontrun{
+# creating a single rust function
+rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+add(2.5, 4.7)
+
+# creating multiple rust functions at once
+code <- r"(
+use extendr_api::*;
+
+#[extendr]
+fn hello() -> &'static str {
+    "Hello, world!"
+}
+
+#[extendr]
+fn test( a: &str, b: i64) {
+    println!("Data sent to Rust: {}, {}", a, b);
+}
+)"
+
+rust_source(code = code)
+hello()
+test("a string", 42)
+}
 }
