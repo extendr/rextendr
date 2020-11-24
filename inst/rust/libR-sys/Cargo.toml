@@ -1,6 +1,6 @@
 [package]
 name = "libR-sys"
-version = "0.1.10"
+version = "*"  # dummy version, will be replaced with actual version, keep this on line 3 of this file
 authors = ["andy-thomason <andy@andythomason.com>"]
 edition = "2018"
 description = "Low level bindings to the R programming language."
