@@ -23,7 +23,7 @@ To install the package, run:
 
 Note that this will install the package but does not guarantee that the
 package can do anything useful. You will also need to set up a working
-Rust toolchain, including libclan/llvm-config support to run
+Rust toolchain, including libclang/llvm-config support to run
 [bindgen](https://rust-lang.github.io/rust-bindgen/). See the
 [installation instructions for
 libR-sys](https://github.com/extendr/libR-sys) for help. If you can
@@ -36,26 +36,33 @@ Basic use example:
 
     library(rextendr)
 
-    # some simple Rust code with two functions
-    rust_src <- "use extendr_api::*;
+    # create a single rust function
+    rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//Rtmp3Nm20j/file1693cee42723
+
+    add(2.5, 4.7)
+    #> [1] 7.2
+
+    # create a function using some more complex Rust code, including
+    # a dependency on an external crate; here we create a function that
+    # converts markdown text to html
+    code <- "use extendr_api::*;
+    use pulldown_cmark::{Parser, Options, html};
 
     #[extendr]
-    fn hello() -> &'static str {
-        \"Hello, this string was created by Rust.\"
-    }
-
-    #[extendr]
-    fn add(a: i64, b: i64) -> i64 {
-        a + b
+    fn md_to_html(input: &str) -> Robj {
+        let mut options = Options::empty();
+        options.insert(Options::ENABLE_TABLES);
+        let parser = Parser::new_ext(input, options);
+        let mut output = String::new();
+        html::push_html(&mut output, parser);
+        Robj::from(&*output)
     }
     "
+    rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
+    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//Rtmp3Nm20j/file1693cee42723
 
-    rust_source(code = rust_src, quiet = TRUE)
-
-    # call `hello()` function from R
-    hello()
-    #> [1] "Hello, this string was created by Rust."
-
-    # call `add()` function from R
-    add(14, 23)
-    #> [1] 37
+    md_text <- "# The story of the fox
+    The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
+    md_to_html(md_text)
+    #> [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog. The quick <em>brown fox</em> jumps over the lazy dog.</p>\n"

@@ -29,7 +29,7 @@ To install the package, run:
 remotes::install_github("clauswilke/rextendr")
 ```
 
-Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclan/llvm-config support to run [bindgen](https://rust-lang.github.io/rust-bindgen/). See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
+Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclang/llvm-config support to run [bindgen](https://rust-lang.github.io/rust-bindgen/). See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
 
 ## Usage
 
@@ -38,26 +38,32 @@ Basic use example:
 ```{r}
 library(rextendr)
 
-# some simple Rust code with two functions
-rust_src <- "use extendr_api::*;
+# create a single rust function
+rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+
+add(2.5, 4.7)
+
+# create a function using some more complex Rust code, including
+# a dependency on an external crate; here we create a function that
+# converts markdown text to html
+code <- "use extendr_api::*;
+use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]
-fn hello() -> &'static str {
-    \"Hello, this string was created by Rust.\"
-}
-
-#[extendr]
-fn add(a: i64, b: i64) -> i64 {
-    a + b
+fn md_to_html(input: &str) -> Robj {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    let parser = Parser::new_ext(input, options);
+    let mut output = String::new();
+    html::push_html(&mut output, parser);
+    Robj::from(&*output)
 }
 "
+rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
 
-rust_source(code = rust_src, quiet = TRUE)
+md_text <- "# The story of the fox
+The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
+md_to_html(md_text)
 
-# call `hello()` function from R
-hello()
-
-# call `add()` function from R
-add(14, 23)
 ```
 
