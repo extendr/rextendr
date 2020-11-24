@@ -23,4 +23,7 @@ Imports:
     tibble,
     purrr
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat
+VignetteBuilder: knitr

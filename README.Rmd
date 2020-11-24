@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R build
-status](https://github.com/clauswilke/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/clauswilke/rextendr/actions)
+status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
@@ -26,7 +26,7 @@ status](https://github.com/clauswilke/rextendr/workflows/R-CMD-check/badge.svg)]
 
 To install the package, run:
 ```r
-remotes::install_github("clauswilke/rextendr")
+remotes::install_github("extendr/rextendr")
 ```
 
 Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclang/llvm-config support to run [bindgen](https://rust-lang.github.io/rust-bindgen/). See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.

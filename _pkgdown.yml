@@ -1,0 +1,8 @@
+destination: docs
+
+reference:
+- title: Compiling and running Rust code
+  contents:
+  - rust_source
+  - rust_function
+  - install_libR_bindings

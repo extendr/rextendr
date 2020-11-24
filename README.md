@@ -7,7 +7,7 @@ Call Rust code from R using the ‘extendr’ crate
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/clauswilke/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/clauswilke/rextendr/actions)
+status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
 [![Lifecycle:
@@ -19,7 +19,7 @@ Installation
 
 To install the package, run:
 
-    remotes::install_github("clauswilke/rextendr")
+    remotes::install_github("extendr/rextendr")
 
 Note that this will install the package but does not guarantee that the
 package can do anything useful. You will also need to set up a working
@@ -38,7 +38,7 @@ Basic use example:
 
     # create a single rust function
     rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
-    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//Rtmp3Nm20j/file1693cee42723
+    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpL9W0pq/file16d7c2763a76d
 
     add(2.5, 4.7)
     #> [1] 7.2
@@ -60,7 +60,7 @@ Basic use example:
     }
     "
     rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
-    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//Rtmp3Nm20j/file1693cee42723
+    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpL9W0pq/file16d7c2763a76d
 
     md_text <- "# The story of the fox
     The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
