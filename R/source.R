@@ -11,6 +11,10 @@
 #'   be added to the `Cargo.toml` file.
 #' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
 #'   `"dev"`, compiles faster but produces slower code.
+#' @param extendr_version Version of the extendr-api crate, provided as a Rust
+#'   version string. `"*"` will use the latest available version on crates.io.
+#' @param extendr_macros_version Version of the extendr-macros crate, if different
+#'   from `extendr_version`.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
@@ -44,7 +48,9 @@
 #' }
 #' @export
 rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io = NULL,
-                        profile = c("dev", "release"), env = parent.frame(),
+                        profile = c("dev", "release"), extendr_version = "*",
+                        extendr_macros_version = extendr_version,
+                        env = parent.frame(),
                         cache_build = TRUE, quiet = FALSE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
@@ -73,7 +79,10 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
   }
 
   # generate Cargo.toml file and compile shared library
-  cargo.toml_content <- generate_cargo.toml(libname, dependencies, patch.crates_io)
+  cargo.toml_content <- generate_cargo.toml(
+    libname, dependencies, patch.crates_io,
+    extendr_version, extendr_macros_version
+  )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
   status <- system2(
@@ -119,15 +128,16 @@ rust_function <- function(code, env = parent.frame(), ...) {
   rust_source(code = code, env = env, ...)
 }
 
-generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL) {
+generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
+                                extendr_version = "*", extendr_macros_version = extendr_version) {
   cargo.toml <- c(
     '[package]',
     glue::glue('name = "{libname}"'),
     'version = "0.0.1"\nedition = "2018"',
     '[lib]\ncrate-type = ["cdylib"]',
     '[dependencies]',
-    'extendr-api = "0.1"',
-    'extendr-macros = "0.1"'
+    glue::glue('extendr-api = "{extendr_version}"'),
+    glue::glue('extendr-macros = "{extendr_macros_version}"')
   )
 
   # add user-provided dependencies

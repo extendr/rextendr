@@ -11,6 +11,8 @@ rust_source(
   dependencies = NULL,
   patch.crates_io = NULL,
   profile = c("dev", "release"),
+  extendr_version = "*",
+  extendr_macros_version = extendr_version,
   env = parent.frame(),
   cache_build = TRUE,
   quiet = FALSE
@@ -31,6 +33,12 @@ be added to the \code{Cargo.toml} file.}
 
 \item{profile}{Rust profile. Can be either \code{"dev"} or \code{"release"}. The default,
 \code{"dev"}, compiles faster but produces slower code.}
+
+\item{extendr_version}{Version of the extendr-api crate, provided as a Rust
+version string. \code{"*"} will use the latest available version on crates.io.}
+
+\item{extendr_macros_version}{Version of the extendr-macros crate, if different
+from \code{extendr_version}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
