@@ -4,9 +4,17 @@
 \alias{install_libR_bindings}
 \title{Install libR bindings for Rust}
 \usage{
-install_libR_bindings(force = FALSE, quiet = FALSE, patch.crates_io = NULL)
+install_libR_bindings(
+  version = "*",
+  force = FALSE,
+  quiet = FALSE,
+  patch.crates_io = NULL
+)
 }
 \arguments{
+\item{version}{libR-sys version, provided as a Rust version string. \code{"*"} will install the
+latest available version on crates.io.}
+
 \item{force}{Logical indicating whether install should be forced
 even if bindings have already been installed previously.}
 

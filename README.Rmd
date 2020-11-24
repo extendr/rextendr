@@ -16,7 +16,22 @@ knitr::opts_chunk$set(
 # Call Rust code from R using the 'extendr' crate
 
 <!-- badges: start -->
+[![R build
+status](https://github.com/clauswilke/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/clauswilke/rextendr/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
+
+## Installation
+
+To install the package, run:
+```r
+remotes::install_github("clauswilke/rextendr")
+```
+
+Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclan/llvm-config support to run [bindgen](https://rust-lang.github.io/rust-bindgen/). See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
+
+## Usage
 
 Basic use example:
 
