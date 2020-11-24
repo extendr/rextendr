@@ -2,11 +2,8 @@
 # on crates.io.
 
 test_that("Testing the source", {
-  #FIXME: This would typically fail unless configured precisely..
-  #
-  #
-  library(rextendr)
-
+  skip("This would typically fail, unless changed to reflect paths /
+       on host's machine. ")
   # some simple Rust code with two functions
   rust_src <- "use extendr_api::*;
 
