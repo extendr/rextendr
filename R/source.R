@@ -124,10 +124,10 @@ generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch
     '[package]',
     glue::glue('name = "{libname}"'),
     'version = "0.0.1"\nedition = "2018"',
-    '[lib]\ncrate-type = ["dylib"]',
+    '[lib]\ncrate-type = ["cdylib"]',
     '[dependencies]',
-    'extendr-api = "0.1.3"',
-    'extendr-macros = "0.1.2"'
+    'extendr-api = "0.1"',
+    'extendr-macros = "0.1"'
   )
 
   # add user-provided dependencies

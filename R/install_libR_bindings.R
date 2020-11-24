@@ -21,7 +21,7 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io 
   }
 
   bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
-  if (isTRUE(file.exists(bindings_file))) {
+  if (!isTRUE(force) && isTRUE(file.exists(bindings_file))) {
     message("libR bindings are already installed. Rerun with `force = TRUE` to force re-install.")
     return(invisible())
   }
@@ -32,7 +32,7 @@ install_libR_bindings <- function(force = FALSE, quiet = FALSE, patch.crates_io 
   dir.create(file.path(dir, "src"))
   cargo.toml <- c(
     '[package]\nname = "build-libR-sys"\nversion = "0.0.1"\nedition = "2018"',
-    '[dependencies]\nlibR-sys = "0.1.10"',
+    '[dependencies]\nlibR-sys = "0.1"',
     '[patch.crates-io]',
     patch.crates_io
   )
