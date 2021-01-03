@@ -59,7 +59,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
-    cat(sprintf("build directory: %s\n", dir))
+    message(sprintf("build directory: %s\n", dir))
     stdout <- "" # to be used by `system2()` below
   } else {
     stdout <- NULL

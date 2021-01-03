@@ -1,10 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-Call Rust code from R using the ‘extendr’ crate
-===============================================
+# Call Rust code from R using the ‘extendr’ crate
 
 <!-- badges: start -->
+
 [![R build
 status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![CRAN
@@ -13,8 +13,7 @@ status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.o
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-Installation
-------------
+## Installation
 
 To install the package, run:
 
@@ -28,8 +27,7 @@ Rust toolchain, including libclang/llvm-config support to run
 libR-sys](https://github.com/extendr/libR-sys) for help. If you can
 successfully build libR-sys you’re good.
 
-Usage
------
+## Usage
 
 Basic use example:
 
@@ -37,7 +35,7 @@ Basic use example:
 
     # create a single rust function
     rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
-    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpL9W0pq/file16d7c2763a76d
+    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpgRjWtR/fileafb2eba0d14
 
     add(2.5, 4.7)
     #> [1] 7.2
@@ -58,10 +56,32 @@ Basic use example:
         Robj::from(&*output)
     }
     "
-    rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
-    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpL9W0pq/file16d7c2763a76d
+    #rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
 
     md_text <- "# The story of the fox
     The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
-    md_to_html(md_text)
-    #> [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog. The quick <em>brown fox</em> jumps over the lazy dog.</p>\n"
+    #md_to_html(md_text)
+
+The package also enables a new chunk type for knitr, `extendr`, which
+compiles and evaluates Rust code. For example, a code chunk such as this
+one:
+
+    ```{extendr}
+    rprintln!("Hello from Rust!");
+
+    let x = 5;
+    let y = 7;
+    let z = x*y;
+    z.into()
+    ```
+
+would create the following output in the knitted document:
+
+    rprintln!("Hello from Rust!");
+
+    let x = 5;
+    let y = 7;
+    let z = x*y;
+    z.into()
+    #> Hello from Rust!
+    #> [1] 35

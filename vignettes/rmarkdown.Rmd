@@ -1,0 +1,54 @@
+---
+title: "Using Rust code in R Markdown documents"
+author: "Claus O. Wilke"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{RMarkdown}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## R Markdown
+
+The rextendr package enables a new chunk type for knitr, `extendr`, which compiles and evaluates Rust code.
+
+First, you need to load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.
+```{r}
+library(rextendr)
+```
+
+
+Then, you can create a code chunk of type `extendr`. For example:
+````markdown
+`r ''````{extendr}
+rprintln!("Hello from Rust!");
+
+let x = 5;
+let y = 7;
+let z = x*y;
+z.into()
+```
+````
+This chunk generates the following output:
+```{extendr}
+rprintln!("Hello from Rust!");
+
+let x = 5;
+let y = 7;
+let z = x*y;
+z.into()
+```
+
+The call `z.into()` casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a `;` at the end of this line. You can also write code that doesn't return any result to R. In this case, the last line would end in a `;`, as in this example:
+```{extendr}
+let x = 5;
+let y = 7;
+let z = x*y;
+
+rprintln!("{}*{} = {}", x, y, z);
+```
+

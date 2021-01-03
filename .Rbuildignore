@@ -2,5 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
+^vignettes/rmarkdown.Rmd$
 ^\.github$
 
