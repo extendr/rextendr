@@ -5,7 +5,6 @@ Call Rust code from R using the ‘extendr’ crate
 ===============================================
 
 <!-- badges: start -->
-
 [![R build
 status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![CRAN
