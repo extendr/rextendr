@@ -1,0 +1,52 @@
+#' Evaluate Rust code
+#'
+#' Evaluate Rust code.
+#' @param code Input rust code.
+#' @param ... Other parameters handed off to [rust_function()].
+#' @examples
+#' \dontrun{
+#' # Rust code without return value, called only for its side effects
+#' rust_eval(
+#'   code = 'rprintln!("hello from Rust!");'
+#' )
+#'
+#' # Rust code with return value; note the `.into()` at the end
+#' rust_eval(
+#'   code = '
+#'     let x = 5;
+#'     let y = 7;
+#'     let z = x * y;
+#'     z.into() // cast z into an Robj and return
+#'  '
+#' )
+#' }
+#' @export
+rust_eval <- function(code, ...) {
+  # make sure code is given as a single character string
+  code <- glue::glue_collapse(code, sep = "\n")
+
+  if (grepl(".*;\\s*$", code, perl = TRUE)) {
+    rust_eval_no_return(code, ...)
+  } else {
+    rust_eval_return(code, ...)
+  }
+}
+
+
+# eval with return value
+rust_eval_return <- function(code, ...) {
+  code <- glue::glue("fn rextendr_rust_eval_fun() -> Robj {{\n{code}\n}}\n")
+  out <- rust_function(code = code, ...)
+  result <- rextendr_rust_eval_fun()
+  dyn.unload(out[["path"]])
+  result
+}
+
+# eval without return value
+rust_eval_no_return <- function(code, ...) {
+  code <- glue::glue("fn rextendr_rust_eval_fun() {{\n{code}\n}}\n")
+  out <- rust_function(code = code, ...)
+  rextendr_rust_eval_fun()
+  dyn.unload(out[["path"]])
+  invisible()
+}

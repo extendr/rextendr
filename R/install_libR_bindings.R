@@ -1,18 +1,21 @@
-#' Install libR bindings for Rust
-#'
-#' Call [install_libR_bindings()] once after installing rextendr to locally prebuild and install
-#' libR bindings for Rust. This is not required for any other parts of the package to function
-#' properly, but it will speed up subsequent calls to [rust_source()] as the bindings don't have
-#' to be regenerated over and over.
-#' @param version libR-sys version, provided as a Rust version string. `"*"` will install the
-#'   latest available version on crates.io.
-#' @param force Logical indicating whether install should be forced
-#'   even if bindings have already been installed previously.
-#' @param quiet Logical indicating whether compile output should be generated or not.
-#' @param patch.crates_io Character vector of patch statements for crates.io to
-#'   be added to the `Cargo.toml` file.
-#' @return Integer error code as returned by [system2()]. A value of `0L` indicates success.
-#' @export
+## This has been disabled. It needs to be deleted or reworked for libR-sys 0.2.0,
+## which includes support for pre-computed bindings.
+
+# Install libR bindings for Rust
+#
+# Call [install_libR_bindings()] once after installing rextendr to locally prebuild and install
+# libR bindings for Rust. This is not required for any other parts of the package to function
+# properly, but it will speed up subsequent calls to [rust_source()] as the bindings don't have
+# to be regenerated over and over.
+# @param version libR-sys version, provided as a Rust version string. `"*"` will install the
+#   latest available version on crates.io.
+# @param force Logical indicating whether install should be forced
+#   even if bindings have already been installed previously.
+# @param quiet Logical indicating whether compile output should be generated or not.
+# @param patch.crates_io Character vector of patch statements for crates.io to
+#   be added to the `Cargo.toml` file.
+# @return Integer error code as returned by [system2()]. A value of `0L` indicates success.
+# @export
 install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, patch.crates_io = NULL) {
   package_dir <- find.package("rextendr")
   if (file.access(package_dir, 2) != 0L) {

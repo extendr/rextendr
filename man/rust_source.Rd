@@ -9,7 +9,9 @@ rust_source(
   file,
   code = NULL,
   dependencies = NULL,
-  patch.crates_io = NULL,
+ 
+    patch.crates_io = c("extendr-api = { git = \\"https://github.com/extendr/extendr\\" }",
+    "extendr-macros = { git = \\"https://github.com/extendr/extendr\\" }"),
   profile = c("dev", "release"),
   extendr_version = "*",
   extendr_macros_version = extendr_version,
@@ -60,7 +62,7 @@ compiles and loads a single Rust function for use in R.
 \examples{
 \dontrun{
 # creating a single rust function
-rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 add(2.5, 4.7)
 
 # creating multiple rust functions at once
@@ -74,7 +76,7 @@ fn hello() -> &'static str {
 
 #[extendr]
 fn test( a: &str, b: i64) {
-    println!("Data sent to Rust: {}, {}", a, b);
+    rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 )"
 

@@ -24,7 +24,7 @@
 #' @examples
 #' \dontrun{
 #' # creating a single rust function
-#' rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
+#' rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 #' add(2.5, 4.7)
 #'
 #' # creating multiple rust functions at once
@@ -38,7 +38,7 @@
 #'
 #' #[extendr]
 #' fn test( a: &str, b: i64) {
-#'     println!("Data sent to Rust: {}, {}", a, b);
+#'     rprintln!("Data sent to Rust: {}, {}", a, b);
 #' }
 #' )"
 #'
@@ -47,7 +47,11 @@
 #' test("a string", 42)
 #' }
 #' @export
-rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io = NULL,
+rust_source <- function(file, code = NULL, dependencies = NULL,
+                        patch.crates_io = c(
+                          'extendr-api = { git = "https://github.com/extendr/extendr" }',
+                          'extendr-macros = { git = "https://github.com/extendr/extendr" }'
+                        ),
                         profile = c("dev", "release"), extendr_version = "*",
                         extendr_macros_version = extendr_version,
                         env = parent.frame(),
@@ -142,21 +146,6 @@ generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch
 
   # add user-provided dependencies
   cargo.toml <- c(cargo.toml, dependencies)
-
-  # use locally installed bindings if they exist
-  package_dir <- find.package("rextendr")
-  bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
-  if (isTRUE(file.exists(bindings_file))) {
-    patch.crates_io <- c(
-      patch.crates_io,
-      glue::glue(
-        'libR-sys = {{ path = "{path}" }}',
-        path = file.path(package_dir, "rust", "libR-sys")
-      )
-    )
-  } else {
-    message("Prebuild libR bindings are not available. Run `install_libR_bindings()` to improve future build times.")
-  }
 
   # add user-provided patch.crates-io statements
   cargo.toml <- c(
