@@ -81,12 +81,24 @@ compiles and loads a single Rust function for use in R." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -114,18 +126,22 @@ compiles and loads a single Rust function for use in R." />
 compiles and loads a single Rust function for use in R.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rust_source</span>(
-  <span class='kw'>file</span>,
-  code = <span class='kw'>NULL</span>,
-  dependencies = <span class='kw'>NULL</span>,
-  patch.crates_io = <span class='kw'>NULL</span>,
-  profile = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"dev"</span>, <span class='st'>"release"</span>),
-  env = <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>(),
-  cache_build = <span class='fl'>TRUE</span>,
-  quiet = <span class='fl'>FALSE</span>
-)
+    <pre class="usage"><span class='fu'>rust_source</span><span class='op'>(</span>
+  <span class='va'>file</span>,
+  code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dependencies <span class='op'>=</span> <span class='cn'>NULL</span>,
+ 
+    patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"extendr-api = { git = \"https://github.com/extendr/extendr\" }"</span>,
+    <span class='st'>"extendr-macros = { git = \"https://github.com/extendr/extendr\" }"</span><span class='op'>)</span>,
+  profile <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dev"</span>, <span class='st'>"release"</span><span class='op'>)</span>,
+  extendr_version <span class='op'>=</span> <span class='st'>"*"</span>,
+  extendr_macros_version <span class='op'>=</span> <span class='va'>extendr_version</span>,
+  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
+  cache_build <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>rust_function</span>(<span class='kw'>code</span>, env = <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>(), <span class='kw'>...</span>)</pre>
+<span class='fu'>rust_function</span><span class='op'>(</span><span class='va'>code</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +170,16 @@ be added to the <code>Cargo.toml</code> file.</p></td>
 <code>"dev"</code>, compiles faster but produces slower code.</p></td>
     </tr>
     <tr>
+      <th>extendr_version</th>
+      <td><p>Version of the extendr-api crate, provided as a Rust
+version string. <code>"*"</code> will use the latest available version on crates.io.</p></td>
+    </tr>
+    <tr>
+      <th>extendr_macros_version</th>
+      <td><p>Version of the extendr-macros crate, if different
+from <code>extendr_version</code>.</p></td>
+    </tr>
+    <tr>
       <th>env</th>
       <td><p>The R environment in which the wrapping functions will be defined.</p></td>
     </tr>
@@ -178,13 +204,13 @@ calls to <code>rust_source()</code>.</p></td>
 <code><a href='https://rdrr.io/r/base/getLoadedDLLs.html'>getLoadedDLLs()</a></code> for more details.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># creating a single rust function</span>
-<span class='fu'>rust_function</span>(<span class='st'>"fn add(a:f64, b:f64) -&gt; f64 {a+b}"</span>)
-<span class='fu'>add</span>(<span class='fl'>2.5</span>, <span class='fl'>4.7</span>)
+<span class='fu'>rust_function</span><span class='op'>(</span><span class='st'>"fn add(a:f64, b:f64) -&gt; f64 { a + b }"</span><span class='op'>)</span>
+<span class='fu'>add</span><span class='op'>(</span><span class='fl'>2.5</span>, <span class='fl'>4.7</span><span class='op'>)</span>
 
 <span class='co'># creating multiple rust functions at once</span>
-<span class='kw'>code</span> <span class='op'>&lt;-</span> <span class='st'>r"(
+<span class='va'>code</span> <span class='op'>&lt;-</span> <span class='st'>r"(
 use extendr_api::*;
 
 #[extendr]
@@ -194,14 +220,14 @@ fn hello() -&gt; &amp;'static str {
 
 #[extendr]
 fn test( a: &amp;str, b: i64) {
-    println!("Data sent to Rust: {}, {}", a, b);
+    rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 )"</span>
 
-<span class='fu'>rust_source</span>(code = <span class='kw'>code</span>)
-<span class='fu'>hello</span>()
-<span class='fu'>test</span>(<span class='st'>"a string"</span>, <span class='fl'>42</span>)
-}
+<span class='fu'>rust_source</span><span class='op'>(</span>code <span class='op'>=</span> <span class='va'>code</span><span class='op'>)</span>
+<span class='fu'>hello</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>test</span><span class='op'>(</span><span class='st'>"a string"</span>, <span class='fl'>42</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

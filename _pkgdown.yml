@@ -5,4 +5,5 @@ reference:
   contents:
   - rust_source
   - rust_function
-  - install_libR_bindings
+  - rust_eval
+  - eng_extendr

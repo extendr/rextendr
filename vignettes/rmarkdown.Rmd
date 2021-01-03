@@ -43,7 +43,7 @@ let z = x*y;
 z.into()
 ```
 
-The call `z.into()` casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a `;` at the end of this line. You can also write code that doesn't return any result to R. In this case, the last line would end in a `;`, as in this example:
+The call `z.into()` casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
 ```{extendr}
 let x = 5;
 let y = 7;
