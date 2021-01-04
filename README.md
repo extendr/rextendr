@@ -34,8 +34,7 @@ Basic use example:
     library(rextendr)
 
     # create a single rust function
-    rust_function("fn add(a:f64, b:f64) -> f64 {a+b}")
-    #> build directory: /var/folders/b1/13gn4j655jddkfhxmtk5tsfm0000gn/T//RtmpgRjWtR/fileafb2eba0d14
+    rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 
     add(2.5, 4.7)
     #> [1] 7.2
@@ -56,11 +55,13 @@ Basic use example:
         Robj::from(&*output)
     }
     "
-    #rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
+    rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
 
     md_text <- "# The story of the fox
     The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
-    #md_to_html(md_text)
+
+    md_to_html(md_text)
+    #> [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog. The quick <em>brown fox</em> jumps over the lazy dog.</p>\n"
 
 The package also enables a new chunk type for knitr, `extendr`, which
 compiles and evaluates Rust code. For example, a code chunk such as this
@@ -72,6 +73,7 @@ one:
     let x = 5;
     let y = 7;
     let z = x*y;
+
     z.into()
     ```
 
@@ -82,6 +84,7 @@ would create the following output in the knitted document:
     let x = 5;
     let y = 7;
     let z = x*y;
+
     z.into()
     #> Hello from Rust!
     #> [1] 35

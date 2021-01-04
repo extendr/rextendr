@@ -98,15 +98,17 @@
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="in">let x = 5;</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="in">let y = 7;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="in">let z = x*y;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="in">z.into()</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="in">z.into()</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
 <p>This chunk generates the following output:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>z<span class="op">.</span>into()</span></code></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>z<span class="op">.</span>into()</span></code></pre></div>
 <pre><code>## Hello from Rust!
 ## [1] 35</code></pre>
 <p>The call <code>z.into()</code> casts the Rust integer variable into type <code>Robj</code> and returns its value to R. Notice the lack of a semicolon (<code>;</code>) at the end of this line. You can also write code that doesn’t return any result to R. In this case, the last line would end in a semicolon, as in this example:</p>

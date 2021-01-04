@@ -30,6 +30,7 @@ rprintln!("Hello from Rust!");
 let x = 5;
 let y = 7;
 let z = x*y;
+
 z.into()
 ```
 ````
@@ -40,6 +41,7 @@ rprintln!("Hello from Rust!");
 let x = 5;
 let y = 7;
 let z = x*y;
+
 z.into()
 ```
 
