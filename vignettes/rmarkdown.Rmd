@@ -54,3 +54,19 @@ let z = x*y;
 rprintln!("{}*{} = {}", x, y, z);
 ```
 
+## Communicating between R and Rust
+
+It is possible to access variables defined in R from Rust. Let's define two R variables, a numeric and a string:
+
+```{r}
+x <- 5.3
+y <- "hello"
+```
+
+We can read these variables from Rust using the `R!()` macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we're ignoring the errors with `unwrap()`. For example, `R!()` call the R interpreter and it could generate an error. And even if it returns a value, we're not guaranteed that the value can be coerced into a real value or a string, so `as_real()` and `as_str()` can also error out.
+
+```{extendr}
+let x:f64 = R!(x).unwrap().as_real().unwrap();
+let y:String = R!(y).unwrap().as_str().unwrap().to_string();
+rprintln!("{} {}", y, x);
+```
