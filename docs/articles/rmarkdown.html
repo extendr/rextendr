@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Using Rust code in R Markdown documents</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2021-01-04</h4>
+            <h4 class="date">2021-01-05</h4>
       
       
       <div class="hidden name"><code>rmarkdown.Rmd</code></div>
@@ -99,7 +99,7 @@
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="in">let y = 7;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="in">let z = x*y;</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="in">z.into()</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="in">z</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
 <p>This chunk generates the following output:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
@@ -108,10 +108,10 @@
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>z<span class="op">.</span>into()</span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>z</span></code></pre></div>
 <pre><code>## Hello from Rust!
 ## [1] 35</code></pre>
-<p>The call <code>z.into()</code> casts the Rust integer variable into type <code>Robj</code> and returns its value to R. Notice the lack of a semicolon (<code>;</code>) at the end of this line. You can also write code that doesn’t return any result to R. In this case, the last line would end in a semicolon, as in this example:</p>
+<p>In the background, the <code>extendr</code> knit engine casts the Rust integer variable into type <code>Robj</code> and returns its value to R. Notice the lack of a semicolon (<code>;</code>) at the end of this line, to indicate that you want to return a value. You can also write code that doesn’t return any result to R. In this case, the last line would end in a semicolon, as in this example:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
@@ -126,7 +126,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">5.3</span>
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="st">"hello"</span></code></pre></div>
-<p>We can read these variables from Rust using the <code>R!()</code> macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we’re ignoring the errors with <code>unwrap()</code>. For example, <code>R!()</code> call the R interpreter and it could generate an error. And even if it returns a value, we’re not guaranteed that the value can be coerced into a real value or a string, so <code>as_real()</code> and <code>as_str()</code> can also error out.</p>
+<p>We can read these variables from Rust using the <code>R!()</code> macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we’re ignoring the errors with <code>unwrap()</code>. For example, <code>R!()</code> calls the R interpreter and it could generate an error. And even if it returns a value, we’re not guaranteed that the value can be coerced into a real value or a string, so <code>as_real()</code> and <code>as_str()</code> can also error out.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">let</span> x<span class="op">:</span><span class="dt">f64</span> <span class="op">=</span> <span class="pp">R!</span>(x)<span class="op">.</span>unwrap()<span class="op">.</span>as_real()<span class="op">.</span>unwrap()<span class="op">;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="kw">let</span> y<span class="op">:</span><span class="dt">String</span> <span class="op">=</span> <span class="pp">R!</span>(y)<span class="op">.</span>unwrap()<span class="op">.</span>as_str()<span class="op">.</span>unwrap()<span class="op">.</span>to_string()<span class="op">;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"{} {}"</span><span class="op">,</span> y<span class="op">,</span> x)<span class="op">;</span></span></code></pre></div>
