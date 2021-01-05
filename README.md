@@ -74,7 +74,7 @@ one:
     let y = 7;
     let z = x*y;
 
-    z.into()
+    z
     ```
 
 would create the following output in the knitted document:
@@ -85,6 +85,6 @@ would create the following output in the knitted document:
     let y = 7;
     let z = x*y;
 
-    z.into()
+    z
     #> Hello from Rust!
     #> [1] 35

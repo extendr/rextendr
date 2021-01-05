@@ -31,7 +31,7 @@ let x = 5;
 let y = 7;
 let z = x*y;
 
-z.into()
+z
 ```
 ````
 This chunk generates the following output:
@@ -42,10 +42,10 @@ let x = 5;
 let y = 7;
 let z = x*y;
 
-z.into()
+z
 ```
 
-The call `z.into()` casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
+In the background, the `extendr` knit engine casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line, to indicate that you want to return a value. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
 ```{extendr}
 let x = 5;
 let y = 7;
@@ -63,7 +63,7 @@ x <- 5.3
 y <- "hello"
 ```
 
-We can read these variables from Rust using the `R!()` macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we're ignoring the errors with `unwrap()`. For example, `R!()` call the R interpreter and it could generate an error. And even if it returns a value, we're not guaranteed that the value can be coerced into a real value or a string, so `as_real()` and `as_str()` can also error out.
+We can read these variables from Rust using the `R!()` macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we're ignoring the errors with `unwrap()`. For example, `R!()` calls the R interpreter and it could generate an error. And even if it returns a value, we're not guaranteed that the value can be coerced into a real value or a string, so `as_real()` and `as_str()` can also error out.
 
 ```{extendr}
 let x:f64 = R!(x).unwrap().as_real().unwrap();
