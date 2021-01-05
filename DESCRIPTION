@@ -11,11 +11,13 @@ Description: Call Rust code from R. This package provides functions to compile a
   code from R, similar to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Under
   the hood, the package uses the Rust 'extendr' crate to do all the heavy lifting.
 License: MIT + file LICENSE
-SystemRequirements: Rust tool chain w/ cargo, libclang/llvm-config
+SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile without error
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends:
+    R (>= 4.0)
 Imports: 
     brio,
     dplyr,

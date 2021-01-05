@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Call Rust code from R using the ‘extendr’ crate
+# Call Rust code from R <img width="120px" alt="rextendr logo" align="right" src="man/figures/rextendr-logo.png">
 
 <!-- badges: start -->
 

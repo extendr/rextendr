@@ -42,9 +42,10 @@
 <meta property="og:title" content="Evaluate Rust code — rust_eval" />
 <meta property="og:description" content="Compile and evaluate one or more Rust expressions. If the last
 expression in the Rust code returns a value (i.e., does not end with
-;), then this value is returned to R. In Rust, the return value is
-of type Robj. Most native Rust types can be cast into this type
-by calling into() on the value to be returned, see examples." />
+;), then this value is returned to R. The value returned does not need
+to be of type Robj, as long as it can be cast into this type with
+.into(). This conversion is done automatically, so you don't have to
+worry about it in your code." />
 
 
 
@@ -127,9 +128,10 @@ by calling into() on the value to be returned, see examples." />
     <div class="ref-description">
     <p>Compile and evaluate one or more Rust expressions. If the last
 expression in the Rust code returns a value (i.e., does not end with
-<code>;</code>), then this value is returned to R. In Rust, the return value is
-of type <code>Robj</code>. Most native Rust types can be cast into this type
-by calling <code>into()</code> on the value to be returned, see examples.</p>
+<code>;</code>), then this value is returned to R. The value returned does not need
+to be of type <code>Robj</code>, as long as it can be cast into this type with
+<code>.into()</code>. This conversion is done automatically, so you don't have to
+worry about it in your code.</p>
     </div>
 
     <pre class="usage"><span class='fu'>rust_eval</span><span class='op'>(</span><span class='va'>code</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -158,13 +160,13 @@ by calling <code>into()</code> on the value to be returned, see examples.</p>
   code <span class='op'>=</span> <span class='st'>'rprintln!("hello from Rust!");'</span>
 <span class='op'>)</span>
 
-<span class='co'># Rust code with return value; note the `.into()` at the end</span>
+<span class='co'># Rust code with return value</span>
 <span class='fu'>rust_eval</span><span class='op'>(</span>
   code <span class='op'>=</span> <span class='st'>'
     let x = 5;
     let y = 7;
     let z = x * y;
-    z.into() // cast z into an Robj and return
+    z // return to R; rust_eval() takes care of type conversion code
  '</span>
 <span class='op'>)</span>
 <span class='op'>}</span>

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Call Rust code from R using the 'extendr' crate
+# Call Rust code from R <img width="120px" alt="rextendr logo" align="right" src="man/figures/rextendr-logo.png">
 
 <!-- badges: start -->
 [![R build
