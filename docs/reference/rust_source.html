@@ -137,6 +137,7 @@ compiles and loads a single Rust function for use in R.</p>
   extendr_version <span class='op'>=</span> <span class='st'>"*"</span>,
   extendr_macros_version <span class='op'>=</span> <span class='va'>extendr_version</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
+  use_extendr_api <span class='op'>=</span> <span class='cn'>TRUE</span>,
   cache_build <span class='op'>=</span> <span class='cn'>TRUE</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
@@ -184,6 +185,12 @@ from <code>extendr_version</code>.</p></td>
       <td><p>The R environment in which the wrapping functions will be defined.</p></td>
     </tr>
     <tr>
+      <th>use_extendr_api</th>
+      <td><p>Logical indicating whether <code>use extendr_api::*;</code> should
+be added at the top of the Rust source provided via <code>code</code>. Default is <code>TRUE</code>.
+Ignored for Rust source provided via <code>file</code>.</p></td>
+    </tr>
+    <tr>
       <th>cache_build</th>
       <td><p>Logical indicating whether builds should be cached between
 calls to <code>rust_source()</code>.</p></td>
@@ -211,8 +218,6 @@ calls to <code>rust_source()</code>.</p></td>
 
 <span class='co'># creating multiple rust functions at once</span>
 <span class='va'>code</span> <span class='op'>&lt;-</span> <span class='st'>r"(
-use extendr_api::*;
-
 #[extendr]
 fn hello() -&gt; &amp;'static str {
     "Hello, world!"

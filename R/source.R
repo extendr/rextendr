@@ -16,6 +16,9 @@
 #' @param extendr_macros_version Version of the extendr-macros crate, if different
 #'   from `extendr_version`.
 #' @param env The R environment in which the wrapping functions will be defined.
+#' @param use_extendr_api Logical indicating whether `use extendr_api::*;` should
+#'   be added at the top of the Rust source provided via `code`. Default is `TRUE`.
+#'   Ignored for Rust source provided via `file`.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
@@ -29,8 +32,6 @@
 #'
 #' # creating multiple rust functions at once
 #' code <- r"(
-#' use extendr_api::*;
-#'
 #' #[extendr]
 #' fn hello() -> &'static str {
 #'     "Hello, world!"
@@ -55,6 +56,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
                         profile = c("dev", "release"), extendr_version = "*",
                         extendr_macros_version = extendr_version,
                         env = parent.frame(),
+                        use_extendr_api = TRUE,
                         cache_build = TRUE, quiet = FALSE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
@@ -68,6 +70,9 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   # copy rust code into src/lib.rs and determine library name
   rust_file <- file.path(dir, "src", "lib.rs")
   if (!is.null(code)) {
+    if (isTRUE(use_extendr_api)) {
+      code <- paste0("use extendr_api::*;\n\n", code)
+    }
     brio::write_lines(code, rust_file)
 
     # generate lib name
@@ -128,7 +133,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
 rust_function <- function(code, env = parent.frame(), ...) {
-  code <- paste0("use extendr_api::*;\n\n#[extendr]\n", code)
+  code <- paste0("#[extendr]\n", code)
   rust_source(code = code, env = env, ...)
 }
 

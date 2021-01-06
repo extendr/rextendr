@@ -42,7 +42,7 @@ Basic use example:
     # create a function using some more complex Rust code, including
     # a dependency on an external crate; here we create a function that
     # converts markdown text to html
-    code <- "use extendr_api::*;
+    code <- r"(
     use pulldown_cmark::{Parser, Options, html};
 
     #[extendr]
@@ -54,7 +54,7 @@ Basic use example:
         html::push_html(&mut output, parser);
         Robj::from(&*output)
     }
-    "
+    )"
     rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
 
     md_text <- "# The story of the fox

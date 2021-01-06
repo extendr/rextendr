@@ -12,17 +12,16 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
-## R Markdown
+The rextendr package enables two new chunk types for knitr, `extendr` and `extendrfuns`. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.
 
-The rextendr package enables a new chunk type for knitr, `extendr`, which compiles and evaluates Rust code.
-
-First, you need to load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.
 ```{r}
 library(rextendr)
 ```
 
+## Evaluating Rust statements
 
-Then, you can create a code chunk of type `extendr`. For example:
+Chunks of type `extendr` evaluate a block of Rust statements. The value of the last statement can be returned to R and will be printed as chunk output. For example:
+
 ````markdown
 `r ''````{extendr}
 rprintln!("Hello from Rust!");
@@ -34,7 +33,8 @@ let z = x*y;
 z
 ```
 ````
-This chunk generates the following output:
+
+This chunk will look in the knitted document as follows:
 ```{extendr}
 rprintln!("Hello from Rust!");
 
@@ -46,6 +46,7 @@ z
 ```
 
 In the background, the `extendr` knit engine casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line, to indicate that you want to return a value. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
+
 ```{extendr}
 let x = 5;
 let y = 7;
@@ -54,7 +55,7 @@ let z = x*y;
 rprintln!("{}*{} = {}", x, y, z);
 ```
 
-## Communicating between R and Rust
+## Accessing R values from Rust
 
 It is possible to access variables defined in R from Rust. Let's define two R variables, a numeric and a string:
 
@@ -69,4 +70,44 @@ We can read these variables from Rust using the `R!()` macro. Unfortunately, it 
 let x:f64 = R!(x).unwrap().as_real().unwrap();
 let y:String = R!(y).unwrap().as_str().unwrap().to_string();
 rprintln!("{} {}", y, x);
+```
+
+
+## Exporting Rust functions to R
+
+The chunk type `extendrfuns` compiles Rust functions and registers them with R to be called later. For example, consider this code chunk. It creates R functions `hello()` and `foo()`.
+
+````markdown
+`r ''````{extendrfuns}
+#[extendr]
+fn hello() -> &'static str {
+    "Hello from Rust!"
+}
+
+#[extendr]
+fn foo(a: &str, b: i64) {
+    rprintln!("Data sent to Rust: {}, {}", a, b);
+}
+```
+````
+
+The only output the chunk itself creates is the Rust source code:
+```{extendrfuns}
+#[extendr]
+fn hello() -> &'static str {
+    "Hello from Rust!"
+}
+
+#[extendr]
+fn foo(a: &str, b: i64) {
+    rprintln!("Data sent to Rust: {}, {}", a, b);
+}
+```
+
+However, now we can call the functions `hello()` and `foo()` from R:
+
+```{r}
+out <- hello()
+out
+foo(out, nchar(out))
 ```

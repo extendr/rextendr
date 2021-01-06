@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Using Rust code in R Markdown documents</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2021-01-05</h4>
+            <h4 class="date">2021-01-06</h4>
       
       
       <div class="hidden name"><code>rmarkdown.Rmd</code></div>
@@ -84,14 +84,13 @@
 
     
     
-<div id="r-markdown" class="section level2">
-<h2 class="hasAnchor">
-<a href="#r-markdown" class="anchor"></a>R Markdown</h2>
-<p>The rextendr package enables a new chunk type for knitr, <code>extendr</code>, which compiles and evaluates Rust code.</p>
-<p>First, you need to load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.</p>
+<p>The rextendr package enables two new chunk types for knitr, <code>extendr</code> and <code>extendrfuns</code>. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rextendr</span><span class="op">)</span></code></pre></div>
-<p>Then, you can create a code chunk of type <code>extendr</code>. For example:</p>
+<div id="evaluating-rust-statements" class="section level2">
+<h2 class="hasAnchor">
+<a href="#evaluating-rust-statements" class="anchor"></a>Evaluating Rust statements</h2>
+<p>Chunks of type <code>extendr</code> evaluate a block of Rust statements. The value of the last statement can be returned to R and will be printed as chunk output. For example:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="in">```{extendr}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
@@ -101,7 +100,7 @@
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="in">z</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
-<p>This chunk generates the following output:</p>
+<p>This chunk will look in the knitted document as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
@@ -119,9 +118,9 @@
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"{}*{} = {}"</span><span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> z)<span class="op">;</span></span></code></pre></div>
 <pre><code>## 5*7 = 35</code></pre>
 </div>
-<div id="communicating-between-r-and-rust" class="section level2">
+<div id="accessing-r-values-from-rust" class="section level2">
 <h2 class="hasAnchor">
-<a href="#communicating-between-r-and-rust" class="anchor"></a>Communicating between R and Rust</h2>
+<a href="#accessing-r-values-from-rust" class="anchor"></a>Accessing R values from Rust</h2>
 <p>It is possible to access variables defined in R from Rust. Let’s define two R variables, a numeric and a string:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">5.3</span>
@@ -131,6 +130,40 @@
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="kw">let</span> y<span class="op">:</span><span class="dt">String</span> <span class="op">=</span> <span class="pp">R!</span>(y)<span class="op">.</span>unwrap()<span class="op">.</span>as_str()<span class="op">.</span>unwrap()<span class="op">.</span>to_string()<span class="op">;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="pp">rprintln!</span>(<span class="st">"{} {}"</span><span class="op">,</span> y<span class="op">,</span> x)<span class="op">;</span></span></code></pre></div>
 <pre><code>## hello 5.3</code></pre>
+</div>
+<div id="exporting-rust-functions-to-r" class="section level2">
+<h2 class="hasAnchor">
+<a href="#exporting-rust-functions-to-r" class="anchor"></a>Exporting Rust functions to R</h2>
+<p>The chunk type <code>extendrfuns</code> compiles Rust functions and registers them with R to be called later. For example, consider this code chunk. It creates R functions <code>hello()</code> and <code>foo()</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="in">```{extendrfuns}</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="in">#[extendr]</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="in">fn hello() -&gt; &amp;'static str {</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="in">    "Hello from Rust!"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="in">}</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="in">#[extendr]</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="in">fn foo(a: &amp;str, b: i64) {</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a><span class="in">    rprintln!("Data sent to Rust: {}, {}", a, b);</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="in">}</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
+<p>The only output the chunk itself creates is the Rust source code:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="kw">fn</span> hello() <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>    <span class="st">"Hello from Rust!"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="op">}</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a><span class="kw">fn</span> foo(a<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> b<span class="op">:</span> <span class="dt">i64</span>) <span class="op">{</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a>    <span class="pp">rprintln!</span>(<span class="st">"Data sent to Rust: {}, {}"</span><span class="op">,</span> a<span class="op">,</span> b)<span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true"></a><span class="op">}</span></span></code></pre></div>
+<p>However, now we can call the functions <code>hello()</code> and <code>foo()</code> from R:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">hello</span><span class="op">(</span><span class="op">)</span>
+<span class="va">out</span></code></pre></div>
+<pre><code>## [1] "Hello from Rust!"</code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">foo</span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/nchar.html">nchar</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Data sent to Rust: Hello from Rust!, 16</code></pre>
 </div>
   </div>
 

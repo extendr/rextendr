@@ -16,6 +16,7 @@ rust_source(
   extendr_version = "*",
   extendr_macros_version = extendr_version,
   env = parent.frame(),
+  use_extendr_api = TRUE,
   cache_build = TRUE,
   quiet = FALSE
 )
@@ -44,6 +45,10 @@ from \code{extendr_version}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
+\item{use_extendr_api}{Logical indicating whether \verb{use extendr_api::*;} should
+be added at the top of the Rust source provided via \code{code}. Default is \code{TRUE}.
+Ignored for Rust source provided via \code{file}.}
+
 \item{cache_build}{Logical indicating whether builds should be cached between
 calls to \code{\link[=rust_source]{rust_source()}}.}
 
@@ -67,8 +72,6 @@ add(2.5, 4.7)
 
 # creating multiple rust functions at once
 code <- r"(
-use extendr_api::*;
-
 #[extendr]
 fn hello() -> &'static str {
     "Hello, world!"
