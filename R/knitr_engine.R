@@ -23,7 +23,20 @@ eng_impl <- function(options, rextendr_fun) {
     stop("The knitr package is required to run the extendr chunk engine.", call. = TRUE)
   }
 
-  code = glue::glue_collapse(options$code, sep = "\n")
+  if (!is.null(options$preamble)) {
+    preamble <- knitr::knit_code$get(options$preamble)
+    code <- c(
+      lapply(options$preamble, function(x) knitr::knit_code$get(x)),
+      recursive = TRUE
+    )
+    code <- c(code, options$code)
+  } else {
+    code <- options$code
+  }
+
+  code <- glue::glue_collapse(code, sep = "\n") # code to compile
+  code_out <- glue::glue_collapse(options$code, sep = "\n") # code to output to html
+
   # engine.opts is a list of arguments to be passed to rust_eval, e.g.
   # engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')
   opts <- options$engine.opts
@@ -45,5 +58,5 @@ eng_impl <- function(options, rextendr_fun) {
   }
 
   options$engine <- "rust" # wrap up source code in rust syntax
-  knitr::engine_output(options, code, out)
+  knitr::engine_output(options, code_out, out)
 }

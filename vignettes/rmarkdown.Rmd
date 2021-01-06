@@ -72,6 +72,51 @@ let y:String = R!(y).unwrap().as_str().unwrap().to_string();
 rprintln!("{} {}", y, x);
 ```
 
+## Chaining chunks together
+
+We may sometimes want to break a block of Rust code into separate Markdown chunks but treat them as one compile unit. We can do so by including the code from one chunk into the compile unit of another, by specifying a `preamble` chunk option. This option takes a character vector of chunk names, which get included into the compile unit in the order provided.
+
+Consider this example Markdown code:
+
+````markdown
+Define variable `x`:
+
+`r ''````{extendr chunk_x, eval = FALSE}
+let x = 1;
+```
+
+Define variable `y`:
+
+`r ''````{extendr chunk_y, eval = FALSE}
+let y = 2;
+```
+
+Print:
+
+`r ''````{extendr out, preamble = c("chunk_x", "chunk_y")}
+rprintln!("x = {}, y = {}", x, y);
+```
+````
+
+It produces the following output.
+
+Define variable `x`:
+
+```{extendr chunk_x, eval = FALSE}
+let x = 1;
+```
+
+Define variable `y`:
+
+```{extendr chunk_y, eval = FALSE}
+let y = 2;
+```
+
+Print:
+
+```{extendr out, preamble = c("chunk_x", "chunk_y")}
+rprintln!("x = {}, y = {}", x, y);
+```
 
 ## Exporting Rust functions to R
 
