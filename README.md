@@ -33,35 +33,12 @@ Basic use example:
 
     library(rextendr)
 
-    # create a single rust function
+    # create a Rust function
     rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 
+    # call it from R
     add(2.5, 4.7)
     #> [1] 7.2
-
-    # create a function using some more complex Rust code, including
-    # a dependency on an external crate; here we create a function that
-    # converts markdown text to html
-    code <- r"(
-    use pulldown_cmark::{Parser, Options, html};
-
-    #[extendr]
-    fn md_to_html(input: &str) -> Robj {
-        let mut options = Options::empty();
-        options.insert(Options::ENABLE_TABLES);
-        let parser = Parser::new_ext(input, options);
-        let mut output = String::new();
-        html::push_html(&mut output, parser);
-        Robj::from(&*output)
-    }
-    )"
-    rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
-
-    md_text <- "# The story of the fox
-    The quick brown fox **jumps over** the lazy dog. The quick *brown fox* jumps over the lazy dog."
-
-    md_to_html(md_text)
-    #> [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog. The quick <em>brown fox</em> jumps over the lazy dog.</p>\n"
 
 The package also enables a new chunk type for knitr, `extendr`, which
 compiles and evaluates Rust code. For example, a code chunk such as this

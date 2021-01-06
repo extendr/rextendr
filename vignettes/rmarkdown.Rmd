@@ -111,3 +111,46 @@ out <- hello()
 out
 foo(out, nchar(out))
 ```
+
+If your code requires external crates, you can set dependencies via the `engine.opts` chunk option, like so:
+
+````markdown
+`r ''````{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
+use pulldown_cmark::{Parser, Options, html};
+
+#[extendr]
+fn md_to_html(input: &str) -> String {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    let parser = Parser::new_ext(input, options);
+    let mut output = String::new();
+    html::push_html(&mut output, parser);
+    output
+}
+```
+````
+
+As before, the Rust code chunk just outputs the source:
+```{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
+use pulldown_cmark::{Parser, Options, html};
+
+#[extendr]
+fn md_to_html(input: &str) -> String {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    let parser = Parser::new_ext(input, options);
+    let mut output = String::new();
+    html::push_html(&mut output, parser);
+    output
+}
+```
+
+And the generated functions can be used from R:
+
+```{r}
+md_text <- "# The story of the fox
+The quick brown fox **jumps over** the lazy dog.
+The quick *brown fox* jumps over the lazy dog."
+
+md_to_html(md_text)
+```

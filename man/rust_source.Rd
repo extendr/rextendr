@@ -86,5 +86,29 @@ fn test( a: &str, b: i64) {
 rust_source(code = code)
 hello()
 test("a string", 42)
+
+
+# use case with an external dependency: a function that converts
+# markdown text to html, using the `pulldown_cmark` crate.
+code <- r"(
+  use pulldown_cmark::{Parser, Options, html};
+
+  #[extendr]
+  fn md_to_html(input: &str) -> String {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    let parser = Parser::new_ext(input, options);
+    let mut output = String::new();
+    html::push_html(&mut output, parser);
+    output
+  }
+)"
+rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
+
+md_text <- "# The story of the fox
+The quick brown fox **jumps over** the lazy dog.
+The quick *brown fox* jumps over the lazy dog."
+
+md_to_html(md_text)
 }
 }

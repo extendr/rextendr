@@ -164,6 +164,40 @@
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">foo</span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/nchar.html">nchar</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Data sent to Rust: Hello from Rust!, 16</code></pre>
+<p>If your code requires external crates, you can set dependencies via the <code>engine.opts</code> chunk option, like so:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="in">```{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="in">use pulldown_cmark::{Parser, Options, html};</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a><span class="in">#[extendr]</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="in">fn md_to_html(input: &amp;str) -&gt; String {</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="in">    let mut options = Options::empty();</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a><span class="in">    options.insert(Options::ENABLE_TABLES);</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a><span class="in">    let parser = Parser::new_ext(input, options);</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a><span class="in">    let mut output = String::new();</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a><span class="in">    html::push_html(&amp;mut output, parser);</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a><span class="in">    output</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a><span class="in">}</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a><span class="in">```</span></span></code></pre></div>
+<p>As before, the Rust code chunk just outputs the source:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">use</span> <span class="pp">pulldown_cmark::</span><span class="op">{</span>Parser<span class="op">,</span> Options<span class="op">,</span> html<span class="op">};</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a><span class="kw">fn</span> md_to_html(input<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>    <span class="kw">let</span> <span class="kw">mut</span> options <span class="op">=</span> <span class="pp">Options::</span>empty()<span class="op">;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>    options<span class="op">.</span>insert(<span class="pp">Options::</span>ENABLE_TABLES)<span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>    <span class="kw">let</span> parser <span class="op">=</span> <span class="pp">Parser::</span>new_ext(input<span class="op">,</span> options)<span class="op">;</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>    <span class="kw">let</span> <span class="kw">mut</span> output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>new()<span class="op">;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>    <span class="pp">html::</span>push_html(<span class="op">&amp;</span><span class="kw">mut</span> output<span class="op">,</span> parser)<span class="op">;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>    output</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a><span class="op">}</span></span></code></pre></div>
+<p>And the generated functions can be used from R:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">md_text</span> <span class="op">&lt;-</span> <span class="st">"# The story of the fox
+The quick brown fox **jumps over** the lazy dog.
+The quick *brown fox* jumps over the lazy dog."</span>
+
+<span class="fu">md_to_html</span><span class="op">(</span><span class="va">md_text</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "&lt;h1&gt;The story of the fox&lt;/h1&gt;\n&lt;p&gt;The quick brown fox &lt;strong&gt;jumps over&lt;/strong&gt; the lazy dog.\nThe quick &lt;em&gt;brown fox&lt;/em&gt; jumps over the lazy dog.&lt;/p&gt;\n"</code></pre>
 </div>
   </div>
 
