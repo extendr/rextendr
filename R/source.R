@@ -140,10 +140,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
 
 
   # generate R bindings for shared library
-  funs <- get_exported_functions(rust_file) # extract function declarations
-  r_functions <- generate_r_functions(funs)
-  r_path <- file.path(dir, "R", "rextendr.R")
-  brio::write_lines(r_functions, r_path)
+  r_path <- file.path(dir, "target", "extendr_wrappers.R")
   source(r_path, local = env)
 
   # load shared library

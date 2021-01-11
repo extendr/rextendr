@@ -1,6 +1,51 @@
 # implementation of actual tests will require updated extendr-api, extendr-macros, libR-sys
 # on crates.io.
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("Testing the source", {
+  skip("This would typically fail, unless changed to reflect paths /
+       on host's machine. ")
+  # some simple Rust code with two functions
+  rust_src <- "use extendr_api::*;
+
+    #[extendr]
+    fn hello() -> &'static str {
+        \"Hello, this string was created by Rust.\"
+    }
+
+    #[extendr]
+    fn add_and_multiply(a: i32, b: i32, c: i32) -> i32 {
+      c * (a + b)
+    }
+
+    #[extendr]
+    fn add(a: i64, b: i64) -> i64 {
+        a + b
+    }
+
+    #[extendr]
+    fn say_nothing() {
+
+    }
+    "
+
+  rust_source(
+    code = rust_src,
+    # use `patch.crates_io` argument to override crate locations
+    patch.crates_io = c(
+      'extendr-api = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-api"}',
+      'extendr-macros = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-macros"}'
+    ),
+    quiet = FALSE,
+    cache_build = TRUE
+  )
+
+  # call `hello()` function from R
+  hello()
+  #> [1] "Hello, this string was created by Rust."
+
+  # call `add()` function from R
+  expect_equal(add(14, 23), 37)
+  #> [1] 37
+  expect_equal(add(17, 42), 17 + 42)
+
 })
