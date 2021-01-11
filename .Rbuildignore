@@ -4,4 +4,5 @@
 ^README\.Rmd$
 ^vignettes/rmarkdown.Rmd$
 ^\.github$
-
+^docs^
+^_pkgdown\.yml$
