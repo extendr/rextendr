@@ -197,6 +197,21 @@ get_dynlib_ext <- function() {
   .Platform$dynlib.ext
 }
 
+get_specific_target_name <- function() {
+  sysinf <- Sys.info()
+
+  if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
+    if (sysinf["machine"] == "x86-64")
+      return("x86_64-pc-windows-gnu")
+
+    if (sysinf["machine"] == "x86")
+      return("i686-pc-windows-gnu")
+
+    stop("Unknown Windows architecture", call. = FALSE)
+  }
+
+  return(NULL)
+}
 
 the <- new.env(parent = emptyenv())
 the$build_dir <- NULL
