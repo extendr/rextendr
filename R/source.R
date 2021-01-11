@@ -1,6 +1,7 @@
-#' Compile Rust code
+#' Compile Rust code and call from R
 #'
-#' [rust_source()] compiles and loads a single Rust file for use in R.
+#' [rust_source()] compiles and loads a single Rust file for use in R. [rust_function()]
+#' compiles and loads a single Rust function for use in R.
 #'
 #' @param file Input rust file to source.
 #' @param code Input rust code, to be used instead of `file`.
@@ -8,18 +9,83 @@
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
+#' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
+#'   `"dev"`, compiles faster but produces slower code.
+#' @param extendr_version Version of the extendr-api crate, provided as a Rust
+#'   version string. `"*"` will use the latest available version on crates.io.
+#' @param extendr_macros_version Version of the extendr-macros crate, if different
+#'   from `extendr_version`.
 #' @param env The R environment in which the wrapping functions will be defined.
+#' @param use_extendr_api Logical indicating whether `use extendr_api::*;` should
+#'   be added at the top of the Rust source provided via `code`. Default is `TRUE`.
+#'   Ignored for Rust source provided via `file`.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`. See
 #'   [getLoadedDLLs()] for more details.
+#' @examples
+#' \dontrun{
+#' # creating a single rust function
+#' rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
+#' add(2.5, 4.7)
+#'
+#' # creating multiple rust functions at once
+#' code <- r"(
+#' #[extendr]
+#' fn hello() -> &'static str {
+#'     "Hello, world!"
+#' }
+#'
+#' #[extendr]
+#' fn test( a: &str, b: i64) {
+#'     rprintln!("Data sent to Rust: {}, {}", a, b);
+#' }
+#' )"
+#'
+#' rust_source(code = code)
+#' hello()
+#' test("a string", 42)
+#'
+#'
+#' # use case with an external dependency: a function that converts
+#' # markdown text to html, using the `pulldown_cmark` crate.
+#' code <- r"(
+#'   use pulldown_cmark::{Parser, Options, html};
+#'
+#'   #[extendr]
+#'   fn md_to_html(input: &str) -> String {
+#'     let mut options = Options::empty();
+#'     options.insert(Options::ENABLE_TABLES);
+#'     let parser = Parser::new_ext(input, options);
+#'     let mut output = String::new();
+#'     html::push_html(&mut output, parser);
+#'     output
+#'   }
+#' )"
+#' rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
+#'
+#' md_text <- "# The story of the fox
+#' The quick brown fox **jumps over** the lazy dog.
+#' The quick *brown fox* jumps over the lazy dog."
+#'
+#' md_to_html(md_text)
+#' }
 #' @export
-rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io = NULL,
-                        env = parent.frame(), cache_build = TRUE, quiet = FALSE) {
+rust_source <- function(file, code = NULL, dependencies = NULL,
+                        patch.crates_io = c(
+                          'extendr-api = { git = "https://github.com/extendr/extendr" }',
+                          'extendr-macros = { git = "https://github.com/extendr/extendr" }'
+                        ),
+                        profile = c("dev", "release"), extendr_version = "*",
+                        extendr_macros_version = extendr_version,
+                        env = parent.frame(),
+                        use_extendr_api = TRUE,
+                        cache_build = TRUE, quiet = FALSE) {
+  profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
-    cat(sprintf("build directory: %s\n", dir))
+    message(sprintf("build directory: %s\n", dir))
     stdout <- "" # to be used by `system2()` below
   } else {
     stdout <- NULL
@@ -28,6 +94,9 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
   # copy rust code into src/lib.rs and determine library name
   rust_file <- file.path(dir, "src", "lib.rs")
   if (!is.null(code)) {
+    if (isTRUE(use_extendr_api)) {
+      code <- paste0("use extendr_api::*;\n\n", code)
+    }
     brio::write_lines(code, rust_file)
 
     # generate lib name
@@ -43,17 +112,24 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
   }
 
   # generate Cargo.toml file and compile shared library
-  cargo.toml_content <- generate_cargo.toml(libname, dependencies, patch.crates_io)
+  cargo.toml_content <- generate_cargo.toml(
+    libname, dependencies, patch.crates_io,
+    extendr_version, extendr_macros_version
+  )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
+
+  # Get target name, not null for Windows
+  specific_target <- get_specific_target_name()
 
   status <- system2(
     command = "cargo",
     args = c(
       "build",
       "--lib",
-      #"--release",  # release vs debug should be configurable at some point; for now, debug compiles faster
+      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
       sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target"))
+      sprintf("--target-dir %s", file.path(dir, "target")),
+      if (profile == "release") "--release" else NULL
     ),
     stdout = stdout,
     stderr = stdout
@@ -74,38 +150,42 @@ rust_source <- function(file, code = NULL, dependencies = NULL, patch.crates_io 
     paste0("lib", libname, get_dynlib_ext())
   }
 
-  shared_lib <- file.path(dir, "target", "debug", libfilename)
+  target_folder <- ifelse(
+    is.null(specific_target),
+    "target",
+    sprintf("target%s%s", .Platform$file.sep, specific_target)
+  )
+
+  shared_lib <- file.path(
+    dir,
+    target_folder,
+    ifelse(profile == "dev", "debug", "release"),
+    libfilename)
   dyn.load(shared_lib, local = TRUE, now = TRUE)
 }
 
-generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL) {
+#' @rdname rust_source
+#' @param ... Other parameters handed off to [rust_source()].
+#' @export
+rust_function <- function(code, env = parent.frame(), ...) {
+  code <- paste0("#[extendr]\n", code)
+  rust_source(code = code, env = env, ...)
+}
+
+generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
+                                extendr_version = "*", extendr_macros_version = extendr_version) {
   cargo.toml <- c(
     '[package]',
     glue::glue('name = "{libname}"'),
     'version = "0.0.1"\nedition = "2018"',
-    '[lib]\ncrate-type = ["dylib"]',
+    '[lib]\ncrate-type = ["cdylib"]',
     '[dependencies]',
-    'extendr-api = "0.1.3"',
-    'extendr-macros = "0.1.2"'
+    glue::glue('extendr-api = "{extendr_version}"'),
+    glue::glue('extendr-macros = "{extendr_macros_version}"')
   )
 
   # add user-provided dependencies
   cargo.toml <- c(cargo.toml, dependencies)
-
-  # use locally installed bindings if they exist
-  package_dir <- find.package("rextendr")
-  bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
-  if (isTRUE(file.exists(bindings_file))) {
-    patch.crates_io <- c(
-      patch.crates_io,
-      glue::glue(
-        'libR-sys = {{ path = "{path}" }}',
-        path = file.path(package_dir, "rust", "libR-sys")
-      )
-    )
-  } else {
-    message("Prebuild libR bindings are not available. Run `install_libR_bindings()` to improve future build times.")
-  }
 
   # add user-provided patch.crates-io statements
   cargo.toml <- c(
@@ -128,6 +208,23 @@ get_dynlib_ext <- function() {
   .Platform$dynlib.ext
 }
 
+get_specific_target_name <- function() {
+  sysinf <- Sys.info()
+
+  if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
+    if (R.version$arch == "x86_64") {
+      return("x86_64-pc-windows-gnu")
+    }
+
+    if (R.version$arch == "i386") {
+      return("i686-pc-windows-gnu")
+    }
+
+    stop("Unknown Windows architecture", call. = FALSE)
+  }
+
+  return(NULL)
+}
 
 the <- new.env(parent = emptyenv())
 the$build_dir <- NULL
