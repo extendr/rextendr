@@ -118,11 +118,15 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
+  # Get target name, not null for Windows
+  specific_target <- get_specific_target_name()
+
   status <- system2(
     command = "cargo",
     args = c(
       "build",
       "--lib",
+      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
       sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
       sprintf("--target-dir %s", file.path(dir, "target")),
       if (profile == "release") "--release" else NULL
@@ -149,7 +153,17 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
     paste0("lib", libname, get_dynlib_ext())
   }
 
-  shared_lib <- file.path(dir, "target", ifelse(profile == "dev", "debug", "release"), libfilename)
+  target_folder <- ifelse(
+    is.null(specific_target),
+    "target",
+    sprintf("target%s%s", .Platform$file.sep, specific_target)
+  )
+
+  shared_lib <- file.path(
+    dir,
+    target_folder,
+    ifelse(profile == "dev", "debug", "release"),
+    libfilename)
   dyn.load(shared_lib, local = TRUE, now = TRUE)
 }
 
@@ -197,6 +211,23 @@ get_dynlib_ext <- function() {
   .Platform$dynlib.ext
 }
 
+get_specific_target_name <- function() {
+  sysinf <- Sys.info()
+
+  if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
+    if (R.version$arch == "x86_64") {
+      return("x86_64-pc-windows-gnu")
+    }
+
+    if (R.version$arch == "i386") {
+      return("i686-pc-windows-gnu")
+    }
+
+    stop("Unknown Windows architecture", call. = FALSE)
+  }
+
+  return(NULL)
+}
 
 the <- new.env(parent = emptyenv())
 the$build_dir <- NULL
