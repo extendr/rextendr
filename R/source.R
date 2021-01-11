@@ -156,7 +156,8 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   target_folder <- ifelse(
     is.null(specific_target),
     "target",
-    sprintf("target%s%s", .Platform$file.sep, specific_target))
+    sprintf("target%s%s", .Platform$file.sep, specific_target)
+  )
 
   shared_lib <- file.path(
     dir,
@@ -214,11 +215,13 @@ get_specific_target_name <- function() {
   sysinf <- Sys.info()
 
   if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
-    if (R.version$arch == "x86_64")
+    if (R.version$arch == "x86_64") {
       return("x86_64-pc-windows-gnu")
+    }
 
-    if (R.version$arch == "i386")
+    if (R.version$arch == "i386") {
       return("i686-pc-windows-gnu")
+    }
 
     stop("Unknown Windows architecture", call. = FALSE)
   }
