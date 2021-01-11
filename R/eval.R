@@ -31,6 +31,10 @@ rust_eval <- function(code, ...) {
   # make sure code is given as a single character string
   code <- glue::glue_collapse(code, sep = "\n")
 
+  # define to make R code check happy; will be overwritten
+  # by `rust_function()` below.
+  rextendr_rust_eval_fun <- function() NULL
+
   # wrap code into Rust function
   code_wrapped <- glue::glue(r"(
 fn rextendr_rust_eval_fun() -> Robj {{

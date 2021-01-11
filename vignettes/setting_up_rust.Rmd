@@ -1,0 +1,15 @@
+---
+title: "Setting up a Rust build environment"
+author: "Claus O. Wilke"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{Setting up Rust}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+Coming soon...

@@ -45,7 +45,7 @@ eng_impl <- function(options, rextendr_fun) {
 
   if (isTRUE(options$eval)) {
     message('Evaluating Rust extendr code chunk...')
-    out <- capture.output({
+    out <- utils::capture.output({
       result <- withVisible(
         do.call(rextendr_fun, c(list(code = code), opts))
       )
