@@ -13,6 +13,7 @@ rust_source(
     patch.crates_io = c("extendr-api = { git = \\"https://github.com/extendr/extendr\\" }",
     "extendr-macros = { git = \\"https://github.com/extendr/extendr\\" }"),
   profile = c("dev", "release"),
+  toolchain = NULL,
   extendr_version = "*",
   extendr_macros_version = extendr_version,
   env = parent.frame(),
@@ -36,6 +37,10 @@ be added to the \code{Cargo.toml} file.}
 
 \item{profile}{Rust profile. Can be either \code{"dev"} or \code{"release"}. The default,
 \code{"dev"}, compiles faster but produces slower code.}
+
+\item{toolchain}{Rust toolchain. The default, \code{NULL}, compiles with the
+system default toolchain. Accepts valid Rust toolchain qualifiers,
+such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
 \item{extendr_version}{Version of the extendr-api crate, provided as a Rust
 version string. \code{"*"} will use the latest available version on crates.io.}
