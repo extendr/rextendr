@@ -77,7 +77,9 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
                           'extendr-api = { git = "https://github.com/extendr/extendr" }',
                           'extendr-macros = { git = "https://github.com/extendr/extendr" }'
                         ),
-                        profile = c("dev", "release"), extendr_version = "*",
+                        profile = c("dev", "release"),
+                        toolchain = NULL,
+                        extendr_version = "*",
                         extendr_macros_version = extendr_version,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
@@ -124,6 +126,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   status <- system2(
     command = "cargo",
     args = c(
+      sprintf("+%s", toolchain),
       "build",
       "--lib",
       if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
