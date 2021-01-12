@@ -39,7 +39,8 @@ be added to the \code{Cargo.toml} file.}
 \code{"dev"}, compiles faster but produces slower code.}
 
 \item{toolchain}{Rust toolchain. The default, \code{NULL}, compiles with the
-system default toolchain. Accepts valid Rust toolchain qualifiers.}
+system default toolchain. Accepts valid Rust toolchain qualifiers,
+such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
 \item{extendr_version}{Version of the extendr-api crate, provided as a Rust
 version string. \code{"*"} will use the latest available version on crates.io.}

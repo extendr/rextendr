@@ -12,7 +12,8 @@
 #' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
 #'   `"dev"`, compiles faster but produces slower code.
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
-#'  system default toolchain. Accepts valid Rust toolchain qualifiers.
+#'  system default toolchain. Accepts valid Rust toolchain qualifiers,
+#'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_version Version of the extendr-api crate, provided as a Rust
 #'   version string. `"*"` will use the latest available version on crates.io.
 #' @param extendr_macros_version Version of the extendr-macros crate, if different
