@@ -1,5 +1,5 @@
 test_that("Multiple rust functions with the same name", {
-    skip_on_cran()
+
     rust_src_1 <- "
     #[extendr]
     fn rust_fn_1() -> i32 { 1i32 }

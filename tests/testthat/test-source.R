@@ -1,5 +1,4 @@
 test_that("Testing the source", {
-  skip_on_cran()
 
   rust_src <- "
     #[extendr]
