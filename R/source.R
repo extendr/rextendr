@@ -126,6 +126,12 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 
+  # On Windows, if no toolchain specified,
+  # use arch-dependent stable-gnu
+  if (.Platform$OS.type == "windows" && is.null(toolchain)) {
+    toolchain <- paste0("stable-", specific_target)
+  }
+
   status <- system2(
     command = "cargo",
     args = c(
