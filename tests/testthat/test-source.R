@@ -2,9 +2,11 @@
 # on crates.io.
 
 test_that("Testing the source", {
-  skip("This would typically fail, unless changed to reflect paths /
-       on host's machine. ")
+  # skip("This would typically fail, unless changed to reflect paths /
+  #      on host's machine. ")
   # some simple Rust code with two functions
+  skip_on_cran()
+
   rust_src <- "use extendr_api::*;
 
     #[extendr]
@@ -31,17 +33,17 @@ test_that("Testing the source", {
   rust_source(
     code = rust_src,
     # use `patch.crates_io` argument to override crate locations
-    patch.crates_io = c(
-      'extendr-api = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-api"}',
-      'extendr-macros = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-macros"}'
-    ),
+    # patch.crates_io = c(
+    #   'extendr-api = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-api"}',
+    #   'extendr-macros = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-macros"}'
+    # ),
     quiet = FALSE,
     cache_build = TRUE
   )
 
   # call `hello()` function from R
-  hello()
   #> [1] "Hello, this string was created by Rust."
+  expect_equal(hello(), "Hello, this string was created by Rust.")
 
   # call `add()` function from R
   expect_equal(add(14, 23), 37)
