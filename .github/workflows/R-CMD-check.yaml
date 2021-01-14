@@ -38,6 +38,12 @@ jobs:
         with:
           toolchain: ${{ matrix.config.rust-version }}
           default: true
+      
+      - name: Configure second Rust toolchain (Windows)
+        if: startsWith(runner.os, 'Windows') && endsWith(matrix.config.rust-version, 'gnu')
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable-i686-gnu
 
       # Uses @master branch to address rtools path issue
       # https://github.com/r-lib/actions/issues/228
@@ -65,10 +71,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Configure Windows
-        if: startsWith(runner.os, 'Windows')
-        run: |
-            rustup toolchain add stable-i686-pc-windows-gnu
 
       - name: Configure Linux
         if: startsWith(runner.os, 'Linux')
