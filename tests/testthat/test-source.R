@@ -1,14 +1,7 @@
-# implementation of actual tests will require updated extendr-api, extendr-macros, libR-sys
-# on crates.io.
-
 test_that("Testing the source", {
-  # skip("This would typically fail, unless changed to reflect paths /
-  #      on host's machine. ")
-  # some simple Rust code with two functions
   skip_on_cran()
 
-  rust_src <- "use extendr_api::*;
-
+  rust_src <- "
     #[extendr]
     fn hello() -> &'static str {
         \"Hello, this string was created by Rust.\"
@@ -32,11 +25,6 @@ test_that("Testing the source", {
 
   rust_source(
     code = rust_src,
-    # use `patch.crates_io` argument to override crate locations
-    # patch.crates_io = c(
-    #   'extendr-api = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-api"}',
-    #   'extendr-macros = {path = "C:/Users/tpb398/Documents/GitHub/extendR/extendr-macros"}'
-    # ),
     quiet = FALSE,
     cache_build = TRUE
   )
