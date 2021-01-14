@@ -66,6 +66,12 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
+      - name: Configure Windows
+        if: startsWith(runner.os, 'Windows')
+        run: |
+          rustup target add x86_64-pc-windows-gnu
+          rustup target add i686-pc-windows-gnu
+
       - name: Configure Linux
         if: startsWith(runner.os, 'Linux')
         run: |
@@ -73,6 +79,7 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+
 
       - name: Install dependencies
         run: |
