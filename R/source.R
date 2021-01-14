@@ -169,7 +169,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   r_path <- file.path(dir, "target", "extendr_wrappers.R")
   r_raw_lines <- brio::read_lines(r_path)
   # Inject loaded dll correct name
-  r_raw_lines <- gsub(".Call\\((.*)\\)", sprintf(".Call(\\1, PACKAGE = \"%s\")", dll_info[["name"]]), r_raw_lines)
+  r_raw_lines <- gsub(".Call\\(([^)]+)\\)", sprintf(".Call(\\1, PACKAGE = \"%s\")", dll_info[["name"]]), r_raw_lines)
   brio::write_lines(r_raw_lines, r_path)
   source(r_path, local = env)
 
