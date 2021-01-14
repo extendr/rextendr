@@ -38,4 +38,7 @@ test_that("Testing the source", {
   #> [1] 37
   expect_equal(add(17, 42), 17 + 42)
 
+  # This function takes no arguments and invisibly return NULL
+  expect_null(say_nothing())
+
 })
