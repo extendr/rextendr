@@ -35,7 +35,7 @@ pacman -S --noconfirm mingw-w64-x86_64-toolchain   # 64-bit
 pacman -S --noconfirm mingw-w64-i686-toolchain     # 32-bit
 ```
 
-Finally, add the msys2 bin paths to the `PATH` environment variable. For example, if you installed msys2 into `C:\msys32`, these would be `C:\msys32\usr\bin`, `C:\msys32\mingw32\bin`, and `C:\msys32\mingw64\bin`, and you could run (using the CMD shell):
+Finally, add the msys2 bin paths to the `PATH` environment variable. For example, if you installed msys2 into `C:\msys2`, these would be `C:\msys2\usr\bin`, `C:\msys2\mingw64\bin`, and `C:\msys2\mingw32\bin`, and you could run (using the CMD shell):
 ```
-set PATH=C:\msys32\usr\bin;C:\msys32\mingw32\bin;C:\msys32\mingw64\bin;%PATH%
+set PATH=C:\msys2\usr\bin;C:\msys2\mingw64\bin;C:\msys2\mingw32\bin;%PATH%
 ```
