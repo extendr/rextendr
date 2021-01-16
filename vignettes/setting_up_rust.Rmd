@@ -12,4 +12,30 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
-Coming soon...
+Regardless of which operating system you use, we recommend using [rustup](https://rustup.rs/) to install and maintain your Rust toolchain. 
+On Linux and OS X, you simply run the following command in a shell:
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+No further action should be needed.
+
+On Windows, things are a little more involved. First download `rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it, following the onscreen instructions. Then execute the following rustup commands:
+
+```
+rustup default stable-x86_64-pc-windows-msvc
+rustup target add x86_64-pc-windows-gnu
+rustup target add i686-pc-windows-gnu
+```
+
+Then install [msys2](https://www.msys2.org/). You need to do this even if you have Rtools installed already. At present, the Rust compiler doesn't play well with the tools shipped by Rtools.
+
+Once msys2 is installed, install the mingw toolchain. We recommend doing this for both 32 and 64 bit.
+```
+pacman -S --noconfirm mingw-w64-x86_64-toolchain   # 64-bit
+pacman -S --noconfirm mingw-w64-i686-toolchain     # 32-bit
+```
+
+Finally, add `%MSYS_ROOT%\usr\bin`, `%MSYS_ROOT%\mingw32\bin`, and `%MSYS_ROOT%\mingw64\bin` to the PATH environment variable. For example, using the CMD shell:
+```
+set PATH=%MSYS_ROOT%\usr\bin;%MSYS_ROOT%\mingw32\bin;%MSYS_ROOT%\mingw64\bin;%PATH%
+```

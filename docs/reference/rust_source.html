@@ -98,6 +98,9 @@ compiles and loads a single Rust function for use in R." />
     <li>
       <a href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a>
     </li>
+    <li>
+      <a href="../articles/setting_up_rust.html">Setting up a Rust build environment</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -134,6 +137,7 @@ compiles and loads a single Rust function for use in R.</p>
     patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"extendr-api = { git = \"https://github.com/extendr/extendr\" }"</span>,
     <span class='st'>"extendr-macros = { git = \"https://github.com/extendr/extendr\" }"</span><span class='op'>)</span>,
   profile <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dev"</span>, <span class='st'>"release"</span><span class='op'>)</span>,
+  toolchain <span class='op'>=</span> <span class='cn'>NULL</span>,
   extendr_version <span class='op'>=</span> <span class='st'>"*"</span>,
   extendr_macros_version <span class='op'>=</span> <span class='va'>extendr_version</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
@@ -169,6 +173,12 @@ be added to the <code>Cargo.toml</code> file.</p></td>
       <th>profile</th>
       <td><p>Rust profile. Can be either <code>"dev"</code> or <code>"release"</code>. The default,
 <code>"dev"</code>, compiles faster but produces slower code.</p></td>
+    </tr>
+    <tr>
+      <th>toolchain</th>
+      <td><p>Rust toolchain. The default, <code>NULL</code>, compiles with the
+system default toolchain. Accepts valid Rust toolchain qualifiers,
+such as <code>"nightly"</code>, or (on Windows) <code>"stable-msvc"</code>.</p></td>
     </tr>
     <tr>
       <th>extendr_version</th>

@@ -58,6 +58,9 @@
 <li>
       <a href="articles/rmarkdown.html">Using Rust code in R Markdown documents</a>
     </li>
+    <li>
+      <a href="articles/setting_up_rust.html">Setting up a Rust build environment</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -83,41 +86,42 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install the package, run:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"extendr/rextendr"</span>)</span></code></pre></div>
-<p>Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclang/llvm-config support to run <a href="https://rust-lang.github.io/rust-bindgen/">bindgen</a>. See the <a href="https://github.com/extendr/libR-sys">installation instructions for libR-sys</a> for help. If you can successfully build libR-sys you’re good.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"extendr/rextendr"</span><span class="op">)</span></code></pre></div>
+<p>Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain. See the <a href="https://github.com/extendr/libR-sys">installation instructions for libR-sys</a> for help. If you can successfully build libR-sys you’re good.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Basic use example:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(rextendr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="co"># create a Rust function</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">rust_function</span>(<span class="st">"fn add(a:f64, b:f64) -&gt; f64 { a + b }"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="co"># call it from R</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="kw">add</span>(<span class="fl">2.5</span>, <span class="fl">4.7</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co">#&gt; [1] 7.2</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rextendr</span><span class="op">)</span>
+
+<span class="co"># create a Rust function</span>
+<span class="fu"><a href="reference/rust_source.html">rust_function</a></span><span class="op">(</span><span class="st">"fn add(a:f64, b:f64) -&gt; f64 { a + b }"</span><span class="op">)</span>
+
+<span class="co"># call it from R</span>
+<span class="fu">add</span><span class="op">(</span><span class="fl">2.5</span>, <span class="fl">4.7</span><span class="op">)</span>
+<span class="co">#&gt; [1] 7.2</span></code></pre></div>
 <p>The package also enables a new chunk type for knitr, <code>extendr</code>, which compiles and evaluates Rust code. For example, a code chunk such as this one:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="st">```</span><span class="dt">{extendr}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="dt">rprintln!("Hello from Rust!");</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="dt">let x = 5;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="dt">let y = 7;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="dt">let z = x*y;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="dt">z</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="st">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 5;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 7;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="in">z</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>would create the following output in the knitted document:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>rprintln<span class="op">!</span>(<span class="st">"Hello from Rust!"</span>);</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>let x =<span class="st"> </span><span class="dv">5</span>;</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>let y =<span class="st"> </span><span class="dv">7</span>;</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>let z =<span class="st"> </span>x<span class="op">*</span>y;</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>z</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co">#&gt; Hello from Rust!</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co">#&gt; [1] 35</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> NULL</span></code></pre></div>
 </div>
 </div>
   </div>

@@ -30,7 +30,7 @@ To install the package, run:
 remotes::install_github("extendr/rextendr")
 ```
 
-Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain, including libclang/llvm-config support to run [bindgen](https://rust-lang.github.io/rust-bindgen/). See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
+Note that this will install the package but does not guarantee that the package can do anything useful. You will also need to set up a working Rust toolchain. See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
 
 ## Usage
 
