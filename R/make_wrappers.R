@@ -1,7 +1,9 @@
-# this file will eventually contain code to read wrapper info from a Rust
-# library and write to a desired location.
+# Currently we have code here that works for the internal needs of this package.
+# In the future, it should also work for package development, so that we can
+# call a function here that generates the wrappers and saves them to the right
+# location.
 
-# some relevant notes:
+# Some relevant notes for the second application:
 # to get the name of the current package, use code such as the following:
 # library(desc)
 # library(here)
