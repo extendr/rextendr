@@ -12,12 +12,17 @@
 
 make_wrappers <- function(module_name, package_name, outfile,
                           use_symbols = FALSE, quiet = FALSE) {
-  x <- .Call(
-    glue::glue("wrap__make_{module_name}_wrappers"),
-    use_symbols = use_symbols,
-    package_name = package_name,
-    PACKAGE = package_name
+  wrapper_function <- glue::glue("wrap__make_{module_name}_wrappers")
+  wrapper_call <- glue::glue(
+    ".Call(
+       \"{wrapper_function}\",
+       use_symbols = {use_symbols},
+       package_name = \"{package_name}\",
+       PACKAGE = \"{package_name}\"
+    )"
   )
+
+  x <- eval(str2expression(wrapper_call))
   x <- strsplit(x, "\n")[[1]]
 
   if (!isTRUE(quiet)) {

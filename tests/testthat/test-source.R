@@ -20,6 +20,14 @@ test_that("Testing the source", {
     fn say_nothing() {
 
     }
+
+    extendr_module! {
+        mod rextendr;
+        fn hello;
+        fn add_and_multiply;
+        fn add;
+        fn say_nothing;
+    }
     "
 
   rust_source(
