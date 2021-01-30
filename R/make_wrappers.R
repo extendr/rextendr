@@ -8,3 +8,20 @@
 #
 # x <- desc(file = here("DESCRIPTION"))
 # x$get("Package")
+
+
+make_wrappers <- function(module_name, package_name, outfile,
+                          use_symbols = FALSE, quiet = FALSE) {
+  x <- .Call(
+    glue::glue("wrap__make_{module_name}_wrappers"),
+    use_symbols = use_symbols,
+    package_name = package_name,
+    PACKAGE = package_name
+  )
+  x <- strsplit(x, "\n")[[1]]
+
+  if (!isTRUE(quiet)) {
+    message("Writting wrappers to:\n", outfile)
+  }
+  brio::write_lines(x, outfile)
+}
