@@ -16,7 +16,12 @@ test_that("Multiple rust functions with the same name", {
     fn rust_fn_3() -> i32 { 30i32 }
     "
 
-    rust_source(code = rust_src_1, quiet = FALSE)
+    rust_source(
+        code = rust_src_1,
+        quiet = FALSE,
+        toolchain = test_env[["toolchain"]],
+        patch.crates_io = test_env[["patch.crates_io"]]
+    )
 
     # At this point:
     # fn1 -> 1
@@ -26,7 +31,12 @@ test_that("Multiple rust functions with the same name", {
     expect_equal(rust_fn_1(), 1L)
     expect_equal(rust_fn_2(), 2L)
 
-    rust_source(code = rust_src_2, quiet = FALSE)
+    rust_source(
+        code = rust_src_2,
+        quiet = FALSE,
+        toolchain = test_env[["toolchain"]],
+        patch.crates_io = test_env[["patch.crates_io"]]
+    )
 
     # At this point:
     # fn1 -> 1 (unchanged)
