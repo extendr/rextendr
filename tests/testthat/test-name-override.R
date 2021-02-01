@@ -19,8 +19,8 @@ test_that("Multiple rust functions with the same name", {
     rust_source(
         code = rust_src_1,
         quiet = FALSE,
-        toolchain = test_env[["toolchain"]],
-        patch.crates_io = test_env[["patch.crates_io"]]
+        toolchain = rust_source_defaults[["toolchain"]],
+        patch.crates_io = rust_source_defaults[["patch.crates_io"]]
     )
 
     # At this point:
@@ -34,8 +34,8 @@ test_that("Multiple rust functions with the same name", {
     rust_source(
         code = rust_src_2,
         quiet = FALSE,
-        toolchain = test_env[["toolchain"]],
-        patch.crates_io = test_env[["patch.crates_io"]]
+        toolchain = rust_source_defaults[["toolchain"]],
+        patch.crates_io = rust_source_defaults[["patch.crates_io"]]
     )
 
     # At this point:
