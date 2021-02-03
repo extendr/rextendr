@@ -1,4 +1,4 @@
-test_that("Testing the source", {
+test_that("`rust_source()` works", {
 
   rust_src <- "
     #[extendr]
@@ -19,14 +19,6 @@ test_that("Testing the source", {
     #[extendr]
     fn say_nothing() {
 
-    }
-
-    extendr_module! {
-        mod rextendr;
-        fn hello;
-        fn add_and_multiply;
-        fn add;
-        fn say_nothing;
     }
     "
 

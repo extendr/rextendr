@@ -1,8 +1,8 @@
 #' Knitr engines
 #'
 #' Two knitr engines that enable code chunks of type `extendr` (individual Rust
-#' statements to be evaluated) and `extendrfuns` (Rust functions that will be
-#' exported to R).
+#' statements to be evaluated via [rust_eval()]) and `extendrsrc` (Rust functions
+#' or classes that will be exported to R via [rust_source()]).
 #' @param options A list of chunk options.
 #' @return A character string representing the engine output.
 #' @export
@@ -12,7 +12,7 @@ eng_extendr <- function(options) {
 
 #' @rdname eng_extendr
 #' @export
-eng_extendrfuns <- function(options) {
+eng_extendrsrc <- function(options) {
   eng_impl(options, rust_source)
 }
 

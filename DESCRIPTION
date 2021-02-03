@@ -20,7 +20,11 @@ Depends:
     R (>= 4.0)
 Imports: 
     brio,
-    glue
+    dplyr,
+    glue,
+    stringi,
+    tibble,
+    purrr
 Suggests: 
     knitr,
     rmarkdown,

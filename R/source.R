@@ -25,6 +25,12 @@
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
 #'   provided via `code`. Default is `TRUE`. Ignored for Rust source provided
 #'   via `file`.
+#' @param generate_module_macro Logical indicating whether the Rust module
+#'   macro should be automatically generated from the code. Default is `TRUE`.
+#'   Ignored for Rust source provided via `file`. The macro generation is done
+#'   with [make_module_macro()] and it may fail in complex cases. If something
+#'   doesn't work, try calling [make_module_macro()] on your code to see whether
+#'   the generated macro code has issues.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
@@ -102,6 +108,7 @@ rust_source <- function(file, code = NULL,
                         extendr_macros_version = extendr_version,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
+                        generate_module_macro = TRUE,
                         cache_build = TRUE, quiet = FALSE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
@@ -115,8 +122,11 @@ rust_source <- function(file, code = NULL,
   # copy rust code into src/lib.rs and determine library name
   rust_file <- file.path(dir, "src", "lib.rs")
   if (!is.null(code)) {
+    if (isTRUE(generate_module_macro)) {
+      code <- c(code, make_module_macro(code, module_name))
+    }
     if (isTRUE(use_extendr_api)) {
-      code <- paste0("use extendr_api::*;\n\n", code)
+      code <- c("use extendr_api::*;", code)
     }
     brio::write_lines(code, rust_file)
 
@@ -200,27 +210,9 @@ rust_source <- function(file, code = NULL,
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
 rust_function <- function(code, env = parent.frame(), ...) {
-  code <- glue::glue_collapse(code, sep = "\n")
-
-  # extract function name
-  pattern <- "^\\s*fn\\s+(\\w+)"
-  match_list <- gregexpr(pattern, code, perl = TRUE)
-  match <- attributes(match_list[[1]])
-  if (match$capture.start[1] > 0) {
-    fn_name <- substr(code, match$capture.start[1], match$capture.start[1] + match$capture.length[1] - 1)
-  } else {
-    stop("Cannot identify Rust function name.", call. = FALSE)
-  }
-
-  code <- glue::glue(
-    r"(#[extendr]
-{code}
-
-extendr_module! {{
-    mod rextendr;
-    fn {fn_name};
-}}
-)"
+  code <- c(
+    "#[extendr]",
+    stringi::stri_trim(code)
   )
 
   rust_source(code = code, env = env, ...)

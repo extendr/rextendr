@@ -19,6 +19,7 @@ rust_source(
   extendr_macros_version = extendr_version,
   env = parent.frame(),
   use_extendr_api = TRUE,
+  generate_module_macro = TRUE,
   cache_build = TRUE,
   quiet = FALSE
 )
@@ -58,6 +59,13 @@ from \code{extendr_version}.}
 \verb{use extendr_api::prelude::*;} should be added at the top of the Rust source
 provided via \code{code}. Default is \code{TRUE}. Ignored for Rust source provided
 via \code{file}.}
+
+\item{generate_module_macro}{Logical indicating whether the Rust module
+macro should be automatically generated from the code. Default is \code{TRUE}.
+Ignored for Rust source provided via \code{file}. The macro generation is done
+with \code{\link[=make_module_macro]{make_module_macro()}} and it may fail in complex cases. If something
+doesn't work, try calling \code{\link[=make_module_macro]{make_module_macro()}} on your code to see whether
+the generated macro code has issues.}
 
 \item{cache_build}{Logical indicating whether builds should be cached between
 calls to \code{\link[=rust_source]{rust_source()}}.}

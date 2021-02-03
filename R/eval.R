@@ -37,11 +37,11 @@ rust_eval <- function(code, ...) {
 
   # wrap code into Rust function
   code_wrapped <- glue::glue(r"(
-fn rextendr_rust_eval_fun() -> Robj {{
+fn rextendr_rust_eval_fun() -> Result<Robj> {{
   let x = {{
     {code}
   }};
-  x.into()
+  Ok(x.into())
 }}
 )")
   out <- rust_function(code = code_wrapped, ...)

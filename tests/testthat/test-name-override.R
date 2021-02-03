@@ -6,12 +6,6 @@ test_that("Multiple rust functions with the same name", {
 
     #[extendr]
     fn rust_fn_2() -> i32 { 2i32 }
-
-    extendr_module! {
-        mod rextendr;
-        fn rust_fn_1;
-        fn rust_fn_2;
-    }
     "
 
     rust_src_2 <- "
@@ -20,12 +14,6 @@ test_that("Multiple rust functions with the same name", {
 
     #[extendr]
     fn rust_fn_3() -> i32 { 30i32 }
-
-    extendr_module! {
-        mod rextendr;
-        fn rust_fn_2;
-        fn rust_fn_3;
-    }
     "
 
     rust_source(code = rust_src_1, quiet = FALSE)
@@ -48,6 +36,4 @@ test_that("Multiple rust functions with the same name", {
     expect_equal(rust_fn_1(), 1L)
     expect_equal(rust_fn_2(), 20L)
     expect_equal(rust_fn_3(), 30L)
-
-
 })
