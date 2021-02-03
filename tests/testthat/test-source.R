@@ -25,7 +25,9 @@ test_that("Testing the source", {
   rust_source(
     code = rust_src,
     quiet = FALSE,
-    cache_build = TRUE
+    cache_build = TRUE,
+    toolchain = rust_source_defaults[["toolchain"]],
+    patch.crates_io = rust_source_defaults[["patch.crates_io"]]
   )
 
   # call `hello()` function from R
