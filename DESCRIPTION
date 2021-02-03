@@ -22,6 +22,7 @@ Imports:
     brio,
     dplyr,
     glue,
+    stringi,
     tibble,
     purrr
 Suggests: 

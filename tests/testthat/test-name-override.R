@@ -46,6 +46,4 @@ test_that("Multiple rust functions with the same name", {
     expect_equal(rust_fn_1(), 1L)
     expect_equal(rust_fn_2(), 20L)
     expect_equal(rust_fn_3(), 30L)
-
-
 })

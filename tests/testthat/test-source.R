@@ -1,4 +1,4 @@
-test_that("Testing the source", {
+test_that("`rust_source()` works", {
 
   rust_src <- "
     #[extendr]

@@ -8,6 +8,7 @@
 rust_source(
   file,
   code = NULL,
+  module_name = "rextendr",
   dependencies = NULL,
  
     patch.crates_io = c("extendr-api = { git = \\"https://github.com/extendr/extendr\\" }",
@@ -18,6 +19,7 @@ rust_source(
   extendr_macros_version = extendr_version,
   env = parent.frame(),
   use_extendr_api = TRUE,
+  generate_module_macro = TRUE,
   cache_build = TRUE,
   quiet = FALSE
 )
@@ -28,6 +30,9 @@ rust_function(code, env = parent.frame(), ...)
 \item{file}{Input rust file to source.}
 
 \item{code}{Input rust code, to be used instead of \code{file}.}
+
+\item{module_name}{Name of the module defined in the Rust source via
+\verb{extendr_module!}. Default is \code{"rextendr"}.}
 
 \item{dependencies}{Character vector of dependencies lines to be added to the
 \code{Cargo.toml} file.}
@@ -50,9 +55,17 @@ from \code{extendr_version}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
-\item{use_extendr_api}{Logical indicating whether \verb{use extendr_api::*;} should
-be added at the top of the Rust source provided via \code{code}. Default is \code{TRUE}.
-Ignored for Rust source provided via \code{file}.}
+\item{use_extendr_api}{Logical indicating whether
+\verb{use extendr_api::prelude::*;} should be added at the top of the Rust source
+provided via \code{code}. Default is \code{TRUE}. Ignored for Rust source provided
+via \code{file}.}
+
+\item{generate_module_macro}{Logical indicating whether the Rust module
+macro should be automatically generated from the code. Default is \code{TRUE}.
+Ignored for Rust source provided via \code{file}. The macro generation is done
+with \code{\link[=make_module_macro]{make_module_macro()}} and it may fail in complex cases. If something
+doesn't work, try calling \code{\link[=make_module_macro]{make_module_macro()}} on your code to see whether
+the generated macro code has issues.}
 
 \item{cache_build}{Logical indicating whether builds should be cached between
 calls to \code{\link[=rust_source]{rust_source()}}.}
@@ -86,6 +99,12 @@ fn hello() -> &'static str {
 fn test( a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
+
+extendr_module! {
+    mod rextendr;
+    fn hello;
+    fn test;
+}
 )"
 
 rust_source(code = code)
@@ -106,6 +125,11 @@ code <- r"(
     let mut output = String::new();
     html::push_html(&mut output, parser);
     output
+  }
+
+  extendr_module! {
+    mod rextendr;
+    fn md_to_html;
   }
 )"
 rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')

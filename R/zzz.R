@@ -3,7 +3,7 @@
   if (requireNamespace("knitr", quietly = TRUE)) {
     knitr::knit_engines$set(
       extendr = eng_extendr,
-      extendrfuns = eng_extendrfuns
+      extendrsrc = eng_extendrsrc
     )
   }
 }

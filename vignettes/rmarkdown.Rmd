@@ -20,6 +20,8 @@ library(rextendr)
 
 ## Evaluating Rust statements
 
+**Note: This functionality is currently [broken](https://github.com/extendr/rextendr/issues/32). We hope we can fix this as soon as possible.**
+
 Chunks of type `extendr` evaluate a block of Rust statements. The value of the last statement can be returned to R and will be printed as chunk output. For example:
 
 ````markdown
@@ -45,7 +47,7 @@ let z = x*y;
 z
 ```
 
-In the background, the `extendr` knit engine casts the Rust integer variable into type `Robj` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line, to indicate that you want to return a value. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
+In the background, the `extendr` knit engine casts the Rust integer variable into type `Result<Robj>` and returns its value to R. Notice the lack of a semicolon (`;`) at the end of this line, to indicate that you want to return a value. You can also write code that doesn't return any result to R. In this case, the last line would end in a semicolon, as in this example:
 
 ```{extendr}
 let x = 5;
@@ -137,7 +139,7 @@ fn foo(a: &str, b: i64) {
 ````
 
 The only output the chunk itself creates is the Rust source code:
-```{extendrfuns}
+```{extendrsrc}
 #[extendr]
 fn hello() -> &'static str {
     "Hello from Rust!"
@@ -147,14 +149,39 @@ fn hello() -> &'static str {
 fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
+
+struct Counter {
+    n: i32,
+}
+
+#[extendr]
+impl Counter {
+    fn new() -> Self {
+        Self { n: 0 }
+    }
+    
+    fn increment(&mut self) {
+        self.n += 1;
+    }
+    
+    fn get(&self) -> i32 {
+        self.n
+    }
+}
 ```
 
-However, now we can call the functions `hello()` and `foo()` from R:
+However, now we can call the functions `hello()` and `foo()` from R and use the `Counter` object:
 
 ```{r}
 out <- hello()
 out
 foo(out, nchar(out))
+
+x <- Counter$new()
+x$get()
+x$increment()
+x$increment()
+x$get()
 ```
 
 If your code requires external crates, you can set dependencies via the `engine.opts` chunk option, like so:
@@ -176,7 +203,7 @@ fn md_to_html(input: &str) -> String {
 ````
 
 As before, the Rust code chunk just outputs the source:
-```{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
+```{extendrsrc engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
 use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]

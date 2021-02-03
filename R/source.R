@@ -5,6 +5,8 @@
 #'
 #' @param file Input rust file to source.
 #' @param code Input rust code, to be used instead of `file`.
+#' @param module_name Name of the module defined in the Rust source via
+#'   `extendr_module!`. Default is `"rextendr"`.
 #' @param dependencies Character vector of dependencies lines to be added to the
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
@@ -19,9 +21,16 @@
 #' @param extendr_macros_version Version of the extendr-macros crate, if different
 #'   from `extendr_version`.
 #' @param env The R environment in which the wrapping functions will be defined.
-#' @param use_extendr_api Logical indicating whether `use extendr_api::*;` should
-#'   be added at the top of the Rust source provided via `code`. Default is `TRUE`.
-#'   Ignored for Rust source provided via `file`.
+#' @param use_extendr_api Logical indicating whether
+#'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
+#'   provided via `code`. Default is `TRUE`. Ignored for Rust source provided
+#'   via `file`.
+#' @param generate_module_macro Logical indicating whether the Rust module
+#'   macro should be automatically generated from the code. Default is `TRUE`.
+#'   Ignored for Rust source provided via `file`. The macro generation is done
+#'   with [make_module_macro()] and it may fail in complex cases. If something
+#'   doesn't work, try calling [make_module_macro()] on your code to see whether
+#'   the generated macro code has issues.
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
@@ -44,6 +53,12 @@
 #' fn test( a: &str, b: i64) {
 #'     rprintln!("Data sent to Rust: {}, {}", a, b);
 #' }
+#'
+#' extendr_module! {
+#'     mod rextendr;
+#'     fn hello;
+#'     fn test;
+#' }
 #' )"
 #'
 #' rust_source(code = code)
@@ -65,6 +80,11 @@
 #'     html::push_html(&mut output, parser);
 #'     output
 #'   }
+#'
+#'   extendr_module! {
+#'     mod rextendr;
+#'     fn md_to_html;
+#'   }
 #' )"
 #' rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
 #'
@@ -75,7 +95,9 @@
 #' md_to_html(md_text)
 #' }
 #' @export
-rust_source <- function(file, code = NULL, dependencies = NULL,
+rust_source <- function(file, code = NULL,
+                        module_name = "rextendr",
+                        dependencies = NULL,
                         patch.crates_io = c(
                           'extendr-api = { git = "https://github.com/extendr/extendr" }',
                           'extendr-macros = { git = "https://github.com/extendr/extendr" }'
@@ -86,6 +108,7 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
                         extendr_macros_version = extendr_version,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
+                        generate_module_macro = TRUE,
                         cache_build = TRUE, quiet = FALSE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
@@ -99,8 +122,11 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   # copy rust code into src/lib.rs and determine library name
   rust_file <- file.path(dir, "src", "lib.rs")
   if (!is.null(code)) {
+    if (isTRUE(generate_module_macro)) {
+      code <- c(code, make_module_macro(code, module_name))
+    }
     if (isTRUE(use_extendr_api)) {
-      code <- paste0("use extendr_api::*;\n\n", code)
+      code <- c("use extendr_api::*;", code)
     }
     brio::write_lines(code, rust_file)
 
@@ -148,8 +174,6 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   # load shared library
   libfilename <- paste0(get_dynlib_name(libname), get_dynlib_ext())
 
-
-
   target_folder <- ifelse(
     is.null(specific_target),
     "target",
@@ -166,12 +190,17 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
   dll_info <- dyn.load(shared_lib, local = TRUE, now = TRUE)
 
   # generate R bindings for shared library
-  r_path <- file.path(dir, "target", "extendr_wrappers.R")
-  r_raw_lines <- brio::read_lines(r_path)
-  # Inject loaded dll correct name
-  r_raw_lines <- gsub(".Call\\(([^)]+)\\)", sprintf(".Call(\\1, PACKAGE = \"%s\")", dll_info[["name"]]), r_raw_lines)
-  brio::write_lines(r_raw_lines, r_path)
-  source(r_path, local = env)
+  wrapper_file <- file.path(dir, "target", "extendr_wrappers.R")
+
+
+  make_wrappers(
+    module_name = module_name,
+    package_name = dll_info[["name"]],
+    outfile = wrapper_file,
+    use_symbols = FALSE,
+    quiet = FALSE
+  )
+  source(wrapper_file, local = env)
 
   # Invisibly returns to fulfill contract
   invisible(dll_info)
@@ -181,7 +210,11 @@ rust_source <- function(file, code = NULL, dependencies = NULL,
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
 rust_function <- function(code, env = parent.frame(), ...) {
-  code <- paste0("#[extendr]\n", code)
+  code <- c(
+    "#[extendr]",
+    stringi::stri_trim(code)
+  )
+
   rust_source(code = code, env = env, ...)
 }
 
@@ -273,3 +306,4 @@ clean_build_dir <- function() {
     the$build_dir <- NULL
   }
 }
+

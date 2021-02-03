@@ -2,12 +2,12 @@
 % Please edit documentation in R/knitr_engine.R
 \name{eng_extendr}
 \alias{eng_extendr}
-\alias{eng_extendrfuns}
+\alias{eng_extendrsrc}
 \title{Knitr engines}
 \usage{
 eng_extendr(options)
 
-eng_extendrfuns(options)
+eng_extendrsrc(options)
 }
 \arguments{
 \item{options}{A list of chunk options.}
@@ -17,6 +17,6 @@ A character string representing the engine output.
 }
 \description{
 Two knitr engines that enable code chunks of type \code{extendr} (individual Rust
-statements to be evaluated) and \code{extendrfuns} (Rust functions that will be
-exported to R).
+statements to be evaluated via \code{\link[=rust_eval]{rust_eval()}}) and \code{extendrsrc} (Rust functions
+or classes that will be exported to R via \code{\link[=rust_source]{rust_source()}}).
 }
