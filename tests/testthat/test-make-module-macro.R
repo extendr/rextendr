@@ -6,6 +6,8 @@ fn hello() -> &'static str {
 }
 
 #[extendr]
+// An awkwardly placed comment
+// to verify comments are stripped
 fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }

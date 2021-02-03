@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Knitr engines — eng_extendr • rextendr</title>
+<title>Generate extendr module macro for Rust source — make_module_macro • rextendr</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,9 @@
 
 
 
-<meta property="og:title" content="Knitr engines — eng_extendr" />
-<meta property="og:description" content="Two knitr engines that enable code chunks of type extendr (individual Rust
-statements to be evaluated via rust_eval()) and extendrsrc (Rust functions
-or classes that will be exported to R via rust_source())." />
+<meta property="og:title" content="Generate extendr module macro for Rust source — make_module_macro" />
+<meta property="og:description" content="Read some Rust source code, find functions or implementations with the
+#[extendr] attribute, and generate an extendr_module! macro statement." />
 
 
 
@@ -120,33 +119,37 @@ or classes that will be exported to R via rust_source())." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Knitr engines</h1>
+    <h1>Generate extendr module macro for Rust source</h1>
     
-    <div class="hidden name"><code>eng_extendr.Rd</code></div>
+    <div class="hidden name"><code>make_module_macro.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Two knitr engines that enable code chunks of type <code>extendr</code> (individual Rust
-statements to be evaluated via <code><a href='rust_eval.html'>rust_eval()</a></code>) and <code>extendrsrc</code> (Rust functions
-or classes that will be exported to R via <code><a href='rust_source.html'>rust_source()</a></code>).</p>
+    <p>Read some Rust source code, find functions or implementations with the
+<code>#[extendr]</code> attribute, and generate an <code>extendr_module!</code> macro statement.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>eng_extendr</span><span class='op'>(</span><span class='va'>options</span><span class='op'>)</span>
-
-<span class='fu'>eng_extendrsrc</span><span class='op'>(</span><span class='va'>options</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>make_module_macro</span><span class='op'>(</span><span class='va'>code</span>, module_name <span class='op'>=</span> <span class='st'>"rextendr"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>options</th>
-      <td><p>A list of chunk options.</p></td>
+      <th>code</th>
+      <td><p>Character vector containing Rust code.</p></td>
+    </tr>
+    <tr>
+      <th>module_name</th>
+      <td><p>Module name</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A character string representing the engine output.</p>
+    <p>This function uses simple regular expressions to do the Rust parsing and
+can get confused by valid Rust code. It is only meant as a convenience for
+simple use cases. In particular, it cannot currently handle implementations
+for generics.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

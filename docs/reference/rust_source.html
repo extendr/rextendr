@@ -132,6 +132,7 @@ compiles and loads a single Rust function for use in R.</p>
     <pre class="usage"><span class='fu'>rust_source</span><span class='op'>(</span>
   <span class='va'>file</span>,
   code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  module_name <span class='op'>=</span> <span class='st'>"rextendr"</span>,
   dependencies <span class='op'>=</span> <span class='cn'>NULL</span>,
  
     patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"extendr-api = { git = \"https://github.com/extendr/extendr\" }"</span>,
@@ -142,6 +143,7 @@ compiles and loads a single Rust function for use in R.</p>
   extendr_macros_version <span class='op'>=</span> <span class='va'>extendr_version</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
   use_extendr_api <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  generate_module_macro <span class='op'>=</span> <span class='cn'>TRUE</span>,
   cache_build <span class='op'>=</span> <span class='cn'>TRUE</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
@@ -158,6 +160,11 @@ compiles and loads a single Rust function for use in R.</p>
     <tr>
       <th>code</th>
       <td><p>Input rust code, to be used instead of <code>file</code>.</p></td>
+    </tr>
+    <tr>
+      <th>module_name</th>
+      <td><p>Name of the module defined in the Rust source via
+<code>extendr_module!</code>. Default is <code>"rextendr"</code>.</p></td>
     </tr>
     <tr>
       <th>dependencies</th>
@@ -196,9 +203,19 @@ from <code>extendr_version</code>.</p></td>
     </tr>
     <tr>
       <th>use_extendr_api</th>
-      <td><p>Logical indicating whether <code>use extendr_api::*;</code> should
-be added at the top of the Rust source provided via <code>code</code>. Default is <code>TRUE</code>.
-Ignored for Rust source provided via <code>file</code>.</p></td>
+      <td><p>Logical indicating whether
+<code>use extendr_api::prelude::*;</code> should be added at the top of the Rust source
+provided via <code>code</code>. Default is <code>TRUE</code>. Ignored for Rust source provided
+via <code>file</code>.</p></td>
+    </tr>
+    <tr>
+      <th>generate_module_macro</th>
+      <td><p>Logical indicating whether the Rust module
+macro should be automatically generated from the code. Default is <code>TRUE</code>.
+Ignored for Rust source provided via <code>file</code>. The macro generation is done
+with <code><a href='make_module_macro.html'>make_module_macro()</a></code> and it may fail in complex cases. If something
+doesn't work, try calling <code><a href='make_module_macro.html'>make_module_macro()</a></code> on your code to see whether
+the generated macro code has issues.</p></td>
     </tr>
     <tr>
       <th>cache_build</th>
@@ -237,6 +254,12 @@ fn hello() -&gt; &amp;'static str {
 fn test( a: &amp;str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
+
+extendr_module! {
+    mod rextendr;
+    fn hello;
+    fn test;
+}
 )"</span>
 
 <span class='fu'>rust_source</span><span class='op'>(</span>code <span class='op'>=</span> <span class='va'>code</span><span class='op'>)</span>
@@ -257,6 +280,11 @@ fn test( a: &amp;str, b: i64) {
     let mut output = String::new();
     html::push_html(&amp;mut output, parser);
     output
+  }
+
+  extendr_module! {
+    mod rextendr;
+    fn md_to_html;
   }
 )"</span>
 <span class='fu'>rust_source</span><span class='op'>(</span>code <span class='op'>=</span> <span class='va'>code</span>, dependencies <span class='op'>=</span> <span class='st'>'pulldown-cmark = "0.8"'</span><span class='op'>)</span>
@@ -283,7 +311,7 @@ The quick *brown fox* jumps over the lazy dog."</span>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

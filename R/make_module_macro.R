@@ -24,6 +24,10 @@ make_module_macro <- function(code, module_name = "rextendr") {
 
 
 get_extendr_idents <- function(lines) {
+  # remove all lines that are commented out
+  not_comment <- !grepl("^\\s*//", lines)
+  lines <- lines[not_comment]
+
   # find all lines with the "#[extendr]" decoration
   idx <- which(grepl("\\#\\[extendr\\]", lines))
   idx <- idx + 1 # bump indices by one to look in subsequent lines
