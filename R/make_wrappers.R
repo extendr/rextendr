@@ -25,7 +25,7 @@ make_wrappers <- function(module_name, package_name, outfile,
   )
 
   x <- eval(str2expression(wrapper_call))
-  x <- strsplit(x, "\n")[[1]]
+  x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
     message("Writting wrappers to:\n", outfile)
