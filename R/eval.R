@@ -33,7 +33,9 @@ rust_eval <- function(code, env = parent.frame(), ...) {
   code <- glue::glue_collapse(code, sep = "\n")
 
   # define to make R code check happy; is not used
-  rextendr_rust_eval_fun <- function() "decoy function; should never be called."
+  rextendr_rust_eval_fun <- function() {
+    stop("decoy function; should never be called.")
+  }
 
   # wrap code into Rust function
   code_wrapped <- glue::glue(r"(
