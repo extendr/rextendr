@@ -1,4 +1,4 @@
-test_that("knitr-engines work", {
+test_that("knitr-engine works", {
   options <- knitr::opts_chunk$merge(list(
     code = "2 + 2",
     comment = "##",
@@ -6,8 +6,14 @@ test_that("knitr-engines work", {
     echo = TRUE
   ))
 
-  # this is actually not correct, just using this for testing for now
-  expect_equal(eng_extendr(options), "2 + 2\n## NULL\n")
-  # this is what the output should be
-  #expect_equal(eng_extendr(options), "2 + 2\n## 4\n")
+  expect_equal(eng_extendr(options), "2 + 2\n## 4\n")
+
+  options <- knitr::opts_chunk$merge(list(
+    code = "rprintln!(\"hello world!\");",
+    comment = "##",
+    eval = TRUE,
+    echo = FALSE
+  ))
+
+  expect_equal(eng_extendr(options), "## hello world!\n")
 })
