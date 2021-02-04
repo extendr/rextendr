@@ -6,7 +6,7 @@ test_that("knitr-engine works", {
     echo = TRUE
   ))
 
-  expect_equal(eng_extendr(options), "2 + 2\n## 4\n")
+  expect_equal(eng_extendr(options), "2 + 2\n## [1] 4\n")
 
   options <- knitr::opts_chunk$merge(list(
     code = "rprintln!(\"hello world!\");",
