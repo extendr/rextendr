@@ -25,9 +25,9 @@ test_that("`rust_source()` works", {
   rust_source(
     code = rust_src,
     quiet = FALSE,
-    cache_build = TRUE,
-    toolchain = rust_source_defaults[["toolchain"]],
-    patch.crates_io = rust_source_defaults[["patch.crates_io"]]
+    cache_build = TRUE#,
+    #toolchain = rust_source_defaults[["toolchain"]],
+    #patch.crates_io = rust_source_defaults[["patch.crates_io"]]
   )
 
   # call `hello()` function from R

@@ -4,10 +4,12 @@
 \alias{rust_eval}
 \title{Evaluate Rust code}
 \usage{
-rust_eval(code, ...)
+rust_eval(code, env = parent.frame(), ...)
 }
 \arguments{
 \item{code}{Input rust code.}
+
+\item{env}{The R environment in which the Rust code will be evaluated.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_function]{rust_function()}}.}
 }

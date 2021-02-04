@@ -20,8 +20,6 @@ library(rextendr)
 
 ## Evaluating Rust statements
 
-**Note: This functionality is currently [broken](https://github.com/extendr/rextendr/issues/32). We hope we can fix this as soon as possible.**
-
 Chunks of type `extendr` evaluate a block of Rust statements. The value of the last statement can be returned to R and will be printed as chunk output. For example:
 
 ````markdown

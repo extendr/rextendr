@@ -137,7 +137,7 @@ to be of type <code>Robj</code>, as long as it can be cast into this type with
 worry about it in your code.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rust_eval</span><span class='op'>(</span><span class='va'>code</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>rust_eval</span><span class='op'>(</span><span class='va'>code</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,6 +145,10 @@ worry about it in your code.</p>
     <tr>
       <th>code</th>
       <td><p>Input rust code.</p></td>
+    </tr>
+    <tr>
+      <th>env</th>
+      <td><p>The R environment in which the Rust code will be evaluated.</p></td>
     </tr>
     <tr>
       <th>...</th>
