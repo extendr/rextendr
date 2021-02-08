@@ -5,7 +5,9 @@ Authors@R: c(
     person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", c("aut", "cre"),
       comment = c(ORCID = "0000-0002-7470-9261")),
     person("Andy", "Thomason", , "andy@andythomason.com", c("aut")),
-    person("Mossa M.", "Reimert", , "mossa@sund.ku.dk", c("aut"))
+    person("Mossa M.", "Reimert", , "mossa@sund.ku.dk", c("aut")),
+    person("Ilia", "Kosenkov", , "ilia.kosenkov@outlook.com", c("aut"),
+      comment = c(ORCID = "0000-0001-5563-7840"))
   )
 Description: Call Rust code from R. This package provides functions to compile and load Rust
   code from R, similar to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Under

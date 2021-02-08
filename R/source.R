@@ -34,6 +34,10 @@
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
+#' @param use_rtools Logical indicating whether to append path to Rtools
+#'   to the `PATH` variable on Windows using `RTOOLS40_HOME` environent variable
+#'   (if it is set). Appended path depends on the process architecture.
+#'   Does nothing on other platforms.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`. See
 #'   [getLoadedDLLs()] for more details.
 #' @examples
@@ -106,7 +110,9 @@ rust_source <- function(file, code = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
-                        cache_build = TRUE, quiet = FALSE) {
+                        cache_build = TRUE,
+                        quiet = FALSE,
+                        use_rtools = TRUE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
@@ -149,24 +155,15 @@ rust_source <- function(file, code = NULL,
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 
-  status <- system2(
-    command = "cargo",
-    args = c(
-      sprintf("+%s", toolchain),
-      "build",
-      "--lib",
-      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
-      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target")),
-      if (profile == "release") "--release" else NULL
-    ),
+  invoke_cargo(
+    toolchain = toolchain,
+    specific_target = specific_target,
+    dir = dir,
+    profile = profile,
     stdout = stdout,
-    stderr = stdout
+    stderr = stderr,
+    use_rtools = use_rtools
   )
-  if (status != 0L) {
-    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
-  }
-
 
   # load shared library
   libfilename <- paste0(get_dynlib_name(libname), get_dynlib_ext())
@@ -213,6 +210,49 @@ rust_function <- function(code, env = parent.frame(), ...) {
   )
 
   rust_source(code = code, env = env, ...)
+}
+
+# Wrapps call to cargo, allowing modification of PATH variable
+invoke_cargo <- function(toolchain, specific_target, dir, profile,
+                         stdout, stderr, use_rtools) {
+  # Append rtools path to the end of PATH on Windows
+  if (
+    isTRUE(use_rtools) &&
+    .Platform$OS.type == "windows" &&
+    nzchar(Sys.getenv("RTOOLS40_HOME"))
+  ) {
+    env_path <- Sys.getenv("PATH")
+    # This retores PATH when function returns, i.e. after cargo finishes.
+    on.exit(Sys.setenv(PATH = env_path))
+
+    r_tools_path <-
+      normalizePath(
+        file.path(
+          Sys.getenv("RTOOLS40_HOME"), # {rextendr} targets R >= 4.0
+          paste0("mingw", ifelse(R.version$arch == "i386", "32", "64")),
+          "bin"
+        )
+      )
+    Sys.setenv(PATH = paste(env_path, r_tools_path, sep = .Platform$path.sep))
+  }
+
+  status <- system2(
+    command = "cargo",
+    args = c(
+      sprintf("+%s", toolchain),
+      "build",
+      "--lib",
+      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
+      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
+      sprintf("--target-dir %s", file.path(dir, "target")),
+      if (profile == "release") "--release" else NULL
+    ),
+    stdout = stdout,
+    stderr = stdout
+  )
+  if (status != 0L) {
+    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
+  }
 }
 
 generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
