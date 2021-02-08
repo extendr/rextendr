@@ -1,12 +1,12 @@
 .onLoad <- function(...) {
 
   # register the extendr knitr chunk engine if knitr is available
-  # if (requireNamespace("knitr", quietly = TRUE)) {
-  #   knitr::knit_engines$set(
-  #     extendr = eng_extendr,
-  #     extendrsrc = eng_extendrsrc
-  #   )
-  # }
+  if (requireNamespace("knitr", quietly = TRUE)) {
+    knitr::knit_engines$set(
+      extendr = eng_extendr,
+      extendrsrc = eng_extendrsrc
+    )
+  }
 
   # Setting default options
   # If rextendr options are already set, do not override
