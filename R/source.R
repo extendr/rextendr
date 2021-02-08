@@ -98,14 +98,11 @@
 rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
-                        patch.crates_io = c(
-                          'extendr-api = { git = "https://github.com/extendr/extendr" }',
-                          'extendr-macros = { git = "https://github.com/extendr/extendr" }'
-                        ),
+                        patch.crates_io = getOption("rextendr.patch.crates_io", character()),
                         profile = c("dev", "release"),
-                        toolchain = NULL,
-                        extendr_version = "*",
-                        extendr_macros_version = extendr_version,
+                        toolchain = getOption("rextendr.toolchain"),
+                        extendr_version = getOption("rextendr.extendr.version", "*"),
+                        extendr_macros_version = getOption("rextendr.extendr_macros.version", "*"),
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
