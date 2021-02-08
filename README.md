@@ -68,5 +68,6 @@ let y = 7;
 let z = x*y;
 
 z
-#> NULL
+#> Hello from Rust!
+#> [1] 35
 ```
