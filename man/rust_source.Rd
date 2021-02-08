@@ -21,7 +21,8 @@ rust_source(
   use_extendr_api = TRUE,
   generate_module_macro = TRUE,
   cache_build = TRUE,
-  quiet = FALSE
+  quiet = FALSE,
+  use_rtools = TRUE
 )
 
 rust_function(code, env = parent.frame(), ...)
@@ -71,6 +72,11 @@ the generated macro code has issues.}
 calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
+
+\item{use_rtools}{Logical indicating whether to append path to Rtools
+to the PATH variable on Windows using RTOOLS40_HOME env var (if it is set).
+Appended path depends on the process architecture.
+Does nothing on other platforms.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }
