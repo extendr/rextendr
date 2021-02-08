@@ -109,7 +109,8 @@ rust_source <- function(file, code = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
-                        cache_build = TRUE, quiet = FALSE) {
+                        cache_build = TRUE,
+                        quiet = FALSE) {
   profile <- match.arg(profile)
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
@@ -202,6 +203,21 @@ rust_function <- function(code, env = parent.frame(), ...) {
 }
 
 invoke_cargo <- function(toolchain, specific_target, dir, profile, stdout, stderr) {
+  # Append rtools path to the end of PATH
+  if (.Platform$OS.type == "windows" && nzchar(Sys.getenv("RTOOLS40_HOME"))) {
+    env_path <- Sys.getenv("PATH")
+    r_tools_path <-
+      normalizePath(
+        file.path(
+          Sys.getenv("RTOOLS40_HOME"), # {rextendr} targets R >= 4.0
+          paste0("mingw", ifelse(R.version$arch == "i386", "32", "64")),
+          "bin"
+        )
+      )
+    Sys.setenv(PATH = paste(env_path, r_tools_path, sep = .Platform$path.sep))
+    on.exit(Sys.setenv(PATH = env_path))
+  }
+
   status <- system2(
     command = "cargo",
     args = c(
