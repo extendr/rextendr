@@ -43,3 +43,37 @@ test_that("`rust_source()` works", {
   expect_null(say_nothing())
 
 })
+
+
+test_that("`options` override `toolchain` value in `rust_source`", {
+  old_val <- options("rextendr.toolchain")
+  options(rextendr.toolchain = "Non-existent-toolchain")
+  on.exit(options(old_val))
+
+  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+})
+
+test_that("`options` override `patch.crates_io` value in `rust_source`", {
+  old_val <- options("rextendr.patch.crates_io")
+  options(rextendr.patch.crates_io = "Non-existent-patch")
+  on.exit(options(old_val))
+
+  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+})
+
+
+test_that("`options` override `rextendr.extendr.version` value in `rust_source`", {
+  old_val <- options("rextendr.extendr.version")
+  options(rextendr.extendr.version = "-1")
+  on.exit(options(old_val))
+
+  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+})
+
+test_that("`options` override `rextendr.extendr_macros.version` value in `rust_source`", {
+  old_val <- options("rextendr.extendr_macros.version")
+  options(rextendr.extendr_macros.version = "-1")
+  on.exit(options(old_val))
+
+  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+})
