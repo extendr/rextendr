@@ -152,24 +152,7 @@ rust_source <- function(file, code = NULL,
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 
-  status <- system2(
-    command = "cargo",
-    args = c(
-      sprintf("+%s", toolchain),
-      "build",
-      "--lib",
-      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
-      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target")),
-      if (profile == "release") "--release" else NULL
-    ),
-    stdout = stdout,
-    stderr = stdout
-  )
-  if (status != 0L) {
-    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
-  }
-
+  invoke_cargo(toolchain, specific_target, dir, profile, stdout, stderr)
 
   # load shared library
   libfilename <- paste0(get_dynlib_name(libname), get_dynlib_ext())
@@ -216,6 +199,26 @@ rust_function <- function(code, env = parent.frame(), ...) {
   )
 
   rust_source(code = code, env = env, ...)
+}
+
+invoke_cargo <- function(toolchain, specific_target, dir, profile, stdout, stderr) {
+  status <- system2(
+    command = "cargo",
+    args = c(
+      sprintf("+%s", toolchain),
+      "build",
+      "--lib",
+      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
+      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
+      sprintf("--target-dir %s", file.path(dir, "target")),
+      if (profile == "release") "--release" else NULL
+    ),
+    stdout = stdout,
+    stderr = stdout
+  )
+  if (status != 0L) {
+    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
+  }
 }
 
 generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
