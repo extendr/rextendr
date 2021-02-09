@@ -144,7 +144,7 @@ format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
         )
     } else {
         formatter <- as_function(.formatter)
-        items <- paste0(formatter(x, ...), collapse = ",\n")
+        items <- paste0(formatter(x, ...), collapse = ", ")
         if (length(x) > 1L || !is.null(dim(x))) {
             items <- paste0("[ ", items, " ]")
         }
