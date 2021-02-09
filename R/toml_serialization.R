@@ -4,7 +4,7 @@ to_toml <- function(
     .format_int = "%d",
     .format_dbl = "%g"
 ) {
-    args <- list2(...)
+    args <- dots_list(..., .preserve_empty = TRUE, .ignore_empty = "none")
     names <- names2(args)
     invalid <- which(map_lgl(args, is.atomic) & !nzchar(names))
     if (length(invalid) > 0) {
@@ -24,7 +24,7 @@ to_toml <- function(
         )
     }
     map2(names, args, function(nm, a) {
-        vec_c(
+        c(
             if (nzchar(nm)) paste0("[", nm, "]") else character(0),
             format_toml(
                 a,
@@ -42,8 +42,19 @@ format_toml <- function(x, ...) UseMethod("format_toml")
 
 format_toml.default <- function(x, ...)
     stop(
-        glue("{get_toml_err_msg()}\n  x `{vec_ptype_abbr(x)}` cannot be converted to toml.\n"),
+        paste(
+            get_toml_err_msg(),
+            paste0("  x `", typeof(x), "` cannot be converted to toml."),
+            sep = "\n"
+        ),
         call. = FALSE)
+
+format_toml.name <- function(x, ...) {
+    if (is_missing(x))
+        return(character(0))
+
+     format_toml.default(x, ...)
+}
 
 format_toml_atomic <- function(x, ..., .formatter) {
     if (length(x) == 0L) {
@@ -109,13 +120,5 @@ format_toml.list <- function(x, .top_level = TRUE, ...) {
 
 
 to_toml(
-    dependencies = list(`libR-sys` = "0.2.0"),
-    vec_c(1L, 2L, 3),
-    patch.crates_io = list(
-        `extendr-api` = list(
-            git = "github",
-            branch = "master",
-            nested = list(x = 1, y = 2)),
-        `extendr-macros` = list(git = "another_ref")
-    ),
-    "here") %>% walk(cat, sep ="\n")
+    workspace = ,
+    ) %>% walk(cat, sep ="\n")

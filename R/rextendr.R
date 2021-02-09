@@ -7,7 +7,6 @@
 #' @importFrom glue  glue
 #' @importFrom purrr map2 map_chr
 #' @importFrom rlang list2 names2
-#' @importFrom vctrs vec_ptype_abbr vec_c
 #' @docType package
 NULL
 
