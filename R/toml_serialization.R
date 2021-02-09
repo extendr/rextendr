@@ -70,6 +70,33 @@ format_toml.double <- function(x, .format_dbl = "%g", ...) {
     format_toml_atomic(x, ..., .format_dbl = .format_dbl, .formatter = ~sprintf(.format_dbl, .x))
 }
 
+format_toml.list <- function(x, .top_level = TRUE, ...) {
+    names <- names2(x)
+    map2(names, x, function(nm, val) {
+        paste(nm, format_toml(val, .top_level = FALSE, ...), sep = " = ")
+    }) -> result
+
+    if (!.top_level) {
+        result <- paste0(result, collapse = ", ")
+        result <- paste0("{ ", result, " }")
+    }
+    if (!is.atomic(result))
+        result <- flatten_chr(result)
+
+    # debug
+    vec_assert(result, character())
+    result
+}
 
 
-to_toml(vec_c(1L, 2L, 3), patch.crates_io = "Tom \"Dubs\" Preston-Werner") %>% walk(cat, sep ="\n")
+
+to_toml(
+    dependencies = list(`libR-sys` = "0.2.0"),
+    vec_c(1L, 2L, 3),
+    patch.crates_io = list(
+        `extendr-api` = list(
+            git = "github",
+            branch = "master",
+            nested = list(x = 1, y = 2)),
+        `extendr-macros` = list(git = "another_ref")
+    )) %>% walk(cat, sep ="\n")
