@@ -55,7 +55,7 @@ test_that("`options` override `toolchain` value in `rust_source`", {
 
 test_that("`options` override `patch.crates_io` value in `rust_source`", {
   old_val <- options("rextendr.patch.crates_io")
-  options(rextendr.patch.crates_io = "Non-existent-patch")
+  options(rextendr.patch.crates_io = list(`extendr-api` = "-1"))
   on.exit(options(old_val))
 
   expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")

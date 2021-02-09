@@ -171,7 +171,7 @@ format_toml.character <- function(x,  ..., .str_as_literal = TRUE, .top_level = 
     )
 }
 
-format_toml.integer <- function(x, .format_int = "%d", ..., .top_level = FALSE) {
+format_toml.integer <- function(x, ..., .format_int = "%d", .top_level = FALSE) {
     format_toml_atomic(
         x,
         ...,
