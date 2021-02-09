@@ -133,15 +133,7 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
 
 format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
     if (length(x) == 0L) {
-        stop(
-            paste(
-                get_toml_err_msg(),
-                "  x `x` has length of `0`.",
-                "  i Input should be of length >= 1.",
-                sep = "\n"
-            ),
-            call. = FALSE
-        )
+        "[ ]"
     } else {
         formatter <- as_function(.formatter)
         items <- paste0(formatter(x, ...), collapse = ", ")
