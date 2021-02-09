@@ -39,3 +39,5 @@ vignettes/*.pdf
 .Renviron
 .Rproj.user
 
+**/.vscode/*
+

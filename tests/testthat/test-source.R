@@ -1,5 +1,4 @@
 test_that("`rust_source()` works", {
-
   rust_src <- "
     #[extendr]
     fn hello() -> &'static str {
@@ -25,21 +24,20 @@ test_that("`rust_source()` works", {
   rust_source(
     code = rust_src,
     quiet = FALSE,
-    cache_build = TRUE#,
+    cache_build = TRUE # ,
   )
 
   # call `hello()` function from R
-  #> [1] "Hello, this string was created by Rust."
+  # > [1] "Hello, this string was created by Rust."
   expect_equal(hello(), "Hello, this string was created by Rust.")
 
   # call `add()` function from R
   expect_equal(add(14, 23), 37)
-  #> [1] 37
+  # > [1] 37
   expect_equal(add(17, 42), 17 + 42)
 
   # This function takes no arguments and invisibly return NULL
   expect_null(say_nothing())
-
 })
 
 

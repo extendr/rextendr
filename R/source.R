@@ -114,7 +114,8 @@ rust_source <- function(file, code = NULL,
   if (is.null(extendr_deps)) {
     stop(
       "Invalid argument.\n  x `extendr_deps` cannot be `NULL.",
-      call. = FALSE)
+      call. = FALSE
+    )
   }
 
   dir <- get_build_dir(cache_build)
@@ -183,7 +184,8 @@ rust_source <- function(file, code = NULL,
     dir,
     target_folder,
     ifelse(profile == "dev", "debug", "release"),
-    libfilename)
+    libfilename
+  )
 
   # Capture loaded dll
   dll_info <- dyn.load(shared_lib, local = TRUE, now = TRUE)
@@ -223,8 +225,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   # Append rtools path to the end of PATH on Windows
   if (
     isTRUE(use_rtools) &&
-    .Platform$OS.type == "windows" &&
-    nzchar(Sys.getenv("RTOOLS40_HOME"))
+      .Platform$OS.type == "windows" &&
+      nzchar(Sys.getenv("RTOOLS40_HOME"))
   ) {
     env_path <- Sys.getenv("PATH")
     # This retores PATH when function returns, i.e. after cargo finishes.
@@ -261,11 +263,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 }
 
 generate_cargo.toml <- function(
-  libname = "rextendr",
-  dependencies = NULL,
-  patch.crates_io = NULL,
-  extendr_deps = NULL
-) {
+                                libname = "rextendr",
+                                dependencies = NULL,
+                                patch.crates_io = NULL,
+                                extendr_deps = NULL) {
   to_toml(
     package = list(
       name = libname,
@@ -287,10 +288,11 @@ generate_cargo.toml <- function(
 get_dynlib_ext <- function() {
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
   sysinf <- Sys.info()
-  if (!is.null(sysinf)){
-    os <- sysinf['sysname']
-    if (os == 'Darwin')
+  if (!is.null(sysinf)) {
+    os <- sysinf["sysname"]
+    if (os == "Darwin") {
       return(".dylib")
+    }
   }
   .Platform$dynlib.ext
 }
@@ -306,7 +308,7 @@ get_dynlib_name <- function(libname) {
 get_specific_target_name <- function() {
   sysinf <- Sys.info()
 
-  if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
+  if (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
     if (R.version$arch == "x86_64") {
       return("x86_64-pc-windows-gnu")
     }
@@ -346,4 +348,3 @@ clean_build_dir <- function() {
     the$build_dir <- NULL
   }
 }
-

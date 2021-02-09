@@ -1,38 +1,38 @@
 test_that("`toml` is generated correctly", {
-    # Using cargo's Cargo.toml file for reference
-    # https://github.com/rust-lang/cargo/blob/master/Cargo.toml
-    # Testing arrays, names, and nested values
-    toml <- to_toml(
-        package = list(
-            name = "cargo",
-            version = "0.52.0",
-            edition = "2018",
-            authors = c("author_1", "author_2", "author_3"),
-            license = "MIT OR Apache-2.0",
-            homepage = "https://crates.io",
-            repository = "https://github.com/rust-lang/cargo",
-            documentation = "https://docs.rs/cargo",
-            readme = "README.md",
-            description = "Cargo, a package manager for Rust."
-        ),
-        dependencies = list(
-            semver = list(version = "0.10", features = array("serde", 1)),
-            serde = list(version = "1.0.82", features = array("derive", 1))
-        ),
-        `target.'cfg(target_os = "macos")'.dependencies` = list(
-            `core-foundation` = list(
-                version = "0.9.0",
-                features = array("mac_os_10_7_support", 1)
-            )
-        ),
-        `target.'cfg(windows)'.dependencies` = list(
-            miow = "0.3.6",
-            fwdansi = "1.1.0"
-        ),
-        .str_as_literal = FALSE
-    )
+  # Using cargo's Cargo.toml file for reference
+  # https://github.com/rust-lang/cargo/blob/master/Cargo.toml
+  # Testing arrays, names, and nested values
+  toml <- to_toml(
+    package = list(
+      name = "cargo",
+      version = "0.52.0",
+      edition = "2018",
+      authors = c("author_1", "author_2", "author_3"),
+      license = "MIT OR Apache-2.0",
+      homepage = "https://crates.io",
+      repository = "https://github.com/rust-lang/cargo",
+      documentation = "https://docs.rs/cargo",
+      readme = "README.md",
+      description = "Cargo, a package manager for Rust."
+    ),
+    dependencies = list(
+      semver = list(version = "0.10", features = array("serde", 1)),
+      serde = list(version = "1.0.82", features = array("derive", 1))
+    ),
+    `target.'cfg(target_os = "macos")'.dependencies` = list(
+      `core-foundation` = list(
+        version = "0.9.0",
+        features = array("mac_os_10_7_support", 1)
+      )
+    ),
+    `target.'cfg(windows)'.dependencies` = list(
+      miow = "0.3.6",
+      fwdansi = "1.1.0"
+    ),
+    .str_as_literal = FALSE
+  )
 
-reference <- c(
+  reference <- c(
     "[package]",
     "name = \"cargo\"",
     "version = \"0.52.0\"",
@@ -52,7 +52,7 @@ reference <- c(
     "[target.'cfg(windows)'.dependencies]",
     "miow = \"0.3.6\"",
     "fwdansi = \"1.1.0\""
-)
+  )
 
-    expect_equal(toml, reference)
+  expect_equal(toml, reference)
 })
