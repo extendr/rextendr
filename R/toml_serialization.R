@@ -5,7 +5,25 @@ to_toml <- function(
     .format_dbl = "%g"
 ) {
     args <- list2(...)
-    map2(names2(args), args, function(nm, a) {
+    names <- names2(args)
+    invalid <- which(map_lgl(args, is.atomic) & !nzchar(names))
+    if (length(invalid) > 0) {
+        args_limit <- 5
+        idx <- paste0("`", head(invalid, args_limit), "`", collapse = ", ")
+        if (length(invalid) > args_limit)
+        idx <- paste0(idx, ", ...")
+
+        stop(
+            paste(
+                get_toml_err_msg(),
+                paste0("  x Unnamed arguments found at position(s) ", idx, "."),
+                "  i All top-level values should be named.",
+                sep = "\n"
+            ),
+            call. = FALSE
+        )
+    }
+    map2(names, args, function(nm, a) {
         vec_c(
             if (nzchar(nm)) paste0("[", nm, "]") else character(0),
             format_toml(
@@ -99,4 +117,5 @@ to_toml(
             branch = "master",
             nested = list(x = 1, y = 2)),
         `extendr-macros` = list(git = "another_ref")
-    )) %>% walk(cat, sep ="\n")
+    ),
+    "here") %>% walk(cat, sep ="\n")
