@@ -1,3 +1,26 @@
+#' Convert R `list()` into toml-compatible format.
+#'
+#' [to_toml()] can be used to build `Cargo.toml`.
+#'
+#' @param ... A list from which toml is constructed.
+#'     Supports nesting and tidy evaluation.
+#' @param .str_as_literal Logical indicating wether to treat
+#'     strings as literal (single quotes no escapes) or
+#'     basic (ecaping some sequences) ones. Default is `TRUE`.
+#' @param .format_int,.format_dbl Character scalar describing
+#'     number formatting. Compatible with `sprintf`.
+#' @return A character vector, each element corresponds to
+#'     one line of the resulting output.
+#' @examples
+#' \dontrun{
+#' to_toml(workspace = )
+#' # Produces [workspace] with no children
+#'
+#' to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
+#' # [patch.crates_io]
+#' # extendr-api = { git = 'git-ref' }
+#' }
+#' @export
 to_toml <- function(
     ...,
     .str_as_literal = TRUE,
@@ -6,10 +29,13 @@ to_toml <- function(
 ) {
     args <- dots_list(..., .preserve_empty = TRUE, .ignore_empty = "none")
     names <- names2(args)
+
+    # We disallow unnamed top-level atomic arguments
     invalid <- which(map_lgl(args, is.atomic) & !nzchar(names))
+    # If such args found, display an error message
     if (length(invalid) > 0) {
         args_limit <- 5
-        idx <- paste0("`", head(invalid, args_limit), "`", collapse = ", ")
+        idx <- paste0("`", utils::head(invalid, args_limit), "`", collapse = ", ")
         if (length(invalid) > args_limit)
         idx <- paste0(idx, ", ...")
 
@@ -23,21 +49,23 @@ to_toml <- function(
             call. = FALSE
         )
     }
-    map2(names, args, function(nm, a) {
-        c(
-            if (nzchar(nm)) paste0("[", nm, "]") else character(0),
-            format_toml(
-                a,
-                .str_as_literal = .str_as_literal,
-                .format_int = .format_int,
-                .format_dbl = .format_dbl
+    flatten_chr(
+        map2(names, args, function(nm, a) {
+            c(
+                if (nzchar(nm)) paste0("[", nm, "]") else character(0),
+                format_toml(
+                    a,
+                    .str_as_literal = .str_as_literal,
+                    .format_int = .format_int,
+                    .format_dbl = .format_dbl
+                )
             )
-        )
-    })
+        })
+    )
 }
 
 get_toml_err_msg <- function() "Object cannot be serialzied."
-get_toml_size_err_msg <- function() "  x `x` has length of `0`.\n  i Input should be of length >= 1.\n"
+
 format_toml <- function(x, ...) UseMethod("format_toml")
 
 format_toml.default <- function(x, ...)
@@ -49,6 +77,9 @@ format_toml.default <- function(x, ...)
         ),
         call. = FALSE)
 
+# This handles missing args
+# `to_toml(workspace = )` results into
+# [workspace] with no children
 format_toml.name <- function(x, ...) {
     if (is_missing(x))
         return(character(0))
@@ -59,7 +90,12 @@ format_toml.name <- function(x, ...) {
 format_toml_atomic <- function(x, ..., .formatter) {
     if (length(x) == 0L) {
         stop(
-            paste(get_toml_err_msg(), get_toml_size_err_msg(), sep = "\n"),
+            paste(
+                get_toml_err_msg(),
+                "  x `x` has length of `0`.",
+                "  i Input should be of length >= 1.",
+                sep = "\n"
+            ),
             call. = FALSE
         )
     } else {
@@ -69,16 +105,12 @@ format_toml_atomic <- function(x, ..., .formatter) {
             items <- paste0("[ ", items, " ]")
         }
         items
-
-        # debug
-        vec_assert(items, ptype = character(), size = 1L)
     }
-
 }
 
 # This should escape basic symbols
 escape_dbl_quotes <- function(x) {
-    stringi::stri_replace_all_regex(x, "([\"])", r"(\\$1)")
+    stri_replace_all_regex(x, "([\"])", r"(\\$1)")
 }
 
 format_toml.character <- function(x, .str_as_literal = TRUE, ...) {
@@ -101,9 +133,9 @@ format_toml.double <- function(x, .format_dbl = "%g", ...) {
 
 format_toml.list <- function(x, .top_level = TRUE, ...) {
     names <- names2(x)
-    map2(names, x, function(nm, val) {
+    result <- map2(names, x, function(nm, val) {
         paste(nm, format_toml(val, .top_level = FALSE, ...), sep = " = ")
-    }) -> result
+    })
 
     if (!.top_level) {
         result <- paste0(result, collapse = ", ")
@@ -112,13 +144,5 @@ format_toml.list <- function(x, .top_level = TRUE, ...) {
     if (!is.atomic(result))
         result <- flatten_chr(result)
 
-    # debug
-    vec_assert(result, character())
     result
 }
-
-
-
-to_toml(
-    workspace = ,
-    ) %>% walk(cat, sep ="\n")

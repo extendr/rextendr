@@ -72,8 +72,8 @@ calls to \code{\link[=rust_source]{rust_source()}}.}
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 
 \item{use_rtools}{Logical indicating whether to append path to Rtools
-to the PATH variable on Windows using RTOOLS40_HOME env var (if it is set).
-Appended path depends on the process architecture.
+to the \code{PATH} variable on Windows using \code{RTOOLS40_HOME} environent variable
+(if it is set). Appended path depends on the process architecture.
 Does nothing on other platforms.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}

@@ -27,8 +27,7 @@ Imports:
     stringi,
     tibble,
     purrr,
-    rlang,
-    vctrs
+    rlang
 Suggests: 
     knitr,
     rmarkdown,
