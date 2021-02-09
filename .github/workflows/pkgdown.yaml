@@ -21,7 +21,7 @@ jobs:
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ matrix.config.rust-version }}
+          toolchain: stable
           default: true
 
       - name: Query dependencies
