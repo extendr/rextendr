@@ -16,10 +16,8 @@
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
-#' @param extendr_version Version of the extendr-api crate, provided as a Rust
-#'   version string. `"*"` will use the latest available version on crates.io.
-#' @param extendr_macros_version Version of the extendr-macros crate, if different
-#'   from `extendr_version`.
+#' @param extendr_deps Versions of `extendr-*` crates. Defaults to
+#'   \code{list(`extendr-api` = "*", `extendr-macros` = "*")}.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
@@ -105,8 +103,7 @@ rust_source <- function(file, code = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
                         profile = c("dev", "release"),
                         toolchain = getOption("rextendr.toolchain"),
-                        extendr_version = getOption("rextendr.extendr.version", "*"),
-                        extendr_macros_version = getOption("rextendr.extendr_macros.version", "*"),
+                        extendr_deps = getOption("rextendr.extendr_deps"),
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
@@ -114,6 +111,12 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE) {
   profile <- match.arg(profile)
+  if (is.null(extendr_deps)) {
+    stop(
+      "Invalid argument.\n  x `extendr_deps` cannot be `NULL.",
+      call. = FALSE)
+  }
+
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
     message(sprintf("build directory: %s\n", dir))
@@ -147,8 +150,10 @@ rust_source <- function(file, code = NULL,
 
   # generate Cargo.toml file and compile shared library
   cargo.toml_content <- generate_cargo.toml(
-    libname, dependencies, patch.crates_io,
-    extendr_version, extendr_macros_version
+    libname = libname,
+    dependencies = dependencies,
+    patch.crates_io = patch.crates_io,
+    extendr_deps = extendr_deps
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
@@ -255,8 +260,12 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   }
 }
 
-generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
-                                extendr_version = "*", extendr_macros_version = extendr_version) {
+generate_cargo.toml <- function(
+  libname = "rextendr",
+  dependencies = NULL,
+  patch.crates_io = NULL,
+  extendr_deps = NULL
+) {
   to_toml(
     package = list(
       name = libname,
@@ -267,10 +276,7 @@ generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch
       `crate-type` = array("cdylib", 1)
     ),
     dependencies = append(
-      list(
-        `extendr-api` = extendr_version,
-        `extendr-macros` = extendr_macros_version
-      ),
+      extendr_deps,
       dependencies
     ),
     `patch.crates-io` = patch.crates_io
