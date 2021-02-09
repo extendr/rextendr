@@ -1,36 +1,50 @@
 Package: rextendr
 Title: Call Rust Code from R using the 'extendr' Crate
 Version: 0.1.0
-Authors@R: c(
-    person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", c("aut", "cre"),
-      comment = c(ORCID = "0000-0002-7470-9261")),
-    person("Andy", "Thomason", , "andy@andythomason.com", c("aut")),
-    person("Mossa M.", "Reimert", , "mossa@sund.ku.dk", c("aut")),
-    person("Ilia", "Kosenkov", , "ilia.kosenkov@outlook.com", c("aut"),
-      comment = c(ORCID = "0000-0001-5563-7840"))
-  )
-Description: Call Rust code from R. This package provides functions to compile and load Rust
-  code from R, similar to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Under
-  the hood, the package uses the Rust 'extendr' crate to do all the heavy lifting.
+Authors@R: 
+    c(person(given = "Claus O.",
+             family = "Wilke",
+             role = c("aut", "cre"),
+             email = "wilke@austin.utexas.edu",
+             comment = c(ORCID = "0000-0002-7470-9261")),
+      person(given = "Andy",
+             family = "Thomason",
+             role = "aut",
+             email = "andy@andythomason.com"),
+      person(given = "Mossa M.",
+             family = "Reimert",
+             role = "aut",
+             email = "mossa@sund.ku.dk"),
+      person(given = "Ilia",
+             family = "Kosenkov",
+             role = "aut",
+             email = "ilia.kosenkov@outlook.com",
+             comment = c(ORCID = "0000-0001-5563-7840")))
+Description: Call Rust code from R. This package provides
+    functions to compile and load Rust code from R, similar to how 'Rcpp'
+    or 'cpp11' allow easy interfacing with C++ code. Under the hood, the
+    package uses the Rust 'extendr' crate to do all the heavy lifting.
 License: MIT + file LICENSE
-SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile without error
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+URL: https://github.com/extendr/rextendr
+BugReports: https://github.com/extendr/rextendr/issues
 Depends:
     R (>= 4.0)
 Imports: 
     brio,
     dplyr,
     glue,
+    purrr,
     stringi,
-    tibble,
-    purrr
+    tibble
 Suggests: 
     knitr,
     rmarkdown,
     testthat
-VignetteBuilder: knitr
-URL: https://github.com/extendr/rextendr
-BugReports: https://github.com/extendr/rextendr/issues
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must
+    compile without error
