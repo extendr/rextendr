@@ -36,8 +36,7 @@
     # Default version of 'extendr_macros' if no 'patch.crates_io' is specified
     rextendr.extendr_macros.version = "*",
     rextendr.extendr_deps = list(
-      `extendr-api` = "*",
-      `extendr-macros` = "*"
+      `extendr-api` = "*"
     )
   )
 
