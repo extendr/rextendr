@@ -19,6 +19,12 @@
 #' to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
 #' # [patch.crates_io]
 #' # extendr-api = { git = 'git-ref' }
+#'
+#' # Single-element arrays are distinguished from scalars
+#' # using explicitly set `dim`
+#' to_toml(lib = list(`crate-type` = array("cdylib", 1)))
+#' # [lib]
+#' # crate-type = [ 'cdylib' ]
 #' }
 #' @export
 to_toml <- function(
@@ -31,7 +37,7 @@ to_toml <- function(
     names <- names2(args)
 
     # We disallow unnamed top-level atomic arguments
-    invalid <- which(map_lgl(args, is.atomic) & !nzchar(names))
+    invalid <- which(map_lgl(args, is.atomic))
     # If such args found, display an error message
     if (length(invalid) > 0) {
         args_limit <- 5
@@ -101,7 +107,7 @@ format_toml_atomic <- function(x, ..., .formatter) {
     } else {
         formatter <- as_function(.formatter)
         items <- paste0(formatter(x, ...), collapse = ", ")
-        if (length(x) > 1L) {
+        if (length(x) > 1L || !is.null(dim(x))) {
             items <- paste0("[ ", items, " ]")
         }
         items
@@ -120,7 +126,7 @@ format_toml.character <- function(x, .str_as_literal = TRUE, ...) {
     else {
         .formatter <- ~paste0("\"", escape_dbl_quotes(.x), "\"")
     }
-    format_toml_atomic(x, ..., .formatter = .formatter)
+    format_toml_atomic(x, ..., .str_as_literal = .str_as_literal, .formatter = .formatter)
 }
 
 format_toml.integer <- function(x, .format_int = "%d", ...) {
