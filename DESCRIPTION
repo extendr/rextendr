@@ -33,7 +33,6 @@ Imports:
     brio,
     dplyr,
     glue,
-    purrr,
     stringi,
     tibble,
     purrr,

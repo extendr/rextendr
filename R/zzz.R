@@ -31,7 +31,7 @@
     ),
     # character scalar
     # Default version of 'extendr_api' if no 'patch.crates_io' is specified
-    rextendr.extendr.version = "*",
+    # rextendr.extendr.version = "*",
     # character scalar
     # Default version of 'extendr_macros' if no 'patch.crates_io' is specified
     rextendr.extendr_macros.version = "*",

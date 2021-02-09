@@ -115,7 +115,7 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
 
 }
 
-# `NULL` is equivalen to missing arg
+# `NULL` is equivalent to missing arg
 format_toml.NULL <- function(x, ..., .top_level = FALSE) {
     if (isTRUE(.top_level)) {
         return(character(0))
@@ -156,7 +156,8 @@ format_toml.character <- function(x,  ..., .str_as_literal = TRUE, .top_level = 
         .formatter <- ~paste0("\"", escape_dbl_quotes(.x), "\"")
     }
     format_toml_atomic(
-        x, ...,
+        x,
+        ...,
         .str_as_literal = .str_as_literal,
         .top_level = FALSE,
         .formatter = .formatter
