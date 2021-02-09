@@ -10,6 +10,12 @@ if (!is.null(toolchain) && nzchar(toolchain)) {
 # E.g., "extendr-api = { git = \"https://github.com/extendr/extendr\" };extendr-macros = { git = \"https://github.com/extendr/extendr\" }"
 patch <- Sys.getenv("REXTENDR_PATCH_CRATES_IO")
 if (!is.null(patch) && nzchar(patch)) {
-  options(rextendr.patch.crates_io = strsplit(patch, ";")[[1]])
+    patch_val <- gsub("([a-zA-Z0-9_\\-\\.]+)(?=\\s*=)", "`\\1`", patch, perl = TRUE)
+    patch_val <- gsub("\\{", "list(", patch_val)
+    patch_val <- gsub("\\}", ")", patch_val)
+    patch_val <- gsub(";", ", ", patch_val)
+    patch_expr <- parse(text = paste0("list(", patch_val, ")"))
+
+  options(rextendr.patch.crates_io = eval(patch_expr))
   message(paste0(">> {rextendr}: Using cargo patch from 'REXTENDR_PATCH_CRATES_IO': ", patch))
 }

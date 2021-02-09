@@ -144,7 +144,7 @@ format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
         )
     } else {
         formatter <- as_function(.formatter)
-        items <- paste0(formatter(x, ...), collapse = ", ")
+        items <- paste0(formatter(x, ...), collapse = ",\n")
         if (length(x) > 1L || !is.null(dim(x))) {
             items <- paste0("[ ", items, " ]")
         }
@@ -193,6 +193,23 @@ format_toml.double <- function(x, ..., .format_dbl = "%g", .top_level = FALSE) {
 
 format_toml.list <- function(x, ..., .top_level = FALSE) {
     names <- names2(x)
+    invalid <- which(!nzchar(names))
+    if (length(invalid) > 0) {
+        args_limit <- 5
+        idx <- paste0("`", utils::head(invalid, args_limit), "`", collapse = ", ")
+        if (length(invalid) > args_limit)
+        idx <- paste0(idx, ", ...")
+
+        stop(
+            paste(
+                get_toml_err_msg(),
+                paste0("  x Unnamed arguments found at position(s) ", idx, "."),
+                "  i List values should have names.",
+                sep = "\n"
+            ),
+            call. = FALSE
+        )
+    }
     result <- map2(names, x, function(nm, val) {
         paste(nm, format_toml(val, ..., .top_level = FALSE), sep = " = ")
     })

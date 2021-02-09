@@ -26,8 +26,6 @@ test_that("`rust_source()` works", {
     code = rust_src,
     quiet = FALSE,
     cache_build = TRUE#,
-    #toolchain = rust_source_defaults[["toolchain"]],
-    #patch.crates_io = rust_source_defaults[["patch.crates_io"]]
   )
 
   # call `hello()` function from R
@@ -62,17 +60,9 @@ test_that("`options` override `patch.crates_io` value in `rust_source`", {
 })
 
 
-test_that("`options` override `rextendr.extendr.version` value in `rust_source`", {
-  old_val <- options("rextendr.extendr.version")
-  options(rextendr.extendr.version = "-1")
-  on.exit(options(old_val))
-
-  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
-})
-
-test_that("`options` override `rextendr.extendr_macros.version` value in `rust_source`", {
-  old_val <- options("rextendr.extendr_macros.version")
-  options(rextendr.extendr_macros.version = "-1")
+test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
+  old_val <- options("rextendr.extendr_deps")
+  options(rextendr.extendr_deps = list(`extendr-api` = "-1"))
   on.exit(options(old_val))
 
   expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
