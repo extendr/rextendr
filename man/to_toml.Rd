@@ -25,7 +25,6 @@ one line of the resulting output.
 \code{\link[=to_toml]{to_toml()}} can be used to build \code{Cargo.toml}.
 }
 \examples{
-\dontrun{
 to_toml(workspace = )
 # Produces [workspace] with no children
 
@@ -38,5 +37,4 @@ to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
 to_toml(lib = list(`crate-type` = array("cdylib", 1)))
 # [lib]
 # crate-type = [ 'cdylib' ]
-}
 }
