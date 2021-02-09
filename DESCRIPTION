@@ -32,3 +32,5 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
+URL: https://github.com/extendr/rextendr
+BugReports: https://github.com/extendr/rextendr/issues
