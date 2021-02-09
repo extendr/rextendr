@@ -26,8 +26,7 @@
     #   'extendr-macros = { git = "https://github.com/extendr/extendr" }'
     # ),
     rextendr.patch.crates_io = list(
-      `extendr-api` = git_ref,
-      `extendr-macros` = git_ref
+      `extendr-api` = git_ref
     ),
     # character scalar
     # Default version of 'extendr_api' if no 'patch.crates_io' is specified
