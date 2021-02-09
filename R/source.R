@@ -102,7 +102,7 @@
 rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
-                        patch.crates_io = getOption("rextendr.patch.crates_io", character()),
+                        patch.crates_io = getOption("rextendr.patch.crates_io"),
                         profile = c("dev", "release"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_version = getOption("rextendr.extendr.version", "*"),
@@ -257,27 +257,45 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
 generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
                                 extendr_version = "*", extendr_macros_version = extendr_version) {
-  cargo.toml <- c(
-    '[package]',
-    glue::glue('name = "{libname}"'),
-    'version = "0.0.1"\nedition = "2018"',
-    '[lib]\ncrate-type = ["cdylib"]',
-    '[dependencies]',
-    glue::glue('extendr-api = "{extendr_version}"'),
-    glue::glue('extendr-macros = "{extendr_macros_version}"')
+  # cargo.toml <- c(
+  #   '[package]',
+  #   glue::glue('name = "{libname}"'),
+  #   'version = "0.0.1"\nedition = "2018"',
+  #   '[lib]\ncrate-type = ["cdylib"]',
+  #   '[dependencies]',
+  #   glue::glue('extendr-api = "{extendr_version}"'),
+  #   glue::glue('extendr-macros = "{extendr_macros_version}"')
+  # )
+
+  # # add user-provided dependencies
+  # cargo.toml <- c(cargo.toml, dependencies)
+
+  # # add user-provided patch.crates-io statements
+  # cargo.toml <- c(
+  #   cargo.toml,
+  #   "[patch.crates-io]",
+  #   patch.crates_io
+  # )
+
+  # cargo.toml
+
+  c(
+    to_toml(
+      package = list(
+        name = libname,
+        version = "0.0.1",
+        edition = "2018"
+      ),
+      lib = list(
+        `crate-type` = array("cdylib", 1)
+      ),
+      dependencies = list(
+        `extendr-api` = extendr_version,
+        `extendr-macros` = extendr_macros_version
+      ),
+      `patch.crates-io` = patch.crates_io
+    )
   )
-
-  # add user-provided dependencies
-  cargo.toml <- c(cargo.toml, dependencies)
-
-  # add user-provided patch.crates-io statements
-  cargo.toml <- c(
-    cargo.toml,
-    "[patch.crates-io]",
-    patch.crates_io
-  )
-
-  cargo.toml
 }
 
 
