@@ -29,6 +29,10 @@ test_that("`toml` is generated correctly", {
       miow = "0.3.6",
       fwdansi = "1.1.0"
     ),
+    empty_block = NULL,
+    test_block = list(
+      logical = TRUE
+    ),
     .str_as_literal = FALSE
   )
 
@@ -51,7 +55,10 @@ test_that("`toml` is generated correctly", {
     "core-foundation = { version = \"0.9.0\", features = [ \"mac_os_10_7_support\" ] }",
     "[target.'cfg(windows)'.dependencies]",
     "miow = \"0.3.6\"",
-    "fwdansi = \"1.1.0\""
+    "fwdansi = \"1.1.0\"",
+    "[empty_block]",
+    "[test_block]",
+    "logical = true"
   )
 
   expect_equal(toml, reference)

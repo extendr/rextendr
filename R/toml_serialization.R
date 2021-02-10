@@ -210,6 +210,17 @@ format_toml.double <- function(x,
   )
 }
 
+format_toml.logical <- function(x,
+                                ...,
+                                .top_level = FALSE) {
+  format_toml_atomic(
+    x,
+    ...,
+    .top_level = FALSE,
+    .formatter = ~ ifelse(.x, "true", "false")
+  )
+}
+
 format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
