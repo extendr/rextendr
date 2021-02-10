@@ -1,5 +1,4 @@
 test_that("`rust_source()` works", {
-
   rust_src <- "
     #[extendr]
     fn hello() -> &'static str {
@@ -25,23 +24,20 @@ test_that("`rust_source()` works", {
   rust_source(
     code = rust_src,
     quiet = FALSE,
-    cache_build = TRUE#,
-    #toolchain = rust_source_defaults[["toolchain"]],
-    #patch.crates_io = rust_source_defaults[["patch.crates_io"]]
+    cache_build = TRUE # ,
   )
 
   # call `hello()` function from R
-  #> [1] "Hello, this string was created by Rust."
+  # > [1] "Hello, this string was created by Rust."
   expect_equal(hello(), "Hello, this string was created by Rust.")
 
   # call `add()` function from R
   expect_equal(add(14, 23), 37)
-  #> [1] 37
+  # > [1] 37
   expect_equal(add(17, 42), 17 + 42)
 
   # This function takes no arguments and invisibly return NULL
   expect_null(say_nothing())
-
 })
 
 
@@ -55,24 +51,16 @@ test_that("`options` override `toolchain` value in `rust_source`", {
 
 test_that("`options` override `patch.crates_io` value in `rust_source`", {
   old_val <- options("rextendr.patch.crates_io")
-  options(rextendr.patch.crates_io = "Non-existent-patch")
+  options(rextendr.patch.crates_io = list(`extendr-api` = "-1"))
   on.exit(options(old_val))
 
   expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 
-test_that("`options` override `rextendr.extendr.version` value in `rust_source`", {
-  old_val <- options("rextendr.extendr.version")
-  options(rextendr.extendr.version = "-1")
-  on.exit(options(old_val))
-
-  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
-})
-
-test_that("`options` override `rextendr.extendr_macros.version` value in `rust_source`", {
-  old_val <- options("rextendr.extendr_macros.version")
-  options(rextendr.extendr_macros.version = "-1")
+test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
+  old_val <- options("rextendr.extendr_deps")
+  options(rextendr.extendr_deps = list(`extendr-api` = "-1"))
   on.exit(options(old_val))
 
   expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")

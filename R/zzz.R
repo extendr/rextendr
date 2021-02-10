@@ -13,22 +13,30 @@
   # NULL values are present for reference and may later be replaced
   # by concrete values
 
+  git_ref <- list(git = "https://github.com/extendr/extendr")
+
   rextendr_opts <- list(
     # character scalar
     # Controls default Rust toolchain; NULL corresponds to system's default
     rextendr.toolchain = NULL,
     # character vector
     # Overrides Rust dependencies; mainly used for development
-    rextendr.patch.crates_io =  c(
-      'extendr-api = { git = "https://github.com/extendr/extendr" }',
-      'extendr-macros = { git = "https://github.com/extendr/extendr" }'
+    # rextendr.patch.crates_io =  c(
+    #   'extendr-api = { git = "https://github.com/extendr/extendr" }',
+    #   'extendr-macros = { git = "https://github.com/extendr/extendr" }'
+    # ),
+    rextendr.patch.crates_io = list(
+      `extendr-api` = git_ref
     ),
     # character scalar
     # Default version of 'extendr_api' if no 'patch.crates_io' is specified
-    rextendr.extendr.version = "*",
+    # rextendr.extendr.version = "*",
     # character scalar
     # Default version of 'extendr_macros' if no 'patch.crates_io' is specified
-    rextendr.extendr_macros.version = "*"
+    # rextendr.extendr_macros.version = "*",
+    rextendr.extendr_deps = list(
+      `extendr-api` = "*"
+    )
   )
 
 

@@ -33,9 +33,10 @@ Imports:
     brio,
     dplyr,
     glue,
-    purrr,
     stringi,
-    tibble
+    tibble,
+    purrr,
+    rlang
 Suggests: 
     knitr,
     rmarkdown,

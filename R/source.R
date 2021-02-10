@@ -16,10 +16,8 @@
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
-#' @param extendr_version Version of the extendr-api crate, provided as a Rust
-#'   version string. `"*"` will use the latest available version on crates.io.
-#' @param extendr_macros_version Version of the extendr-macros crate, if different
-#'   from `extendr_version`.
+#' @param extendr_deps Versions of `extendr-*` crates. Defaults to
+#'   \code{list(`extendr-api` = "*", `extendr-macros` = "*")}.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
@@ -102,11 +100,10 @@
 rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
-                        patch.crates_io = getOption("rextendr.patch.crates_io", character()),
+                        patch.crates_io = getOption("rextendr.patch.crates_io"),
                         profile = c("dev", "release"),
                         toolchain = getOption("rextendr.toolchain"),
-                        extendr_version = getOption("rextendr.extendr.version", "*"),
-                        extendr_macros_version = getOption("rextendr.extendr_macros.version", "*"),
+                        extendr_deps = getOption("rextendr.extendr_deps"),
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
@@ -114,6 +111,13 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE) {
   profile <- match.arg(profile)
+  if (is.null(extendr_deps)) {
+    stop(
+      "Invalid argument.\n  x `extendr_deps` cannot be `NULL`.",
+      call. = FALSE
+    )
+  }
+
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
     message(sprintf("build directory: %s\n", dir))
@@ -147,8 +151,10 @@ rust_source <- function(file, code = NULL,
 
   # generate Cargo.toml file and compile shared library
   cargo.toml_content <- generate_cargo.toml(
-    libname, dependencies, patch.crates_io,
-    extendr_version, extendr_macros_version
+    libname = libname,
+    dependencies = dependencies,
+    patch.crates_io = patch.crates_io,
+    extendr_deps = extendr_deps
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
@@ -178,7 +184,8 @@ rust_source <- function(file, code = NULL,
     dir,
     target_folder,
     ifelse(profile == "dev", "debug", "release"),
-    libfilename)
+    libfilename
+  )
 
   # Capture loaded dll
   dll_info <- dyn.load(shared_lib, local = TRUE, now = TRUE)
@@ -218,8 +225,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   # Append rtools path to the end of PATH on Windows
   if (
     isTRUE(use_rtools) &&
-    .Platform$OS.type == "windows" &&
-    nzchar(Sys.getenv("RTOOLS40_HOME"))
+      .Platform$OS.type == "windows" &&
+      nzchar(Sys.getenv("RTOOLS40_HOME"))
   ) {
     env_path <- Sys.getenv("PATH")
     # This retores PATH when function returns, i.e. after cargo finishes.
@@ -255,39 +262,36 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   }
 }
 
-generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch.crates_io = NULL,
-                                extendr_version = "*", extendr_macros_version = extendr_version) {
-  cargo.toml <- c(
-    '[package]',
-    glue::glue('name = "{libname}"'),
-    'version = "0.0.1"\nedition = "2018"',
-    '[lib]\ncrate-type = ["cdylib"]',
-    '[dependencies]',
-    glue::glue('extendr-api = "{extendr_version}"'),
-    glue::glue('extendr-macros = "{extendr_macros_version}"')
+generate_cargo.toml <- function(libname = "rextendr",
+                                dependencies = NULL,
+                                patch.crates_io = NULL,
+                                extendr_deps = NULL) {
+  to_toml(
+    package = list(
+      name = libname,
+      version = "0.0.1",
+      edition = "2018"
+    ),
+    lib = list(
+      `crate-type` = array("cdylib", 1)
+    ),
+    dependencies = append(
+      extendr_deps,
+      dependencies
+    ),
+    `patch.crates-io` = patch.crates_io
   )
-
-  # add user-provided dependencies
-  cargo.toml <- c(cargo.toml, dependencies)
-
-  # add user-provided patch.crates-io statements
-  cargo.toml <- c(
-    cargo.toml,
-    "[patch.crates-io]",
-    patch.crates_io
-  )
-
-  cargo.toml
 }
 
 
 get_dynlib_ext <- function() {
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
   sysinf <- Sys.info()
-  if (!is.null(sysinf)){
-    os <- sysinf['sysname']
-    if (os == 'Darwin')
+  if (!is.null(sysinf)) {
+    os <- sysinf["sysname"]
+    if (os == "Darwin") {
       return(".dylib")
+    }
   }
   .Platform$dynlib.ext
 }
@@ -303,7 +307,7 @@ get_dynlib_name <- function(libname) {
 get_specific_target_name <- function() {
   sysinf <- Sys.info()
 
-  if  (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
+  if (!is.null(sysinf) && sysinf["sysname"] == "Windows") {
     if (R.version$arch == "x86_64") {
       return("x86_64-pc-windows-gnu")
     }
@@ -343,4 +347,3 @@ clean_build_dir <- function() {
     the$build_dir <- NULL
   }
 }
-
