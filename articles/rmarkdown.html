@@ -234,7 +234,7 @@
 <span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>If your code requires external crates, you can set dependencies via the <code>engine.opts</code> chunk option, like so:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1"></a><span class="bn">```{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}</span></span>
+<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1"></a><span class="bn">```{extendrfuns engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}</span></span>
 <span id="cb25-2"><a href="#cb25-2"></a><span class="bn">use pulldown_cmark::{Parser, Options, html};</span></span>
 <span id="cb25-3"><a href="#cb25-3"></a></span>
 <span id="cb25-4"><a href="#cb25-4"></a><span class="bn">#[extendr]</span></span>
