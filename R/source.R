@@ -113,7 +113,7 @@ rust_source <- function(file, code = NULL,
   profile <- match.arg(profile)
   if (is.null(extendr_deps)) {
     stop(
-      "Invalid argument.\n  x `extendr_deps` cannot be `NULL.",
+      "Invalid argument.\n  x `extendr_deps` cannot be `NULL`.",
       call. = FALSE
     )
   }
@@ -262,8 +262,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   }
 }
 
-generate_cargo.toml <- function(
-                                libname = "rextendr",
+generate_cargo.toml <- function(libname = "rextendr",
                                 dependencies = NULL,
                                 patch.crates_io = NULL,
                                 extendr_deps = NULL) {
