@@ -25,16 +25,12 @@ one line of the resulting output.
 \code{\link[=to_toml]{to_toml()}} can be used to build \code{Cargo.toml}.
 }
 \examples{
-to_toml(workspace = )
 # Produces [workspace] with no children
+to_toml(workspace = )
 
 to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
-# [patch.crates_io]
-# extendr-api = { git = 'git-ref' }
 
 # Single-element arrays are distinguished from scalars
 # using explicitly set `dim`
 to_toml(lib = list(`crate-type` = array("cdylib", 1)))
-# [lib]
-# crate-type = [ 'cdylib' ]
 }
