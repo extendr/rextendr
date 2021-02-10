@@ -43,18 +43,13 @@ to_toml <- function(
   invalid <- which(map_lgl(args, ~ is.atomic(.x) && !is.null(.x)))
   # If such args found, display an error message
   if (length(invalid) > 0) {
-    args_limit <- 5
-    idx <- paste0("`", utils::head(invalid, args_limit), "`", collapse = ", ")
-    if (length(invalid) > args_limit) {
-      idx <- paste0(idx, ", ...")
-    }
-
     stop(
-      paste(
+      glue(
         get_toml_err_msg(),
-        paste0("  x Unnamed arguments found at position(s) ", idx, "."),
-        "  i All top-level values should be named.",
-        sep = "\n"
+        make_idx_msg(invalid),
+        "i All top-level values should be named.",
+        .sep = "\n  ",
+        .trim = FALSE
       ),
       call. = FALSE
     )
@@ -75,17 +70,31 @@ to_toml <- function(
   )
 }
 
+make_idx_msg <- function(invalid, args_limit = 5L) {
+  idx <- paste0(
+    glue("`{utils::head(invalid, args_limit)}`"),
+    collapse = ", "
+  )
+  if (length(invalid) > args_limit) {
+    idx <- glue("{idx}, ... ")
+  }
+
+  glue("x Unnamed arguments found at position(s): {idx}.")
+}
 get_toml_err_msg <- function() "Object cannot be serialzied."
-get_toml_missing_msg <- function() "  x Missing arument and `NULL` are only allowed at the top level."
+get_toml_missing_msg <- function() {
+  "x Missing arument and `NULL` are only allowed at the top level."
+}
 
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 format_toml.default <- function(x, ..., .top_level = FALSE) {
   stop(
-    paste(
+    glue(
       get_toml_err_msg(),
-      paste0("  x `", typeof(x), "` cannot be converted to toml."),
-      sep = "\n"
+      "x `{typeof(x)}` cannot be converted to toml.",
+      .sep = "\n  ",
+      .trim = FALSE
     ),
     call. = FALSE
   )
@@ -99,18 +108,23 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
     if (is_missing(x)) {
       return(character(0))
     } else {
-      # This function does not return
+      # This function errors and does not return
       format_toml.default(x, ..., .top_level = .top_level)
     }
   } else {
-    stop(
-      paste(
-        get_toml_err_msg(),
-        get_toml_missing_msg(),
-        sep = "\n"
-      ),
-      call. = FALSE
-    )
+    if (is_missing(x)) {
+      stop(
+        paste(
+          get_toml_err_msg(),
+          get_toml_missing_msg(),
+          sep = "\n  "
+        ),
+        call. = FALSE
+      )
+    } else {
+      # This function errors and does not return
+      format_toml.default(x, ..., .top_level = .top_level)
+    }
   }
 }
 
@@ -123,23 +137,27 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
       paste(
         get_toml_err_msg(),
         get_toml_missing_msg(),
-        sep = "\n"
+        sep = "\n  "
       ),
       call. = FALSE
     )
   }
 }
 
-format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
+format_toml_atomic <- function(x,
+                               ...,
+                               .top_level = FALSE,
+                               .formatter) {
   if (length(x) == 0L) {
     "[ ]"
   } else {
     formatter <- as_function(.formatter)
     items <- paste0(formatter(x, ...), collapse = ", ")
     if (length(x) > 1L || !is.null(dim(x))) {
-      items <- paste0("[ ", items, " ]")
+      items <- glue("[ {items} ]")
     }
-    items
+    # Ensure type-stability
+    as.character(items)
   }
 }
 
@@ -148,11 +166,14 @@ escape_dbl_quotes <- function(x) {
   stri_replace_all_regex(x, "([\"])", r"(\\$1)")
 }
 
-format_toml.character <- function(x, ..., .str_as_literal = TRUE, .top_level = FALSE) {
+format_toml.character <- function(x,
+                                  ...,
+                                  .str_as_literal = TRUE,
+                                  .top_level = FALSE) {
   if (isTRUE(.str_as_literal)) {
-    .formatter <- ~ paste0("'", .x, "'")
+    .formatter <- ~ glue("'{.x}'")
   } else {
-    .formatter <- ~ paste0("\"", escape_dbl_quotes(.x), "\"")
+    .formatter <- ~ glue("\"{escape_dbl_quotes(.x)}\"")
   }
   format_toml_atomic(
     x,
@@ -163,7 +184,10 @@ format_toml.character <- function(x, ..., .str_as_literal = TRUE, .top_level = F
   )
 }
 
-format_toml.integer <- function(x, ..., .format_int = "%d", .top_level = FALSE) {
+format_toml.integer <- function(x,
+                                ...,
+                                .format_int = "%d",
+                                .top_level = FALSE) {
   format_toml_atomic(
     x,
     ...,
@@ -173,7 +197,10 @@ format_toml.integer <- function(x, ..., .format_int = "%d", .top_level = FALSE) 
   )
 }
 
-format_toml.double <- function(x, ..., .format_dbl = "%g", .top_level = FALSE) {
+format_toml.double <- function(x,
+                               ...,
+                               .format_dbl = "%g",
+                               .top_level = FALSE) {
   format_toml_atomic(
     x,
     ...,
@@ -187,33 +214,27 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
   if (length(invalid) > 0) {
-    args_limit <- 5
-    idx <- paste0("`", utils::head(invalid, args_limit), "`", collapse = ", ")
-    if (length(invalid) > args_limit) {
-      idx <- paste0(idx, ", ...")
-    }
-
     stop(
-      paste(
+      glue(
         get_toml_err_msg(),
-        paste0("  x Unnamed arguments found at position(s) ", idx, "."),
-        "  i List values should have names.",
-        sep = "\n"
+        make_idx_msg(invalid),
+        "i List values should have names.",
+        .sep = "\n  ",
+        .trim = FALSE
       ),
       call. = FALSE
     )
   }
   result <- map2(names, x, function(nm, val) {
-    paste(nm, format_toml(val, ..., .top_level = FALSE), sep = " = ")
+    glue("{nm} = {format_toml(val, ..., .top_level = FALSE)}")
   })
 
   if (!.top_level) {
-    result <- paste0(result, collapse = ", ")
-    result <- paste0("{ ", result, " }")
+    result <- glue("{{ {paste0(result, collapse = \", \")} }}")
   }
   if (!is.atomic(result)) {
     result <- flatten_chr(result)
   }
-
-  result
+  # Ensure type-stability
+  as.character(result)
 }
