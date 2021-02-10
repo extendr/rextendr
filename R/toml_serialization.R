@@ -40,7 +40,7 @@ to_toml <- function(
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(map_lgl(args, ~ is.atomic(.x) && !is.null(.x)))
+  invalid <- which(map_lgl(args, ~ is_atomic(.x) && !is.null(.x)))
   # If such args found, display an error message
   if (length(invalid) > 0) {
     stop(
@@ -57,10 +57,11 @@ to_toml <- function(
   flatten_chr(
     map2(names, args, function(nm, a) {
       c(
-        if (nzchar(nm)) paste0("[", nm, "]") else character(0),
+        make_header(nm, a),
         format_toml(
           a,
           .top_level = TRUE,
+          .tbl_name = ifelse(is.data.frame(a), nm, character(0)),
           .str_as_literal = .str_as_literal,
           .format_int = .format_int,
           .format_dbl = .format_dbl
@@ -68,6 +69,16 @@ to_toml <- function(
       )
     })
   )
+}
+
+make_header <- function(nm, arg) {
+  # For future support of array-of-table
+  # https://toml.io/en/v1.0.0-rc.3#array-of-tables
+  if (nzchar(nm) && !is.data.frame(arg)) {
+    as.character(glue("[{nm}]"))
+  } else {
+    character(0)
+  }
 }
 
 make_idx_msg <- function(invalid, args_limit = 5L) {
@@ -86,6 +97,17 @@ get_toml_missing_msg <- function() {
   "x Missing arument and `NULL` are only allowed at the top level."
 }
 
+is_emptyish_row <- function(row) every(row, ~ is_na(.x) || is_null(unlist(.x)))
+
+simplify_row <- function(row) {
+  map_if(
+    row,
+    ~ is.list(.x) && all(!nzchar(names2(.x))),
+    ~ .x[[1]],
+    .else = ~.x
+  )
+}
+
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 format_toml.default <- function(x, ..., .top_level = FALSE) {
@@ -98,6 +120,38 @@ format_toml.default <- function(x, ..., .top_level = FALSE) {
     ),
     call. = FALSE
   )
+}
+
+format_toml.data.frame <- function(x,
+                                   ...,
+                                   .tbl_name,
+                                   .top_level = FALSE) {
+  rows <- nrow(x)
+  header <- glue("[[{.tbl_name}]]")
+
+  if (rows == 0L) {
+    return(as.character(header))
+  }
+  result <-
+    map_if(
+      seq_len(rows),
+      ~ is_emptyish_row(x[.x, ]),
+      ~header,
+      .else = function(idx) {
+        item <- simplify_row(x[idx, ])
+        result <- format_toml(
+          item,
+          ...,
+          .top_level = TRUE
+        )
+        if (!is_atomic(result)) {
+          result <- flatten_chr(result)
+        }
+
+        c(header, result)
+      }
+    )
+  flatten_chr(result)
 }
 
 # This handles missing args
@@ -243,7 +297,7 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
   if (!.top_level) {
     result <- glue("{{ {paste0(result, collapse = \", \")} }}")
   }
-  if (!is.atomic(result)) {
+  if (!is_atomic(result)) {
     result <- flatten_chr(result)
   }
   # Ensure type-stability

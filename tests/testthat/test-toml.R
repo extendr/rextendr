@@ -30,8 +30,10 @@ test_that("`toml` is generated correctly", {
       fwdansi = "1.1.0"
     ),
     empty_block = NULL,
-    test_block = list(
-      logical = TRUE
+    lib = data.frame(
+      name = "cargo",
+      test = FALSE,
+      doc = FALSE
     ),
     .str_as_literal = FALSE
   )
@@ -57,8 +59,10 @@ test_that("`toml` is generated correctly", {
     "miow = \"0.3.6\"",
     "fwdansi = \"1.1.0\"",
     "[empty_block]",
-    "[test_block]",
-    "logical = true"
+    "[[lib]]",
+    "name = \"cargo\"",
+    "test = false",
+    "doc = false"
   )
 
   expect_equal(toml, reference)
