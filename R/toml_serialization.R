@@ -97,14 +97,16 @@ get_toml_missing_msg <- function() {
   "x Missing arument and `NULL` are only allowed at the top level."
 }
 
-is_emptyish_row <- function(row) every(row, ~ is_na(.x) || is_null(unlist(.x)))
-
 simplify_row <- function(row) {
-  map_if(
+  result <- map_if(
     row,
     ~ is.list(.x) && all(!nzchar(names2(.x))),
     ~ .x[[1]],
     .else = ~.x
+  )
+  discard(
+    result,
+    ~ is_na(.x) || is_null(unlist(.x))
   )
 }
 
@@ -133,17 +135,19 @@ format_toml.data.frame <- function(x,
     return(as.character(header))
   }
   result <-
-    map_if(
+    map(
       seq_len(rows),
-      ~ is_emptyish_row(x[.x, ]),
-      ~header,
-      .else = function(idx) {
+      function(idx) {
         item <- simplify_row(x[idx, ])
-        result <- format_toml(
-          item,
-          ...,
-          .top_level = TRUE
-        )
+        if (length(item) == 0L) {
+          result <- character(0)
+        } else {
+          result <- format_toml(
+            item,
+            ...,
+            .top_level = TRUE
+          )
+        }
         if (!is_atomic(result)) {
           result <- flatten_chr(result)
         }
