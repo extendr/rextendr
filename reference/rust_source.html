@@ -105,7 +105,12 @@ compiles and loads a single Rust function for use in R." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/extendr/rextendr/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -120,7 +125,7 @@ compiles and loads a single Rust function for use in R." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compile Rust code and call from R</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/source.R'><code>R/source.R</code></a></small>
     <div class="hidden name"><code>rust_source.Rd</code></div>
     </div>
 
@@ -134,11 +139,10 @@ compiles and loads a single Rust function for use in R.</p>
   code <span class='op'>=</span> <span class='cn'>NULL</span>,
   module_name <span class='op'>=</span> <span class='st'>"rextendr"</span>,
   dependencies <span class='op'>=</span> <span class='cn'>NULL</span>,
-  patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.patch.crates_io"</span>, <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.patch.crates_io"</span><span class='op'>)</span>,
   profile <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dev"</span>, <span class='st'>"release"</span><span class='op'>)</span>,
   toolchain <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.toolchain"</span><span class='op'>)</span>,
-  extendr_version <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.extendr.version"</span>, <span class='st'>"*"</span><span class='op'>)</span>,
-  extendr_macros_version <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.extendr_macros.version"</span>, <span class='st'>"*"</span><span class='op'>)</span>,
+  extendr_deps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"rextendr.extendr_deps"</span><span class='op'>)</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
   use_extendr_api <span class='op'>=</span> <span class='cn'>TRUE</span>,
   generate_module_macro <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -187,14 +191,9 @@ system default toolchain. Accepts valid Rust toolchain qualifiers,
 such as <code>"nightly"</code>, or (on Windows) <code>"stable-msvc"</code>.</p></td>
     </tr>
     <tr>
-      <th>extendr_version</th>
-      <td><p>Version of the extendr-api crate, provided as a Rust
-version string. <code>"*"</code> will use the latest available version on crates.io.</p></td>
-    </tr>
-    <tr>
-      <th>extendr_macros_version</th>
-      <td><p>Version of the extendr-macros crate, if different
-from <code>extendr_version</code>.</p></td>
+      <th>extendr_deps</th>
+      <td><p>Versions of <code>extendr-*</code> crates. Defaults to
+<code><a href='https://rdrr.io/r/base/list.html'>list(`extendr-api` = "*", `extendr-macros` = "*")</a></code>.</p></td>
     </tr>
     <tr>
       <th>env</th>
@@ -228,8 +227,8 @@ calls to <code>rust_source()</code>.</p></td>
     <tr>
       <th>use_rtools</th>
       <td><p>Logical indicating whether to append path to Rtools
-to the PATH variable on Windows using RTOOLS40_HOME env var (if it is set).
-Appended path depends on the process architecture.
+to the <code>PATH</code> variable on Windows using <code>RTOOLS40_HOME</code> environent variable
+(if it is set). Appended path depends on the process architecture.
 Does nothing on other platforms.</p></td>
     </tr>
     <tr>
