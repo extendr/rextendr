@@ -1,7 +1,13 @@
 #' Convert R `list()` into toml-compatible format.
 #'
 #' [to_toml()] can be used to build `Cargo.toml`.
-#'
+#' The cargo manifest can be represented in terms of
+#' R objects, allowing limited validation and syntax verification.
+#' This function converts mainfests written using R objects into
+#' toml represenation, applying basic formatting,
+#' whcih is ideal for generating cargo
+#' manifests at runtime.
+#' 
 #' @param ... A list from which toml is constructed.
 #'     Supports nesting and tidy evaluation.
 #' @param .str_as_literal Logical indicating wether to treat
@@ -21,8 +27,7 @@
 #' # using explicitly set `dim`
 #' to_toml(lib = list(`crate-type` = array("cdylib", 1)))
 #' @export
-to_toml <- function(
-                    ...,
+to_toml <- function(...,
                     .str_as_literal = TRUE,
                     .format_int = "%d",
                     .format_dbl = "%g") {
