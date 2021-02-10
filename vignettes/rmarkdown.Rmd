@@ -185,7 +185,7 @@ x$get()
 If your code requires external crates, you can set dependencies via the `engine.opts` chunk option, like so:
 
 ````markdown
-`r ''````{extendrfuns engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
+`r ''````{extendrfuns engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
 use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]
