@@ -201,7 +201,7 @@ fn md_to_html(input: &str) -> String {
 ````
 
 As before, the Rust code chunk just outputs the source:
-```{extendrsrc engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')}
+```{extendrsrc engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
 use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]
