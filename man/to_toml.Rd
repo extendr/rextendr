@@ -23,6 +23,12 @@ one line of the resulting output.
 }
 \description{
 \code{\link[=to_toml]{to_toml()}} can be used to build \code{Cargo.toml}.
+The cargo manifest can be represented in terms of
+R objects, allowing limited validation and syntax verification.
+This function converts mainfests written using R objects into
+toml represenation, applying basic formatting,
+whcih is ideal for generating cargo
+manifests at runtime.
 }
 \examples{
 # Produces [workspace] with no children
