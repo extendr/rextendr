@@ -8,28 +8,39 @@ clean_rust_code <- function(lines) {
 }
 
 remove_empty_or_whitespace <- function(lns) {
-  stri_subset_regex(lns, "^\\s*$", negate = TRUE)
+  stringi::stri_subset_regex(lns, "^\\s*$", negate = TRUE)
 }
 
 remove_line_comments <- function(lns) {
-  stri_replace_first_regex(lns, "//.*$", "")
+  stringi::stri_replace_first_regex(lns, "//.*$", "")
 }
 
 fill_block_comments <- function(lns, fill_with = " ") {
   lns <- paste(lns, collapse = "\n")
-  locations <- stri_locate_all_regex(lns, c("/\\*", "\\*/"))
+  locations <- stringi::stri_locate_all_regex(lns, c("/\\*", "\\*/"))
 
   comment_syms <-
     locations %>%
-    map(as_tibble) %>%
-    imap_dfr(
-      ~mutate(
+    purrr::map(tibble::as_tibble) %>%
+    purrr::imap_dfr(
+      ~dplyr::mutate(
         .x,
-        type = if_else(.y == 1L, "open", "close")
+        type = dplyr::if_else(.y == 1L, "open", "close")
       )
     ) %>%
-    arrange(start)
+    dplyr::arrange(start)
 
+  if (
+    all(is.na(comment_syms[["start"]])) &&
+      all(is.na(comment_syms[["end"]]))
+  ) {
+    return(
+      stringi::stri_split_lines(
+      lns,
+      omit_empty = TRUE
+      )[[1]]
+    )
+  }
   i <- 2L
   n <- nrow(comment_syms)
   selects <- logical(n)
@@ -46,30 +57,32 @@ fill_block_comments <- function(lns, fill_with = " ") {
 
   to_replace <-
     valid_syms %>%
-    mutate(cnt = cumsum(if_else(type == "open", +1L, -1L))) %>%
-    filter(lag(cnt) == 0 | cnt == 0 | row_number() == 1) %>%
-    mutate(id = vec_rep_each(seq_len(n() / 2L), 2L))
+    dplyr::mutate(cnt = cumsum(if_else(type == "open", +1L, -1L))) %>%
+    dplyr::filter(
+      dplyr::lag(cnt) == 0 | cnt == 0 | dplyr::row_number() == 1
+    ) %>%
+    dplyr::mutate(id = rep(seq_len(dplyr::n() / 2L), each = 2L))
 
-  to_replace <- tibble(
-    start_open = filter(to_replace, type == "open")[["start"]],
-    end_close = filter(to_replace, type == "close")[["end"]],
+  to_replace <- tibble::tibble(
+    start_open = dplyr::filter(to_replace, type == "open")[["start"]],
+    end_close  = dplyr::filter(to_replace, type == "close")[["end"]],
   )
 
-  reduce(
+  purrr::reduce(
     seq_len(nrow(to_replace)),
     function(ln, i) {
       from <- to_replace[["start_open"]][i]
       to <- to_replace[["end_close"]][i]
 
-      `stri_sub<-`(
+      stringi::stri_sub(
         ln,
         from,
         to,
-        value = strrep(fill_with, to - from + 1L)
-      )
+      ) <- strrep(fill_with, to - from + 1L)
+      ln
     },
     .init = lns
   ) %>%
-  stri_split_regex("\n", simplify = TRUE) %>%
+  stringi::stri_split_regex("\n", simplify = TRUE) %>%
   as.character
 }

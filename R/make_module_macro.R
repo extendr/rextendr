@@ -13,11 +13,14 @@
 #' @export
 make_module_macro <- function(code, module_name = "rextendr") {
   # make sure we have cleanly separated lines
-  lines <- stringi::stri_split_lines(glue::glue_collapse(code, sep = "\n"), omit_empty = TRUE)
-  idents <- get_extendr_idents(lines[[1]])
-
+  lines <- stringi::stri_split_lines(
+    glue::glue_collapse(code, sep = "\n"),
+    omit_empty = TRUE
+  )[[1]]
+  # idents <- get_extendr_idents(lines[[1]])
+  idents <- find_exports(clean_rust_code(lines))
   outlines <- c("extendr_module! {", glue::glue("mod {module_name};"))
-  outlines <- c(outlines, glue::glue_data(idents, "{type} {ident};"))
+  outlines <- c(outlines, glue::glue_data(idents, "{type} {name};"))
   outlines <- c(outlines, "}")
   outlines
 }
