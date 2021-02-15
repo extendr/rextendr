@@ -1,3 +1,7 @@
+utils::globalVariables(
+  c("cnt", "start", "impl", "lifetime", "type", "name")
+)
+
 clean_rust_code <- function(lines) {
   lines <-
     lines %>%
@@ -57,7 +61,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
 
   to_replace <-
     valid_syms %>%
-    dplyr::mutate(cnt = cumsum(if_else(type == "open", +1L, -1L))) %>%
+    dplyr::mutate(cnt = cumsum(dplyr::if_else(type == "open", +1L, -1L))) %>%
     dplyr::filter(
       dplyr::lag(cnt) == 0 | cnt == 0 | dplyr::row_number() == 1
     ) %>%
@@ -68,7 +72,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
     end_close  = dplyr::filter(to_replace, type == "close")[["end"]],
   )
 
-  purrr::reduce(
+  result <- purrr::reduce(
     seq_len(nrow(to_replace)),
     function(ln, i) {
       from <- to_replace[["start_open"]][i]
@@ -82,7 +86,8 @@ fill_block_comments <- function(lns, fill_with = " ") {
       ln
     },
     .init = lns
-  ) %>%
-  stringi::stri_split_regex("\n", simplify = TRUE) %>%
-  as.character
+  )
+
+  stringi::stri_split_lines(result, omit_empty = TRUE)[[1]]
+
 }
