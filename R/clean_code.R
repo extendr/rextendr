@@ -24,6 +24,12 @@ remove_line_comments <- function(lns) {
 # 4. We fill in space between remaining delimiters with spaces (simplest way).
 fill_block_comments <- function(lns, fill_with = " ") {
   lns <- glue::glue_collapse(lns, sep = "\n")
+
+  # Fast path if character input is empty
+  if (length(lns) == 0L || !nzchar(lns)) {
+    return(character(0))
+  }
+
   locations <- stringi::stri_locate_all_regex(lns, c("/\\*", "\\*/"))
 
   # A sorted DF having `start`, `end`, and `type`
@@ -36,6 +42,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
         type = dplyr::if_else(.y == 1L, "open", "close")
       )
     ) %>%
+    dplyr::filter(!is.na(.data$start)) %>%
     dplyr::arrange(.data$start)
 
   # Fast path if no comments are found at all.
