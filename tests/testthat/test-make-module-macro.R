@@ -80,11 +80,8 @@ test_that("Macro generation fails on invalid comments in code", {
 
   expect_error(
     make_module_macro("*/  /*"),
-    paste(
-      "Malformed comments.",
-       "x `/\\*` and `\\*/` are not paired correctly.",
-       "i This error may be caused by a code fragment like `\\*/ ... /\\*`.",
-      sep = "\n "
-    )
+    "Malformed comments.
+ x `/\\*` and `\\*/` are not paired correctly.
+ i This error may be caused by a code fragment like `\\*/ ... /\\*`.",
   )
 })

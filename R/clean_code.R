@@ -1,10 +1,5 @@
-utils::globalVariables(
-  c("cnt", "start", "impl", "lifetime", "type", "name")
-)
-
 clean_rust_code <- function(lines) {
-  lines <-
-    lines %>%
+  lines %>%
     remove_empty_or_whitespace() %>%
     fill_block_comments() %>%
     remove_line_comments() %>%
@@ -28,7 +23,7 @@ remove_line_comments <- function(lns) {
 #   comments.
 # 4. We fill in space between remaining delimiters with spaces (simplest way).
 fill_block_comments <- function(lns, fill_with = " ") {
-  lns <- paste(lns, collapse = "\n")
+  lns <- glue::glue_collapse(lns, sep = "\n")
   locations <- stringi::stri_locate_all_regex(lns, c("/\\*", "\\*/"))
 
   # A sorted DF having `start`, `end`, and `type`
@@ -41,7 +36,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
         type = dplyr::if_else(.y == 1L, "open", "close")
       )
     ) %>%
-    dplyr::arrange(start)
+    dplyr::arrange(.data$start)
 
   # Fast path if no comments are found at all.
   if (
@@ -72,7 +67,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
   }
 
   # Contains only valid comment delimiters in order of appearance.
-  valid_syms <- dplyr::slice(comment_syms, which(selects))
+  valid_syms <- dplyr::slice(comment_syms, which(.env$selects))
 
   n_open <- sum(valid_syms[["type"]] == "open")
   n_close <- sum(valid_syms[["type"]] == "close")
@@ -97,9 +92,11 @@ fill_block_comments <- function(lns, fill_with = " ") {
   # the first in the table.
   to_replace <-
     valid_syms %>%
-    dplyr::mutate(cnt = cumsum(dplyr::if_else(type == "open", +1L, -1L))) %>%
+    dplyr::mutate(
+      cnt = cumsum(dplyr::if_else(.data$type == "open", +1L, -1L))
+    ) %>%
     dplyr::filter(
-      dplyr::lag(cnt) == 0 | cnt == 0 | dplyr::row_number() == 1
+      dplyr::lag(.data$cnt) == 0 | .data$cnt == 0 | dplyr::row_number() == 1
     )
 
   # This handles `*/ text /*` scenarios.
@@ -112,19 +109,20 @@ fill_block_comments <- function(lns, fill_with = " ") {
     any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
     stop(
-      paste(
+      glue::glue(
         "Malformed comments.",
         "x `/*` and `*/` are not paired correctly.",
         "i This error may be caused by a code fragment like `*/ ... /*`.",
-        sep = "\n "
+        .sep = "\n ",
+        .trim = FALSE
       ),
       call. = FALSE
     )
   }
   # Manual `pivot_wider`.
   to_replace <- tibble::tibble(
-    start_open = dplyr::filter(to_replace, type == "open")[["start"]],
-    end_close = dplyr::filter(to_replace, type == "close")[["end"]],
+    start_open = dplyr::filter(to_replace, .data$type == "open")[["start"]],
+    end_close = dplyr::filter(to_replace, .data$type == "close")[["end"]],
   )
 
   # Replaces each continuous commnet block with whitespaces

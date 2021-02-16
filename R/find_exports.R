@@ -10,9 +10,9 @@ find_exports <- function(clean_lns) {
     # Keeps only name, type (fn|impl) and lifetime of impl
     # if present.
     dplyr::transmute(
-      name,
-      type = dplyr::if_else(is.na(impl), "fn", "impl"),
-      lifetime
+      .data$name,
+      type = dplyr::if_else(is.na(.data$impl), "fn", "impl"),
+      .data$lifetime
     )
 }
 
@@ -27,19 +27,19 @@ extract_meta <- function(lns) {
 
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
-    paste(lns, collapse = "\n"),
+    glue::glue_collapse(lns, sep = "\n"),
     "(?:(fn)|(impl)(?:<(.+?)>)?)\\s+(_\\w+|[A-z]\\w*)"
   ) %>%
     tibble::as_tibble(.name_repair = "minimal") %>%
     rlang::set_names(c("match", "fn", "impl", "lifetime", "name")) %>%
-    dplyr::filter(!is.na(match))
+    dplyr::filter(!is.na(.data$match))
 
   # If no matches have been found, then the attribute is misplaced
   if (nrow(result) == 0L) {
     # This unfortunately does not provide
     # meaningful output or source line numbers.
     code_sample <- stringi::stri_sub(
-      paste(lns, collapse = "\n  "),
+      glue::glue_collapse(lns, sep = "\n  "),
       1, 80
     )
     stop(

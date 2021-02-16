@@ -6,7 +6,8 @@
 #' @importFrom dplyr   mutate %>%
 #' @importFrom purrr   map2 map_lgl flatten_chr map_if every map discard
 #' @importFrom glue    glue
-#' @importFrom rlang   dots_list names2 as_function is_missing is_atomic is_null is_na
+#' @importFrom rlang   dots_list names2 as_function is_missing is_atomic is_null
+#' @importFrom rlang   is_na .data .env
 #' @importFrom stringi stri_replace_all_regex
 #' @docType package
 NULL
