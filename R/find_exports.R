@@ -5,29 +5,36 @@ find_exports <- function(clean_lns) {
   purrr::map2_dfr(
     start,
     end,
-    ~extract_func(clean_lns[seq(.x, .y, by = 1L)])
+    ~ extract_meta(clean_lns[seq(.x, .y, by = 1L)])
   ) %>%
-  dplyr::transmute(
-    name,
-    type = dplyr::if_else(is.na(impl), "fn", "impl"),
-    lifetime
-  )
+    # Keeps only name, type (fn|impl) and lifetime of impl
+    # if present.
+    dplyr::transmute(
+      name,
+      type = dplyr::if_else(is.na(impl), "fn", "impl"),
+      lifetime
+    )
 }
 
+# Finds lines which contain #[extendr] (allowing additional spaces)
 find_extendr_attrs_ids <- function(lns) {
   which(stringi::stri_detect_regex(lns, "#\\s*\\[\\s*extendr\\s*\\]"))
 }
 
-extract_func <- function(lns) {
+# Gets function/module metadata from a subset of lines.
+# Finds first occurence of `fn` or `impl`.
+extract_meta <- function(lns) {
 
+  # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
-      paste(lns, collapse = "\n"),
-      "(?:(fn)|(impl)(?:<(.+?)>)?)\\s+(_\\w+|[A-z]\\w*)"
+    paste(lns, collapse = "\n"),
+    "(?:(fn)|(impl)(?:<(.+?)>)?)\\s+(_\\w+|[A-z]\\w*)"
   ) %>%
     tibble::as_tibble(.name_repair = "minimal") %>%
     rlang::set_names(c("match", "fn", "impl", "lifetime", "name")) %>%
     dplyr::filter(!is.na(match))
 
+  # If no matches have been found, then the attribute is misplaced
   if (nrow(result) == 0L) {
     # This unfortunately does not provide
     # meaningful output or source line numbers.
