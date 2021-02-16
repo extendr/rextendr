@@ -105,8 +105,9 @@ fill_block_comments <- function(lns, fill_with = " ") {
   # of one comment block.
   # If not, comments are malformed.
   n_valid <- nrow(to_replace)
-  if (any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") |
-    any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
+  if (
+    any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") ||
+      any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
     stop(
       glue::glue(
