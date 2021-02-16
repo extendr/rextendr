@@ -1,7 +1,9 @@
 test_that("Module macro generation", {
   rust_src <- r"(
 #[extendr]
-fn hello() -> &'static str {
+/* multiline
+comment
+*/fn hello() -> &'static str {
     "Hello from Rust!"
 }
 
@@ -17,6 +19,7 @@ struct Counter {
 }
 
 #[extendr]
+#[allow(dead_code)]
 impl Counter {
     fn new() -> Self {
       Self { n: 0 }
@@ -53,5 +56,13 @@ impl Counter {
       "impl Counter;",
       "}"
     )
+  )
+})
+
+test_that("Macro generation fails", {
+  expect_error(
+    make_module_macro("#[extendr]\nlet invalid_var = ();"),
+    "Rust code contains invalid attribute macros.
+ x No valid `fn` or `impl` block found in the following sample:"
   )
 })

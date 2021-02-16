@@ -33,7 +33,7 @@ extract_func <- function(lns) {
     # meaningful output or source line numbers.
     code_sample <- stringi::stri_sub(
       paste(lns, collapse = "\n  "),
-      1, 20
+      1, 80
     )
     stop(
       glue::glue(
