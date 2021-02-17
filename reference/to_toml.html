@@ -40,7 +40,13 @@
 
 
 <meta property="og:title" content="Convert R list() into toml-compatible format. — to_toml" />
-<meta property="og:description" content="to_toml() can be used to build Cargo.toml." />
+<meta property="og:description" content="to_toml() can be used to build Cargo.toml.
+The cargo manifest can be represented in terms of
+R objects, allowing limited validation and syntax verification.
+This function converts mainfests written using R objects into
+toml represenation, applying basic formatting,
+whcih is ideal for generating cargo
+manifests at runtime." />
 
 
 
@@ -129,7 +135,13 @@
     </div>
 
     <div class="ref-description">
-    <p><code>to_toml()</code> can be used to build <code>Cargo.toml</code>.</p>
+    <p><code>to_toml()</code> can be used to build <code>Cargo.toml</code>.
+The cargo manifest can be represented in terms of
+R objects, allowing limited validation and syntax verification.
+This function converts mainfests written using R objects into
+toml represenation, applying basic formatting,
+whcih is ideal for generating cargo
+manifests at runtime.</p>
     </div>
 
     <pre class="usage"><span class='fu'>to_toml</span><span class='op'>(</span><span class='va'>...</span>, .str_as_literal <span class='op'>=</span> <span class='cn'>TRUE</span>, .format_int <span class='op'>=</span> <span class='st'>"%d"</span>, .format_dbl <span class='op'>=</span> <span class='st'>"%g"</span><span class='op'>)</span></pre>
