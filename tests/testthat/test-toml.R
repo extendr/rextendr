@@ -35,6 +35,12 @@ test_that("`toml` is generated correctly", {
       test = FALSE,
       doc = FALSE
     ),
+    empty_table = data.frame(),
+    table_array = data.frame(
+      x = c(1L, NA_integer_, 2L),
+      y = c("1", NA_character_, "2")
+    ),
+    single_row_array = data.frame(x = 1),
     .str_as_literal = FALSE
   )
 
@@ -62,7 +68,17 @@ test_that("`toml` is generated correctly", {
     "[[lib]]",
     "name = \"cargo\"",
     "test = false",
-    "doc = false"
+    "doc = false",
+    "[[empty_table]]",
+    "[[table_array]]",
+    "x = 1",
+    "y = \"1\"",
+    "[[table_array]]",
+    "[[table_array]]",
+    "x = 2",
+    "y = \"2\"",
+    "[[single_row_array]]",
+    "x = 1"
   )
 
   expect_equal(toml, reference)

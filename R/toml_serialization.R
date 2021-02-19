@@ -131,7 +131,6 @@ format_toml.data.frame <- function(x,
                                    .top_level = FALSE) {
   rows <- nrow(x)
   header <- glue("[[{.tbl_name}]]")
-
   if (rows == 0L) {
     return(as.character(header))
   }
@@ -139,7 +138,7 @@ format_toml.data.frame <- function(x,
     map(
       seq_len(rows),
       function(idx) {
-        item <- simplify_row(x[idx, ])
+        item <- simplify_row(dplyr::slice(x, idx))
         if (length(item) == 0L) {
           result <- character(0)
         } else {
