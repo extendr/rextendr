@@ -10,7 +10,7 @@ rust_source(
   code = NULL,
   module_name = "rextendr",
   dependencies = NULL,
-  patch.crates_io = getOption("rextendr.patch.crates_io", character()),
+  patch.crates_io = getOption("rextendr.patch.crates_io", NULL),
   profile = c("dev", "release"),
   toolchain = getOption("rextendr.toolchain"),
   extendr_version = getOption("rextendr.extendr.version", "*"),

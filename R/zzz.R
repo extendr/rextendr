@@ -19,10 +19,11 @@
     rextendr.toolchain = NULL,
     # character vector
     # Overrides Rust dependencies; mainly used for development
-    rextendr.patch.crates_io =  c(
-      'extendr-api = { git = "https://github.com/extendr/extendr" }',
-      'extendr-macros = { git = "https://github.com/extendr/extendr" }'
-    ),
+    rextendr.patch.crates_io = NULL,
+#    rextendr.patch.crates_io =  c(
+#      'extendr-api = { git = "https://github.com/extendr/extendr" }',
+#      'extendr-macros = { git = "https://github.com/extendr/extendr" }'
+#    ),
     # character scalar
     # Default version of 'extendr_api' if no 'patch.crates_io' is specified
     rextendr.extendr.version = "*",

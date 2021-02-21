@@ -98,7 +98,7 @@
 rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
-                        patch.crates_io = getOption("rextendr.patch.crates_io", character()),
+                        patch.crates_io = getOption("rextendr.patch.crates_io", NULL),
                         profile = c("dev", "release"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_version = getOption("rextendr.extendr.version", "*"),
@@ -231,11 +231,13 @@ generate_cargo.toml <- function(libname = "rextendr", dependencies = NULL, patch
   cargo.toml <- c(cargo.toml, dependencies)
 
   # add user-provided patch.crates-io statements
-  cargo.toml <- c(
-    cargo.toml,
-    "[patch.crates-io]",
-    patch.crates_io
-  )
+  if (!is.null(patch.crates_io)) {
+    cargo.toml <- c(
+      cargo.toml,
+      "[patch.crates-io]",
+      patch.crates_io
+    )
+  }
 
   cargo.toml
 }
