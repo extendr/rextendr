@@ -10,16 +10,16 @@ rust_source(
   code = NULL,
   module_name = "rextendr",
   dependencies = NULL,
-  patch.crates_io = getOption("rextendr.patch.crates_io", NULL),
+  patch.crates_io = getOption("rextendr.patch.crates_io"),
   profile = c("dev", "release"),
   toolchain = getOption("rextendr.toolchain"),
-  extendr_version = getOption("rextendr.extendr.version", "*"),
-  extendr_macros_version = getOption("rextendr.extendr_macros.version", "*"),
+  extendr_deps = getOption("rextendr.extendr_deps"),
   env = parent.frame(),
   use_extendr_api = TRUE,
   generate_module_macro = TRUE,
   cache_build = TRUE,
-  quiet = FALSE
+  quiet = FALSE,
+  use_rtools = TRUE
 )
 
 rust_function(code, env = parent.frame(), ...)
@@ -45,11 +45,8 @@ be added to the \code{Cargo.toml} file.}
 system default toolchain. Accepts valid Rust toolchain qualifiers,
 such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
-\item{extendr_version}{Version of the extendr-api crate, provided as a Rust
-version string. \code{"*"} will use the latest available version on crates.io.}
-
-\item{extendr_macros_version}{Version of the extendr-macros crate, if different
-from \code{extendr_version}.}
+\item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to
+\code{list(`extendr-api` = "*")}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
@@ -69,6 +66,11 @@ the generated macro code has issues.}
 calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
+
+\item{use_rtools}{Logical indicating whether to append path to Rtools
+to the \code{PATH} variable on Windows using \code{RTOOLS40_HOME} environent variable
+(if it is set). Appended path depends on the process architecture.
+Does nothing on other platforms.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }
