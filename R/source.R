@@ -17,7 +17,7 @@
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to
-#'   \code{list(`extendr-api` = "*", `extendr-macros` = "*")}.
+#'   \code{list(`extendr-api` = "*")}.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source

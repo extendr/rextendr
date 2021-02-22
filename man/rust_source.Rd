@@ -46,7 +46,7 @@ system default toolchain. Accepts valid Rust toolchain qualifiers,
 such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
 \item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to
-\code{list(`extendr-api` = "*", `extendr-macros` = "*")}.}
+\code{list(`extendr-api` = "*")}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
