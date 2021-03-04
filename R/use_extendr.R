@@ -168,20 +168,3 @@ hello_world <- function() .Call(wrap__hello_world)
 
   return(invisible(TRUE))
 }
-
-make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE) {
-  wrapper_function <- glue::glue("wrap__make_{module_name}_wrappers")
-  x <- .Call(
-    wrapper_function,
-    use_symbols = use_symbols,
-    package_name = package_name,
-    PACKAGE = package_name
-  )
-  x <- stringi::stri_split_lines1(x)
-
-  if (!isTRUE(quiet)) {
-    message("Writting wrappers to:\n", outfile)
-  }
-  brio::write_lines(x, outfile)
-}
