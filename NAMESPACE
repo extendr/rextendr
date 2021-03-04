@@ -3,6 +3,7 @@
 export(eng_extendr)
 export(eng_extendrsrc)
 export(make_module_macro)
+export(register_extendr)
 export(rust_eval)
 export(rust_function)
 export(rust_source)

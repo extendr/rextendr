@@ -31,12 +31,14 @@ Depends:
     R (>= 4.0)
 Imports: 
     brio,
+    desc,
     dplyr,
     glue,
     stringi,
     tibble,
     purrr,
-    rlang
+    rlang,
+    rprojroot
 Suggests: 
     knitr,
     rmarkdown,
