@@ -23,7 +23,7 @@ register_extendr <- function(path = ".", quiet = FALSE) {
     message(glue::glue("Generating extendr wrapper functions for package: {pkg_name}"))
   }
 
-  outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = ".")
+  outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
   if (requireNamespace(pkg_name, quietly = TRUE)) {
     make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
