@@ -146,17 +146,17 @@ extendr_module! {{
   }
 
 
-  useDynLib <- "@useDynLib" # workaround for roxygen parsing bug in raw strings
+  roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
 r"(
-#' @docType package
-#' @usage NULL
-#' {useDynLib} {pkg_name}, .registration = TRUE
+{roxcmt} @docType package
+{roxcmt} @usage NULL
+{roxcmt} @useDynLib {pkg_name}, .registration = TRUE
 NULL
 
-#' Return string `"Hello world!"` to R.
-#' @export
+{roxcmt} Return string `"Hello world!"` to R.
+{roxcmt} @export
 hello_world <- function() .Call(wrap__hello_world)
 )"
   )
