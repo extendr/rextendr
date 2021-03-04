@@ -23,7 +23,7 @@ register_extendr <- function(path = ".", quiet = FALSE) {
     message(glue::glue("Generating extendr wrapper functions for package: {pkg_name}"))
   }
 
-  outfile = rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = ".")
+  outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = ".")
 
   if (requireNamespace(pkg_name, quietly = TRUE)) {
     make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
@@ -38,16 +38,12 @@ register_extendr <- function(path = ".", quiet = FALSE) {
 make_wrappers <- function(module_name, package_name, outfile,
                           use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue::glue("wrap__make_{module_name}_wrappers")
-  wrapper_call <- glue::glue(
-    ".Call(
-       \"{wrapper_function}\",
-       use_symbols = {use_symbols},
-       package_name = \"{package_name}\",
-       PACKAGE = \"{package_name}\"
-    )"
+  x <- .Call(
+    wrapper_function,
+    use_symbols = use_symbols,
+    package_name = package_name,
+    PACKAGE = package_name
   )
-
-  x <- eval(str2expression(wrapper_call))
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
