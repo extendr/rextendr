@@ -109,19 +109,10 @@ target
 "
   brio::write_lines(gitignore_content, file.path(src_dir, ".gitignore"))
 
-  cargo_toml_content <- glue::glue(
-r"(
-  [package]
-  name = "{pkg_name}"
-  version = "0.1.0"
-  edition = "2018"
-
-  [lib]
-  crate-type = ["staticlib"]
-
-  [dependencies]
-  extendr-api = "*"
-)"
+  cargo_toml_content <- to_toml(
+    package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
+    lib = list(`crate-type` = array("staticlib", 1)),
+    dependencies = list(`extendr-api` = "*")
   )
   brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
 
