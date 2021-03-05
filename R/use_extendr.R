@@ -102,6 +102,13 @@ clean:
   )
   brio::write_lines(makevars_win_content, file.path(src_dir, "Makevars.win"))
 
+  gitignore_content <- "*.o
+*.so
+*.dll
+target
+"
+  brio::write_lines(gitignore_content, file.path(src_dir, ".gitignore"))
+
   cargo_toml_content <- glue::glue(
 r"(
   [package]
