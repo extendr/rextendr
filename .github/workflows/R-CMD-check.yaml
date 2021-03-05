@@ -114,11 +114,12 @@ jobs:
           setwd("testpkg")
           devtools::create(".")
           rextendr::use_extendr()
+          usethis::use_mit_license()
           usethis::use_testthat()
           brio::write_lines(
               c(
-                  "expect_that(\"`hello_world()` works\", {",
-                  "expect_equal(hello_world(), \"Hello world!\")",
+                  "test_that(\"`hello_world()` works\", {",
+                  "  expect_equal(hello_world(), \"Hello world!\")",
                   "})"
               ),
               file.path("tests", "testthat", "test-hello.R")
