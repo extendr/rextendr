@@ -14,5 +14,6 @@ reference:
   - register_extendr
 
 - title: Various utility functions
+  contents:
   - to_toml
   - make_module_macro
