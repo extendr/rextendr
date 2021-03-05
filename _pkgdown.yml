@@ -7,3 +7,12 @@ reference:
   - rust_function
   - rust_eval
   - eng_extendr
+
+- title: Package development
+  contents:
+  - use_extendr
+  - register_extendr
+
+- title: Various utility functions
+  - to_toml
+  - make_module_macro
