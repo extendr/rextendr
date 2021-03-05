@@ -5,14 +5,14 @@
 #' R objects, allowing limited validation and syntax verification.
 #' This function converts mainfests written using R objects into
 #' toml represenation, applying basic formatting,
-#' whcih is ideal for generating cargo
+#' which is ideal for generating cargo
 #' manifests at runtime.
-#' 
+#'
 #' @param ... A list from which toml is constructed.
 #'     Supports nesting and tidy evaluation.
-#' @param .str_as_literal Logical indicating wether to treat
+#' @param .str_as_literal Logical indicating whether to treat
 #'     strings as literal (single quotes no escapes) or
-#'     basic (ecaping some sequences) ones. Default is `TRUE`.
+#'     basic (escaping some sequences) ones. Default is `TRUE`.
 #' @param .format_int,.format_dbl Character scalar describing
 #'     number formatting. Compatible with `sprintf`.
 #' @return A character vector, each element corresponds to
