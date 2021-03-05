@@ -114,6 +114,7 @@ jobs:
           setwd("testpkg")
           devtools::create(".")
           rextendr::use_extendr()
+          usethis::use_build_ignore(".*\\.o$", escape = FALSE)
           usethis::use_mit_license()
           usethis::use_testthat()
           brio::write_lines(
