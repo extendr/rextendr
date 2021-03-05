@@ -102,3 +102,33 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-rust${{ matrix.config.rust-version }}-results
           path: check
 
+
+      - name: Test package generation
+         env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+        run: |
+          remotes::install_local()
+          remotes::install_cran("devtools")
+          remotes::install_cran("usethis")
+          dir.create("testpkg")
+          setwd("testpkg")
+          devtools::create(".")
+          rextendr::use_extendr()
+          usethis::use_testthat()
+          brio::write_lines(
+              c(
+                  "expect_that(\"`hello_world()` works\", {",
+                  "expect_equal(hello_world(), \"Hello world!\")",
+                  "})"
+              ),
+              file.path("tests", "testthat", "test-hello.R")
+          )
+          devtools::document()
+          devtools::document()
+          rcmdcheck::rcmdcheck(
+              path = ".", 
+              args = c("--no-manual", "--as-cran"),
+              error_on = "warning",
+              check_dir = "check_use_extendr"
+          )
+        shell: Rscript {0}
