@@ -77,6 +77,7 @@ jobs:
       - name: Configure Linux
         if: startsWith(runner.os, 'Linux')
         run: |
+          sudo apt-get install libcurl4-openssl-dev
           while read -r cmd
           do
             eval sudo $cmd
