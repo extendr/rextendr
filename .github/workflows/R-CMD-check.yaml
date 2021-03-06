@@ -111,7 +111,6 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          remotes::install_local()
           temp_dir <- tempdir()
           pkg_dir <- file.path(temp_dir, "testpkg")
           dir.create(pkg_dir)
@@ -129,6 +128,8 @@ jobs:
           )
           rextendr::use_extendr()
           devtools::document()
+          devtools::install()
+          rextendr::register_extendr()
           devtools::document()
           rcmdcheck::rcmdcheck(
               path = ".", 
