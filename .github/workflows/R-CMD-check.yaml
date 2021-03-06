@@ -105,7 +105,7 @@ jobs:
 
 
       - name: Test package generation
-         env:
+        env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
           remotes::install_local()
