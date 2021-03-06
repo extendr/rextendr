@@ -88,6 +88,8 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_cran("devtools")
+          remotes::install_cran("usethis")
         shell: Rscript {0}
 
       - name: Check
@@ -110,8 +112,6 @@ jobs:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
           remotes::install_local()
-          remotes::install_cran("devtools")
-          remotes::install_cran("usethis")
           temp_dir <- tempdir()
           pkg_dir <- file.path(temp_dir, "testpkg")
           dir.create(pkg_dir)
