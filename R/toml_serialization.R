@@ -55,21 +55,21 @@ to_toml <- function(...,
       call. = FALSE
     )
   }
-  flatten_chr(
-    map2(names, args, function(nm, a) {
-      c(
-        make_header(nm, a),
-        format_toml(
-          a,
-          .top_level = TRUE,
-          .tbl_name = ifelse(is.data.frame(a), nm, character(0)),
-          .str_as_literal = .str_as_literal,
-          .format_int = .format_int,
-          .format_dbl = .format_dbl
-        )
-      )
-    })
-  )
+
+  tables <- map2_chr(names, args, function(nm, a) {
+    header <- make_header(nm, a)
+    body <- format_toml(
+      a,
+      .top_level = TRUE,
+      .tbl_name = ifelse(is.data.frame(a), nm, character(0)),
+      .str_as_literal = .str_as_literal,
+      .format_int = .format_int,
+      .format_dbl = .format_dbl
+    )
+    body <- paste(body, collapse = "\n")
+    paste0(header, "\n", body, "\n")
+  })
+  paste(tables, collapse = "\n")
 }
 
 make_header <- function(nm, arg) {
