@@ -56,20 +56,27 @@ test_that("`toml` is generated correctly", {
     "documentation = \"https://docs.rs/cargo\"",
     "readme = \"README.md\"",
     "description = \"Cargo, a package manager for Rust.\"",
+    "",
     "[dependencies]",
     "semver = { version = \"0.10\", features = [ \"serde\" ] }",
     "serde = { version = \"1.0.82\", features = [ \"derive\" ] }",
+    "",
     "[target.'cfg(target_os = \"macos\")'.dependencies]",
     "core-foundation = { version = \"0.9.0\", features = [ \"mac_os_10_7_support\" ] }",
+    "",
     "[target.'cfg(windows)'.dependencies]",
     "miow = \"0.3.6\"",
     "fwdansi = \"1.1.0\"",
+    "",
     "[empty_block]",
+    "",
     "[[lib]]",
     "name = \"cargo\"",
     "test = false",
     "doc = false",
+    "",
     "[[empty_table]]",
+    "",
     "[[table_array]]",
     "x = 1",
     "y = \"1\"",
@@ -77,9 +84,12 @@ test_that("`toml` is generated correctly", {
     "[[table_array]]",
     "x = 2",
     "y = \"2\"",
+    "",
     "[[single_row_array]]",
     "x = 1"
   )
+
+  reference <- glue_collapse(reference, "\n")
 
   expect_equal(toml, reference)
 })
