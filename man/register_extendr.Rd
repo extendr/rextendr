@@ -4,13 +4,17 @@
 \alias{register_extendr}
 \title{Register the extendr module of a package with R}
 \usage{
-register_extendr(path = ".", quiet = FALSE)
+register_extendr(path = ".", quiet = FALSE, force_wrappers = FALSE)
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
+
+\item{force_wrappers}{Logical indicating whether to generate a minimal
+wrapper in the cases when the package's namespace cannot be loaded. This is
+useful to recover the wrapper file when something is wrong with it.}
 }
 \value{
 The generated wrapper code. Note that this is not normally needed,
