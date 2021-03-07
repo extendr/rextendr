@@ -175,13 +175,15 @@ one line of the resulting output.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Produces [workspace] with no children</span>
 <span class='fu'>to_toml</span><span class='op'>(</span>workspace <span class='op'>=</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "[workspace]"</div><div class='input'>
+</div><div class='output co'>#&gt; [workspace]</div><div class='input'>
 <span class='fu'>to_toml</span><span class='op'>(</span>patch.crates_io <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>`extendr-api` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>git <span class='op'>=</span> <span class='st'>"git-ref"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "[patch.crates_io]"                 "extendr-api = { git = 'git-ref' }"</div><div class='input'>
+</div><div class='output co'>#&gt; [patch.crates_io]
+#&gt; extendr-api = { git = 'git-ref' }</div><div class='input'>
 <span class='co'># Single-element arrays are distinguished from scalars</span>
 <span class='co'># using explicitly set `dim`</span>
 <span class='fu'>to_toml</span><span class='op'>(</span>lib <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>`crate-type` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span><span class='op'>(</span><span class='st'>"cdylib"</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "[lib]"                     "crate-type = [ 'cdylib' ]"</div></pre>
+</div><div class='output co'>#&gt; [lib]
+#&gt; crate-type = [ 'cdylib' ]</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -193,7 +195,7 @@ one line of the resulting output.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov.</p>
+  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov, Hiroaki Yutani.</p>
 </div>
 
 <div class="pkgdown">
