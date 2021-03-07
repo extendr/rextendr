@@ -69,7 +69,7 @@ to_toml <- function(...,
     body <- glue_collapse(body, "\n")
     # The values can be (1) header and body, (2) header only, or (3) body only.
     # In the case of (2) and (3) the other element is of length 0, so we need to
-    # remove them by `c()` first, and then concatinate by "\n" if both exists
+    # remove them by `c()` first, and then concatenate by "\n" if both exists
     glue_collapse(c(header, body), "\n")
   })
   glue_collapse(tables, "\n\n")
