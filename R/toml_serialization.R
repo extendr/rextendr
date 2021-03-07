@@ -66,10 +66,13 @@ to_toml <- function(...,
       .format_int = .format_int,
       .format_dbl = .format_dbl
     )
-    body <- paste(body, collapse = "\n")
-    paste0(header, "\n", body, "\n")
+    body <- glue_collapse(body, "\n")
+    # The values can be (1) header and body, (2) header only, or (3) body only.
+    # In the case of (2) and (3) the other element is of length 0, so we need to
+    # remove them by `c()` first, and then concatinate by "\n" if both exists
+    glue_collapse(c(header, body), "\n")
   })
-  paste(tables, collapse = "\n")
+  glue_collapse(tables, "\n\n")
 }
 
 make_header <- function(nm, arg) {
@@ -172,10 +175,10 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
   } else {
     if (is_missing(x)) {
       stop(
-        paste(
+        glue(
           get_toml_err_msg(),
           get_toml_missing_msg(),
-          sep = "\n  "
+          .sep = "\n  "
         ),
         call. = FALSE
       )
@@ -210,7 +213,7 @@ format_toml_atomic <- function(x,
     "[ ]"
   } else {
     formatter <- as_function(.formatter)
-    items <- paste0(formatter(x, ...), collapse = ", ")
+    items <- glue_collapse(formatter(x, ...), ", ")
     if (length(x) > 1L || !is.null(dim(x))) {
       items <- glue("[ {items} ]")
     }
