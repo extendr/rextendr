@@ -34,8 +34,8 @@ eng_impl <- function(options, rextendr_fun) {
     code <- options$code
   }
 
-  code <- glue::glue_collapse(code, sep = "\n") # code to compile
-  code_out <- glue::glue_collapse(options$code, sep = "\n") # code to output to html
+  code <- glue_collapse(code, sep = "\n") # code to compile
+  code_out <- glue_collapse(options$code, sep = "\n") # code to output to html
 
   # engine.opts is a list of arguments to be passed to rust_eval, e.g.
   # engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')

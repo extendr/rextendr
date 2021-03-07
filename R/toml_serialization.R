@@ -55,21 +55,24 @@ to_toml <- function(...,
       call. = FALSE
     )
   }
-  flatten_chr(
-    map2(names, args, function(nm, a) {
-      c(
-        make_header(nm, a),
-        format_toml(
-          a,
-          .top_level = TRUE,
-          .tbl_name = ifelse(is.data.frame(a), nm, character(0)),
-          .str_as_literal = .str_as_literal,
-          .format_int = .format_int,
-          .format_dbl = .format_dbl
-        )
-      )
-    })
-  )
+
+  tables <- map2_chr(names, args, function(nm, a) {
+    header <- make_header(nm, a)
+    body <- format_toml(
+      a,
+      .top_level = TRUE,
+      .tbl_name = ifelse(is.data.frame(a), nm, character(0)),
+      .str_as_literal = .str_as_literal,
+      .format_int = .format_int,
+      .format_dbl = .format_dbl
+    )
+    body <- glue_collapse(body, "\n")
+    # The values can be (1) header and body, (2) header only, or (3) body only.
+    # In the case of (2) and (3) the other element is of length 0, so we need to
+    # remove them by `c()` first, and then concatenate by "\n" if both exists
+    glue_collapse(c(header, body), "\n")
+  })
+  glue_collapse(tables, "\n\n")
 }
 
 make_header <- function(nm, arg) {
@@ -172,10 +175,10 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
   } else {
     if (is_missing(x)) {
       stop(
-        paste(
+        glue(
           get_toml_err_msg(),
           get_toml_missing_msg(),
-          sep = "\n  "
+          .sep = "\n  "
         ),
         call. = FALSE
       )
@@ -210,7 +213,7 @@ format_toml_atomic <- function(x,
     "[ ]"
   } else {
     formatter <- as_function(.formatter)
-    items <- paste0(formatter(x, ...), collapse = ", ")
+    items <- glue_collapse(formatter(x, ...), ", ")
     if (length(x) > 1L || !is.null(dim(x))) {
       items <- glue("[ {items} ]")
     }
