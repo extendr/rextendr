@@ -144,7 +144,7 @@ extendr_module! {{
 
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
-  sample_function_wrapper <- glue(
+  example_function_wrapper <- glue(
     r"(
     {roxcmt} Return string `"Hello world!"` to R.
     {roxcmt} @export
@@ -152,7 +152,7 @@ extendr_module! {{
     )"
   )
 
-  make_sample_wrappers(pkg_name, wrappers_file, extra_items = sample_function_wrapper)
+  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
@@ -161,7 +161,7 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
-make_sample_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
+make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
