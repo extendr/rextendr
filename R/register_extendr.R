@@ -30,7 +30,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 
   # If force_wrappers is TRUE, use tryCatch() to generate minimal wrappers even
   # when there's some error (e.g. the symbol cannot be found).
-  # If FALSE, execute make_wrappers() only when the namespace is loaded.
+  # If FALSE, execute make_wrappers() only when the package can be loaded.
   if (isTRUE(force_wrappers)) {
     tryCatch(
       make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
