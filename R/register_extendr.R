@@ -26,6 +26,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
     message(glue("Generating extendr wrapper functions for package: {pkg_name}"))
   }
 
+  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
+  if (!file.exists(entrypoint_c_file)) {
+    stop(
+      "src/entrypoint.c, which is necessary to make wrappers available to R sessions, doesn't exist.",
+      call. = FALSE
+    )
+  }
+
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
   # If force_wrappers is TRUE, use tryCatch() to generate minimal wrappers even
