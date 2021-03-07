@@ -27,7 +27,7 @@ extract_meta <- function(lns) {
 
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
-    glue::glue_collapse(lns, sep = "\n"),
+    glue_collapse(lns, sep = "\n"),
     "(?:(fn)|(impl)(?:\\s*<(.+?)>)?)\\s+(_\\w+|[A-z]\\w*)"
   ) %>%
     tibble::as_tibble(.name_repair = "minimal") %>%
@@ -39,11 +39,11 @@ extract_meta <- function(lns) {
     # This unfortunately does not provide
     # meaningful output or source line numbers.
     code_sample <- stringi::stri_sub(
-      glue::glue_collapse(lns, sep = "\n  "),
+      glue_collapse(lns, sep = "\n  "),
       1, 80
     )
     stop(
-      glue::glue(
+      glue(
         "Rust code contains invalid attribute macros.",
         "x No valid `fn` or `impl` block found in the following sample:",
         "`{code_sample}`",

@@ -36,14 +36,14 @@ use_extendr <- function(path = ".", quiet = FALSE) {
   }
 
   if (!isTRUE(quiet)) {
-    message(glue::glue("Creating `src` ..."))
+    message(glue("Creating `src` ..."))
   }
 
   dir.create(src_dir)
   dir.create(file.path(src_dir, "rust"))
   dir.create(file.path(src_dir, "rust", "src"))
 
-  entrypoint_content <- glue::glue(
+  entrypoint_content <- glue(
 r"(
 // We need to forward routine registration from C to Rust
 // to avoid the linker removing the static library.
@@ -57,7 +57,7 @@ void R_init_{pkg_name}(void *dll) {{
   )
   brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
 
-  makevars_content <- glue::glue(
+  makevars_content <- glue(
 "
 LIBDIR = ./rust/target/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
@@ -79,7 +79,7 @@ clean:
   )
   brio::write_lines(makevars_content, file.path(src_dir, "Makevars"))
 
-  makevars_win_content <- glue::glue(
+  makevars_win_content <- glue(
 "
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 LIBDIR = ./rust/target/$(TARGET)/release
@@ -116,7 +116,7 @@ target
   )
   brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
 
-  lib_rs_content <- glue::glue(
+  lib_rs_content <- glue(
 r"(
 use extendr_api::prelude::*;
 
@@ -140,13 +140,13 @@ extendr_module! {{
 
 
   if (!isTRUE(quiet)) {
-    message(glue::glue("Creating `R/extendr-wrappers.R` ..."))
+    message(glue("Creating `R/extendr-wrappers.R` ..."))
   }
 
 
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
-  wrappers_content <- glue::glue(
+  wrappers_content <- glue(
 r"(
 {roxcmt} @docType package
 {roxcmt} @usage NULL
@@ -161,7 +161,7 @@ hello_world <- function() .Call(wrap__hello_world)
   brio::write_lines(wrappers_content, wrappers_file)
 
   if (!isTRUE(quiet)) {
-    message(glue::glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
+    message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
   }
 
   return(invisible(TRUE))

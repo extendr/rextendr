@@ -23,7 +23,7 @@ remove_line_comments <- function(lns) {
 #   comments.
 # 4. We fill in space between remaining delimiters with spaces (simplest way).
 fill_block_comments <- function(lns, fill_with = " ") {
-  lns <- glue::glue_collapse(lns, sep = "\n")
+  lns <- glue_collapse(lns, sep = "\n")
 
   # Fast path if character input is empty
   if (length(lns) == 0L || !nzchar(lns)) {
@@ -81,7 +81,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
   # Fails if number of `/*` and `*/` are different.
   if (n_open != n_close) {
     stop(
-      glue::glue(
+      glue(
         "Malformed comments.",
         "x Number of start `/*` and end `*/` delimiters are not equal.",
         "i Found `{n_open}` occurence(s) of `/*`.",
@@ -117,7 +117,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
       any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
     stop(
-      glue::glue(
+      glue(
         "Malformed comments.",
         "x `/*` and `*/` are not paired correctly.",
         "i This error may be caused by a code fragment like `*/ ... /*`.",

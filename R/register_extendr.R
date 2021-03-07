@@ -20,7 +20,7 @@ register_extendr <- function(path = ".", quiet = FALSE) {
   pkg_name <- x$get("Package")
 
   if (!isTRUE(quiet)) {
-    message(glue::glue("Generating extendr wrapper functions for package: {pkg_name}"))
+    message(glue("Generating extendr wrapper functions for package: {pkg_name}"))
   }
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
@@ -29,7 +29,7 @@ register_extendr <- function(path = ".", quiet = FALSE) {
     make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
   } else {
     stop(
-      glue::glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
+      glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
       call. = FALSE
     )
   }
@@ -37,7 +37,7 @@ register_extendr <- function(path = ".", quiet = FALSE) {
 
 make_wrappers <- function(module_name, package_name, outfile,
                           use_symbols = FALSE, quiet = FALSE) {
-  wrapper_function <- glue::glue("wrap__make_{module_name}_wrappers")
+  wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
     wrapper_function,
     use_symbols = use_symbols,
