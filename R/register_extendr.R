@@ -29,7 +29,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
   if (!file.exists(entrypoint_c_file)) {
     stop(
-      "src/entrypoint.c, which is necessary to make wrappers available to R sessions, doesn't exist.",
+      "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
       call. = FALSE
     )
   }
