@@ -138,31 +138,47 @@ extendr_module! {{
   )
   brio::write_lines(lib_rs_content, file.path(src_dir, "rust", "src", "lib.rs"))
 
-
   if (!isTRUE(quiet)) {
     message(glue("Creating `R/extendr-wrappers.R` ..."))
   }
 
-
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
-  wrappers_content <- glue(
-r"(
-{roxcmt} @docType package
-{roxcmt} @usage NULL
-{roxcmt} @useDynLib {pkg_name}, .registration = TRUE
-NULL
-
-{roxcmt} Return string `"Hello world!"` to R.
-{roxcmt} @export
-hello_world <- function() .Call(wrap__hello_world)
-)"
+  example_function_wrapper <- glue(
+    r"(
+    {roxcmt} Return string `"Hello world!"` to R.
+    {roxcmt} @export
+    hello_world <- function() .Call(wrap__hello_world)
+    )"
   )
-  brio::write_lines(wrappers_content, wrappers_file)
+
+  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
   }
 
   return(invisible(TRUE))
+}
+
+make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
+  roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
+
+  wrappers_content <- glue::glue(
+    r"(
+    {roxcmt} @docType package
+    {roxcmt} @usage NULL
+    {roxcmt} @useDynLib {pkg_name}, .registration = TRUE
+    NULL
+    )"
+  )
+
+  if (!is.null(extra_items)) {
+    wrappers_content <- glue::glue_collapse(
+      c(wrappers_content, extra_items),
+      sep = "\n"
+    )
+  }
+
+  brio::write_lines(wrappers_content, outfile)
 }

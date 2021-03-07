@@ -12,10 +12,13 @@
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
+#' @param force_wrappers Logical indicating whether to generate a minimal
+#'   wrapper in the cases when the package's namespace cannot be loaded. This is
+#'   useful to recover the wrapper file when something is wrong with it.
 #' @return The generated wrapper code. Note that this is not normally needed,
 #' as the function saves the wrapper code to `R/extendr-wrappers.R`.
 #' @export
-register_extendr <- function(path = ".", quiet = FALSE) {
+register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -23,9 +26,31 @@ register_extendr <- function(path = ".", quiet = FALSE) {
     message(glue("Generating extendr wrapper functions for package: {pkg_name}"))
   }
 
+  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
+  if (!file.exists(entrypoint_c_file)) {
+    stop(
+      "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
+      call. = FALSE
+    )
+  }
+
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
-  if (requireNamespace(pkg_name, quietly = TRUE)) {
+  # If force_wrappers is TRUE, use tryCatch() to generate minimal wrappers even
+  # when there's some error (e.g. the symbol cannot be found).
+  # If FALSE, execute make_wrappers() only when the package can be loaded.
+  if (isTRUE(force_wrappers)) {
+    tryCatch(
+      make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+      error = function(...) {
+        warning(
+          "Generating the wrapper functions failed, so a minimal one is used instead",
+          call. = FALSE
+        )
+        make_example_wrappers(pkg_name, outfile)
+      }
+    )
+  } else if (requireNamespace(pkg_name, quietly = TRUE)) {
     make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
   } else {
     stop(
