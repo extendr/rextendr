@@ -129,7 +129,7 @@ jobs:
           )
           rextendr::use_extendr()
           devtools::document()
-          devtools::install()
+          devtools::install(quick = TRUE)
           rextendr::register_extendr()
           devtools::document()
           rcmdcheck::rcmdcheck(
