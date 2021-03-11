@@ -57,7 +57,7 @@ needs_compilation <- function(path = ".") {
   }
 
   purrr::walk(
-    modified_files_info[["path"]],
+    fs::path_rel(modified_files_info[["path"]], start = rprojroot::find_package_root_file()),
     ~cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
   )
 
