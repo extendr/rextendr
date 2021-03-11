@@ -40,6 +40,7 @@ Imports:
     desc,
     dplyr,
     glue,
+    pkgload,
     stringi,
     tibble,
     purrr,

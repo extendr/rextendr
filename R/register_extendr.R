@@ -64,15 +64,16 @@ make_wrappers <- function(module_name, package_name, outfile,
                           use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- callr::r_safe(
-    function(PACKAGE, ...) {
-      library(PACKAGE, character.only = TRUE)
-      .Call(..., PACKAGE = PACKAGE)
+    function(package_root, ...) {
+      pkgload::load_all(package_root)
+      .Call(...)
     },
     args = list(
       wrapper_function,
       use_symbols = use_symbols,
       package_name = package_name,
-      PACKAGE = package_name
+      PACKAGE = package_name,
+      package_root = rprojroot::find_package_root_file(path = ".")
     )
   )
   x <- stringi::stri_split_lines1(x)
