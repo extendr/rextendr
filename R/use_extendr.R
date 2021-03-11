@@ -99,19 +99,27 @@ write_example_entrypoint <- function(pkg_name, outfile) {
 
 write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
   if (windows) {
-    target <- glue("TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu")
-    pkg_libs <- glue("PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv")
+    variables <- glue(
+      "
+      TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+      LIBDIR = ./rust/target/$(TARGET)/release
+      STATLIB = $(LIBDIR)/lib{pkg_name}.a
+      PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
+      ")
   } else {
-    target <- glue("")
-    pkg_libs <- glue("PKG_LIBS = -L$(LIBDIR) -l{pkg_name}")
+    variables <- glue(
+      "
+      LIBDIR = ./rust/target/release
+      STATLIB = $(LIBDIR)/lib{pkg_name}.a
+      PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
+      "
+    )
   }
 
   makevars_content <- glue(
     "
-    {target}
-    LIBDIR = ./rust/target/$(TARGET)/release
-    STATLIB = $(LIBDIR)/lib{pkg_name}.a
-    {pkg_libs}
+    {variables}
+
     WRAPPER_FILE = ./extendr-wrappers.R
 
     all: C_clean
