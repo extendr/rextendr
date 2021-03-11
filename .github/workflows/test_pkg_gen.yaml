@@ -115,10 +115,8 @@ jobs:
             ),
             file.path("tests", "testthat", "test-hello.R")
           )
-          rextendr::use_extendr()
+          rextendr::use_extendr(use_roclets = TRUE)
           devtools::document()
-          devtools::install(quick = TRUE)
-          rextendr::register_extendr()
           devtools::document()
           rcmdcheck::rcmdcheck(
               path = ".", 
