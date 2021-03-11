@@ -193,7 +193,7 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
 write_namespace <- function(pkg_name) {
   ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = ".")
   if (!file.exists(ns_path)) {
-    usethis::ui_warn("`NAMESPACE` file is missing. Make sure the project has been set up correctly.")
+    cli::cli_alert_warning("{.file NAMESPACE} file is missing. Make sure the project has been set up correctly.")
     usethis::use_namespace()
   }
   lines <- brio::read_lines(ns_path)
