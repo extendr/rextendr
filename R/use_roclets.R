@@ -10,14 +10,18 @@ use_roclets <- function(
 ) {
   # recompilation roclet
   # registration roclet
-  args <- character(0)
+  roclet_args <- "rextendr::test_roclet"
   if (isTRUE(use_roxygen_roclets)) {
-    args <- c(args, "roxygen2::roxy_meta_get(\"roclets\")")
+    roclet_args <- c(roclet_args, "roxygen2::roxy_meta_get(\"roclets\")")
   }
   roxygen_prop <- desc::desc_get("Roxygen")
   if (all(is.na(roxygen_prop)) || all(!nzchar(roxygen_prop))) {
     # No 'Roxygen' field in DESCRIPTION or it is empty
-    roxygen <- glue::glue_collapse(args, sep = ", ")
+    roxygen <- glue::glue(
+      "roclets = c(",
+      glue::glue_collapse(roclet_args, sep = ", "),
+      ")"
+    )
   } else {
     # 'Roxygen' field is not empty
     roxygen <- stringi::stri_match_first_regex(
@@ -27,14 +31,23 @@ use_roclets <- function(
 
     if (all(is.na(roxygen))) {
      cli::cli_alert_danger(
-       c("{.var Roxygen} field in {.file DESCRIPTION} has unsupported format.",
-       " Skipping initialization of roclets."
+       c(
+          "{.var Roxygen} field in {.file DESCRIPTION} has unsupported format.",
+          " Skipping initialization of roclets."
        )
      )
      return(invisible(NULL))
     }
-
-    roxygen <- glue::glue_collapse(c(roxygen, args), sep = ",\n\t")
+    roxygen <- glue::glue(
+      roxygen,
+      glue::glue(
+        "roclets = c(",
+        glue::glue_collapse(roclet_args, sep = ", "),
+        ")"
+      ),
+      .sep = ",\n\t",
+      .trim = FALSE
+    )
   }
 
   desc::desc_set(
