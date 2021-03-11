@@ -105,13 +105,26 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
       LIBDIR = ./rust/target/$(TARGET)/release
       STATLIB = $(LIBDIR)/lib{pkg_name}.a
       PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
-      ")
+      "
+    )
+    wrapper_file_command <- glue(
+      "
+      ifneq \"$(WIN)\" \"32\"
+      \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+      endif
+      "
+    )
   } else {
     variables <- glue(
       "
       LIBDIR = ./rust/target/release
       STATLIB = $(LIBDIR)/lib{pkg_name}.a
       PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
+      "
+    )
+    wrapper_file_command <- glue(
+      "
+      \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
       "
     )
   }
@@ -130,7 +143,7 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
     \tcargo build --lib --release --manifest-path=./rust/Cargo.toml
 
     $(WRAPPER_FILE): $(STATLIB)
-    \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    {wrapper_file_command}
 
     C_clean:
     \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
