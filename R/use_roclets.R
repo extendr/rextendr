@@ -1,0 +1,47 @@
+
+# Use roclets to augment package compilaion.
+#' @param use_roxygen_roclets Logical (default: \code{TRUE}), indicates
+#' if roclets should be referenced in the DESCRIPTION file.
+#' @returns \code{NULL} (invisibly)
+#' @export
+use_roclets <- function(
+  use_roxygen_roclets = TRUE
+) {
+  # recompilation roclet
+  # registration roclet
+  args <- character(0)
+  if (isTRUE(use_roxygen_roclets)) {
+    args <- c(args, "roxygen2::roxy_meta_get(\"roclets\")")
+  }
+  roxygen_prop <- desc::desc_get("Roxygen")
+  if (all(is.na(roxygen_prop)) || all(!nzchar(roxygen_prop))) {
+    # No 'Roxygen' field in DESCRIPTION or it is empty
+    roxygen <- glue::glue_collapse(args, sep = ", ")
+  } else {
+    # 'Roxygen' field is not empty
+    roxygen <- stringi::stri_match_first_regex(
+      roxygen_prop,
+      "^\\s*list\\((.*)\\)\\s*$"
+    )[2]
+
+    if (all(is.na(roxygen))) {
+     cli::cli_alert_danger(
+       c("{.var Roxygen} field in {.file DESCRIPTION} has unsupported format.",
+       " Skipping initialization of roclets."
+       )
+     )
+     return(invisible(NULL))
+    }
+
+    roxygen <- glue::glue_collapse(c(roxygen, args), sep = ",\n\t")
+  }
+
+  desc::desc_set(
+    Roxygen = glue::glue("list(\n\t{roxygen}\n)")
+  )
+  cli::cli_alert_success(
+    "Adding roclets to {.var Roxygen} field in {.file DESCRIPTION}."
+  )
+
+  invisible(NULL)
+}
