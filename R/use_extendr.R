@@ -12,10 +12,12 @@
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
+#' @param use_roclets Logical (default: `FALSE`) indicating whether to use
+#'   `roxygen2` roclets to augment pacakge compilation process.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-use_extendr <- function(path = ".", quiet = FALSE) {
+use_extendr <- function(path = ".", use_roclets = FALSE, quiet = FALSE) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -154,6 +156,10 @@ extendr_module! {{
 
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
   write_namespace(pkg_name)
+
+  if (isTRUE(use_roclets)) {
+    use_roclets(use_roxygen_roclets = TRUE)
+  }
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))

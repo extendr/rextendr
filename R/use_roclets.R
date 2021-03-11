@@ -1,8 +1,9 @@
 
-# Use roclets to augment package compilaion.
-#' @param use_roxygen_roclets Logical (default: \code{TRUE}), indicates
-#' if roclets should be referenced in the DESCRIPTION file.
-#' @returns \code{NULL} (invisibly)
+#' Use roclets to augment package compilaion.
+#'
+#' @param use_roxygen_roclets Logical (default: `TRUE`), indicates
+#' if default `roxygen2` roclets should be referenced in the DESCRIPTION file.
+#' @returns `NULL` (invisibly)
 #' @export
 use_roclets <- function(
   use_roxygen_roclets = TRUE
