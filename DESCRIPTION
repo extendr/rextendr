@@ -44,7 +44,8 @@ Imports:
     purrr,
     rlang,
     rprojroot,
-    usethis
+    usethis,
+    roxygen2
 Suggests: 
     knitr,
     rmarkdown,
