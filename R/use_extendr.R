@@ -47,7 +47,7 @@ use_extendr <- function(path = ".", quiet = FALSE) {
   write_example_entrypoint(pkg_name, file.path(src_dir, "entrypoint.c"))
 
   write_example_makevars(pkg_name, file.path(src_dir, "Makevars"))
-  write_example_makevars(pkg_name, file.path(src_dir, "Makevars.win"), windows = TRUE)
+  write_example_makevars_win(pkg_name, file.path(src_dir, "Makevars.win"))
 
   write_example_gitignore(file.path(src_dir, ".gitignore"))
 
@@ -97,43 +97,12 @@ write_example_entrypoint <- function(pkg_name, outfile) {
   brio::write_lines(entrypoint_content, outfile)
 }
 
-write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
-  wrapper_file_command <- glue(
-    "
-    \tcargo build --release --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
-    \t$(LIBDIR)/generate_wrappers > $@
-    "
-  )
-
-  if (windows) {
-    variables <- glue(
-      "
-      TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-      LIBDIR = ./rust/target/$(TARGET)/release
-      STATLIB = $(LIBDIR)/lib{pkg_name}.a
-      PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
-      "
-    )
-    wrapper_file_command <- glue(
-      "
-      ifneq \"$(WIN)\" \"32\"
-      {wrapper_file_command}
-      endif
-      "
-    )
-  } else {
-    variables <- glue(
-      "
-      LIBDIR = ./rust/target/release
-      STATLIB = $(LIBDIR)/lib{pkg_name}.a
-      PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
-      "
-    )
-  }
-
+write_example_makevars <- function(pkg_name, outfile) {
   makevars_content <- glue(
     "
-    {variables}
+    LIBDIR = ./rust/target/release
+    STATLIB = $(LIBDIR)/lib{pkg_name}.a
+    PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
 
     WRAPPER_FILE = ./extendr-wrappers.R
 
@@ -145,7 +114,39 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
     \tcargo build --lib --release --manifest-path=./rust/Cargo.toml
 
     $(WRAPPER_FILE): $(STATLIB)
-    {wrapper_file_command}
+    \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+
+    C_clean:
+    \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
+
+    clean:
+    \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE) rust/target
+    "
+  )
+  brio::write_lines(makevars_content, outfile)
+}
+
+write_example_makevars_win <- function(pkg_name, outfile) {
+  makevars_win_content <- glue(
+    "
+    TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+    LIBDIR = ./rust/target/$(TARGET)/release
+    STATLIB = $(LIBDIR)/lib{pkg_name}.a
+    PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
+
+    WRAPPER_FILE = ./extendr-wrappers.R
+
+    all: C_clean
+
+    $(SHLIB): $(STATLIB) $(WRAPPER_FILE)
+
+    $(STATLIB):
+    \tcargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
+
+    $(WRAPPER_FILE): $(STATLIB)
+    ifneq \"$(WIN)\" \"32\"
+    \tcargo run --target=$(TARGET) --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    endif
 
     C_clean:
     \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
@@ -155,7 +156,7 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
     "
   )
 
-  brio::write_lines(makevars_content, outfile)
+  brio::write_lines(makevars_win_content, outfile)
 }
 
 write_example_gitignore <- function(outfile) {
