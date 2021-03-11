@@ -63,11 +63,17 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 make_wrappers <- function(module_name, package_name, outfile,
                           use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
-  x <- .Call(
-    wrapper_function,
-    use_symbols = use_symbols,
-    package_name = package_name,
-    PACKAGE = package_name
+  x <- callr::r_safe(
+    function(PACKAGE, ...) {
+      library(PACKAGE, character.only = TRUE)
+      .Call(..., PACKAGE = PACKAGE)
+    },
+    args = list(
+      wrapper_function,
+      use_symbols = use_symbols,
+      package_name = package_name,
+      PACKAGE = package_name
+    )
   )
   x <- stringi::stri_split_lines1(x)
 
