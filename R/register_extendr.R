@@ -55,7 +55,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
           "Generating the wrapper functions failed, so a minimal one is used instead",
           call. = FALSE
         )
-        make_example_wrappers(pkg_name, outfile)
+        write_example_wrappers(pkg_name, outfile)
       }
     )
   } else if (requireNamespace(pkg_name, quietly = TRUE)) {
