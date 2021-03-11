@@ -42,60 +42,20 @@ use_extendr <- function(path = ".", quiet = FALSE) {
   dir.create(src_dir)
   dir.create(file.path(src_dir, "rust"))
   dir.create(file.path(src_dir, "rust", "src"))
+  dir.create(file.path(src_dir, "rust", "src", "bin"))
 
-  entrypoint_content <- glue(
-r"(
-// We need to forward routine registration from C to Rust
-// to avoid the linker removing the static library.
+  write_example_entrypoint(pkg_name, file.path(src_dir, "entrypoint.c"))
 
-void R_init_{pkg_name}_extendr(void *dll);
+  write_example_makevars(pkg_name, file.path(src_dir, "Makevars"))
+  write_example_makevars(pkg_name, file.path(src_dir, "Makevars.win"), windows = TRUE)
 
-void R_init_{pkg_name}(void *dll) {{
-    R_init_{pkg_name}_extendr(dll);
-}}
-)"
-  )
-  brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
+  write_example_gitignore(file.path(src_dir, ".gitignore"))
 
-  write_example_makevars(makevars_content, file.path(src_dir, "Makevars"))
-  write_example_makevars(makevars_content, file.path(src_dir, "Makevars.win"), windows = TRUE)
+  write_example_cargo_toml(file.path(src_dir, "rust", "Cargo.toml"))
 
-  gitignore_content <- "*.o
-*.so
-*.dll
-target
-extendr-wrappers
-"
-  brio::write_lines(gitignore_content, file.path(src_dir, ".gitignore"))
+  write_example_lib_rs(pkg_name, file.path(src_dir, "rust", "src", "lib.rs"))
 
-  cargo_toml_content <- to_toml(
-    package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
-    lib = list(`crate-type` = array("staticlib", 1)),
-    dependencies = list(`extendr-api` = "*")
-  )
-  brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
-
-  lib_rs_content <- glue(
-r"(
-use extendr_api::prelude::*;
-
-/// Return string `"Hello world!"` to R.
-/// @export
-#[extendr]
-fn hello_world() -> &'static str {{
-    "Hello world!"
-}}
-
-// Macro to generate exports.
-// This ensures exported functions are registered with R.
-// See corresponding C code in `entrypoint.c`.
-extendr_module! {{
-    mod {pkg_name};
-    fn hello_world;
-}}
-)"
-  )
-  brio::write_lines(lib_rs_content, file.path(src_dir, "rust", "src", "lib.rs"))
+  write_example_generate_wrappers_rs(pkg_name, file.path(src_dir, "rust", "src", "bin", "generate_wrappers.rs"))
 
   if (!isTRUE(quiet)) {
     message(glue("Creating `R/extendr-wrappers.R` ..."))
@@ -120,6 +80,23 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
+write_example_entrypoint <- function(pkg_name, outfile) {
+  entrypoint_content <- glue(
+    r"(
+    // We need to forward routine registration from C to Rust
+    // to avoid the linker removing the static library.
+
+    void R_init_{pkg_name}_extendr(void *dll);
+
+    void R_init_{pkg_name}(void *dll) {{
+    R_init_{pkg_name}_extendr(dll);
+    }}
+    )"
+  )
+
+  brio::write_lines(entrypoint_content, outfile)
+}
+
 write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
   if (windows) {
     target <- "TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu"
@@ -128,38 +105,104 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
     target <- ""
     pkg_libs <- "PKG_LIBS = -L$(LIBDIR) -l{pkg_name}"
   }
-  content <- glue(
-    "{target}
-LIBDIR = ./rust/target/$(TARGET)/release
-STATLIB = $(LIBDIR)/lib{pkg_name}.a
-{pkg_libs}
-WRAPPER_FILE = ./extendr-wrappers.R
 
-all: C_clean
+  makevars_content <- glue(
+    "
+    {target}
+    LIBDIR = ./rust/target/$(TARGET)/release
+    STATLIB = $(LIBDIR)/lib{pkg_name}.a
+    {pkg_libs}
+    WRAPPER_FILE = ./extendr-wrappers.R
 
-$(SHLIB): $(STATLIB) $(WRAPPER_FILE)
+    all: C_clean
 
-$(STATLIB):
-\tcargo build --lib --release --manifest-path=./rust/Cargo.toml
+    $(SHLIB): $(STATLIB) $(WRAPPER_FILE)
 
-$(WRAPPER_FILE): $(STATLIB)
-\tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    $(STATLIB):
+    \tcargo build --lib --release --manifest-path=./rust/Cargo.toml
 
-C_clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
+    $(WRAPPER_FILE): $(STATLIB)
+    \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
 
-clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE) rust/target
-"
+    C_clean:
+    \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
+
+    clean:
+    \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE) rust/target
+    "
   )
 
   brio::write_lines(makevars_content, outfile)
 }
 
+write_example_gitignore <- function(outfile) {
+  gitignore_content <- glue(
+    "
+    *.o
+    *.so
+    *.dll
+    target
+    extendr-wrappers.R
+    "
+  )
+
+  brio::write_lines(gitignore_content, outfile)
+}
+
+write_example_cargo_toml <- function(pkg_name, outfile) {
+  cargo_toml_content <- to_toml(
+    package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
+    lib = list(`crate-type` = c("staticlib", "lib")),
+    dependencies = list(`extendr-api` = "*")
+  )
+
+  brio::write_lines(cargo_toml_content, outfile)
+}
+
+write_example_lib_rs <- function(pkg_name, outfile) {
+  lib_rs_content <- glue(
+    r"(
+    use extendr_api::prelude::*;
+
+    /// Return string `"Hello world!"` to R.
+    /// @export
+    #[extendr]
+    fn hello_world() -> &'static str {{
+    "Hello world!"
+    }}
+
+    // Macro to generate exports.
+    // This ensures exported functions are registered with R.
+    // See corresponding C code in `entrypoint.c`.
+    extendr_module! {{
+    mod {pkg_name};
+    fn hello_world;
+    }}
+    )"
+  )
+  brio::write_lines(lib_rs_content, outfile)
+}
+
+write_example_generate_wrappers_rs <- function(pkg_name, outfile) {
+  lib_rs_content <- glue(
+    r"(
+    fn main() {
+      let metadata = {pkg_name}::get_{pkg_name}_metadata();
+      print!(
+        "{}",
+        metadata.make_r_wrappers(true, "{pkg_name}").unwrap()
+      );
+    }
+    )"
+  )
+
+  brio::write_lines(lib_rs_content, outfile)
+}
+
 write_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
-  wrappers_content <- glue::glue(
+  wrappers_content <- glue(
     r"(
     {roxcmt} @docType package
     {roxcmt} @usage NULL
@@ -169,7 +212,7 @@ write_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   )
 
   if (!is.null(extra_items)) {
-    wrappers_content <- glue::glue_collapse(
+    wrappers_content <- glue_collapse(
       c(wrappers_content, extra_items),
       sep = "\n"
     )
