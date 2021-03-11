@@ -30,14 +30,15 @@ get_rust_files <- function(path = ".") {
       )
     )
   }
-
   result
 }
 
 needs_compilation <- function(path = ".") {
   library_path <- get_library_path(path)
 
+  # This will likely never happen
   if (!fs::file_exists(library_path)) {
+    library_path <- fs::path_rel(library_path, start = rprojroot::find_package_root_file(path = path))
     cli::cli_alert_info("No library found at {.file {library_path}}, recompilation is required.")
     return(TRUE)
   }
@@ -57,8 +58,8 @@ needs_compilation <- function(path = ".") {
   }
 
   purrr::walk(
-    fs::path_rel(modified_files_info[["path"]], start = rprojroot::find_package_root_file()),
-    ~cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
+    fs::path_rel(modified_files_info[["path"]], start = rprojroot::find_package_root_file(path = path)),
+    ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
   )
 
   TRUE
@@ -76,5 +77,4 @@ touch_makevars <- function(path = ".") {
   if (fs::file_exists(makevars_win_path)) {
     fs::file_touch(makevars_win_path)
   }
-
 }

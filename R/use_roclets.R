@@ -5,9 +5,7 @@
 #' if default `roxygen2` roclets should be referenced in the DESCRIPTION file.
 #' @returns `NULL` (invisibly)
 #' @export
-use_roclets <- function(
-  use_roxygen_roclets = TRUE
-) {
+use_roclets <- function(use_roxygen_roclets = TRUE) {
   # Roclets are written as strings, custom roclets should be wrapped
   # in double quotes.
   # Adding roclet that invokes `rextendr::register_extendr()`
@@ -34,13 +32,13 @@ use_roclets <- function(
     )[2]
 
     if (all(is.na(roxygen))) {
-     cli::cli_alert_danger(
-       c(
+      cli::cli_alert_danger(
+        c(
           "{.var Roxygen} field in {.file DESCRIPTION} has unsupported format.",
           " Skipping initialization of roclets."
-       )
-     )
-     return(invisible(NULL))
+        )
+      )
+      return(invisible(NULL))
     }
     roxygen <- glue::glue(
       roxygen,

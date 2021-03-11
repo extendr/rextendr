@@ -46,7 +46,7 @@ use_extendr <- function(path = ".", use_roclets = FALSE, quiet = FALSE) {
   dir.create(file.path(src_dir, "rust", "src"))
 
   entrypoint_content <- glue(
-r"(
+    r"(
 // We need to forward routine registration from C to Rust
 // to avoid the linker removing the static library.
 
@@ -60,7 +60,7 @@ void R_init_{pkg_name}(void *dll) {{
   brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
 
   makevars_content <- glue(
-"
+    "
 LIBDIR = ./rust/target/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
 PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
@@ -82,7 +82,7 @@ clean:
   brio::write_lines(makevars_content, file.path(src_dir, "Makevars"))
 
   makevars_win_content <- glue(
-"
+    "
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 LIBDIR = ./rust/target/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
@@ -119,7 +119,7 @@ target
   brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
 
   lib_rs_content <- glue(
-r"(
+    r"(
 use extendr_api::prelude::*;
 
 /// Return string `"Hello world!"` to R.
