@@ -144,7 +144,6 @@ write_example_makevars_win <- function(pkg_name, outfile) {
     \tcargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
 
     $(WRAPPER_FILE): $(STATLIB)
-    \techo \"$(WIN)\"
     ifeq \"$(WIN)\" \"64\"
     \tcargo run --target=$(TARGET) --release --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
     endif
