@@ -94,7 +94,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          remotes::install_local()
+          remotes::install_local(force = TRUE)
           temp_dir <- tempdir()
           pkg_dir <- file.path(temp_dir, "testpkg")
           dir.create(pkg_dir, recursive = TRUE)
