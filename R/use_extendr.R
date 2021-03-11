@@ -114,7 +114,7 @@ write_example_makevars <- function(pkg_name, outfile) {
     \tcargo build --lib --release --manifest-path=./rust/Cargo.toml
 
     $(WRAPPER_FILE): $(STATLIB)
-    \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    \tcargo run --release --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
 
     C_clean:
     \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
@@ -145,7 +145,7 @@ write_example_makevars_win <- function(pkg_name, outfile) {
 
     $(WRAPPER_FILE): $(STATLIB)
     ifneq \"$(WIN)\" \"32\"
-    \tcargo run --target=$(TARGET) --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    \tcargo run --target=$(TARGET) --release --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
     endif
 
     C_clean:
