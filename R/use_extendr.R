@@ -98,6 +98,13 @@ write_example_entrypoint <- function(pkg_name, outfile) {
 }
 
 write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
+  wrapper_file_command <- glue(
+    "
+    \tcargo build --release --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+    \t$(LIBDIR)/generate_wrappers > $@
+    "
+  )
+
   if (windows) {
     variables <- glue(
       "
@@ -110,7 +117,7 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
     wrapper_file_command <- glue(
       "
       ifneq \"$(WIN)\" \"32\"
-      \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+      {wrapper_file_command}
       endif
       "
     )
@@ -120,11 +127,6 @@ write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
       LIBDIR = ./rust/target/release
       STATLIB = $(LIBDIR)/lib{pkg_name}.a
       PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
-      "
-    )
-    wrapper_file_command <- glue(
-      "
-      \tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
       "
     )
   }
