@@ -8,9 +8,10 @@
 use_roclets <- function(
   use_roxygen_roclets = TRUE
 ) {
-  # recompilation roclet
-  # registration roclet
-  roclet_args <- "rextendr::registration_roclet"
+  # Roclets are written as strings, custom roclets should be wrapped
+  # in double quotes.
+  # Adding roclet that invokes `rextendr::register_extendr()`
+  roclet_args <- "\"rextendr::registration_roclet\""
   if (isTRUE(use_roxygen_roclets)) {
     roclet_args <- c(roclet_args, "roxygen2::roxy_meta_get(\"roclets\")")
   }
