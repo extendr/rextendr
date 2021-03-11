@@ -57,55 +57,14 @@ void R_init_{pkg_name}(void *dll) {{
   )
   brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
 
-  makevars_content <- glue(
-"
-LIBDIR = ./rust/target/release
-STATLIB = $(LIBDIR)/lib{pkg_name}.a
-PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
-
-all: C_clean
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB):
-\tcargo build --lib --release --manifest-path=./rust/Cargo.toml
-
-C_clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-
-clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-"
-  )
-  brio::write_lines(makevars_content, file.path(src_dir, "Makevars"))
-
-  makevars_win_content <- glue(
-"
-TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-LIBDIR = ./rust/target/$(TARGET)/release
-STATLIB = $(LIBDIR)/lib{pkg_name}.a
-PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
-
-all: C_clean
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB):
-\tcargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
-
-C_clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-
-clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-"
-  )
-  brio::write_lines(makevars_win_content, file.path(src_dir, "Makevars.win"))
+  write_example_makevars(makevars_content, file.path(src_dir, "Makevars"))
+  write_example_makevars(makevars_content, file.path(src_dir, "Makevars.win"), windows = TRUE)
 
   gitignore_content <- "*.o
 *.so
 *.dll
 target
+extendr-wrappers
 "
   brio::write_lines(gitignore_content, file.path(src_dir, ".gitignore"))
 
@@ -152,7 +111,7 @@ extendr_module! {{
     )"
   )
 
-  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
+  write_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
@@ -161,7 +120,43 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
-make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
+write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
+  if (windows) {
+    target <- "TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu"
+    pkg_libs <- "PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv"
+  } else {
+    target <- ""
+    pkg_libs <- "PKG_LIBS = -L$(LIBDIR) -l{pkg_name}"
+  }
+  content <- glue(
+    "{target}
+LIBDIR = ./rust/target/$(TARGET)/release
+STATLIB = $(LIBDIR)/lib{pkg_name}.a
+{pkg_libs}
+WRAPPER_FILE = ./extendr-wrappers.R
+
+all: C_clean
+
+$(SHLIB): $(STATLIB) $(WRAPPER_FILE)
+
+$(STATLIB):
+\tcargo build --lib --release --manifest-path=./rust/Cargo.toml
+
+$(WRAPPER_FILE): $(STATLIB)
+\tcargo run --quiet --manifest-path=./rust/Cargo.toml --bin generate_wrappers > $@
+
+C_clean:
+\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE)
+
+clean:
+\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(WRAPPER_FILE) rust/target
+"
+  )
+
+  brio::write_lines(makevars_content, outfile)
+}
+
+write_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
@@ -182,3 +177,4 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
 
   brio::write_lines(wrappers_content, outfile)
 }
+
