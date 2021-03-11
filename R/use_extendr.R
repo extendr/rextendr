@@ -51,7 +51,7 @@ use_extendr <- function(path = ".", quiet = FALSE) {
 
   write_example_gitignore(file.path(src_dir, ".gitignore"))
 
-  write_example_cargo_toml(file.path(src_dir, "rust", "Cargo.toml"))
+  write_example_cargo_toml(pkg_name, file.path(src_dir, "rust", "Cargo.toml"))
 
   write_example_lib_rs(pkg_name, file.path(src_dir, "rust", "src", "lib.rs"))
 
@@ -99,11 +99,11 @@ write_example_entrypoint <- function(pkg_name, outfile) {
 
 write_example_makevars <- function(pkg_name, outfile, windows = FALSE) {
   if (windows) {
-    target <- "TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu"
-    pkg_libs <- "PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv"
+    target <- glue("TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu")
+    pkg_libs <- glue("PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv")
   } else {
-    target <- ""
-    pkg_libs <- "PKG_LIBS = -L$(LIBDIR) -l{pkg_name}"
+    target <- glue("")
+    pkg_libs <- glue("PKG_LIBS = -L$(LIBDIR) -l{pkg_name}")
   }
 
   makevars_content <- glue(
@@ -168,15 +168,15 @@ write_example_lib_rs <- function(pkg_name, outfile) {
     /// @export
     #[extendr]
     fn hello_world() -> &'static str {{
-    "Hello world!"
+      "Hello world!"
     }}
 
     // Macro to generate exports.
     // This ensures exported functions are registered with R.
     // See corresponding C code in `entrypoint.c`.
     extendr_module! {{
-    mod {pkg_name};
-    fn hello_world;
+      mod {pkg_name};
+      fn hello_world;
     }}
     )"
   )
@@ -184,19 +184,19 @@ write_example_lib_rs <- function(pkg_name, outfile) {
 }
 
 write_example_generate_wrappers_rs <- function(pkg_name, outfile) {
-  lib_rs_content <- glue(
+  generate_wrappers_rs_content <- glue(
     r"(
-    fn main() {
+    fn main() {{
       let metadata = {pkg_name}::get_{pkg_name}_metadata();
       print!(
-        "{}",
+        "{{}}",
         metadata.make_r_wrappers(true, "{pkg_name}").unwrap()
       );
-    }
+    }}
     )"
   )
 
-  brio::write_lines(lib_rs_content, outfile)
+  brio::write_lines(generate_wrappers_rs_content, outfile)
 }
 
 write_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
