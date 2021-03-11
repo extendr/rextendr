@@ -50,7 +50,7 @@ needs_compilation <- function(path = ".") {
   rust_info <- fs::file_info(rust_files)
   library_info <- fs::file_info(library_path)
 
-  modified_files_info <- dplyr::filter(rust_info, modification_time > library_info[["modification_time"]][1])
+  modified_files_info <- dplyr::filter(rust_info, .data$modification_time > library_info[["modification_time"]][1])
 
   if (nrow(modified_files_info) == 0L) {
     return(FALSE)

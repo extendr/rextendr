@@ -9,5 +9,6 @@
 #' @importFrom rlang   dots_list names2 as_function is_missing is_atomic is_null
 #' @importFrom rlang   is_na .data .env
 #' @importFrom stringi stri_replace_all_regex
+#' @importFrom roxygen2 roclet_process roclet_output
 #' @docType package
 NULL
