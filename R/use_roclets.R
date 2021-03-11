@@ -10,7 +10,7 @@ use_roclets <- function(
 ) {
   # recompilation roclet
   # registration roclet
-  roclet_args <- "rextendr::test_roclet"
+  roclet_args <- "rextendr::registration_roclet"
   if (isTRUE(use_roxygen_roclets)) {
     roclet_args <- c(roclet_args, "roxygen2::roxy_meta_get(\"roclets\")")
   }
