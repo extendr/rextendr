@@ -69,7 +69,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 }
 
 fish_wrappers <- function(src_dir, outfile, quiet = FALSE) {
-  if (identical(Sys.info()["sysname"], "Windows")) {
+  if (isTRUE(Sys.info()["sysname"] == "Windows")) {
     makevars_file <- "Makevars.win"
   } else {
     makevars_file <- "Makevars"
