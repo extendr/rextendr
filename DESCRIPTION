@@ -45,7 +45,9 @@ Imports:
     rlang,
     rprojroot,
     usethis,
-    roxygen2
+    roxygen2,
+    fs,
+    cli
 Suggests: 
     knitr,
     rmarkdown,

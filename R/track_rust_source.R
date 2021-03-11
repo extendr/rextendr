@@ -16,11 +16,11 @@ get_rust_files <- function(path = ".") {
   rust_root <- rprojroot::find_package_root_file("src", "rust", path = path)
   result <- fs::path()
   cargo_toml_path <- fs::path(rust_root, "Cargo.toml")
-  if (fs::file_exitst(cargo_toml_path)) {
+  if (fs::file_exists(cargo_toml_path)) {
     result <- c(result, cargo_toml_path)
   }
   rust_src_subdir <- fs::path(rust_root, "src")
-  if (fs::dir_exists(rust_src_subdir)) s{
+  if (fs::dir_exists(rust_src_subdir)) {
     result <- c(
       result,
       fs::dir_ls(
@@ -43,22 +43,22 @@ needs_compilation <- function(path = ".") {
   }
 
   rust_files <- get_rust_files(path)
-  if (nrow(rust_files) == 0L) {
+  if (length(rust_files) == 0L) {
     return(FALSE)
   }
 
   rust_info <- fs::file_info(rust_files)
-  library_info <- fs::file_info(library_info)
+  library_info <- fs::file_info(library_path)
 
-  modifed_files <- dplyr::filter(rust_info, modification_time > library_info[["modification_time"]][1])
+  modified_files_info <- dplyr::filter(rust_info, modification_time > library_info[["modification_time"]][1])
 
-  if (nrow(modifed_files) == 0L) {
+  if (nrow(modified_files_info) == 0L) {
     return(FALSE)
   }
 
   purrr::walk(
-    modified_files[["path"]],
-    ~cli::cli_alert_info("File {.file{.x}} has been modified since last compilation.")
+    modified_files_info[["path"]],
+    ~cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
   )
 
   TRUE

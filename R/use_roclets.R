@@ -11,7 +11,10 @@ use_roclets <- function(
   # Roclets are written as strings, custom roclets should be wrapped
   # in double quotes.
   # Adding roclet that invokes `rextendr::register_extendr()`
-  roclet_args <- "\"rextendr::registration_roclet\""
+  roclet_args <- c(
+    "\"rextendr::registration_roclet\"",
+    "\"rextendr::filetracker_roclet\""
+  )
   if (isTRUE(use_roxygen_roclets)) {
     roclet_args <- c(roclet_args, "roxygen2::roxy_meta_get(\"roclets\")")
   }
