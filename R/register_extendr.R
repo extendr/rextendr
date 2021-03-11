@@ -40,24 +40,26 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   # when there's some error (e.g. the symbol cannot be found).
   # If FALSE, execute make_wrappers() only when the package can be loaded.
   if (isTRUE(force_wrappers)) {
-    tryCatch(
-      make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
-      error = function(...) {
-        warning(
-          "Generating the wrapper functions failed, so a minimal one is used instead",
-          call. = FALSE
-        )
-        make_example_wrappers(pkg_name, outfile)
-      }
-    )
-  } else if (requireNamespace(pkg_name, quietly = TRUE)) {
-    make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
+    error_handle <- function(e) {
+      warning(
+        "Generating the wrapper functions failed, so a minimal one is used instead",
+        call. = FALSE
+      )
+      make_example_wrappers(pkg_name, outfile)
+    }
   } else {
-    stop(
-      glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
-      call. = FALSE
-    )
+    error_handle <- function(e) {
+      stop(
+        glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
+        call. = FALSE
+      )
+    }
   }
+
+  tryCatch(
+    make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+    error = error_handle
+  )
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
@@ -65,15 +67,16 @@ make_wrappers <- function(module_name, package_name, outfile,
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- callr::r_safe(
     function(package_root, ...) {
+      cat(package_root)
       pkgload::load_all(package_root)
       .Call(...)
     },
     args = list(
+      package_root = rprojroot::find_package_root_file(path = "."),
       wrapper_function,
       use_symbols = use_symbols,
       package_name = package_name,
-      PACKAGE = package_name,
-      package_root = rprojroot::find_package_root_file(path = ".")
+      PACKAGE = package_name
     )
   )
   x <- stringi::stri_split_lines1(x)
