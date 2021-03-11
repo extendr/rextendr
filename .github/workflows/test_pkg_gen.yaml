@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -67,7 +67,7 @@ jobs:
         run: |
           rustup target add x86_64-pc-windows-gnu
           rustup target add i686-pc-windows-gnu
-          echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+          echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         shell: pwsh
 
@@ -115,12 +115,10 @@ jobs:
             file.path("tests", "testthat", "test-hello.R")
           )
           rextendr::use_extendr()
-          devtools::document()
-          devtools::install(quick = TRUE)
           rextendr::register_extendr()
           devtools::document()
           rcmdcheck::rcmdcheck(
-              path = ".", 
+              path = ".",
               args = c("--no-manual", "--as-cran"),
               error_on = "warning",
               check_dir = "check_use_extendr"
