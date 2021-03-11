@@ -153,6 +153,7 @@ extendr_module! {{
   )
 
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
+  write_namespace(pkg_name)
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
@@ -181,4 +182,17 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   }
 
   brio::write_lines(wrappers_content, outfile)
+}
+
+write_namespace <- function(pkg_name) {
+  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = ".")
+  if (!file.exists(ns_path)) {
+    usethis::ui_warn("`NAMESPACE` file is missing. Make sure the project has been set up correctly.")
+    usethis::use_namespace()
+  }
+  lines <- brio::read_lines(ns_path)
+  if (!any(grepl("useDynLib", lines))) {
+    # NAMESPACE has no `useDynLib`
+    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"))
+  }
 }
