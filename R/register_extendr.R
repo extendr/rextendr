@@ -36,29 +36,25 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
-  # If force_wrappers is TRUE, use tryCatch() to generate minimal wrappers even
-  # when there's some error (e.g. the symbol cannot be found).
-  # If FALSE, execute make_wrappers() only when the package can be loaded.
+  # If force_wrappers is TRUE, generate minimal wrappers even when there's some
+  # error (e.g. the symbol cannot be found).
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
-      warning(
-        "Generating the wrapper functions failed, so a minimal one is used instead",
-        call. = FALSE
-      )
+      msg <- "Generating the wrapper functions failed, so a minimal one is used instead"
+      warning(msg, call. = FALSE)
       make_example_wrappers(pkg_name, outfile)
     }
   } else {
     error_handle <- function(e) {
-      stop(
-        glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
-        call. = FALSE
-      )
+      stop("Generating the wrapper functions failed", call. = FALSE)
     }
   }
 
   tryCatch(
     make_wrappers(pkg_name, pkg_name, outfile,
       use_symbols = TRUE, quiet = quiet,
+      # Call the wrapper generation in a separate R process to avoid the problem
+      # of loading and unloading the same name of library (c.f. #64).
       use_callr = TRUE
     ),
     error = error_handle
@@ -71,8 +67,7 @@ make_wrappers <- function(module_name, package_name, outfile,
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
 
   func <- function(package_root, ...) {
-    cat(package_root)
-    pkgload::load_all(package_root)
+    pkgload::load_all(package_root, quiet = TRUE)
     .Call(...)
   }
 
