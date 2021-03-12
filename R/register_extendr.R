@@ -20,7 +20,7 @@
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
   # Shortcut: no new wrappers requried
-  if (!needs_new_warppers(path)) {
+  if (isFALSE(force_wrappers) && isFALSE(needs_new_warppers(path))) {
     return()
   }
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
@@ -30,7 +30,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
     cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
   }
 
-  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
+  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
     stop(
       "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
@@ -97,7 +97,7 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
   }
 
   # Retrieves path to e.g. 'src/my_package.dll'
-  library_path <- get_library_path()
+  library_path <- get_library_path(path)
 
   if (!fs::file_exists(library_path)) {
     # No library found
