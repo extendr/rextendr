@@ -2,17 +2,19 @@
 % Please edit documentation in R/use_roclets.R
 \name{use_roclets}
 \alias{use_roclets}
-\title{Use roclets to augment package compilaion.}
+\title{Use roclets to augment package compilation.}
 \usage{
 use_roclets(use_roxygen_roclets = TRUE)
 }
 \arguments{
 \item{use_roxygen_roclets}{Logical (default: \code{TRUE}), indicates
-if default \code{roxygen2} roclets should be referenced in the DESCRIPTION file.}
+if default \code{roxygen2} roclets should be referenced in the DESCRIPTION file.
+Default roclets are respnsible for writing \code{.Rd} documenation and updating
+\code{NAMESPACE} file.}
 }
 \value{
 \code{NULL} (invisibly)
 }
 \description{
-Use roclets to augment package compilaion.
+Use roclets to augment package compilation.
 }

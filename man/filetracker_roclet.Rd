@@ -2,7 +2,7 @@
 % Please edit documentation in R/filetracker_roclet.R
 \name{filetracker_roclet}
 \alias{filetracker_roclet}
-\title{Create roclet that tracks Rust source files changes.}
+\title{Create a roclet that tracks Rust source files changes.}
 \usage{
 filetracker_roclet()
 }
@@ -10,5 +10,5 @@ filetracker_roclet()
 A roclet.
 }
 \description{
-Create roclet that tracks Rust source files changes.
+Create a roclet that tracks Rust source files changes.
 }
