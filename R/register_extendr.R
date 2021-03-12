@@ -76,3 +76,29 @@ make_wrappers <- function(module_name, package_name, outfile,
   }
   brio::write_lines(x, outfile)
 }
+
+# Checks if new wrappers should be generated
+needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr-wrappers.R")) {
+  wrapper_path <- rprojroot::find_package_root_file(wrapper_path, path = path)
+
+  if (!fs::file_exists(wrapper_path)) {
+    # No wrapeers, they should be generated
+    return(TRUE)
+  }
+
+  # Retrieves path to e.g. 'src/my_package.dll'
+  library_path <- get_library_path()
+
+  if (!fs::file_exists(library_path)) {
+    # No library found
+    cli::cli_alert_danger("Library file {.file {library_path}} is missing, cannot generate wrappers!")
+    stop("Wrapper generation failed. Aborting.", call. = FALSE)
+  }
+
+  wrapepr_info <- fs::file_info(wrapper_path)
+  library_info <- fs::file_info(library_path)
+
+  # If wrapeprs are older than the library file, new wrappers are needed.
+  library_info[["modification_time"]] > wrapper_info[["modification_time"]]
+
+}
