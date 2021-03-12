@@ -12,7 +12,7 @@ get_library_path <- function(path = ".") {
   pkg_name <- pkg$get("Package")
   fs::path(
     glue::glue(
-      "src",
+      rprojroot::find_package_root_file("src", path = path),
       "{pkg_name}{.Platform$dynlib.ext}",
       .sep = .Platform$file.sep
     )
@@ -49,14 +49,16 @@ get_rust_files <- function(path = ".") {
   result
 }
 
-needs_compilation <- function(path = ".") {
+needs_compilation <- function(path = ".", quiet = FALSE) {
   library_path <- get_library_path(path)
 
   # This will likely never happen.
   # Shortcut: missing library file requires compilation in any case.
   if (!fs::file_exists(library_path)) {
-    library_path_rel <- pretty_rel_path(library_path, path)
-    cli::cli_alert_info("No library found at {.file {library_path_rel}}, recompilation is required.")
+    if (!isTRUE(quiet)) {
+      library_path_rel <- pretty_rel_path(library_path, path)
+      cli::cli_alert_info("No library found at {.file {library_path_rel}}, recompilation is required.")
+    }
     return(TRUE)
   }
 
@@ -88,15 +90,17 @@ needs_compilation <- function(path = ".") {
   # informing user of each modification.
   # This perhaps should have an `isFALSE(quiet)` check, but right now rextendr rocelts
   # do not support `quiet` arg.
-  purrr::walk(
-    pretty_rel_path(modified_files_info[["path"]], search_from = path),
-    ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
-  )
+  if(!isTRUE(quiet)) {
+    purrr::walk(
+      pretty_rel_path(modified_files_info[["path"]], search_from = path),
+      ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
+    )
+  }
 
   TRUE
 }
 
-touch_makevars <- function(path = ".") {
+touch_makevars <- function(path = ".", quiet = FALSE) {
   # Build system does not track modfications to source files other than
   # C/C++/Fortran and Makevars.
   # If Makevars is 'touched', next time recompilation will be triggered
@@ -123,7 +127,7 @@ touch_makevars <- function(path = ".") {
   # If there are no Makevars(.win), alert user that Rust changes have been detected,
   # but build system cannot be notified.
   # This is also a sing of a serious misconfiguration of the project.
-  if (isFALSE(has_been_touched)) {
+  if (isFALSE(has_been_touched) && !isTRUE(quiet)) {
     cli::cli_alert_danger(
       c(
         "No {.file src/Makevars} or {.file src/Makevars.win} files have been found. ",
