@@ -12,10 +12,12 @@
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
+#' @param use_roclets Logical (default: `FALSE`) indicating whether to use
+#'   `roxygen2` roclets to augment pacakge compilation process.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-use_extendr <- function(path = ".", quiet = FALSE) {
+use_extendr <- function(path = ".", use_roclets = FALSE, quiet = FALSE) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -44,7 +46,7 @@ use_extendr <- function(path = ".", quiet = FALSE) {
   dir.create(file.path(src_dir, "rust", "src"))
 
   entrypoint_content <- glue(
-r"(
+    r"(
 // We need to forward routine registration from C to Rust
 // to avoid the linker removing the static library.
 
@@ -58,7 +60,7 @@ void R_init_{pkg_name}(void *dll) {{
   brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
 
   makevars_content <- glue(
-"
+    "
 LIBDIR = ./rust/target/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
 PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
@@ -80,7 +82,7 @@ clean:
   brio::write_lines(makevars_content, file.path(src_dir, "Makevars"))
 
   makevars_win_content <- glue(
-"
+    "
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 LIBDIR = ./rust/target/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
@@ -117,7 +119,7 @@ target
   brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
 
   lib_rs_content <- glue(
-r"(
+    r"(
 use extendr_api::prelude::*;
 
 /// Return string `"Hello world!"` to R.
@@ -153,6 +155,11 @@ extendr_module! {{
   )
 
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
+  write_namespace(pkg_name)
+
+  if (isTRUE(use_roclets)) {
+    use_roclets(use_roxygen_roclets = TRUE)
+  }
 
   if (!isTRUE(quiet)) {
     message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
@@ -181,4 +188,17 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   }
 
   brio::write_lines(wrappers_content, outfile)
+}
+
+write_namespace <- function(pkg_name) {
+  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = ".")
+  if (!file.exists(ns_path)) {
+    cli::cli_alert_warning("{.file NAMESPACE} file is missing. Make sure the project has been set up correctly.")
+    usethis::use_namespace()
+  }
+  lines <- brio::read_lines(ns_path)
+  if (!any(grepl("useDynLib", lines))) {
+    # NAMESPACE has no `useDynLib`
+    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"))
+  }
 }

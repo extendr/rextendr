@@ -4,10 +4,13 @@
 \alias{use_extendr}
 \title{Set up a package for use with Rust extendr code}
 \usage{
-use_extendr(path = ".", quiet = FALSE)
+use_extendr(path = ".", use_roclets = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
+
+\item{use_roclets}{Logical (default: \code{FALSE}) indicating whether to use
+\code{roxygen2} roclets to augment pacakge compilation process.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}

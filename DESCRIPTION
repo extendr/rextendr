@@ -43,7 +43,11 @@ Imports:
     tibble,
     purrr,
     rlang,
-    rprojroot
+    rprojroot,
+    usethis,
+    roxygen2,
+    fs,
+    cli
 Suggests: 
     knitr,
     rmarkdown,
