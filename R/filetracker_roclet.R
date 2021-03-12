@@ -1,4 +1,4 @@
-#' Create roclet that tracks Rust source files changes.
+#' Create a roclet that tracks Rust source files changes.
 #' @returns A roclet.
 #' @export
 filetracker_roclet <- function() {
