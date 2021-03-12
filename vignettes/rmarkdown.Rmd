@@ -120,10 +120,10 @@ rprintln!("x = {}, y = {}", x, y);
 
 ## Exporting Rust functions to R
 
-The chunk type `extendrfuns` compiles Rust functions and registers them with R to be called later. For example, consider this code chunk. It creates R functions `hello()` and `foo()`.
+The chunk type `extendrsrc` compiles Rust functions and objects and registers them with R to be called later. For example, consider this code chunk. It creates R functions `hello()` and `foo()`, as well as a class called `Counter`.
 
 ````markdown
-`r ''````{extendrfuns}
+`r ''````{extendrsrc}
 #[extendr]
 fn hello() -> &'static str {
     "Hello from Rust!"
@@ -132,6 +132,25 @@ fn hello() -> &'static str {
 #[extendr]
 fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
+}
+
+struct Counter {
+    n: i32,
+}
+
+#[extendr]
+impl Counter {
+    fn new() -> Self {
+        Self { n: 0 }
+    }
+    
+    fn increment(&mut self) {
+        self.n += 1;
+    }
+    
+    fn get(&self) -> i32 {
+        self.n
+    }
 }
 ```
 ````
@@ -185,7 +204,7 @@ x$get()
 If your code requires external crates, you can set dependencies via the `engine.opts` chunk option, like so:
 
 ````markdown
-`r ''````{extendrfuns engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
+`r ''````{extendrsrc engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
 use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]
