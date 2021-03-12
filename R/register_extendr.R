@@ -51,43 +51,45 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   }
 
   tryCatch(
-    make_wrappers(pkg_name, pkg_name, outfile,
-      use_symbols = TRUE, quiet = quiet,
-      # Call the wrapper generation in a separate R process to avoid the problem
-      # of loading and unloading the same name of library (c.f. #64).
-      use_callr = TRUE
-    ),
+    # Call the wrapper generation in a separate R process to avoid the problem
+    # of loading and unloading the same name of library (c.f. #64).
+    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
     error = error_handle
   )
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE,
-                          use_callr = FALSE) {
+                          use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
-
-  func <- function(package_root, ...) {
-    pkgload::load_all(package_root, quiet = TRUE)
-    .Call(...)
-  }
-
-  args <- list(
-    package_root = rprojroot::find_package_root_file(path = "."),
+  x <- .Call(
     wrapper_function,
     use_symbols = use_symbols,
     package_name = package_name,
     PACKAGE = package_name
   )
-
-  if (isTRUE(use_callr)) {
-    x <- callr::r_safe(func, args = args)
-  } else {
-    x <- do.call(func, args = args)
-  }
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
     message("Writting wrappers to:\n", outfile)
   }
   brio::write_lines(x, outfile)
+}
+
+make_wrappers_externally <- function(module_name, package_name, outfile,
+                                     use_symbols = FALSE, quiet = FALSE) {
+  func <- function(package_root, make_wrappers, ...) {
+    pkgload::load_all(package_root, quiet = TRUE)
+    make_wrappers(...)
+  }
+
+  args <- list(
+    package_root = rprojroot::find_package_root_file(path = "."),
+    make_wrappers = make_wrappers,
+    module_name = module_name,
+    package_name = package_name,
+    outfile = outfile,
+    use_symbols = use_symbols,
+    quiet = quiet
+  )
+  invisible(callr::r(func, args = args))
 }
