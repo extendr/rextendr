@@ -14,6 +14,5 @@ roclet_process.roclet_registration <- function(x, blocks, env, base_path) {
 #' @export
 roclet_output.roclet_registration <- function(x, results, base_path, ...) {
   rextendr::register_extendr()
-  cli::cli_alert_success("Writting wrappers to {.file R/extendr-wrappers.R}.")
   invisible(NULL)
 }
