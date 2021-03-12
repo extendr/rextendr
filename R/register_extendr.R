@@ -51,7 +51,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
           "Generating the wrapper functions failed, so a minimal one is used instead",
           call. = FALSE
         )
-        make_example_wrappers(pkg_name, outfile)
+        make_example_wrappers(pkg_name, outfile, path = path)
       }
     )
   } else if (requireNamespace(pkg_name, quietly = TRUE)) {
@@ -78,13 +78,13 @@ make_wrappers <- function(module_name, package_name, outfile,
   )
   x <- stringi::stri_split_lines1(x)
 
+  # Can't use usethis::write_over because it asks user for input if
+  # file already exists.
+  brio::write_lines(x, outfile)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(outfile, search_from = path)
     cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
   }
-  # Can't use usethis::write_over because it asks user for input if
-  # file already exists.
-  brio::write_lines(x, outfile)
 }
 
 # Checks if new wrappers should be generated

@@ -146,7 +146,7 @@ extendr_module! {{
     )"
   )
 
-  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
+  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper, path = path)
   write_namespace(pkg_name, path, quiet = quiet)
 
   if (!isTRUE(quiet)) {
@@ -158,7 +158,7 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
-make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet = FALSE) {
+make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet = FALSE, path = ".") {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
@@ -177,7 +177,11 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet =
     )
   }
 
-  usethis::write_over(outfile, wrappers_content, quiet = quiet)
+  brio::write_lines(wrappers_content, outfile)
+  if (!isTRUE(quiet)) {
+    rel_path <- pretty_rel_path(outfile, search_from = path)
+    cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
+  }
 }
 
 write_namespace <- function(pkg_name, path = ".", quiet = FALSE) {
