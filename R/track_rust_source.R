@@ -17,7 +17,7 @@ get_rust_files <- function(path = ".") {
   src_root <- rprojroot::find_package_root_file("src", path = path)
   if (!fs::dir_exists(src_root)) {
     # No source code found
-    cli::cli_alert_warn("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
+    cli::cli_alert_warning("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
     return(fs::path())
   }
 
