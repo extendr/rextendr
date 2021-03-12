@@ -1,5 +1,6 @@
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
+  try_save_all()
   needs_compilation <- needs_compilation(pkg, quiet) || pkgbuild::needs_compile(pkg)
 
   pkgload::load_all(
