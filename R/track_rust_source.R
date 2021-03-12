@@ -57,7 +57,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   if (!fs::file_exists(library_path)) {
     if (!isTRUE(quiet)) {
       library_path_rel <- pretty_rel_path(library_path, path)
-      cli::cli_alert_info("No library found at {.file {library_path_rel}}, recompilation is required.")
+      cli::cli_alert_warning("No library found at {.file {library_path_rel}}, recompilation is required.")
     }
     return(TRUE)
   }

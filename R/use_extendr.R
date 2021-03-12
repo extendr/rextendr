@@ -152,7 +152,7 @@ extendr_module! {{
   )
 
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
-  write_namespace(pkg_name)
+  write_namespace(pkg_name, path, quiet = quiet)
 
   if (isTRUE(use_roclets)) {
     use_roclets(use_roxygen_roclets = TRUE)
@@ -160,7 +160,7 @@ extendr_module! {{
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
-    cli::cli_alert_info("Update the system requirement in {.file DESCRIPTION} file.")
+    cli::cli_alert_warning("Please update the system requirement in {.file DESCRIPTION} file.")
     cli::cli_alert_warning("Please run {.fun rextendr::document} for changes to take effect.")
   }
 
@@ -189,15 +189,14 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet =
   usethis::write_over(outfile, wrappers_content, quiet = quiet)
 }
 
-write_namespace <- function(pkg_name) {
-  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = ".")
+write_namespace <- function(pkg_name, path = ".", quiet = FALSE) {
+  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = path)
   if (!file.exists(ns_path)) {
-    cli::cli_alert_warning("{.file NAMESPACE} file is missing. Make sure the project has been set up correctly.")
     usethis::use_namespace()
   }
   lines <- brio::read_lines(ns_path)
   if (!any(grepl("useDynLib", lines))) {
     # NAMESPACE has no `useDynLib`
-    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"))
+    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"), quiet = quiet)
   }
 }

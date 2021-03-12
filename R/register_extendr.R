@@ -82,6 +82,8 @@ make_wrappers <- function(module_name, package_name, outfile,
     rel_path <- pretty_rel_path(outfile, search_from = path)
     cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
   }
+  # Can't use usethis::write_over because it asks user for input if
+  # file already exists.
   brio::write_lines(x, outfile)
 }
 
