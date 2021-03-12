@@ -3,7 +3,7 @@
 #' ensuring Rust code is recompiled when necessary and appropriate R wrappers are generated.
 #'
 #' @param pkg String scalar pointing to the package root.
-#' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
 #' @param roclets Additional roclets from `roxygen2` that are passed into
 #'   `roxygen2::document`.

@@ -92,7 +92,7 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
   wrapper_path <- rprojroot::find_package_root_file(wrapper_path, path = path)
 
   if (!fs::file_exists(wrapper_path)) {
-    # No wrapeers, they should be generated
+    # No wrappers, they should be generated
     return(TRUE)
   }
 
