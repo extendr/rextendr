@@ -57,28 +57,38 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   }
 
   tryCatch(
-    make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+    make_wrappers(pkg_name, pkg_name, outfile,
+      use_symbols = TRUE, quiet = quiet,
+      use_callr = TRUE
+    ),
     error = error_handle
   )
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE) {
+                          use_symbols = FALSE, quiet = FALSE,
+                          use_callr = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
-  x <- callr::r_safe(
-    function(package_root, ...) {
-      cat(package_root)
-      pkgload::load_all(package_root)
-      .Call(...)
-    },
-    args = list(
-      package_root = rprojroot::find_package_root_file(path = "."),
-      wrapper_function,
-      use_symbols = use_symbols,
-      package_name = package_name,
-      PACKAGE = package_name
-    )
+
+  func <- function(package_root, ...) {
+    cat(package_root)
+    pkgload::load_all(package_root)
+    .Call(...)
+  }
+
+  args <- list(
+    package_root = rprojroot::find_package_root_file(path = "."),
+    wrapper_function,
+    use_symbols = use_symbols,
+    package_name = package_name,
+    PACKAGE = package_name
   )
+
+  if (isTRUE(use_callr)) {
+    x <- callr::r_safe(func, args = args)
+  } else {
+    x <- do.call(func, args = args)
+  }
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
