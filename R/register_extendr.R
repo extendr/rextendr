@@ -110,5 +110,4 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
 
   # If wrapeprs are older than the library file, new wrappers are needed.
   library_info[["modification_time"]] > wrapper_info[["modification_time"]]
-
 }
