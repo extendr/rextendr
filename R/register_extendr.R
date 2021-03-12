@@ -15,13 +15,13 @@
 #' @param force_wrappers Logical indicating whether to generate a minimal
 #'   wrapper in the cases when the package's namespace cannot be loaded. This is
 #'   useful to recover the wrapper file when something is wrong with it.
-#' @return The generated wrapper code. Note that this is not normally needed,
-#' as the function saves the wrapper code to `R/extendr-wrappers.R`.
+#' @return Logical scalar. `TRUE` if new wrappers were emitted, `FALSE`
+#'   if wrappers did not require an update.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
   # Shortcut: no new wrappers requried
   if (isFALSE(force_wrappers) && isFALSE(needs_new_warppers(path))) {
-    return()
+    return(FALSE)
   }
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
@@ -63,9 +63,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
     )
   }
 
-  if (!isTRUE(quiet)) {
-    cli::cli_alert_warning("Run {.code devtools::document()} one more time to update documentation and {.file NAMESPACE}.")
-  }
+  TRUE
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
