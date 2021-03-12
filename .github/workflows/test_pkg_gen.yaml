@@ -101,6 +101,7 @@ jobs:
           setwd(pkg_dir)
           Sys.setenv(REXTENDR_TEST_PKG_ROOT = getwd())
           devtools::create(".")
+          usethis::proj_activate(".")
           rextendr::use_extendr()
           usethis::use_mit_license()
           usethis::use_testthat()
