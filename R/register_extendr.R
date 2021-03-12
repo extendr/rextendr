@@ -81,7 +81,7 @@ make_wrappers <- function(module_name, package_name, outfile,
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
-    rel_path <- fs::path_rel(outfile, start = rprojroot::find_package_root_file(path = path))
+    rel_path <- pretty_rel_path(outfile, search_from = path)
     cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
   }
   brio::write_lines(x, outfile)
@@ -101,7 +101,7 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
 
   if (!fs::file_exists(library_path)) {
     # No library found
-    cli::cli_alert_danger("Library file {.file {library_path}} is missing, cannot generate wrappers!")
+    cli::cli_alert_danger("Library file {.file {pretty_rel_path(library_path)}} is missing, cannot generate wrappers!")
     stop("Wrapper generation failed. Aborting.", call. = FALSE)
   }
 

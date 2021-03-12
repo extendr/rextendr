@@ -1,3 +1,11 @@
+# Converts any path to path, relative to the package root
+# E.g., outer_root/some_folder/code/packages/my_package/src/rust/src/lib.rs
+# becomes src/rust/src/lib.rs.
+# Used for pretty printing.
+pretty_rel_path <- function(path, search_from = ".") {
+  fs::path_rel(path, start = rprojroot::find_package_root_file(path = search_from))
+}
+
 get_library_path <- function(path = ".") {
   # Constructs path to the library file (e.g., package_name.dll)
   pkg <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
@@ -47,7 +55,7 @@ needs_compilation <- function(path = ".") {
   # This will likely never happen.
   # Shortcut: missing library file requires compilation in any case.
   if (!fs::file_exists(library_path)) {
-    library_path_rel <- fs::path_rel(library_path, start = rprojroot::find_package_root_file(path = path))
+    library_path_rel <- pretty_rel_path(library_path, path)
     cli::cli_alert_info("No library found at {.file {library_path_rel}}, recompilation is required.")
     return(TRUE)
   }
@@ -81,7 +89,7 @@ needs_compilation <- function(path = ".") {
   # This perhaps should have an `isFALSE(quiet)` check, but right now rextendr rocelts
   # do not support `quiet` arg.
   purrr::walk(
-    fs::path_rel(modified_files_info[["path"]], start = rprojroot::find_package_root_file(path = path)),
+    pretty_rel_path(modified_files_info[["path"]], search_from = path),
     ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
   )
 
