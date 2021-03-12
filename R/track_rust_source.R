@@ -51,7 +51,7 @@ get_rust_files <- function(path = ".") {
 
 #' Checks if re-compilation is needed.
 #' Tracks changes in Rust source files (`*.rs`) and `Cargo.toml`.
-#' 
+#'
 #' @param path Package root.
 #' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
@@ -98,7 +98,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   # informing user of each modification.
   # This perhaps should have an `isFALSE(quiet)` check, but right now rextendr rocelts
   # do not support `quiet` arg.
-  if(!isTRUE(quiet)) {
+  if (!isTRUE(quiet)) {
     purrr::walk(
       pretty_rel_path(modified_files_info[["path"]], search_from = path),
       ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
