@@ -45,9 +45,11 @@ Imports:
     rlang,
     rprojroot,
     usethis,
-    roxygen2,
     fs,
-    cli
+    cli,
+    devtools,
+    pkgbuild,
+    pkgload
 Suggests: 
     knitr,
     rmarkdown,

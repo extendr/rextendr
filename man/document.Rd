@@ -11,7 +11,8 @@ document(pkg = ".", quiet = FALSE, roclets = NULL)
 \arguments{
 \item{pkg}{String scalar pointing to the package root.}
 
-\item{quiet}{Logical scalar indicating wether the output should be verbose.}
+\item{quiet}{Logical scalar indicating wether the output should be quiet (\code{TRUE})
+or verbose (\code{FALSE}).}
 
 \item{roclets}{Additional roclets from \code{roxygen2} that are passed into
 \code{roxygen2::document}.}

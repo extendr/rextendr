@@ -49,6 +49,14 @@ get_rust_files <- function(path = ".") {
   result
 }
 
+#' Checks if re-compilation is needed.
+#' Tracks changes in Rust source files (`*.rs`) and `Cargo.toml`.
+#' 
+#' @param path Package root.
+#' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
+#' @export
 needs_compilation <- function(path = ".", quiet = FALSE) {
   library_path <- get_library_path(path)
 
