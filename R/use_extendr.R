@@ -75,7 +75,7 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  usethis::write_over(fs::path(src_dir, "Makrvars"), makevars_content, quiet = quiet)
+  usethis::write_over(fs::path(src_dir, "Makevars"), makevars_content, quiet = quiet)
 
   makevars_win_content <- glue(
     "
