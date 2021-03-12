@@ -17,8 +17,8 @@ wrapper in the cases when the package's namespace cannot be loaded. This is
 useful to recover the wrapper file when something is wrong with it.}
 }
 \value{
-The generated wrapper code. Note that this is not normally needed,
-as the function saves the wrapper code to \code{R/extendr-wrappers.R}.
+Logical scalar. \code{TRUE} if new wrappers were emitted, \code{FALSE}
+if wrappers did not require an update.
 }
 \description{
 This function generates wrapper code corresponding to the extendr module
