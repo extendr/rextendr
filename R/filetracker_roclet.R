@@ -5,13 +5,11 @@ filetracker_roclet <- function() {
   roxygen2::roclet("filetracker")
 }
 
-#' @method roclet_process roclet_filetracker
 #' @export
 roclet_process.roclet_filetracker <- function(x, blocks, env, base_path) {
   list()
 }
 
-#' @method roclet_output roclet_filetracker
 #' @export
 roclet_output.roclet_filetracker <- function(x, results, base_path, ...) {
   if (needs_compilation()) {
