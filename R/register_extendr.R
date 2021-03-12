@@ -12,9 +12,9 @@
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param force_wrappers Logical indicating whether to generate a minimal
-#'   wrapper in the cases when the package's namespace cannot be loaded. This is
-#'   useful to recover the wrapper file when something is wrong with it.
+#' @param force_wrappers Logical indicating whether to install a minimal wrapper
+#'   file in the cases when generating wrappers by Rust code failed. This might
+#'   be needed when the wrapper file is accidentally lost or corrupted.
 #' @return The generated wrapper code. Note that this is not normally needed,
 #' as the function saves the wrapper code to `R/extendr-wrappers.R`.
 #' @export
@@ -36,23 +36,26 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
-  # If force_wrappers is TRUE, generate minimal wrappers even when there's some
-  # error (e.g. the symbol cannot be found).
+  # If force_wrappers is TRUE, use a minimal wrapper file even when
+  # make_wrappers() fails; since the wrapper generation depends on the compiled
+  # Rust code, the package needs to be installed before attempting this, but
+  # it's not always the case (e.g. the package might be corrupted, or not
+  # installed yet).
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
-      msg <- "Generating the wrapper functions failed, so a minimal one is used instead"
+      msg <- "Failed to generate wrapper functions. Falling back to a minimal wrapper file instead."
       warning(msg, call. = FALSE)
       make_example_wrappers(pkg_name, outfile)
     }
   } else {
     error_handle <- function(e) {
-      stop("Generating the wrapper functions failed", call. = FALSE)
+      stop("Failed to generate wrapper functions", call. = FALSE)
     }
   }
 
   tryCatch(
     # Call the wrapper generation in a separate R process to avoid the problem
-    # of loading and unloading the same name of library (c.f. #64).
+    # of loading and unloading the same name of a DLL (c.f. #64).
     make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
     error = error_handle
   )
@@ -70,7 +73,7 @@ make_wrappers <- function(module_name, package_name, outfile,
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
-    message("Writting wrappers to:\n", outfile)
+    message("Writing wrappers to:\n", outfile)
   }
   brio::write_lines(x, outfile)
 }
