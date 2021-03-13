@@ -17,8 +17,7 @@
 #' @param force_wrappers Logical indicating whether to install a minimal wrapper
 #'   file in the cases when generating wrappers by Rust code failed. This might
 #'   be needed when the wrapper file is accidentally lost or corrupted.
-#' @return Logical scalar. `TRUE` if new wrappers were emitted, `FALSE`
-#'   if wrappers did not require an update.
+#' @return (Invisibly) Path to the file containing generated wrappers.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
@@ -68,7 +67,9 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
     ),
     error = error_handle
   )
-  invisible(NULL)
+
+  # Ensures path is absolute
+  invisible(normalizePath(outfile))
 }
 
 #' Creates R wrappers for Rust functions.

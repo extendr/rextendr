@@ -26,8 +26,7 @@ recompiles if needed (as determined by \code{\link[pkgbuild:needs_compile]{pkgbu
 if \code{FALSE}, never recompiles.}
 }
 \value{
-Logical scalar. \code{TRUE} if new wrappers were emitted, \code{FALSE}
-if wrappers did not require an update.
+(Invisibly) Path to the file containing generated wrappers.
 }
 \description{
 This function generates wrapper code corresponding to the extendr module
