@@ -128,7 +128,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
     package_root = rprojroot::find_package_root_file(path = "."),
     make_wrappers = make_wrappers,
     compile = compile,
-    # arguments passed to make_wrapp
+    # arguments passed to make_wrappers()
     module_name = module_name,
     package_name = package_name,
     outfile = outfile,
