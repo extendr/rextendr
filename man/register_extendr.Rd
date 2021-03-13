@@ -17,8 +17,8 @@ file in the cases when generating wrappers by Rust code failed. This might
 be needed when the wrapper file is accidentally lost or corrupted.}
 }
 \value{
-The generated wrapper code. Note that this is not normally needed,
-as the function saves the wrapper code to \code{R/extendr-wrappers.R}.
+Logical scalar. \code{TRUE} if new wrappers were emitted, \code{FALSE}
+if wrappers did not require an update.
 }
 \description{
 This function generates wrapper code corresponding to the extendr module

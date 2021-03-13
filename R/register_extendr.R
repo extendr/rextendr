@@ -15,18 +15,22 @@
 #' @param force_wrappers Logical indicating whether to install a minimal wrapper
 #'   file in the cases when generating wrappers by Rust code failed. This might
 #'   be needed when the wrapper file is accidentally lost or corrupted.
-#' @return The generated wrapper code. Note that this is not normally needed,
-#' as the function saves the wrapper code to `R/extendr-wrappers.R`.
+#' @return Logical scalar. `TRUE` if new wrappers were emitted, `FALSE`
+#'   if wrappers did not require an update.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
+  # Shortcut: no new wrappers requried
+  if (isFALSE(force_wrappers) && isFALSE(needs_new_warppers(path))) {
+    return(FALSE)
+  }
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
   if (!isTRUE(quiet)) {
-    message(glue("Generating extendr wrapper functions for package: {pkg_name}"))
+    cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
   }
 
-  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
+  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
     stop(
       "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
@@ -59,10 +63,13 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
     make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
     error = error_handle
   )
+
+  TRUE
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE) {
+                          use_symbols = FALSE, quiet = FALSE,
+                          path = ".") {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
     wrapper_function,
@@ -72,10 +79,38 @@ make_wrappers <- function(module_name, package_name, outfile,
   )
   x <- stringi::stri_split_lines1(x)
 
-  if (!isTRUE(quiet)) {
-    message("Writing wrappers to:\n", outfile)
-  }
+  # Can't use usethis::write_over because it asks user for input if
+  # file already exists.
   brio::write_lines(x, outfile)
+  if (!isTRUE(quiet)) {
+    rel_path <- pretty_rel_path(outfile, search_from = path)
+    cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
+  }
+}
+
+# Checks if new wrappers should be generated
+needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr-wrappers.R")) {
+  wrapper_path <- rprojroot::find_package_root_file(wrapper_path, path = path)
+
+  if (!fs::file_exists(wrapper_path)) {
+    # No wrappers, they should be generated
+    return(TRUE)
+  }
+
+  # Retrieves path to e.g. 'src/my_package.dll'
+  library_path <- get_library_path(path)
+
+  if (!fs::file_exists(library_path)) {
+    # No library found
+    cli::cli_alert_danger("Library file {.file {pretty_rel_path(library_path)}} is missing, cannot generate wrappers!")
+    stop("Wrapper generation failed. Aborting.", call. = FALSE)
+  }
+
+  wrapper_info <- fs::file_info(wrapper_path)
+  library_info <- fs::file_info(library_path)
+
+  # If wrapeprs are older than the library file, new wrappers are needed.
+  library_info[["modification_time"]] > wrapper_info[["modification_time"]]
 }
 
 make_wrappers_externally <- function(module_name, package_name, outfile,

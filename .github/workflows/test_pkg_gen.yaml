@@ -93,13 +93,15 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
-          remotes::install_local()
+          remotes::install_local(force = TRUE)
           temp_dir <- tempdir()
           pkg_dir <- file.path(temp_dir, "testpkg")
           dir.create(pkg_dir, recursive = TRUE)
           setwd(pkg_dir)
           Sys.setenv(REXTENDR_TEST_PKG_ROOT = getwd())
           devtools::create(".")
+          usethis::proj_activate(".")
+          rextendr::use_extendr()
           usethis::use_mit_license()
           usethis::use_testthat()
           brio::write_lines(
@@ -114,11 +116,7 @@ jobs:
             ),
             file.path("tests", "testthat", "test-hello.R")
           )
-          rextendr::use_extendr()
-          devtools::document()
-          devtools::install(quick = TRUE)
-          rextendr::register_extendr()
-          devtools::document()
+          rextendr::document()
           rcmdcheck::rcmdcheck(
               path = ".", 
               args = c("--no-manual", "--as-cran"),

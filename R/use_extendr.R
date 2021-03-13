@@ -19,32 +19,28 @@ use_extendr <- function(path = ".", quiet = FALSE) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
-  src_dir <- rprojroot::find_package_root_file("src", path = ".")
-  wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = ".")
+  src_dir <- rprojroot::find_package_root_file("src", path = path)
+  wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
   if (dir.exists(src_dir)) {
     if (!isTRUE(quiet)) {
-      message("Directory `src` already present in package source. No action taken.")
+      cli::cli_alert_danger("Directory {.file src} already present in package source. No action taken.")
     }
     return(invisible(FALSE))
   }
   if (file.exists(wrappers_file)) {
     if (!isTRUE(quiet)) {
-      message("File `R/extendr-wrappers.R` already present in package source. No action taken.")
+      cli::cli_alert_danger("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
     }
     return(invisible(FALSE))
   }
 
-  if (!isTRUE(quiet)) {
-    message(glue("Creating `src` ..."))
-  }
-
-  dir.create(src_dir)
-  dir.create(file.path(src_dir, "rust"))
-  dir.create(file.path(src_dir, "rust", "src"))
+  rust_src_dir <- fs::path(src_dir, "rust", "src")
+  fs::dir_create(rust_src_dir, recurse = TRUE)
+  cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
   entrypoint_content <- glue(
-r"(
+    r"(
 // We need to forward routine registration from C to Rust
 // to avoid the linker removing the static library.
 
@@ -55,10 +51,10 @@ void R_init_{pkg_name}(void *dll) {{
 }}
 )"
   )
-  brio::write_lines(entrypoint_content, file.path(src_dir, "entrypoint.c"))
+  usethis::write_over(fs::path(src_dir, "entrypoint.c"), entrypoint_content, quiet = quiet)
 
   makevars_content <- glue(
-"
+    "
 LIBDIR = ./rust/target/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
 PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
@@ -77,10 +73,10 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  brio::write_lines(makevars_content, file.path(src_dir, "Makevars"))
+  usethis::write_over(fs::path(src_dir, "Makevars"), makevars_content, quiet = quiet)
 
   makevars_win_content <- glue(
-"
+    "
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 LIBDIR = ./rust/target/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{pkg_name}.a
@@ -100,24 +96,24 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  brio::write_lines(makevars_win_content, file.path(src_dir, "Makevars.win"))
+  usethis::write_over(fs::path(src_dir, "Makevars.win"), makevars_win_content, quiet = quiet)
 
   gitignore_content <- "*.o
 *.so
 *.dll
 target
 "
-  brio::write_lines(gitignore_content, file.path(src_dir, ".gitignore"))
+  usethis::write_over(fs::path(src_dir, ".gitignore"), gitignore_content, quiet = quiet)
 
   cargo_toml_content <- to_toml(
     package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
     lib = list(`crate-type` = array("staticlib", 1)),
     dependencies = list(`extendr-api` = "*")
   )
-  brio::write_lines(cargo_toml_content, file.path(src_dir, "rust", "Cargo.toml"))
+  usethis::write_over(fs::path(src_dir, "rust", "Cargo.toml"), cargo_toml_content, quiet = quiet)
 
   lib_rs_content <- glue(
-r"(
+    r"(
 use extendr_api::prelude::*;
 
 /// Return string `"Hello world!"` to R.
@@ -136,11 +132,9 @@ extendr_module! {{
 }}
 )"
   )
-  brio::write_lines(lib_rs_content, file.path(src_dir, "rust", "src", "lib.rs"))
 
-  if (!isTRUE(quiet)) {
-    message(glue("Creating `R/extendr-wrappers.R` ..."))
-  }
+  usethis::write_over(fs::path(rust_src_dir, "lib.rs"), lib_rs_content, quiet = quiet)
+
 
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
@@ -152,16 +146,19 @@ extendr_module! {{
     )"
   )
 
-  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper)
+  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper, path = path)
+  write_namespace(pkg_name, path, quiet = quiet)
 
   if (!isTRUE(quiet)) {
-    message(glue("Done.\n\nPlease run `devtools::document()` for changes to take effect.\nAlso update the system requirements in your `DESCRIPTION` file."))
+    cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
+    cli::cli_alert_warning("Please update the system requirement in {.file DESCRIPTION} file.")
+    cli::cli_alert_warning("Please run {.fun rextendr::document} for changes to take effect.")
   }
 
   return(invisible(TRUE))
 }
 
-make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
+make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet = FALSE, path = ".") {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
@@ -181,4 +178,20 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL) {
   }
 
   brio::write_lines(wrappers_content, outfile)
+  if (!isTRUE(quiet)) {
+    rel_path <- pretty_rel_path(outfile, search_from = path)
+    cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
+  }
+}
+
+write_namespace <- function(pkg_name, path = ".", quiet = FALSE) {
+  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = path)
+  if (!file.exists(ns_path)) {
+    usethis::use_namespace()
+  }
+  lines <- brio::read_lines(ns_path)
+  if (!any(grepl("useDynLib", lines))) {
+    # NAMESPACE has no `useDynLib`
+    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"), quiet = quiet)
+  }
 }

@@ -45,11 +45,18 @@ Imports:
     tibble,
     purrr,
     rlang,
-    rprojroot
+    rprojroot,
+    usethis,
+    fs,
+    cli,
+    devtools,
+    pkgbuild,
+    pkgload
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    rstudioapi
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
