@@ -49,8 +49,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
   # installed yet).
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
-      msg <- "Failed to generate wrapper functions. Falling back to a minimal wrapper file instead."
-      warning(msg, call. = FALSE)
+      cli::cli_alert_danger("Failed to generate wrapper functions. Falling back to a minimal wrapper file instead.")
       make_example_wrappers(pkg_name, outfile)
     }
   } else {
@@ -125,7 +124,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   }
 
   args <- list(
-    package_root = rprojroot::find_package_root_file(path = "."),
+    package_root = rprojroot::find_package_root_file(path = path),
     make_wrappers = make_wrappers,
     compile = compile,
     # arguments passed to make_wrappers()
