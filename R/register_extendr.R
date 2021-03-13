@@ -125,7 +125,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
       package_name = package_name,
       outfile = outfile,
       path = path,
-      use_symbols = use_symbole,
+      use_symbols = use_symbols,
       quiet = quiet
     )
   }
