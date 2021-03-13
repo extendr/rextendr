@@ -21,10 +21,6 @@
 #'   if wrappers did not require an update.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
-  # Shortcut: no new wrappers requried
-  if (isFALSE(force_wrappers) && isFALSE(needs_new_warppers(path))) {
-    return(FALSE)
-  }
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -72,8 +68,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
     ),
     error = error_handle
   )
-
-  TRUE
+  invisible(NULL)
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
@@ -97,38 +92,12 @@ make_wrappers <- function(module_name, package_name, outfile,
   }
 }
 
-# TODO: This no longer works (and perhaps no longer needed).
-# Checks if new wrappers should be generated
-needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr-wrappers.R")) {
-  wrapper_path <- rprojroot::find_package_root_file(wrapper_path, path = path)
-
-  if (!fs::file_exists(wrapper_path)) {
-    # No wrappers, they should be generated
-    return(TRUE)
-  }
-
-  # Retrieves path to e.g. 'src/my_package.dll'
-  library_path <- get_library_path(path)
-
-  if (!fs::file_exists(library_path)) {
-    # No library found. This means this is likely the first run
-    # and wrappers are needed. This will trigger recompilation.
-    return(TRUE)
-  }
-
-  wrapper_info <- fs::file_info(wrapper_path)
-  library_info <- fs::file_info(library_path)
-
-  # If wrapeprs are older than the library file, new wrappers are needed.
-  library_info[["modification_time"]] > wrapper_info[["modification_time"]]
-}
-
 make_wrappers_externally <- function(module_name, package_name, outfile,
                                     path, use_symbols = FALSE, quiet = FALSE,
                                     compile = NA) {
 
-  func <- function(package_root, make_wrappers, compile, ...) {
-    pkgload::load_all(package_root, compile = compile, quiet = FALSE)
+  func <- function(package_root, make_wrappers, compile, quiet,...) {
+    pkgload::load_all(package_root, compile = compile, quiet = quiet)
     make_wrappers(...)
   }
 
@@ -145,5 +114,5 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
     path = path
   )
 
-  invisible(callr::r(func, args = args))
+  invisible(callr::r(func, args = args, show = !isTRUE(quiet)))
 }
