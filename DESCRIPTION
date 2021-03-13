@@ -36,9 +36,11 @@ Depends:
     R (>= 4.0)
 Imports: 
     brio,
+    callr,
     desc,
     dplyr,
     glue,
+    pkgload,
     stringi,
     tibble,
     purrr,
