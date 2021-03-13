@@ -61,8 +61,15 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
   tryCatch(
     # Call the wrapper generation in a separate R process to avoid the problem
     # of loading and unloading the same name of a DLL (c.f. #64).
-    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE,
-                             quiet = quiet, compile = compile),
+    make_wrappers_externally(
+      module_name = pkg_name,
+      package_name = pkg_name,
+      outfile = outfile,
+      path = path,
+      use_symbols = TRUE,
+      quiet = quiet,
+      compile = compile
+    ),
     error = error_handle
   )
 
@@ -90,6 +97,7 @@ make_wrappers <- function(module_name, package_name, outfile,
   }
 }
 
+# TODO: This no longer works (and perhaps no longer needed).
 # Checks if new wrappers should be generated
 needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr-wrappers.R")) {
   wrapper_path <- rprojroot::find_package_root_file(wrapper_path, path = path)
@@ -103,9 +111,9 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
   library_path <- get_library_path(path)
 
   if (!fs::file_exists(library_path)) {
-    # No library found
-    cli::cli_alert_danger("Library file {.file {pretty_rel_path(library_path)}} is missing, cannot generate wrappers!")
-    stop("Wrapper generation failed. Aborting.", call. = FALSE)
+    # No library found. This means this is likely the first run
+    # and wrappers are needed. This will trigger recompilation.
+    return(TRUE)
   }
 
   wrapper_info <- fs::file_info(wrapper_path)
@@ -116,10 +124,11 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
 }
 
 make_wrappers_externally <- function(module_name, package_name, outfile,
-                                     use_symbols = FALSE, quiet = FALSE,
-                                     path = ".", compile = NA) {
+                                    path, use_symbols = FALSE, quiet = FALSE,
+                                    compile = NA) {
+
   func <- function(package_root, make_wrappers, compile, ...) {
-    pkgload::load_all(package_root, compile = compile, quiet = TRUE)
+    pkgload::load_all(package_root, compile = compile, quiet = FALSE)
     make_wrappers(...)
   }
 
@@ -135,5 +144,6 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
     quiet = quiet,
     path = path
   )
+
   invisible(callr::r(func, args = args))
 }
