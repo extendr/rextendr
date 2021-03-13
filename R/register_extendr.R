@@ -9,6 +9,8 @@
 #' wrapper code will be retrieved from the compiled Rust code and saved into
 #' `R/extendr-wrappers.R`. Afterwards, you will have to re-document and then
 #' re-install the package for the wrapper functions to take effect.
+#'
+#' @inheritParams pkgload::load_all
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
@@ -18,7 +20,7 @@
 #' @return Logical scalar. `TRUE` if new wrappers were emitted, `FALSE`
 #'   if wrappers did not require an update.
 #' @export
-register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
+register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
   # Shortcut: no new wrappers requried
   if (isFALSE(force_wrappers) && isFALSE(needs_new_warppers(path))) {
     return(FALSE)
@@ -60,7 +62,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   tryCatch(
     # Call the wrapper generation in a separate R process to avoid the problem
     # of loading and unloading the same name of a DLL (c.f. #64).
-    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE,
+                             quiet = quiet, compile = compile),
     error = error_handle
   )
 
@@ -114,20 +117,24 @@ needs_new_warppers <- function(path = ".", wrapper_path = fs::path("R", "extendr
 }
 
 make_wrappers_externally <- function(module_name, package_name, outfile,
-                                     use_symbols = FALSE, quiet = FALSE) {
-  func <- function(package_root, make_wrappers, ...) {
-    pkgload::load_all(package_root, quiet = TRUE)
+                                     use_symbols = FALSE, quiet = FALSE,
+                                     path = ".", compile = NA) {
+  func <- function(package_root, make_wrappers, compile, ...) {
+    pkgload::load_all(package_root, compile = compile, quiet = TRUE)
     make_wrappers(...)
   }
 
   args <- list(
     package_root = rprojroot::find_package_root_file(path = "."),
     make_wrappers = make_wrappers,
+    compile = compile,
+    # arguments passed to make_wrapp
     module_name = module_name,
     package_name = package_name,
     outfile = outfile,
     use_symbols = use_symbols,
-    quiet = quiet
+    quiet = quiet,
+    path = path
   )
   invisible(callr::r(func, args = args))
 }
