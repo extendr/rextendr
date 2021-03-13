@@ -1,6 +1,15 @@
-try_save_all <- function() {
+#' Try to save open files if \pkg{rextendr} is called from an IDE.
+#'
+#' Uses rstudio API (if available) to save modfied files.
+#' Improves package development experience within RStudio.
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @keywords internal
+try_save_all <- function(quiet = FALSE) {
   if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("documentSaveAll")) {
     rstudioapi::documentSaveAll()
-    cli::cli_alert_success("Saving changes in the open files.")
+    if (!isTRUE(quiet)) {
+      cli::cli_alert_success("Saving changes in the open files.")
+    }
   }
 }

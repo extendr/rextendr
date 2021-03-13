@@ -20,3 +20,4 @@ Logical \code{TRUE} if Rust source has been modified, \code{FALSE} otherwise.
 Checks if re-compilation is needed.
 Tracks changes in Rust source files (\verb{*.rs}) and \code{Cargo.toml}.
 }
+\keyword{internal}

@@ -9,7 +9,7 @@
 #'   `roxygen2::document`.
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
-  try_save_all()
+  try_save_all(quiet = quiet)
   needs_compilation <- needs_compilation(pkg, quiet) || pkgbuild::needs_compile(pkg)
 
   register_extendr(path = pkg, quiet = quiet, compile = needs_compilation)
