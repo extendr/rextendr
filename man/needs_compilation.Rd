@@ -2,13 +2,12 @@
 % Please edit documentation in R/track_rust_source.R
 \name{needs_compilation}
 \alias{needs_compilation}
-\title{Checks if re-compilation is needed.
-Tracks changes in Rust source files (\verb{*.rs}) and \code{Cargo.toml}.}
+\title{Checks if re-compilation is needed.}
 \usage{
 needs_compilation(path = ".", quiet = FALSE)
 }
 \arguments{
-\item{path}{Package root.}
+\item{path}{Path from which package root is looked up.}
 
 \item{quiet}{Logical scalar indicating wether the output should be quiet (\code{TRUE})
 or verbose (\code{FALSE}).}
@@ -17,7 +16,6 @@ or verbose (\code{FALSE}).}
 Logical \code{TRUE} if Rust source has been modified, \code{FALSE} otherwise.
 }
 \description{
-Checks if re-compilation is needed.
 Tracks changes in Rust source files (\verb{*.rs}) and \code{Cargo.toml}.
 }
 \keyword{internal}

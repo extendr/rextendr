@@ -1,12 +1,9 @@
-#' This function is a wrapper for `devtools::document`.
-#' It executes `extendr`-specific routine before calling `devtools::document`,
-#' ensuring Rust code is recompiled when necessary and appropriate R wrappers are generated.
-#'
-#' @param pkg String scalar pointing to the package root.
-#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`).
-#' @param roclets Additional roclets from `roxygen2` that are passed into
-#'   `roxygen2::document`.
+#' Compiles Rust code and generates package documentation.
+#' 
+#' This function is a wrapper for [`devtools::document()`].
+#' It executes `extendr`-specific routine before calling [`devtools::document()`],
+#' ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated.
+#' @inheritParams devtools::document
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
   try_save_all(quiet = quiet)

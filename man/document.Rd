@@ -2,23 +2,22 @@
 % Please edit documentation in R/rextendr_document.R
 \name{document}
 \alias{document}
-\title{This function is a wrapper for \code{devtools::document}.
-It executes \code{extendr}-specific routine before calling \code{devtools::document},
-ensuring Rust code is recompiled when necessary and appropriate R wrappers are generated.}
+\title{Compiles Rust code and generates package documentation.}
 \usage{
 document(pkg = ".", quiet = FALSE, roclets = NULL)
 }
 \arguments{
-\item{pkg}{String scalar pointing to the package root.}
+\item{pkg}{The package to use, can be a file path to the package or a
+package object.  See \code{\link[devtools:as.package]{as.package()}} for more information.}
 
-\item{quiet}{Logical scalar indicating whether the output should be quiet (\code{TRUE})
-or verbose (\code{FALSE}).}
+\item{quiet}{if \code{TRUE} suppresses output from this function.}
 
-\item{roclets}{Additional roclets from \code{roxygen2} that are passed into
-\code{roxygen2::document}.}
+\item{roclets}{Character vector of roclet names to use with package.
+The default, \code{NULL}, uses the roxygen \code{roclets} option,
+which defaults to \code{c("collate", "namespace", "rd")}.}
 }
 \description{
-This function is a wrapper for \code{devtools::document}.
-It executes \code{extendr}-specific routine before calling \code{devtools::document},
-ensuring Rust code is recompiled when necessary and appropriate R wrappers are generated.
+This function is a wrapper for \code{\link[devtools:document]{devtools::document()}}.
+It executes \code{extendr}-specific routine before calling \code{\link[devtools:document]{devtools::document()}},
+ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated.
 }

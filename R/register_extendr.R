@@ -11,7 +11,7 @@
 #' re-install the package for the wrapper functions to take effect.
 #'
 #' @inheritParams pkgload::load_all
-#' @param path File path to the package for which to generate wrapper code.
+#' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
 #' @param force_wrappers Logical indicating whether to install a minimal wrapper
@@ -46,7 +46,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
       cli::cli_alert_danger("Failed to generate wrapper functions. Falling back to a minimal wrapper file instead.")
-      make_example_wrappers(pkg_name, outfile)
+      make_example_wrappers(pkg_name, outfile, path = path)
     }
   } else {
     error_handle <- function(e) {
@@ -71,9 +71,23 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
   invisible(NULL)
 }
 
+#' Creates R wrappers for Rust functions.
+#'
+#' Invokes `wrap__make_{module_name}_wrappers` exported from
+#' the Rust library and writes obtained R wrappers to the `outfile`.
+#' @param module_name The name of the Rust module. Can be the same as `package_name`
+#' @param package_name The name of the package.
+#' @param outfile Determines where to write wrapper code.
+#' @param path Path from which package root is looked up. Used for message formatting.
+#' @param use_symbols Logical, indicating wether to add additonal symbol information to
+#' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
+#' while `TRUE` is used to make wrappers for dynamically generated libraries using 
+#' [`rust_source`], [`rust_function`], etc.
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @keywords internal
 make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE,
-                          path = ".") {
+                          path = ".", use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
     wrapper_function,
@@ -92,13 +106,28 @@ make_wrappers <- function(module_name, package_name, outfile,
   }
 }
 
+#' Creates R wrappers for Rust functions.
+#'
+#' Does the same as [`make_wrappers`], but out of process.
+#' @inheritParams make_wrappers
+#' @param compile Logical indicating whether the library should be recompiled.
+#' @keywords internal
 make_wrappers_externally <- function(module_name, package_name, outfile,
                                     path, use_symbols = FALSE, quiet = FALSE,
                                     compile = NA) {
 
-  func <- function(package_root, make_wrappers, compile, quiet,...) {
+  func <- function(package_root, make_wrappers, compile, quiet,
+                   module_name, package_name, outfile, path,
+                   use_symbols, ...) {
     pkgload::load_all(package_root, compile = compile, quiet = quiet)
-    make_wrappers(...)
+    make_wrappers(
+      module_name = module_name,
+      package_name = package_name,
+      outfile = outfile,
+      path = path,
+      use_symbols = use_symbole,
+      quiet = quiet
+    )
   }
 
   args <- list(
@@ -109,9 +138,9 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
     module_name = module_name,
     package_name = package_name,
     outfile = outfile,
+    path = path,
     use_symbols = use_symbols,
-    quiet = quiet,
-    path = path
+    quiet = quiet
   )
 
   invisible(callr::r(func, args = args, show = !isTRUE(quiet)))

@@ -19,8 +19,14 @@ get_library_path <- function(path = ".") {
   )
 }
 
+#' Obtains paths to the Rust source files.
+#'
+#' Enumerates all Rust files, changes to which should trigger re-compilation.
+#' This inclides `*.rs` and `Cargo.toml`.
+#' @param path Path from which package root is looked up.
+#' @returns A vector of file paths (can be empty).
+#' @keywords internal
 get_rust_files <- function(path = ".") {
-  # Enumerates all Rust files, changes to which should trigger re-compilation.
 
   src_root <- rprojroot::find_package_root_file("src", path = path)
   if (!fs::dir_exists(src_root)) {
@@ -50,9 +56,9 @@ get_rust_files <- function(path = ".") {
 }
 
 #' Checks if re-compilation is needed.
-#' Tracks changes in Rust source files (`*.rs`) and `Cargo.toml`.
 #'
-#' @param path Package root.
+#' Tracks changes in Rust source files (`*.rs`) and `Cargo.toml`.
+#' @param path Path from which package root is looked up.
 #' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
 #' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
@@ -83,7 +89,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   rust_info <- fs::file_info(rust_files)
   library_info <- fs::file_info(library_path)
 
-  # Leaves files, which were modified *after* the library
+  # Leaves files that were modified *after* the library
   modified_files_info <- dplyr::filter(
     rust_info,
     .data$modification_time > library_info[["modification_time"]][1]

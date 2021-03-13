@@ -12,7 +12,7 @@ register_extendr(
 )
 }
 \arguments{
-\item{path}{File path to the package for which to generate wrapper code.}
+\item{path}{Path from which package root is looked up.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}

@@ -158,7 +158,20 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
-make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet = FALSE, path = ".") {
+#' Creates example R wrappers for Rust functions.
+#'
+#' Writes simple R wrappers, without which initial compilation of the
+#' package is impossible. Does not require a compiled library.
+#' Can be used as a fallback.
+#' @param pkg_name The name of the package.
+#' @param outfile Determines where to write wrapper code.
+#' @param path Path from which package root is looked up. Used for pretty message formatting.
+#' @param extra_items Character vector or `NULL` containing additional wrappers.
+#' Should be valid R code.
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @keywords internal
+make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = NULL, quiet = FALSE) {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
   wrappers_content <- glue::glue(
@@ -184,6 +197,20 @@ make_example_wrappers <- function(pkg_name, outfile, extra_items = NULL, quiet =
   }
 }
 
+#' Appends `useDynLib` to the `NAMESPACE` file.
+#'
+#' If `NAMESPACE` is missing `useDynLib` entry, loading package will not
+#' load the native library containing Rust code. This prevents any [`.Call`]s,
+#' which makes wrapper generation impossible.
+#' `NAMESPACE` contents are searched for `useDynLib` entry, and if it is not found,
+#' it is appended.
+#' This normally happens only once for each developed package -- immediately after
+#' package has been created and its `NAMESPACE` is empty.
+#' @param pkg_name Name of the package (should be identical to the library name without extension).
+#' @param path Path from which package root is looked up.
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @keywords internal
 write_namespace <- function(pkg_name, path = ".", quiet = FALSE) {
   ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = path)
   if (!file.exists(ns_path)) {
