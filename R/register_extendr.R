@@ -12,9 +12,9 @@
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param force_wrappers Logical indicating whether to generate a minimal
-#'   wrapper in the cases when the package's namespace cannot be loaded. This is
-#'   useful to recover the wrapper file when something is wrong with it.
+#' @param force_wrappers Logical indicating whether to install a minimal wrapper
+#'   file in the cases when generating wrappers by Rust code failed. This might
+#'   be needed when the wrapper file is accidentally lost or corrupted.
 #' @return The generated wrapper code. Note that this is not normally needed,
 #' as the function saves the wrapper code to `R/extendr-wrappers.R`.
 #' @export
@@ -36,28 +36,29 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
-  # If force_wrappers is TRUE, use tryCatch() to generate minimal wrappers even
-  # when there's some error (e.g. the symbol cannot be found).
-  # If FALSE, execute make_wrappers() only when the package can be loaded.
+  # If force_wrappers is TRUE, use a minimal wrapper file even when
+  # make_wrappers() fails; since the wrapper generation depends on the compiled
+  # Rust code, the package needs to be installed before attempting this, but
+  # it's not always the case (e.g. the package might be corrupted, or not
+  # installed yet).
   if (isTRUE(force_wrappers)) {
-    tryCatch(
-      make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
-      error = function(...) {
-        warning(
-          "Generating the wrapper functions failed, so a minimal one is used instead",
-          call. = FALSE
-        )
-        make_example_wrappers(pkg_name, outfile)
-      }
-    )
-  } else if (requireNamespace(pkg_name, quietly = TRUE)) {
-    make_wrappers(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet)
+    error_handle <- function(e) {
+      msg <- "Failed to generate wrapper functions. Falling back to a minimal wrapper file instead."
+      warning(msg, call. = FALSE)
+      make_example_wrappers(pkg_name, outfile)
+    }
   } else {
-    stop(
-      glue("Package {pkg_name} cannot be loaded. No wrapper functions were generated."),
-      call. = FALSE
-    )
+    error_handle <- function(e) {
+      stop("Failed to generate wrapper functions", call. = FALSE)
+    }
   }
+
+  tryCatch(
+    # Call the wrapper generation in a separate R process to avoid the problem
+    # of loading and unloading the same name of a DLL (c.f. #64).
+    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+    error = error_handle
+  )
 }
 
 make_wrappers <- function(module_name, package_name, outfile,
@@ -72,7 +73,26 @@ make_wrappers <- function(module_name, package_name, outfile,
   x <- stringi::stri_split_lines1(x)
 
   if (!isTRUE(quiet)) {
-    message("Writting wrappers to:\n", outfile)
+    message("Writing wrappers to:\n", outfile)
   }
   brio::write_lines(x, outfile)
+}
+
+make_wrappers_externally <- function(module_name, package_name, outfile,
+                                     use_symbols = FALSE, quiet = FALSE) {
+  func <- function(package_root, make_wrappers, ...) {
+    pkgload::load_all(package_root, quiet = TRUE)
+    make_wrappers(...)
+  }
+
+  args <- list(
+    package_root = rprojroot::find_package_root_file(path = "."),
+    make_wrappers = make_wrappers,
+    module_name = module_name,
+    package_name = package_name,
+    outfile = outfile,
+    use_symbols = use_symbols,
+    quiet = quiet
+  )
+  invisible(callr::r(func, args = args))
 }
