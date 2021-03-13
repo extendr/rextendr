@@ -37,26 +37,25 @@ Depends:
 Imports: 
     brio,
     callr,
+    cli,
     desc,
+    devtools,
     dplyr,
+    fs,
     glue,
+    pkgbuild,
     pkgload,
+    purrr,
     stringi,
     tibble,
-    purrr,
     rlang,
     rprojroot,
     usethis,
-    fs,
-    cli,
-    devtools,
-    pkgbuild,
-    pkgload
 Suggests: 
     knitr,
     rmarkdown,
-    testthat,
-    rstudioapi
+    rstudioapi,
+    testthat
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
