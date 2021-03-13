@@ -11,11 +11,8 @@ get_library_path <- function(path = ".") {
   pkg <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- pkg$get("Package")
   fs::path(
-    glue::glue(
-      rprojroot::find_package_root_file("src", path = path),
-      "{pkg_name}{.Platform$dynlib.ext}",
-      .sep = .Platform$file.sep
-    )
+    rprojroot::find_package_root_file("src", path = path),
+    glue::glue("{pkg_name}{.Platform$dynlib.ext}")
   )
 }
 
