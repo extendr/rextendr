@@ -117,10 +117,16 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
                                     path, use_symbols = FALSE, quiet = FALSE,
                                     compile = NA) {
 
-  func <- function(package_root, make_wrappers, compile, quiet,
-                   module_name, package_name, outfile, path,
+  func <- function(path, make_wrappers, compile, quiet,
+                   module_name, package_name, outfile,
                    use_symbols, ...) {
-    pkgload::load_all(package_root, compile = compile, quiet = quiet)
+    if (isTRUE(compile)) {
+      pkgbuild::compile_dll(quiet = quiet)
+    }
+
+    dll_path <- fs::path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    dyn.load(dll_path)
+
     make_wrappers(
       module_name = module_name,
       package_name = package_name,
@@ -132,14 +138,13 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   }
 
   args <- list(
-    package_root = rprojroot::find_package_root_file(path = path),
+    path = rprojroot::find_package_root_file(path = path),
     make_wrappers = make_wrappers,
     compile = compile,
     # arguments passed to make_wrappers()
     module_name = module_name,
     package_name = package_name,
     outfile = outfile,
-    path = path,
     use_symbols = use_symbols,
     quiet = quiet
   )
