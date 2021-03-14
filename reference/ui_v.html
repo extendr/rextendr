@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Register the extendr module of a package with R — register_extendr • rextendr</title>
+<title>Formats text as a success message. — ui_v • rextendr</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Register the extendr module of a package with R — register_extendr" />
-<meta property="og:description" content="This function generates wrapper code corresponding to the extendr module
-for an R package. This is useful in package development, where we generally
-want appropriate R code wrapping the Rust functions implemented via extendr." />
+<meta property="og:title" content="Formats text as a success message. — ui_v" />
+<meta property="og:description" content="Prepends text with green check mark (v). Performs glue::glue() interpolation." />
 
 
 
@@ -125,60 +123,26 @@ want appropriate R code wrapping the Rust functions implemented via extendr." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Register the extendr module of a package with R</h1>
-    <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/register_extendr.R'><code>R/register_extendr.R</code></a></small>
-    <div class="hidden name"><code>register_extendr.Rd</code></div>
+    <h1>Formats text as a success message.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/ui.R'><code>R/ui.R</code></a></small>
+    <div class="hidden name"><code>ui_v.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function generates wrapper code corresponding to the extendr module
-for an R package. This is useful in package development, where we generally
-want appropriate R code wrapping the Rust functions implemented via extendr.</p>
+    <p>Prepends <code>text</code> with green check mark (<code>v</code>). Performs <code><a href='https://glue.tidyverse.org/reference/glue.html'>glue::glue()</a></code> interpolation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>register_extendr</span><span class='op'>(</span>
-  path <span class='op'>=</span> <span class='st'>"."</span>,
-  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  force_wrappers <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  compile <span class='op'>=</span> <span class='cn'>NA</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ui_v</span><span class='op'>(</span>text <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>path</th>
-      <td><p>Path from which package root is looked up.</p></td>
-    </tr>
-    <tr>
-      <th>quiet</th>
-      <td><p>Logical indicating whether any progress messages should be
-generated or not.</p></td>
-    </tr>
-    <tr>
-      <th>force_wrappers</th>
-      <td><p>Logical indicating whether to install a minimal wrapper
-file in the cases when generating wrappers by Rust code failed. This might
-be needed when the wrapper file is accidentally lost or corrupted.</p></td>
-    </tr>
-    <tr>
-      <th>compile</th>
-      <td><p>If <code>TRUE</code> always recompiles the package; if <code>NA</code>
-recompiles if needed (as determined by <code><a href='https://rdrr.io/pkg/pkgbuild/man/needs_compile.html'>pkgbuild::needs_compile()</a></code>);
-if <code>FALSE</code>, never recompiles.</p></td>
+      <th>text</th>
+      <td><p>String to format.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>(Invisibly) Path to the file containing generated wrappers.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>To run <code>register_extendr()</code>, the R package containing extendr code must have
-previously been compiled and installed. If this condition is met, the
-wrapper code will be retrieved from the compiled Rust code and saved into
-<code>R/extendr-wrappers.R</code>. Afterwards, you will have to re-document and then
-re-install the package for the wrapper functions to take effect.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

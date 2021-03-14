@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Register the extendr module of a package with R — register_extendr • rextendr</title>
+<title>Creates R wrappers for Rust functions. — make_wrappers_externally • rextendr</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Register the extendr module of a package with R — register_extendr" />
-<meta property="og:description" content="This function generates wrapper code corresponding to the extendr module
-for an R package. This is useful in package development, where we generally
-want appropriate R code wrapping the Rust functions implemented via extendr." />
+<meta property="og:title" content="Creates R wrappers for Rust functions. — make_wrappers_externally" />
+<meta property="og:description" content="Does the same as make_wrappers, but out of process." />
 
 
 
@@ -125,21 +123,22 @@ want appropriate R code wrapping the Rust functions implemented via extendr." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Register the extendr module of a package with R</h1>
+    <h1>Creates R wrappers for Rust functions.</h1>
     <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/register_extendr.R'><code>R/register_extendr.R</code></a></small>
-    <div class="hidden name"><code>register_extendr.Rd</code></div>
+    <div class="hidden name"><code>make_wrappers_externally.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function generates wrapper code corresponding to the extendr module
-for an R package. This is useful in package development, where we generally
-want appropriate R code wrapping the Rust functions implemented via extendr.</p>
+    <p>Does the same as <code><a href='make_wrappers.html'>make_wrappers</a></code>, but out of process.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>register_extendr</span><span class='op'>(</span>
-  path <span class='op'>=</span> <span class='st'>"."</span>,
+    <pre class="usage"><span class='fu'>make_wrappers_externally</span><span class='op'>(</span>
+  <span class='va'>module_name</span>,
+  <span class='va'>package_name</span>,
+  <span class='va'>outfile</span>,
+  <span class='va'>path</span>,
+  use_symbols <span class='op'>=</span> <span class='cn'>FALSE</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  force_wrappers <span class='op'>=</span> <span class='cn'>FALSE</span>,
   compile <span class='op'>=</span> <span class='cn'>NA</span>
 <span class='op'>)</span></pre>
 
@@ -147,38 +146,39 @@ want appropriate R code wrapping the Rust functions implemented via extendr.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>module_name</th>
+      <td><p>The name of the Rust module. Can be the same as <code>package_name</code></p></td>
+    </tr>
+    <tr>
+      <th>package_name</th>
+      <td><p>The name of the package.</p></td>
+    </tr>
+    <tr>
+      <th>outfile</th>
+      <td><p>Determines where to write wrapper code.</p></td>
+    </tr>
+    <tr>
       <th>path</th>
-      <td><p>Path from which package root is looked up.</p></td>
+      <td><p>Path from which package root is looked up. Used for message formatting.</p></td>
+    </tr>
+    <tr>
+      <th>use_symbols</th>
+      <td><p>Logical, indicating wether to add additonal symbol information to
+the generated wrappers. Default (<code>FALSE</code>) is used when making wrappers for the package,
+while <code>TRUE</code> is used to make wrappers for dynamically generated libraries using
+<code><a href='rust_source.html'>rust_source</a></code>, <code><a href='rust_source.html'>rust_function</a></code>, etc.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>Logical indicating whether any progress messages should be
-generated or not.</p></td>
-    </tr>
-    <tr>
-      <th>force_wrappers</th>
-      <td><p>Logical indicating whether to install a minimal wrapper
-file in the cases when generating wrappers by Rust code failed. This might
-be needed when the wrapper file is accidentally lost or corrupted.</p></td>
+      <td><p>Logical scalar indicating whether the output should be quiet (<code>TRUE</code>)
+or verbose (<code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>compile</th>
-      <td><p>If <code>TRUE</code> always recompiles the package; if <code>NA</code>
-recompiles if needed (as determined by <code><a href='https://rdrr.io/pkg/pkgbuild/man/needs_compile.html'>pkgbuild::needs_compile()</a></code>);
-if <code>FALSE</code>, never recompiles.</p></td>
+      <td><p>Logical indicating whether the library should be recompiled.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>(Invisibly) Path to the file containing generated wrappers.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>To run <code>register_extendr()</code>, the R package containing extendr code must have
-previously been compiled and installed. If this condition is met, the
-wrapper code will be retrieved from the compiled Rust code and saved into
-<code>R/extendr-wrappers.R</code>. Afterwards, you will have to re-document and then
-re-install the package for the wrapper functions to take effect.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
