@@ -9,28 +9,32 @@
 #' wrapper code will be retrieved from the compiled Rust code and saved into
 #' `R/extendr-wrappers.R`. Afterwards, you will have to re-document and then
 #' re-install the package for the wrapper functions to take effect.
-#' @param path File path to the package for which to generate wrapper code.
+#'
+#' @inheritParams pkgload::load_all
+#' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
 #' @param force_wrappers Logical indicating whether to install a minimal wrapper
 #'   file in the cases when generating wrappers by Rust code failed. This might
 #'   be needed when the wrapper file is accidentally lost or corrupted.
-#' @return The generated wrapper code. Note that this is not normally needed,
-#' as the function saves the wrapper code to `R/extendr-wrappers.R`.
+#' @return (Invisibly) Path to the file containing generated wrappers.
 #' @export
-register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) {
+register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
   if (!isTRUE(quiet)) {
-    message(glue("Generating extendr wrapper functions for package: {pkg_name}"))
+    cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
   }
 
-  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = ".")
+  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
-    stop(
-      "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
-      call. = FALSE
+    ui_throw(
+      "Unable to register the extendr module.",
+      c(
+        ui_x("Could not find file {cli::col_blue(\"src/entrypoint.c\")}."),
+        ui_q("Are you sure this package is using extendr Rust code?")
+      )
     )
   }
 
@@ -43,26 +47,58 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE) 
   # installed yet).
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
-      msg <- "Failed to generate wrapper functions. Falling back to a minimal wrapper file instead."
-      warning(msg, call. = FALSE)
-      make_example_wrappers(pkg_name, outfile)
+      cli::cli_alert_danger("Failed to generate wrapper functions: {e$message}.")
+      cli::cli_alert_warning("Falling back to a minimal wrapper file instead.")
+
+      make_example_wrappers(pkg_name, outfile, path = path)
     }
   } else {
     error_handle <- function(e) {
-      stop("Failed to generate wrapper functions", call. = FALSE)
+      ui_throw(
+        "Failed to generate wrapper functions.",
+        c(
+          ui_x(e[["message"]])
+        )
+      )
     }
   }
 
   tryCatch(
     # Call the wrapper generation in a separate R process to avoid the problem
     # of loading and unloading the same name of a DLL (c.f. #64).
-    make_wrappers_externally(pkg_name, pkg_name, outfile, use_symbols = TRUE, quiet = quiet),
+    make_wrappers_externally(
+      module_name = pkg_name,
+      package_name = pkg_name,
+      outfile = outfile,
+      path = path,
+      use_symbols = TRUE,
+      quiet = quiet,
+      compile = compile
+    ),
     error = error_handle
   )
+
+  # Ensures path is absolute
+  invisible(normalizePath(outfile))
 }
 
+#' Creates R wrappers for Rust functions.
+#'
+#' Invokes `wrap__make_{module_name}_wrappers` exported from
+#' the Rust library and writes obtained R wrappers to the `outfile`.
+#' @param module_name The name of the Rust module. Can be the same as `package_name`
+#' @param package_name The name of the package.
+#' @param outfile Determines where to write wrapper code.
+#' @param path Path from which package root is looked up. Used for message formatting.
+#' @param use_symbols Logical, indicating wether to add additonal symbol information to
+#' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
+#' while `TRUE` is used to make wrappers for dynamically generated libraries using 
+#' [`rust_source`], [`rust_function`], etc.
+#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
+#'   or verbose (`FALSE`).
+#' @keywords internal
 make_wrappers <- function(module_name, package_name, outfile,
-                          use_symbols = FALSE, quiet = FALSE) {
+                          path = ".", use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
     wrapper_function,
@@ -72,27 +108,66 @@ make_wrappers <- function(module_name, package_name, outfile,
   )
   x <- stringi::stri_split_lines1(x)
 
-  if (!isTRUE(quiet)) {
-    message("Writing wrappers to:\n", outfile)
-  }
+  # Can't use usethis::write_over because it asks user for input if
+  # file already exists.
   brio::write_lines(x, outfile)
+  if (!isTRUE(quiet)) {
+    rel_path <- pretty_rel_path(outfile, search_from = path)
+    cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
+  }
 }
 
+#' Creates R wrappers for Rust functions.
+#'
+#' Does the same as [`make_wrappers`], but out of process.
+#' @inheritParams make_wrappers
+#' @param compile Logical indicating whether the library should be recompiled.
+#' @keywords internal
 make_wrappers_externally <- function(module_name, package_name, outfile,
-                                     use_symbols = FALSE, quiet = FALSE) {
-  func <- function(package_root, make_wrappers, ...) {
-    pkgload::load_all(package_root, quiet = TRUE)
-    make_wrappers(...)
+                                    path, use_symbols = FALSE, quiet = FALSE,
+                                    compile = NA) {
+
+  func <- function(path, make_wrappers, compile, quiet,
+                   module_name, package_name, outfile,
+                   use_symbols, ...) {
+    if (isTRUE(compile)) {
+      # This relies on [`pkgbuild::needs_compile()`], which
+      # does not know about Rust files modifications.
+      # `force = TRUE` enforces compilation.
+      pkgbuild::compile_dll(
+        path = path,
+        force = TRUE,
+        quiet = quiet
+      )
+    }
+
+    dll_path <- fs::path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    # Loads native library
+    lib <- dyn.load(dll_path)
+    # Registers library unloading to be invoked at the end of this function
+    on.exit(dyn.unload(lib[["path"]]), add = TRUE)
+
+    make_wrappers(
+      module_name = module_name,
+      package_name = package_name,
+      outfile = outfile,
+      path = path,
+      use_symbols = use_symbols,
+      quiet = quiet
+    )
   }
 
   args <- list(
-    package_root = rprojroot::find_package_root_file(path = "."),
+    path = rprojroot::find_package_root_file(path = path),
     make_wrappers = make_wrappers,
+    compile = compile,
+    # arguments passed to make_wrappers()
     module_name = module_name,
     package_name = package_name,
     outfile = outfile,
     use_symbols = use_symbols,
     quiet = quiet
   )
-  invisible(callr::r(func, args = args))
+
+  invisible(callr::r(func, args = args, show = !isTRUE(quiet)))
 }

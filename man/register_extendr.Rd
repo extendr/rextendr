@@ -4,10 +4,15 @@
 \alias{register_extendr}
 \title{Register the extendr module of a package with R}
 \usage{
-register_extendr(path = ".", quiet = FALSE, force_wrappers = FALSE)
+register_extendr(
+  path = ".",
+  quiet = FALSE,
+  force_wrappers = FALSE,
+  compile = NA
+)
 }
 \arguments{
-\item{path}{File path to the package for which to generate wrapper code.}
+\item{path}{Path from which package root is looked up.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
@@ -15,10 +20,13 @@ generated or not.}
 \item{force_wrappers}{Logical indicating whether to install a minimal wrapper
 file in the cases when generating wrappers by Rust code failed. This might
 be needed when the wrapper file is accidentally lost or corrupted.}
+
+\item{compile}{If \code{TRUE} always recompiles the package; if \code{NA}
+recompiles if needed (as determined by \code{\link[pkgbuild:needs_compile]{pkgbuild::needs_compile()}});
+if \code{FALSE}, never recompiles.}
 }
 \value{
-The generated wrapper code. Note that this is not normally needed,
-as the function saves the wrapper code to \code{R/extendr-wrappers.R}.
+(Invisibly) Path to the file containing generated wrappers.
 }
 \description{
 This function generates wrapper code corresponding to the extendr module
