@@ -147,7 +147,6 @@ extendr_module! {{
   )
 
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper, path = path)
-  write_namespace(pkg_name, path, quiet = quiet)
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
@@ -194,31 +193,5 @@ make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = N
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(outfile, search_from = path)
     cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
-  }
-}
-
-#' Appends `useDynLib` to the `NAMESPACE` file.
-#'
-#' If `NAMESPACE` is missing `useDynLib` entry, loading package will not
-#' load the native library containing Rust code. This prevents any [`.Call`]s,
-#' which makes wrapper generation impossible.
-#' `NAMESPACE` contents are searched for `useDynLib` entry, and if it is not found,
-#' it is appended.
-#' This normally happens only once for each developed package -- immediately after
-#' package has been created and its `NAMESPACE` is empty.
-#' @param pkg_name Name of the package (should be identical to the library name without extension).
-#' @param path Path from which package root is looked up.
-#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`).
-#' @keywords internal
-write_namespace <- function(pkg_name, path = ".", quiet = FALSE) {
-  ns_path <- rprojroot::find_package_root_file("NAMESPACE", path = path)
-  if (!file.exists(ns_path)) {
-    usethis::use_namespace()
-  }
-  lines <- brio::read_lines(ns_path)
-  if (!any(grepl("useDynLib", lines))) {
-    # NAMESPACE has no `useDynLib`
-    usethis::write_union(ns_path, glue::glue("useDynLib({pkg_name}, .registration = TRUE)"), quiet = quiet)
   }
 }
