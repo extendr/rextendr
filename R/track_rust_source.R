@@ -14,7 +14,7 @@ pretty_rel_path <- function(path, search_from = ".") {
   )
 
   # Absolute path.
-  # `path` may not exists, so `mustWork` suppresses unnecessary warnings.
+  # `path` may not exist, so `mustWork` suppresses unnecessary warnings.
   path <- normalizePath(path, winslash = "/", mustWork = FALSE)
 
   # If `package_root` is not parent of `path`,
@@ -155,7 +155,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   TRUE
 }
 
-# Replaces `fs::file_info`.
+# Equivalent to `fs::file_info`.
 #
 # Takes paths, retrieves info using `file.info`
 # and converts obtained `data.frame` in a more suitable `tibble`
