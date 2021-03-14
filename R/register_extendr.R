@@ -131,11 +131,21 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
     if (isTRUE(compile)) {
-      pkgbuild::compile_dll(quiet = quiet)
+      # This relies on [`pkgbuild::needs_compile()`], which
+      # does not know about Rust files modifications.
+      # `force = TRUE` enforces compilation.
+      pkgbuild::compile_dll(
+        path = path,
+        force = TRUE,
+        quiet = quiet
+      )
     }
 
     dll_path <- fs::path(path, "src", paste0(package_name, .Platform$dynlib.ext))
-    dyn.load(dll_path)
+    # Loads native library
+    lib <- dyn.load(dll_path)
+    # Registers library unloading to be invoked at the end of this function
+    on.exit(dyn.unload(lib[["path"]]), add = TRUE)
 
     make_wrappers(
       module_name = module_name,
