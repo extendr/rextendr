@@ -41,7 +41,6 @@ Imports:
     desc,
     devtools,
     dplyr,
-    fs,
     glue,
     pkgbuild,
     pkgload,
