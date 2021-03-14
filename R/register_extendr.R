@@ -29,9 +29,12 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
-    stop(
-      "Could not find file `src/entrypoint.c`. Are you sure this package is using extendr Rust code?",
-      call. = FALSE
+    ui_throw(
+      "Unable to register the extendr module.",
+      c(
+        ui_x("Could not find file {cli::col_blue(\"src/entrypoint.c\")}."),
+        ui_q("Are you sure this package is using extendr Rust code?")
+      )
     )
   }
 
@@ -44,12 +47,19 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
   # installed yet).
   if (isTRUE(force_wrappers)) {
     error_handle <- function(e) {
-      cli::cli_alert_danger("Failed to generate wrapper functions. Falling back to a minimal wrapper file instead.")
+      cli::cli_alert_danger("Failed to generate wrapper functions: {e$message}.")
+      cli::cli_alert_warning("Falling back to a minimal wrapper file instead.")
+
       make_example_wrappers(pkg_name, outfile, path = path)
     }
   } else {
     error_handle <- function(e) {
-      stop("Failed to generate wrapper functions", call. = FALSE)
+      ui_throw(
+        "Failed to generate wrapper functions.",
+        c(
+          ui_x(e[["message"]])
+        )
+      )
     }
   }
 
