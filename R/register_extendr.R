@@ -10,13 +10,18 @@
 #' `R/extendr-wrappers.R`. Afterwards, you will have to re-document and then
 #' re-install the package for the wrapper functions to take effect.
 #'
-#' @inheritParams pkgload::load_all
 #' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
 #' @param force_wrappers Logical indicating whether to install a minimal wrapper
 #'   file in the cases when generating wrappers by Rust code failed. This might
 #'   be needed when the wrapper file is accidentally lost or corrupted.
+#' @param compile Logical indicating whether to recompile DLLs:
+#'   \describe{
+#'     \item{`TRUE`}{always recompiles}
+#'     \item{`NA`}{recompiles if needed (i.e., any source files or manifest file are newer than the DLL)}
+#'     \item{`FALSE`}{never recompiles}
+#'   }
 #' @return (Invisibly) Path to the file containing generated wrappers.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
@@ -92,7 +97,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
 #' @param path Path from which package root is looked up. Used for message formatting.
 #' @param use_symbols Logical, indicating wether to add additonal symbol information to
 #' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
-#' while `TRUE` is used to make wrappers for dynamically generated libraries using 
+#' while `TRUE` is used to make wrappers for dynamically generated libraries using
 #' [`rust_source`], [`rust_function`], etc.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
@@ -121,11 +126,18 @@ make_wrappers <- function(module_name, package_name, outfile,
 #'
 #' Does the same as [`make_wrappers`], but out of process.
 #' @inheritParams make_wrappers
-#' @param compile Logical indicating whether the library should be recompiled.
+#' @inheritParams register_extendr
 #' @keywords internal
 make_wrappers_externally <- function(module_name, package_name, outfile,
                                     path, use_symbols = FALSE, quiet = FALSE,
                                     compile = NA) {
+
+  path <- rprojroot::find_package_root_file(path = path)
+
+  # If compile is NA, compile if the DLL is newer than the source files
+  if (isTRUE(is.na(compile))) {
+    compile <- needs_compilation(path, quiet) || pkgbuild::needs_compile(path)
+  }
 
   func <- function(path, make_wrappers, compile, quiet,
                    module_name, package_name, outfile,
@@ -158,7 +170,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   }
 
   args <- list(
-    path = rprojroot::find_package_root_file(path = path),
+    path = path,
     make_wrappers = make_wrappers,
     compile = compile,
     # arguments passed to make_wrappers()

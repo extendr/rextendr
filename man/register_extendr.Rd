@@ -21,9 +21,12 @@ generated or not.}
 file in the cases when generating wrappers by Rust code failed. This might
 be needed when the wrapper file is accidentally lost or corrupted.}
 
-\item{compile}{If \code{TRUE} always recompiles the package; if \code{NA}
-recompiles if needed (as determined by \code{\link[pkgbuild:needs_compile]{pkgbuild::needs_compile()}});
-if \code{FALSE}, never recompiles.}
+\item{compile}{Logical indicating whether to recompile DLLs:
+\describe{
+\item{\code{TRUE}}{always recompiles}
+\item{\code{NA}}{recompiles if needed (i.e., any source files or manifest file are newer than the DLL)}
+\item{\code{FALSE}}{never recompiles}
+}}
 }
 \value{
 (Invisibly) Path to the file containing generated wrappers.
