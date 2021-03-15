@@ -22,7 +22,7 @@ get_library_path <- function(path = ".") {
 #' This inclides `*.rs` and `Cargo.toml`.
 #' @param path Path from which package root is looked up.
 #' @returns A vector of file paths (can be empty).
-#' @keywords internal
+#' @noRd
 get_rust_files <- function(path = ".") {
 
   src_root <- rprojroot::find_package_root_file("src", path = path)
@@ -59,7 +59,7 @@ get_rust_files <- function(path = ".") {
 #' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
 #' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
-#' @keywords internal
+#' @noRd
 needs_compilation <- function(path = ".", quiet = FALSE) {
   library_path <- get_library_path(path)
 
