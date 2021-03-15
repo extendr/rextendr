@@ -7,7 +7,7 @@
 # first argument.
 test_that("`pretty_rel_path()` works", {
   tempdir <- tempdir()
-  pkg_root <- file.path(tempdir, "testpkg")
+  pkg_root <- normalizePath(file.path(tempdir, "testpkg"), winslash = "/")
   sink(nullfile())
   tryCatch(
     devtools::create(pkg_root),
