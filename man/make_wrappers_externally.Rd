@@ -10,8 +10,7 @@ make_wrappers_externally(
   outfile,
   path,
   use_symbols = FALSE,
-  quiet = FALSE,
-  compile = NA
+  quiet = FALSE
 )
 }
 \arguments{
@@ -30,13 +29,6 @@ while \code{TRUE} is used to make wrappers for dynamically generated libraries u
 
 \item{quiet}{Logical scalar indicating whether the output should be quiet (\code{TRUE})
 or verbose (\code{FALSE}).}
-
-\item{compile}{Logical indicating whether to recompile DLLs:
-\describe{
-\item{\code{TRUE}}{always recompiles}
-\item{\code{NA}}{recompiles if needed (i.e., any source files or manifest file are newer than the DLL)}
-\item{\code{FALSE}}{never recompiles}
-}}
 }
 \description{
 Does the same as \code{\link{make_wrappers}}, but out of process.
