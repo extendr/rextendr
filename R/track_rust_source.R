@@ -59,7 +59,7 @@ pretty_rel_path <- function(path, search_from = ".") {
 
   # If `path` is a subpath of `package_root`,
   # then `path` contains `package_root` as a substring.
-  # This removes `pacakge_root` substring from `path`,
+  # This removes `package_root` substring from `path`,
   # performing comparison case_insensitively.
   path <- stringi::stri_replace_first_fixed(
     str = path,
