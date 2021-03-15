@@ -147,7 +147,7 @@ make_wrappers <- function(module_name, package_name, outfile,
 #' @keywords internal
 make_wrappers_externally <- function(module_name, package_name, outfile,
                                     path, use_symbols = FALSE, quiet = FALSE) {
-  func <- function(path, make_wrappers, compile, quiet,
+  func <- function(path, make_wrappers, quiet,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
     path <- rprojroot::find_package_root_file(path = path)
@@ -170,7 +170,6 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   args <- list(
     path = path,
     make_wrappers = make_wrappers,
-    compile = compile,
     # arguments passed to make_wrappers()
     module_name = module_name,
     package_name = package_name,
