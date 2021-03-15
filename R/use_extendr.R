@@ -35,8 +35,8 @@ use_extendr <- function(path = ".", quiet = FALSE) {
     return(invisible(FALSE))
   }
 
-  rust_src_dir <- fs::path(src_dir, "rust", "src")
-  fs::dir_create(rust_src_dir, recurse = TRUE)
+  rust_src_dir <- file.path(src_dir, "rust", "src")
+  dir.create(rust_src_dir, recursive = TRUE)
   cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
   entrypoint_content <- glue(
@@ -51,7 +51,7 @@ void R_init_{pkg_name}(void *dll) {{
 }}
 )"
   )
-  usethis::write_over(fs::path(src_dir, "entrypoint.c"), entrypoint_content, quiet = quiet)
+  usethis::write_over(file.path(src_dir, "entrypoint.c"), entrypoint_content, quiet = quiet)
 
   makevars_content <- glue(
     "
@@ -73,7 +73,7 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  usethis::write_over(fs::path(src_dir, "Makevars"), makevars_content, quiet = quiet)
+  usethis::write_over(file.path(src_dir, "Makevars"), makevars_content, quiet = quiet)
 
   makevars_win_content <- glue(
     "
@@ -96,21 +96,21 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  usethis::write_over(fs::path(src_dir, "Makevars.win"), makevars_win_content, quiet = quiet)
+  usethis::write_over(file.path(src_dir, "Makevars.win"), makevars_win_content, quiet = quiet)
 
   gitignore_content <- "*.o
 *.so
 *.dll
 target
 "
-  usethis::write_over(fs::path(src_dir, ".gitignore"), gitignore_content, quiet = quiet)
+  usethis::write_over(file.path(src_dir, ".gitignore"), gitignore_content, quiet = quiet)
 
   cargo_toml_content <- to_toml(
     package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
     lib = list(`crate-type` = array("staticlib", 1)),
     dependencies = list(`extendr-api` = "*")
   )
-  usethis::write_over(fs::path(src_dir, "rust", "Cargo.toml"), cargo_toml_content, quiet = quiet)
+  usethis::write_over(file.path(src_dir, "rust", "Cargo.toml"), cargo_toml_content, quiet = quiet)
 
   lib_rs_content <- glue(
     r"(
@@ -133,7 +133,7 @@ extendr_module! {{
 )"
   )
 
-  usethis::write_over(fs::path(rust_src_dir, "lib.rs"), lib_rs_content, quiet = quiet)
+  usethis::write_over(file.path(rust_src_dir, "lib.rs"), lib_rs_content, quiet = quiet)
 
 
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings

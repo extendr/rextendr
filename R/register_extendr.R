@@ -92,7 +92,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
 #' @param path Path from which package root is looked up. Used for message formatting.
 #' @param use_symbols Logical, indicating wether to add additonal symbol information to
 #' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
-#' while `TRUE` is used to make wrappers for dynamically generated libraries using 
+#' while `TRUE` is used to make wrappers for dynamically generated libraries using
 #' [`rust_source`], [`rust_function`], etc.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
@@ -124,9 +124,8 @@ make_wrappers <- function(module_name, package_name, outfile,
 #' @param compile Logical indicating whether the library should be recompiled.
 #' @keywords internal
 make_wrappers_externally <- function(module_name, package_name, outfile,
-                                    path, use_symbols = FALSE, quiet = FALSE,
-                                    compile = NA) {
-
+                                     path, use_symbols = FALSE, quiet = FALSE,
+                                     compile = NA) {
   func <- function(path, make_wrappers, compile, quiet,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
@@ -141,7 +140,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
       )
     }
 
-    dll_path <- fs::path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    dll_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
     # Loads native library
     lib <- dyn.load(dll_path)
     # Registers library unloading to be invoked at the end of this function
