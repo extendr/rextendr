@@ -195,7 +195,8 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
 # @returns A `tibble::tibble()` with information about files,
 # including `path` and `mtime`, which are used elsewhere in `rextendr`.
 get_file_info <- function(path) {
-  info <- file.info(path)
+  # We do not need extra columns, only `mtime`
+  info <- file.info(path, extra_cols = FALSE)
   info <- dplyr::mutate(info, path = rownames(info), .before = dplyr::everything())
   tibble::as_tibble(info)
 }
