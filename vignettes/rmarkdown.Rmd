@@ -12,7 +12,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
-The rextendr package enables two new chunk types for knitr, `extendr` and `extendrfuns`. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.
+The rextendr package enables two new chunk types for knitr, `extendr` and `extendrsrc`. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.
 
 ```{r}
 library(rextendr)
@@ -64,12 +64,19 @@ x <- 5.3
 y <- "hello"
 ```
 
-We can read these variables from Rust using the `R!()` macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we're ignoring the errors with `unwrap()`. For example, `R!()` calls the R interpreter and it could generate an error. And even if it returns a value, we're not guaranteed that the value can be coerced into a real value or a string, so `as_real()` and `as_str()` can also error out.
+We can read these variables from Rust using the `R!()` macro. Unfortunately, it takes a bit of error checking and type-converting to get these into native Rust values. This is the case because things could go wrong at each step. We're handling the errors with `?`. For example, `R!()` calls the R interpreter and it could generate an error. And even if it returns a value, we're not guaranteed that the value can be coerced into a real value or a string. However, `as_real()` and `as_str()` don't return errors, they return options, so we need to turn the `None` option into an error via `ok_or()`.
 
 ```{extendr}
-let x:f64 = R!(x).unwrap().as_real().unwrap();
-let y:String = R!(y).unwrap().as_str().unwrap().to_string();
-rprintln!("{} {}", y, x);
+let x:f64 = R!(x)?
+    .as_real()
+    .ok_or("expected a real")?;
+
+let y:String = R!(y)?
+    .as_str()
+    .ok_or("expected a string reference")?
+    .to_string();
+
+rprintln!("The value of x: {}\nThe value of y: {}", x, y);
 ```
 
 ## Chaining chunks together
@@ -118,12 +125,12 @@ Print:
 rprintln!("x = {}, y = {}", x, y);
 ```
 
-## Exporting Rust functions to R
+## Exporting Rust functions or objects to R
 
-The chunk type `extendrfuns` compiles Rust functions and registers them with R to be called later. For example, consider this code chunk. It creates R functions `hello()` and `foo()`.
+The chunk type `extendrsrc` compiles Rust functions and objects and registers them with R to be called later. For example, consider this code chunk. It creates R functions `hello()` and `foo()`, as well as a class called `Counter`.
 
 ````markdown
-`r ''````{extendrfuns}
+`r ''````{extendrsrc}
 #[extendr]
 fn hello() -> &'static str {
     "Hello from Rust!"
@@ -132,6 +139,25 @@ fn hello() -> &'static str {
 #[extendr]
 fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
+}
+
+struct Counter {
+    n: i32,
+}
+
+#[extendr]
+impl Counter {
+    fn new() -> Self {
+        Self { n: 0 }
+    }
+    
+    fn increment(&mut self) {
+        self.n += 1;
+    }
+    
+    fn get(&self) -> i32 {
+        self.n
+    }
 }
 ```
 ````
@@ -185,7 +211,7 @@ x$get()
 If your code requires external crates, you can set dependencies via the `engine.opts` chunk option, like so:
 
 ````markdown
-`r ''````{extendrfuns engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
+`r ''````{extendrsrc engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
 use pulldown_cmark::{Parser, Options, html};
 
 #[extendr]
