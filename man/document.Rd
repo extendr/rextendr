@@ -2,7 +2,7 @@
 % Please edit documentation in R/rextendr_document.R
 \name{document}
 \alias{document}
-\title{Compiles Rust code and generates package documentation.}
+\title{Compile Rust code and generate package documentation.}
 \usage{
 document(pkg = ".", quiet = FALSE, roclets = NULL)
 }
@@ -17,7 +17,10 @@ The default, \code{NULL}, uses the roxygen \code{roclets} option,
 which defaults to \code{c("collate", "namespace", "rd")}.}
 }
 \description{
-This function is a wrapper for \code{\link[devtools:document]{devtools::document()}}.
-It executes \code{extendr}-specific routine before calling \code{\link[devtools:document]{devtools::document()}},
-ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated.
+The function \code{\link[=document]{document()}} updates the package documentation for an
+R package that uses \code{extendr} code, taking into account any changes that were
+made in the Rust code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}, and it
+executes \code{extendr}-specific routines before calling \code{\link[devtools:document]{devtools::document()}}.
+Specifically, it ensures that Rust code is recompiled (when necessary) and that
+up-to-date R wrappers are generated before re-generating the package documentation.
 }
