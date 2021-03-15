@@ -101,8 +101,8 @@ test_that("`pretty_rel_path()` works", {
 test_that("`get_file_info()` and `file.info()` outputs are equivalent", {
   n_test_files <- 3L
   n_test_dirs <- 2L
-  # Creates 10 temp files in 10 *different* temp directories,
-  # each file prefixed with its index (1 to 10)
+  # Creates 3 temp files in 3 *different* temp directories,
+  # each file prefixed with its index (1 to 3)
   temp_files <- purrr::map_chr(
     seq_len(n_test_files),
     ~ tempfile(pattern = as.character(.x))
