@@ -98,8 +98,8 @@ test_that("`pretty_rel_path()` works", {
 
 # Verifies that `rextendr::get_file_info()` returns the same as base R
 # `file.info()` for files and directories.
-test_that("`get_file_info()` and `file.info()` outptus are equivalent", {
-  n_test_files <- 10L
+test_that("`get_file_info()` and `file.info()` outputs are equivalent", {
+  n_test_files <- 3L
   n_test_dirs <- 2L
   # Creates 10 temp files in 10 *different* temp directories,
   # each file prefixed with its index (1 to 10)
