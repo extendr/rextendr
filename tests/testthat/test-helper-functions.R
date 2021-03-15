@@ -7,14 +7,15 @@
 # first argument.
 test_that("`pretty_rel_path()` works", {
   tempdir <- tempdir()
-  pkg_root <- normalizePath(file.path(tempdir, "testpkg"), winslash = "/")
+  pkg_root <- file.path(tempdir, "testpkg")
+  dir.create(pkg_root, recursive = TRUE)
+  pkg_root <- normalizePath(pkg_root, winslash = "/")
   sink(nullfile())
   tryCatch(
     devtools::create(pkg_root),
     finally = sink()
   )
   rextendr::use_extendr(pkg_root, quiet = TRUE)
-
 
   # Find relative path from package root, trivial case
   expect_equal(
