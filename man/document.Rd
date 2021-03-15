@@ -17,7 +17,7 @@ The default, \code{NULL}, uses the roxygen \code{roclets} option,
 which defaults to \code{c("collate", "namespace", "rd")}.}
 }
 \description{
-The function \code{\link[=document]{document()}} updates the package documentation for an
+The function \code{rextendr::document()} updates the package documentation for an
 R package that uses \code{extendr} code, taking into account any changes that were
 made in the Rust code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}, and it
 executes \code{extendr}-specific routines before calling \code{\link[devtools:document]{devtools::document()}}.
