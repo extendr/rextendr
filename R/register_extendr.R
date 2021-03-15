@@ -73,8 +73,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       isTRUE(file.exists(dll_file)) &&
       isTRUE(file.exists(outfile)) &&
       isTRUE(file.info(dll_file)$mtime < file.info(outfile)$mtime)) {
-    cli::cli_alert_info("{.file {outfile}} is up-to-date. Skip generating wrapper functions.")
-    cli::cli_alert_info("If you want to force the generation, run `register_extendr(force = TRUE)`.")
+    cli::cli_alert_info("{.file {pretty_rel_path(outfile)}} is up-to-date. Skip generating wrapper functions.")
+    cli::cli_alert_warning("If you want to force the generation, run {.code rextendr::register_extendr(force = TRUE)}.")
 
     return(invisible(character(0L)))
   }
