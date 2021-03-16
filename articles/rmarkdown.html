@@ -85,7 +85,7 @@
       <h1 data-toc-skip>Using Rust code in R Markdown documents</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2021-03-15</h4>
+            <h4 class="date">2021-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/master/vignettes/rmarkdown.Rmd"><code>vignettes/rmarkdown.Rmd</code></a></small>
       <div class="hidden name"><code>rmarkdown.Rmd</code></div>
@@ -94,7 +94,7 @@
 
     
     
-<p>The rextendr package enables two new chunk types for knitr, <code>extendr</code> and <code>extendrfuns</code>. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.</p>
+<p>The rextendr package enables two new chunk types for knitr, <code>extendr</code> and <code>extendrsrc</code>. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/extendr/rextendr">rextendr</a></span><span class="op">)</span></code></pre></div>
 <div id="evaluating-rust-statements" class="section level2">
@@ -135,11 +135,19 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">5.3</span>
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="st">"hello"</span></code></pre></div>
-<p>We can read these variables from Rust using the <code>R!()</code> macro. Unfortunately, it takes a bit of unwrapping and type-converting to get these into native Rust values. This is the case because things could go wrong at each step, and we’re ignoring the errors with <code>unwrap()</code>. For example, <code>R!()</code> calls the R interpreter and it could generate an error. And even if it returns a value, we’re not guaranteed that the value can be coerced into a real value or a string, so <code>as_real()</code> and <code>as_str()</code> can also error out.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">let</span> x:<span class="dt">f64</span> = <span class="pp">R!</span>(x).unwrap().as_real().unwrap();</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">let</span> y:<span class="dt">String</span> = <span class="pp">R!</span>(y).unwrap().as_str().unwrap().to_string();</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="pp">rprintln!</span>(<span class="st">"{} {}"</span>, y, x);</span></code></pre></div>
-<pre><code>## hello 5.3</code></pre>
+<p>We can read these variables from Rust using the <code>R!()</code> macro. Unfortunately, it takes a bit of error checking and type-converting to get these into native Rust values. This is the case because things could go wrong at each step. We’re handling the errors with <code><a href="https://rdrr.io/r/utils/Question.html">?</a></code>. For example, <code>R!()</code> calls the R interpreter and it could generate an error. And even if it returns a value, we’re not guaranteed that the value can be coerced into a real value or a string. However, <code>as_real()</code> and <code>as_str()</code> don’t return errors, they return options, so we need to turn the <code>None</code> option into an error via <code>ok_or()</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">let</span> x:<span class="dt">f64</span> = <span class="pp">R!</span>(x)?</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    .as_real()</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    .ok_or(<span class="st">"expected a real"</span>)?;</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">let</span> y:<span class="dt">String</span> = <span class="pp">R!</span>(y)?</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    .as_str()</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    .ok_or(<span class="st">"expected a string reference"</span>)?</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    .to_string();</span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="pp">rprintln!</span>(<span class="st">"The value of x: {}</span><span class="sc">\n</span><span class="st">The value of y: {}"</span>, x, y);</span></code></pre></div>
+<pre><code>## The value of x: 5.3
+## The value of y: hello</code></pre>
 </div>
 <div id="chaining-chunks-together" class="section level2">
 <h2 class="hasAnchor">
@@ -172,11 +180,11 @@
 <div class="sourceCode" id="cb13"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1"></a><span class="pp">rprintln!</span>(<span class="st">"x = {}, y = {}"</span>, x, y);</span></code></pre></div>
 <pre><code>## x = 1, y = 2</code></pre>
 </div>
-<div id="exporting-rust-functions-to-r" class="section level2">
+<div id="exporting-rust-functions-or-objects-to-r" class="section level2">
 <h2 class="hasAnchor">
-<a href="#exporting-rust-functions-to-r" class="anchor"></a>Exporting Rust functions to R</h2>
-<p>The chunk type <code>extendrfuns</code> compiles Rust functions and registers them with R to be called later. For example, consider this code chunk. It creates R functions <code>hello()</code> and <code>foo()</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1"></a><span class="bn">```{extendrfuns}</span></span>
+<a href="#exporting-rust-functions-or-objects-to-r" class="anchor"></a>Exporting Rust functions or objects to R</h2>
+<p>The chunk type <code>extendrsrc</code> compiles Rust functions and objects and registers them with R to be called later. For example, consider this code chunk. It creates R functions <code>hello()</code> and <code>foo()</code>, as well as a class called <code>Counter</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1"></a><span class="bn">```{extendrsrc}</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="bn">#[extendr]</span></span>
 <span id="cb15-3"><a href="#cb15-3"></a><span class="bn">fn hello() -&gt; &amp;'static str {</span></span>
 <span id="cb15-4"><a href="#cb15-4"></a><span class="bn">    "Hello from Rust!"</span></span>
@@ -186,7 +194,26 @@
 <span id="cb15-8"><a href="#cb15-8"></a><span class="bn">fn foo(a: &amp;str, b: i64) {</span></span>
 <span id="cb15-9"><a href="#cb15-9"></a><span class="bn">    rprintln!("Data sent to Rust: {}, {}", a, b);</span></span>
 <span id="cb15-10"><a href="#cb15-10"></a><span class="bn">}</span></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="bn">```</span></span></code></pre></div>
+<span id="cb15-11"><a href="#cb15-11"></a></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="bn">struct Counter {</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="bn">    n: i32,</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a><span class="bn">}</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="bn">#[extendr]</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="bn">impl Counter {</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a><span class="bn">    fn new() -&gt; Self {</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="bn">        Self { n: 0 }</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="bn">    }</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a><span class="bn">    </span></span>
+<span id="cb15-22"><a href="#cb15-22"></a><span class="bn">    fn increment(&amp;mut self) {</span></span>
+<span id="cb15-23"><a href="#cb15-23"></a><span class="bn">        self.n += 1;</span></span>
+<span id="cb15-24"><a href="#cb15-24"></a><span class="bn">    }</span></span>
+<span id="cb15-25"><a href="#cb15-25"></a><span class="bn">    </span></span>
+<span id="cb15-26"><a href="#cb15-26"></a><span class="bn">    fn get(&amp;self) -&gt; i32 {</span></span>
+<span id="cb15-27"><a href="#cb15-27"></a><span class="bn">        self.n</span></span>
+<span id="cb15-28"><a href="#cb15-28"></a><span class="bn">    }</span></span>
+<span id="cb15-29"><a href="#cb15-29"></a><span class="bn">}</span></span>
+<span id="cb15-30"><a href="#cb15-30"></a><span class="bn">```</span></span></code></pre></div>
 <p>The only output the chunk itself creates is the Rust source code:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="kw">fn</span> hello() -&gt; &amp;<span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
@@ -234,7 +261,7 @@
 <span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>If your code requires external crates, you can set dependencies via the <code>engine.opts</code> chunk option, like so:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1"></a><span class="bn">```{extendrfuns engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}</span></span>
+<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1"></a><span class="bn">```{extendrsrc engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}</span></span>
 <span id="cb25-2"><a href="#cb25-2"></a><span class="bn">use pulldown_cmark::{Parser, Options, html};</span></span>
 <span id="cb25-3"><a href="#cb25-3"></a></span>
 <span id="cb25-4"><a href="#cb25-4"></a><span class="bn">#[extendr]</span></span>
