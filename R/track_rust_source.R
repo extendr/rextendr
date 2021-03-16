@@ -147,27 +147,11 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
     return(TRUE)
   }
 
-  rust_files <- get_rust_files(path)
-
-  # Shortcut: no rust sources found, nothing to track.
-  if (length(rust_files) == 0L) {
-    return(FALSE)
-  }
-
-  # Obtains detailed info of each source file and library file.
-  # This includes 'last modification time'.
-  # Stored as tibbles
-  rust_info <- get_file_info(rust_files)
-  library_info <- get_file_info(library_path)
-
   # Leaves files that were modified *after* the library
-  modified_files_info <- dplyr::filter(
-    rust_info,
-    .data$mtime > library_info[["mtime"]][1]
-  )
+  modified_files_paths <- find_newer_files_than(get_rust_files(path), library_path)
 
   # Shortcut: no files have been modified since last compilation.
-  if (nrow(modified_files_info) == 0L) {
+  if (length(modified_files_paths) == 0L) {
     return(FALSE)
   }
 
@@ -177,7 +161,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   # do not support `quiet` arg.
   if (!isTRUE(quiet)) {
     purrr::walk(
-      pretty_rel_path(modified_files_info[["path"]], search_from = path),
+      pretty_rel_path(modified_files_paths, search_from = path),
       ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
     )
   }
@@ -199,4 +183,33 @@ get_file_info <- function(path) {
   info <- file.info(path, extra_cols = FALSE)
   info <- dplyr::mutate(info, path = rownames(info), .before = dplyr::everything())
   tibble::as_tibble(info)
+}
+
+# Find files newer than the reference file.
+#
+# @param files File paths to find newer ones than `reference`.
+# @param reference A file path to compare `files` against.
+# @return File paths newer than `reference`.
+find_newer_files_than <- function(files, reference) {
+  # If `files` is of length 0 or NULL, exit early.
+  if (length(files) == 0L) {
+    return(character(0))
+  }
+
+  if (length(reference) != 1L) {
+    stop("`reference` must be length 1 of character vector", call. = FALSE)
+  }
+
+  if (is.na(reference) || !file.exists(reference)) {
+    stop("File ", reference, " doesn't exist", call. = FALSE)
+  }
+
+  reference_mtime <- get_file_info(reference)[["mtime"]]
+
+  modified_files_info <- dplyr::filter(
+    get_file_info(files),
+    .data$mtime > reference_mtime
+  )
+
+  modified_files_info[["path"]]
 }
