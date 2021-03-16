@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compiles Rust code and generates package documentation. — document • rextendr</title>
+<title>Compile Rust code and generate package documentation. — document • rextendr</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,13 @@
 
 
 
-<meta property="og:title" content="Compiles Rust code and generates package documentation. — document" />
-<meta property="og:description" content="This function is a wrapper for devtools::document().
-It executes extendr-specific routine before calling devtools::document(),
-ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated." />
+<meta property="og:title" content="Compile Rust code and generate package documentation. — document" />
+<meta property="og:description" content="The function rextendr::document() updates the package documentation for an
+R package that uses extendr code, taking into account any changes that were
+made in the Rust code. It is a wrapper for devtools::document(), and it
+executes extendr-specific routines before calling devtools::document().
+Specifically, it ensures that Rust code is recompiled (when necessary) and that
+up-to-date R wrappers are generated before re-generating the package documentation." />
 
 
 
@@ -125,15 +128,18 @@ ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compiles Rust code and generates package documentation.</h1>
+    <h1>Compile Rust code and generate package documentation.</h1>
     <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/rextendr_document.R'><code>R/rextendr_document.R</code></a></small>
     <div class="hidden name"><code>document.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is a wrapper for <code><a href='https://devtools.r-lib.org//reference/document.html'>devtools::document()</a></code>.
-It executes <code>extendr</code>-specific routine before calling <code><a href='https://devtools.r-lib.org//reference/document.html'>devtools::document()</a></code>,
-ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated.</p>
+    <p>The function <code>rextendr::document()</code> updates the package documentation for an
+R package that uses <code>extendr</code> code, taking into account any changes that were
+made in the Rust code. It is a wrapper for <code><a href='https://devtools.r-lib.org//reference/document.html'>devtools::document()</a></code>, and it
+executes <code>extendr</code>-specific routines before calling <code><a href='https://devtools.r-lib.org//reference/document.html'>devtools::document()</a></code>.
+Specifically, it ensures that Rust code is recompiled (when necessary) and that
+up-to-date R wrappers are generated before re-generating the package documentation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>document</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='st'>"."</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span>, roclets <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
