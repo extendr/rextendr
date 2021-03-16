@@ -63,10 +63,10 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     )
   }
 
-  dll_file <- get_library_path(path)
+  library_path <- get_library_path(path)
 
-  if (!file.exists(dll_file)) {
-    msg <- "{dll_file} doesn't exist"
+  if (!file.exists(library_path)) {
+    msg <- "{library_path} doesn't exist"
     if (isTRUE(compile)) {
       # If it doesn't exist even after compile, we have no idea what happened
       ui_throw(msg)
@@ -83,7 +83,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # by the latest DLL, which should mean it doesn't need to be re-generated.
   # This isn't always the case (e.g. when the user accidentally edited the
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
-  if (!isTRUE(force) && length(find_newer_files_than(outfile, dll_file)) > 0) {
+  if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
     rel_path <- pretty_rel_path(outfile, path)
     cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
@@ -158,9 +158,9 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   func <- function(path, make_wrappers, quiet,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
-    dll_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    library_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
     # Loads native library
-    lib <- dyn.load(dll_path)
+    lib <- dyn.load(library_path)
     # Registers library unloading to be invoked at the end of this function
     on.exit(dyn.unload(lib[["path"]]), add = TRUE)
 
