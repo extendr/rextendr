@@ -127,13 +127,25 @@ jobs:
               check_dir = "check_use_extendr"
           )
 
-          # check if rextendr::document() don't re-generate wrappers when unnecessary
           library_path <- rextendr:::get_library_path()
-          mtime_before <- file.info(library_path)$mtime
-          rextendr::document()
-          stopifnot(mtime_before == file.info(library_path)$mtime)
+          library_mtime_before <- file.info(library_path)$mtime
+          wrappers_path <- file.path("R", "extendr-wrappers.R")
+          wrappers_mtime_before <- file.info(wrappers_path)$mtime
 
-          # check if force = TRUE forces re-generating wrappers
+          # check if rextendr::document() don't re-generate wrappers when unnecessary
+          rextendr::document()
+          stopifnot(library_mtime_before == file.info(library_path)$mtime)
+          stopifnot(wrappers_mtime_before == file.info(wrappers_path)$mtime)
+
+          # check if force = TRUE forces re-generating wrappers, but not compile
           rextendr::register_extendr(force = TRUE)
-          stopifnot(mtime_before < file.info(library_path)$mtime)
+          stopifnot(library_mtime_before == file.info(library_path)$mtime)
+          stopifnot(wrappers_mtime_before < file.info(wrappers_path)$mtime)
+
+          wrappers_mtime_before <- file.info(wrappers_path)$mtime
+
+          # check if compile = TRUE forces compile, and accordingly the wrapper generation
+          rextendr::register_extendr(compile = TRUE)
+          stopifnot(library_mtime_before < file.info(library_path)$mtime)
+          stopifnot(wrappers_mtime_before < file.info(wrappers_path)$mtime)
         shell: Rscript {0}
