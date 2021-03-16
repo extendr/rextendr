@@ -2,7 +2,7 @@
 #'
 #' Prepends `text` with red cross (`x`). Performs [`glue::glue()`] interpolation.
 #' @param text String to format.
-#' @keywords internal
+#' @noRd
 ui_x <- function(text = "") {
   glue::glue("{cli::col_red(cli::symbol$cross)} {glue::glue(text)}")
 }
@@ -11,7 +11,7 @@ ui_x <- function(text = "") {
 #'
 #' Prepends `text` with cyan info sign (`i`). Performs [`glue::glue()`] interpolation.
 #' @inheritParams ui_x
-#' @keywords internal
+#' @noRd
 ui_i <- function(text = "") {
   glue::glue("{cli::col_cyan(cli::symbol$info)} {glue::glue(text)}")
 }
@@ -20,7 +20,7 @@ ui_i <- function(text = "") {
 #'
 #' Prepends `text` with green check mark (`v`). Performs [`glue::glue()`] interpolation.
 #' @inheritParams ui_x
-#' @keywords internal
+#' @noRd
 ui_v <- function(text = "") {
   glue::glue("{cli::col_green(cli::symbol$tick)} {glue::glue(text)}")
 }
@@ -29,7 +29,7 @@ ui_v <- function(text = "") {
 #'
 #' Prepends `text` with yellow question mark (`?`). Performs [`glue::glue()`] interpolation.
 #' @inheritParams ui_x
-#' @keywords internal
+#' @noRd
 ui_q <- function(text = "") {
   glue::glue("{cli::col_yellow(\"?\")} {glue::glue(text)}")
 }
@@ -38,13 +38,13 @@ ui_q <- function(text = "") {
 #'
 #' Prepends `text` with yellow exclamation mark (`!`). Performs [`glue::glue()`] interpolation.
 #' @inheritParams ui_x
-#' @keywords internals
+#' @noRd
 ui_w <- function(text = "") {
   glue::glue("{cli::col_yellow(\"!\")} {glue::glue(text)}")
 }
 
 #' Throws an error with formatted message.
-#' 
+#'
 #' Creates a styled error message that is then thrown
 #' using [`stop()`].
 #' @param message The primary error message. Mandatory.
@@ -65,7 +65,7 @@ ui_w <- function(text = "") {
 #' # x That thing happened.
 #' # ? Are you sure you did it right?
 #' }
-#' @keywords internal
+#' @noRd
 ui_throw <- function(message, details = character(0)) {
   if (missing(message) || !nzchar(message)) {
     message <- "Internal error."
