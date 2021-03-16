@@ -134,6 +134,6 @@ jobs:
           stopifnot(mtime_before == file.info(library_path)$mtime)
 
           # check if force = TRUE forces re-generating wrappers
-          rextendr::document(force = TRUE)
+          rextendr::register_extendr(force = TRUE)
           stopifnot(mtime_before < file.info(library_path)$mtime)
         shell: Rscript {0}
