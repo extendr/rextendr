@@ -150,7 +150,7 @@ test_that("find_newer_files_than() works", {
   new_file1 <- tempfile()
   new_file2 <- tempfile()
   brio::write_file("", old_file)
-  Sys.sleep(1)
+  Sys.sleep(0.01)
   brio::write_file("", new_file1)
   brio::write_file("", new_file2)
 
