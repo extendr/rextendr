@@ -13,7 +13,7 @@ register_extendr(path = ".", quiet = FALSE, force = FALSE, compile = NA)
 generated or not.}
 
 \item{force}{Logical indicating whether to force re-generating
-\code{R/extendr-wrappers.R} even when it doesn't seem to need updated (By
+\code{R/extendr-wrappers.R} even when it doesn't seem to need updated. (By
 default, generation is skipped when it's newer than the DLL).}
 
 \item{compile}{Logical indicating whether to recompile DLLs:
