@@ -192,6 +192,6 @@ make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = N
   brio::write_lines(wrappers_content, outfile)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(outfile, search_from = path)
-    cli::cli_alert_success("Writting wrappers to {.file {rel_path}}.")
+    cli::cli_alert_success("Writing wrappers to {.file {rel_path}}.")
   }
 }
