@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Workaround for the issue on bintray
         if: startsWith(runner.os, 'Linux')
-        run: rm -f /etc/apt/sources.list.d/sbt.list
+        run: sudo rm -f /etc/apt/sources.list.d/sbt.list
 
       - uses: actions/checkout@v2
 
