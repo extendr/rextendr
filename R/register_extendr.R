@@ -73,7 +73,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       isTRUE(file.exists(dll_file)) &&
       isTRUE(file.exists(outfile)) &&
       isTRUE(file.info(dll_file)$mtime < file.info(outfile)$mtime)) {
-    cli::cli_alert_info("{.file {pretty_rel_path(outfile)}} is up-to-date. Skip generating wrapper functions.")
+    cli::cli_alert_info("{.file {pretty_rel_path(outfile, path)}} is up-to-date. Skip generating wrapper functions.")
     cli::cli_alert_warning("If you want to force the generation, run {.code rextendr::register_extendr(force = TRUE)}.")
 
     return(invisible(character(0L)))
@@ -149,7 +149,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   func <- function(path, make_wrappers, quiet,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
-    dll_path <- fs::path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    dll_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
     # Loads native library
     lib <- dyn.load(dll_path)
     # Registers library unloading to be invoked at the end of this function
