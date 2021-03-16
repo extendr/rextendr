@@ -74,7 +74,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       ui_throw(
         msg,
-        ui_i("You need to compile first, try {.code `register_rextendr(compile = TRUE)`}")
+        ui_i("You need to compile first, try `register_rextendr(compile = TRUE)`")
       )
     }
   }
