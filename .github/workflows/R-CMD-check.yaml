@@ -30,8 +30,12 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
 
     steps:
+      - name: Workaround for the issue on bintray
+        if: startsWith(runner.os, 'Linux')
+        run: rm -f /etc/apt/sources.list.d/sbt.list
+
       - uses: actions/checkout@v2
-      
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
