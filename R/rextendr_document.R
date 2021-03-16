@@ -1,8 +1,11 @@
-#' Compiles Rust code and generates package documentation.
+#' Compile Rust code and generate package documentation.
 #'
-#' This function is a wrapper for [`devtools::document()`].
-#' It executes `extendr`-specific routine before calling [`devtools::document()`],
-#' ensuring Rust code is recompiled (when necessary) and up-to-date R wrappers are generated.
+#' The function `rextendr::document()` updates the package documentation for an
+#' R package that uses `extendr` code, taking into account any changes that were
+#' made in the Rust code. It is a wrapper for [devtools::document()], and it
+#' executes `extendr`-specific routines before calling [devtools::document()].
+#' Specifically, it ensures that Rust code is recompiled (when necessary) and that
+#' up-to-date R wrappers are generated before re-generating the package documentation.
 #' @inheritParams devtools::document
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
