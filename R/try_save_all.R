@@ -4,7 +4,7 @@
 #' Improves package development experience within RStudio.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
-#' @keywords internal
+#' @noRd
 try_save_all <- function(quiet = FALSE) {
   if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("documentSaveAll")) {
     rstudioapi::documentSaveAll()

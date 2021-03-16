@@ -96,7 +96,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
 #' [`rust_source`], [`rust_function`], etc.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
-#' @keywords internal
+#' @noRd
 make_wrappers <- function(module_name, package_name, outfile,
                           path = ".", use_symbols = FALSE, quiet = FALSE) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
@@ -122,7 +122,7 @@ make_wrappers <- function(module_name, package_name, outfile,
 #' Does the same as [`make_wrappers`], but out of process.
 #' @inheritParams make_wrappers
 #' @param compile Logical indicating whether the library should be recompiled.
-#' @keywords internal
+#' @noRd
 make_wrappers_externally <- function(module_name, package_name, outfile,
                                      path, use_symbols = FALSE, quiet = FALSE,
                                      compile = NA) {

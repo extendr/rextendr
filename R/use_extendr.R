@@ -169,7 +169,7 @@ extendr_module! {{
 #' Should be valid R code.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
-#' @keywords internal
+#' @noRd
 make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = NULL, quiet = FALSE) {
   roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
 
