@@ -196,12 +196,23 @@ find_newer_files_than <- function(files, reference) {
     return(character(0))
   }
 
+  error_details <- character(0)
+
   if (length(reference) != 1L) {
-    stop("`reference` must be length 1 of character vector", call. = FALSE)
+    error_details <- ui_x("Expected vector of length `1`, got `{length(reference)}`.")
   }
 
-  if (is.na(reference) || !file.exists(reference)) {
-    stop("File ", reference, " doesn't exist", call. = FALSE)
+  if (typeof(reference) != "character") {
+    error_details <- c(error_details, ui_x("Expected type `character`, got `{typeof(reference)}`."))
+  }
+
+  # if `reference` is already found invalid, skip checking the existence
+  if (length(error_details) == 0L && !file.exists(reference)) {
+    error_details <- ui_x("File {reference} doesn't exist.")
+  }
+
+  if (length(error_details) > 0L) {
+    ui_throw("Invalid argument `reference`.", details = error_details)
   }
 
   reference_mtime <- get_file_info(reference)[["mtime"]]
