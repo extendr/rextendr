@@ -207,11 +207,13 @@ find_newer_files_than <- function(files, reference) {
   }
 
   # if `reference` is already found invalid, skip checking the existence
+  # Here we want path, i.e the value of `reference`.
   if (length(error_details) == 0L && !file.exists(reference)) {
-    error_details <- ui_x("File {.file reference} doesn't exist.")
+    error_details <- ui_x("File {.file {reference}} doesn't exist.")
   }
 
   if (length(error_details) > 0L) {
+    # Here `reference` is parameter name.
     ui_throw("Invalid argument {.var reference}.", details = error_details)
   }
 
