@@ -12,5 +12,7 @@ document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
   try_save_all(quiet = quiet)
 
   register_extendr(path = pkg, quiet = quiet)
+
+  rlang::check_installed("devtools")
   devtools::document(pkg = pkg, roclets = roclets, quiet = FALSE)
 }
