@@ -144,3 +144,26 @@ test_that("`get_file_info()` and `file.info()` outputs are equivalent", {
   expect_true(is.na(na_info[["ctime"]]))
   expect_true(is.na(na_info[["atime"]]))
 })
+
+test_that("find_newer_files_than() works", {
+  old_file <- tempfile()
+  new_file1 <- tempfile()
+  new_file2 <- tempfile()
+  brio::write_file("", old_file)
+  Sys.sleep(0.01)
+  brio::write_file("", new_file1)
+  brio::write_file("", new_file2)
+
+  # files are older than reference
+  expect_equal(find_newer_files_than(old_file, new_file1), character(0))
+  # files are newer than reference
+  expect_equal(find_newer_files_than(new_file1, old_file), new_file1)
+  # multiple files
+  expect_equal(find_newer_files_than(c(new_file1, new_file2), old_file), c(new_file1, new_file2))
+  # no files
+  expect_equal(find_newer_files_than(character(0), old_file), character(0))
+  expect_equal(find_newer_files_than(NA_character_, old_file), character(0))
+  # invalid cases
+  expect_error(find_newer_files_than(old_file, character(0)))
+  expect_error(find_newer_files_than(old_file, "/no/such/files"))
+})

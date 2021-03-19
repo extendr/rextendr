@@ -10,8 +10,7 @@
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
   try_save_all(quiet = quiet)
-  needs_compilation <- needs_compilation(pkg, quiet) || pkgbuild::needs_compile(pkg)
 
-  register_extendr(path = pkg, quiet = quiet, compile = needs_compilation)
+  register_extendr(path = pkg, quiet = quiet)
   devtools::document(pkg = pkg, roclets = roclets, quiet = FALSE)
 }

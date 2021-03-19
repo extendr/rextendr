@@ -10,16 +10,21 @@
 #' `R/extendr-wrappers.R`. Afterwards, you will have to re-document and then
 #' re-install the package for the wrapper functions to take effect.
 #'
-#' @inheritParams pkgload::load_all
 #' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param force_wrappers Logical indicating whether to install a minimal wrapper
-#'   file in the cases when generating wrappers by Rust code failed. This might
-#'   be needed when the wrapper file is accidentally lost or corrupted.
+#' @param force Logical indicating whether to force re-generating
+#'   `R/extendr-wrappers.R` even when it doesn't seem to need updated. (By
+#'   default, generation is skipped when it's newer than the DLL).
+#' @param compile Logical indicating whether to recompile DLLs:
+#'   \describe{
+#'     \item{`TRUE`}{always recompiles}
+#'     \item{`NA`}{recompiles if needed (i.e., any source files or manifest file are newer than the DLL)}
+#'     \item{`FALSE`}{never recompiles}
+#'   }
 #' @return (Invisibly) Path to the file containing generated wrappers.
 #' @export
-register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, compile = NA) {
+register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -40,27 +45,49 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
 
-  # If force_wrappers is TRUE, use a minimal wrapper file even when
-  # make_wrappers() fails; since the wrapper generation depends on the compiled
-  # Rust code, the package needs to be installed before attempting this, but
-  # it's not always the case (e.g. the package might be corrupted, or not
-  # installed yet).
-  if (isTRUE(force_wrappers)) {
-    error_handle <- function(e) {
-      cli::cli_alert_danger("Failed to generate wrapper functions: {e$message}.")
-      cli::cli_alert_warning("Falling back to a minimal wrapper file instead.")
+  path <- rprojroot::find_package_root_file(path = path)
 
-      make_example_wrappers(pkg_name, outfile, path = path)
-    }
-  } else {
-    error_handle <- function(e) {
+  # If compile is NA, compile if the DLL is newer than the source files
+  if (isTRUE(is.na(compile))) {
+    compile <- needs_compilation(path, quiet) || pkgbuild::needs_compile(path)
+  }
+
+  if (isTRUE(compile)) {
+    # This relies on [`pkgbuild::needs_compile()`], which
+    # does not know about Rust files modifications.
+    # `force = TRUE` enforces compilation.
+    pkgbuild::compile_dll(
+      path = path,
+      force = TRUE,
+      quiet = quiet
+    )
+  }
+
+  library_path <- get_library_path(path)
+
+  if (!file.exists(library_path)) {
+    msg <- "{library_path} doesn't exist"
+    if (isTRUE(compile)) {
+      # If it doesn't exist even after compile, we have no idea what happened
+      ui_throw(msg)
+    } else {
+      # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       ui_throw(
-        "Failed to generate wrapper functions.",
-        c(
-          ui_x(e[["message"]])
-        )
+        msg,
+        ui_i("You need to compile first, try `register_rextendr(compile = TRUE)`")
       )
     }
+  }
+
+  # If the wrapper file is newer than the DLL file, assume it's been generated
+  # by the latest DLL, which should mean it doesn't need to be re-generated.
+  # This isn't always the case (e.g. when the user accidentally edited the
+  # wrapper file by hand) so the user might need to run with `force = TRUE`.
+  if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
+    rel_path <- pretty_rel_path(outfile, path)
+    cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
+
+    return(invisible(character(0L)))
   }
 
   tryCatch(
@@ -72,10 +99,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force_wrappers = FALSE, 
       outfile = outfile,
       path = path,
       use_symbols = TRUE,
-      quiet = quiet,
-      compile = compile
+      quiet = quiet
     ),
-    error = error_handle
+    error = function(e) {
+      ui_throw(
+        "Failed to generate wrapper functions.",
+        ui_x(e[["message"]])
+      )
+    }
   )
 
   # Ensures path is absolute
@@ -121,28 +152,15 @@ make_wrappers <- function(module_name, package_name, outfile,
 #'
 #' Does the same as [`make_wrappers`], but out of process.
 #' @inheritParams make_wrappers
-#' @param compile Logical indicating whether the library should be recompiled.
 #' @noRd
 make_wrappers_externally <- function(module_name, package_name, outfile,
-                                     path, use_symbols = FALSE, quiet = FALSE,
-                                     compile = NA) {
-  func <- function(path, make_wrappers, compile, quiet,
+                                     path, use_symbols = FALSE, quiet = FALSE) {
+  func <- function(path, make_wrappers, quiet,
                    module_name, package_name, outfile,
                    use_symbols, ...) {
-    if (isTRUE(compile)) {
-      # This relies on [`pkgbuild::needs_compile()`], which
-      # does not know about Rust files modifications.
-      # `force = TRUE` enforces compilation.
-      pkgbuild::compile_dll(
-        path = path,
-        force = TRUE,
-        quiet = quiet
-      )
-    }
-
-    dll_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+    library_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
     # Loads native library
-    lib <- dyn.load(dll_path)
+    lib <- dyn.load(library_path)
     # Registers library unloading to be invoked at the end of this function
     on.exit(dyn.unload(lib[["path"]]), add = TRUE)
 
@@ -159,7 +177,6 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
   args <- list(
     path = rprojroot::find_package_root_file(path = path),
     make_wrappers = make_wrappers,
-    compile = compile,
     # arguments passed to make_wrappers()
     module_name = module_name,
     package_name = package_name,
