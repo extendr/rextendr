@@ -166,6 +166,7 @@ test_that("find_newer_files_than() works", {
   # invalid cases
   expect_error(find_newer_files_than(old_file, character(0)))
   expect_error(find_newer_files_than(old_file, "/no/such/files"))
+})
 
 # Verifies that `ui_*` assemble correct ansi strings.
 # Each output of the `ui_*` is compared to the output
