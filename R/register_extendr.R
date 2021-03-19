@@ -37,7 +37,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     ui_throw(
       "Unable to register the extendr module.",
       c(
-        ui_x("Could not find file {cli::col_blue(\"src/entrypoint.c\")}."),
+        ui_x("Could not find file {.file src/entrypoint.c }."),
         ui_q("Are you sure this package is using extendr Rust code?")
       )
     )
