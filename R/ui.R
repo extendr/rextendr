@@ -35,7 +35,7 @@ ui_v <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_q <- function(text = "") {
-  # There is no built-in style questioning message,
+  # There is no built-in style for questioning message,
   # so we construct it ourselves.
   # This will not be affected by global styling.
   cli::cli_format_method(
