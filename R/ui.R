@@ -1,53 +1,70 @@
 #' Formats text as an error message.
 #'
-#' Prepends `text` with red cross (`x`). Performs [`glue::glue()`] interpolation.
+#' Prepends `text` with red cross (`x`).
+#' Supports {cli}'s inline styles and string interpolation.
 #' @param text String to format.
 #' @noRd
 ui_x <- function(text = "") {
-  glue::glue("{cli::col_red(cli::symbol$cross)} {glue::glue(text)}")
+  cli::cli_format_method(cli::cli_alert_danger(text))
 }
 
 #' Formats text as an information message.
 #'
-#' Prepends `text` with cyan info sign (`i`). Performs [`glue::glue()`] interpolation.
+#' Prepends `text` with cyan info sign (`i`).
+#' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
 ui_i <- function(text = "") {
-  glue::glue("{cli::col_cyan(cli::symbol$info)} {glue::glue(text)}")
+  cli::cli_format_method(cli::cli_alert_info(text))
 }
 
 #' Formats text as a success message.
 #'
-#' Prepends `text` with green check mark (`v`). Performs [`glue::glue()`] interpolation.
+#' Prepends `text` with green check mark (`v`).
+#' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
 ui_v <- function(text = "") {
-  glue::glue("{cli::col_green(cli::symbol$tick)} {glue::glue(text)}")
+  cli::cli_format_method(cli::cli_alert_success(text))
 }
 
 #' Formats text as a question message.
 #'
-#' Prepends `text` with yellow question mark (`?`). Performs [`glue::glue()`] interpolation.
+#' Prepends `text` with yellow question mark (`?`).
+#' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
 ui_q <- function(text = "") {
-  glue::glue("{cli::col_yellow(\"?\")} {glue::glue(text)}")
+  # There is no built-in style questioning message,
+  # so we construct it ourselves.
+  # This will not be affected by global styling.
+  cli::cli_format_method(
+    cli::cli_alert(
+      paste(
+        cli::col_yellow("?"),
+        cli::cli_format_method(
+          cli::cli_text(text)
+        )
+      )
+    )
+  )
 }
 
 #' Formats text as a warning message.
 #'
-#' Prepends `text` with yellow exclamation mark (`!`). Performs [`glue::glue()`] interpolation.
+#' Prepends `text` with yellow exclamation mark (`!`).
+#' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
 ui_w <- function(text = "") {
-  glue::glue("{cli::col_yellow(\"!\")} {glue::glue(text)}")
+  cli::cli_format_method(cli::cli_alert_warning(text))
 }
 
 #' Throws an error with formatted message.
 #'
 #' Creates a styled error message that is then thrown
-#' using [`stop()`].
-#' @param message The primary error message. Mandatory.
+#' using [`stop()`]. Supports {cli} formatting.
+#' @param message The primary error message.
 #' @param details An optional character vector of error detais.
 #' can be formatted with `ui_*` helper functions.
 #' @examples
@@ -69,13 +86,15 @@ ui_w <- function(text = "") {
 ui_throw <- function(message, details = character(0)) {
   if (missing(message) || !nzchar(message)) {
     message <- "Internal error."
+  } else {
+    message <- cli::cli_format_method(cli::cli_text(message))
   }
 
   if (length(details) != 0L) {
     details <- glue::glue_collapse(
-        details,
-        sep = "\n"
-      )
+      details,
+      sep = "\n"
+    )
     stop(
       glue::glue(
         message,
