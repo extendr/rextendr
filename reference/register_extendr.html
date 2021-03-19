@@ -136,12 +136,7 @@ for an R package. This is useful in package development, where we generally
 want appropriate R code wrapping the Rust functions implemented via extendr.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>register_extendr</span><span class='op'>(</span>
-  path <span class='op'>=</span> <span class='st'>"."</span>,
-  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  force_wrappers <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  compile <span class='op'>=</span> <span class='cn'>NA</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>register_extendr</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"."</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span>, force <span class='op'>=</span> <span class='cn'>FALSE</span>, compile <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,16 +151,19 @@ want appropriate R code wrapping the Rust functions implemented via extendr.</p>
 generated or not.</p></td>
     </tr>
     <tr>
-      <th>force_wrappers</th>
-      <td><p>Logical indicating whether to install a minimal wrapper
-file in the cases when generating wrappers by Rust code failed. This might
-be needed when the wrapper file is accidentally lost or corrupted.</p></td>
+      <th>force</th>
+      <td><p>Logical indicating whether to force re-generating
+<code>R/extendr-wrappers.R</code> even when it doesn't seem to need updated. (By
+default, generation is skipped when it's newer than the DLL).</p></td>
     </tr>
     <tr>
       <th>compile</th>
-      <td><p>If <code>TRUE</code> always recompiles the package; if <code>NA</code>
-recompiles if needed (as determined by <code><a href='https://rdrr.io/pkg/pkgbuild/man/needs_compile.html'>pkgbuild::needs_compile()</a></code>);
-if <code>FALSE</code>, never recompiles.</p></td>
+      <td><p>Logical indicating whether to recompile DLLs:</p><dl>
+<dt><code>TRUE</code></dt><dd><p>always recompiles</p></dd>
+<dt><code>NA</code></dt><dd><p>recompiles if needed (i.e., any source files or manifest file are newer than the DLL)</p></dd>
+<dt><code>FALSE</code></dt><dd><p>never recompiles</p></dd>
+
+</dl></td>
     </tr>
     </table>
 
