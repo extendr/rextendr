@@ -47,8 +47,7 @@ Imports:
     stringi,
     tibble,
     rlang (>= 0.4.10),
-    rprojroot,
-    usethis,
+    rprojroot
 Suggests: 
     devtools,
     knitr,

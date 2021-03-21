@@ -139,13 +139,12 @@ make_wrappers <- function(module_name, package_name, outfile,
   )
   x <- stringi::stri_split_lines1(x)
 
-  # Can't use usethis::write_over because it asks user for input if
-  # file already exists.
-  brio::write_lines(x, outfile)
-  if (!isTRUE(quiet)) {
-    rel_path <- pretty_rel_path(outfile, search_from = path)
-    cli::cli_alert_success("Writing wrappers to {.file {rel_path}}.")
-  }
+  write_file(
+    text = x,
+    path = outfile,
+    search_root_from = path,
+    quiet = quiet
+  )
 }
 
 #' Creates R wrappers for Rust functions.
