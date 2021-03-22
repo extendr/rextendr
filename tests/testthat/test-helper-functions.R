@@ -285,18 +285,8 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   )
 
   # Creating two temp files for {rextendr} and {brio}.
-  # `normalizePath` is needed moslty on Windows. It ensures
-  # paths are absolute and use `'/'` as directory separators.
-  temp_file_rxr <- normalizePath(
-    tempfile(pattern = "rxr_"),
-    winslash = "/",
-    mustWork = FALSE
-  )
-  temp_file_brio <- normalizePath(
-    tempfile(pattern = "brio_"),
-    winslash = "/",
-    mustWork = FALSE
-  )
+  temp_file_rxr <- tempfile(pattern = "rxr_")
+  temp_file_brio <- tempfile(pattern = "brio_")
 
   # Explicitly removing temporary files
   on.exit(
@@ -314,11 +304,13 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
 
   # Verifies file content
   expect_equal(readLines(temp_file_rxr), readLines(temp_file_brio))
+  # Obtaines 'relative path' that is displayed to the user.
+  rel_path <- pretty_rel_path(temp_file_rxr, ".")
   # Verifies displayed message
   expect_equal(
     ui_message,
     cli::cli_format_method(
-      cli::cli_alert_success("Writing file {.file {temp_file_rxr}}.")
+      cli::cli_alert_success("Writing file {.file {rel_path}}.")
     )
   )
 })
