@@ -272,3 +272,53 @@ test_that("`ui_throw()` formats error messages", {
     fixed = TRUE
   )
 })
+# Ensures that `write_file()` wrapper around `brio::write_lines()`
+# writes file correctly and produces a meaningful message displayed to user.
+test_that("`write_file()` does the same as `brio::write_lines()`", {
+  # The initial text fragment is split into several lines.
+  text <- stringi::stri_split_lines1(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat 
+    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+    anim id est laborum."
+  )
+
+  # Creating two temp files for {rextendr} and {brio}.
+  # `normalizePath` is needed moslty on Windows. It ensures
+  # paths are absolute and use `'/'` as directory separators.
+  temp_file_rxr <- normalizePath(
+    tempfile(pattern = "rxr_"),
+    winslash = "/",
+    mustWork = FALSE
+  )
+  temp_file_brio <- normalizePath(
+    tempfile(pattern = "brio_"),
+    winslash = "/",
+    mustWork = FALSE
+  )
+
+  # Explicitly removing temporary files
+  on.exit(
+    {
+      unlink(temp_file_rxr)
+      unlink(temp_file_brio)
+    },
+    add = TRUE
+  )
+
+  # Writing using {brio} and {rextendr}
+  brio::write_lines(text, temp_file_brio)
+  # `write_file()` produces a {cli} message, so it is captured here
+  ui_message <- cli::cli_format_method(write_file(text, temp_file_rxr))
+
+  # Verifies file content
+  expect_equal(readLines(temp_file_rxr), readLines(temp_file_brio))
+  # Verifies displayed message
+  expect_equal(
+    ui_message,
+    cli::cli_format_method(
+      cli::cli_alert_success("Writing file {.file {temp_file_rxr}}.")
+    )
+  )
+})
