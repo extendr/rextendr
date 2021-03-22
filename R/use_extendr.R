@@ -51,7 +51,7 @@ void R_init_{pkg_name}(void *dll) {{
 }}
 )"
   )
-  # usethis::write_over(file.path(src_dir, "entrypoint.c"), entrypoint_content, quiet = quiet)
+
   write_file(
     text = entrypoint_content,
     path = file.path(src_dir, "entrypoint.c"),
@@ -79,7 +79,7 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  # usethis::write_over(file.path(src_dir, "Makevars"), makevars_content, quiet = quiet)
+
   write_file(
     text = makevars_content,
     path = file.path(src_dir, "Makevars"),
@@ -108,7 +108,7 @@ clean:
 \trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 "
   )
-  # usethis::write_over(file.path(src_dir, "Makevars.win"), makevars_win_content, quiet = quiet)
+
   write_file(
     text = makevars_win_content,
     path = file.path(src_dir, "Makevars.win"),
@@ -122,7 +122,7 @@ clean:
 *.dll
 target
 "
-  # usethis::write_over(file.path(src_dir, ".gitignore"), gitignore_content, quiet = quiet)
+
   write_file(
     text = gitignore_content,
     path = file.path(src_dir, ".gitignore"),
@@ -135,7 +135,7 @@ target
     lib = list(`crate-type` = array("staticlib", 1)),
     dependencies = list(`extendr-api` = "*")
   )
-  # usethis::write_over(file.path(src_dir, "rust", "Cargo.toml"), cargo_toml_content, quiet = quiet)
+
   write_file(
     text = cargo_toml_content,
     path = file.path(src_dir, "rust", "Cargo.toml"),
@@ -165,7 +165,7 @@ extendr_module! {{
 )"
   )
 
-  # usethis::write_over(file.path(rust_src_dir, "lib.rs"), lib_rs_content, quiet = quiet)
+
   write_file(
     text = lib_rs_content,
     path = file.path(rust_src_dir, "lib.rs"),
