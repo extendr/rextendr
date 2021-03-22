@@ -1,7 +1,7 @@
 #' Writes text to file
 #'
-#' This function is a wrapper around [`brio::write_lines`].
-#' It also supports verboe output, similar to [`usethis::write_over`],
+#' This function is a wrapper around [`brio::write_lines()`].
+#' It also supports verboe output, similar to [`usethis::write_over()`],
 #' controlled by the `quiet` parameter.
 #' @param text Character vector containing text to write.
 #' @param path A string giving the file path to write to.
@@ -10,7 +10,7 @@
 #' Unused if `quiet == TRUE`.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
-#' @return The output of [`brio::write_lines`] (invisibly).
+#' @return The output of [`brio::write_lines()`] (invisibly).
 #' @noRd
 write_file <- function(text, path, search_root_from = ".", quiet = FALSE) {
   output <- brio::write_lines(text = text, path = path)
