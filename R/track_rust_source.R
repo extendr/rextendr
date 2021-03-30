@@ -134,7 +134,7 @@ get_rust_files <- function(path = ".") {
 #'   or verbose (`FALSE`).
 #' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
 #' @noRd
-needs_compilation <- function(path = ".", quiet = FALSE) {
+needs_compilation <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   library_path <- get_library_path(path)
 
   # This will likely never happen.

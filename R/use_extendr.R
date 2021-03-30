@@ -11,7 +11,7 @@
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param quiet Logical indicating whether any progress messages should be
-#'   generated or not.
+#'   generated or not. Also checks the `usethis.quiet` option.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export

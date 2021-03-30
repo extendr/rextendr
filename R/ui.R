@@ -5,6 +5,10 @@
 #' @param text String to format.
 #' @noRd
 ui_x <- function(text = "") {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
   cli::cli_format_method(cli::cli_alert_danger(text))
 }
 
@@ -15,6 +19,10 @@ ui_x <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_i <- function(text = "") {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
   cli::cli_format_method(cli::cli_alert_info(text))
 }
 
@@ -25,29 +33,25 @@ ui_i <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_v <- function(text = "") {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
   cli::cli_format_method(cli::cli_alert_success(text))
 }
 
-#' Formats text as a question message.
+#' Formats text as a bullet point
 #'
-#' Prepends `text` with yellow question mark (`?`).
+#' Prepends `text` with red bullet point
 #' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
-ui_q <- function(text = "") {
-  # There is no built-in style for questioning message,
-  # so we construct it ourselves.
-  # This will not be affected by global styling.
-  cli::cli_format_method(
-    cli::cli_alert(
-      paste(
-        cli::col_yellow("?"),
-        cli::cli_format_method(
-          cli::cli_text(text)
-        )
-      )
-    )
-  )
+ui_o <- function(text = "") {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
+  cli::cli_format_method(cli::cli_ul(text))
 }
 
 #' Formats text as a warning message.
@@ -57,6 +61,10 @@ ui_q <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_w <- function(text = "") {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
   cli::cli_format_method(cli::cli_alert_warning(text))
 }
 
@@ -74,7 +82,7 @@ ui_w <- function(text = "") {
 #'   c(
 #'     ui_x("This thing happened."),
 #'     ui_x("That thing happened."),
-#'     ui_q("Are you sure you did it right?")
+#'     ui_o("Are you sure you did it right?")
 #'   )
 #' )
 #' # Error: Something bad has happened!
