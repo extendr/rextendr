@@ -120,7 +120,7 @@ rust_source <- function(file, code = NULL,
 
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
-    message(sprintf("build directory: %s\n", dir))
+    ui_i(glue::glue("build directory: {dir}"))
     stdout <- "" # to be used by `system2()` below
   } else {
     stdout <- NULL

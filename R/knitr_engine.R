@@ -44,7 +44,7 @@ eng_impl <- function(options, rextendr_fun) {
   if (!is.environment(opts$env)) opts$env <- knitr::knit_global() # default env is knit_global()
 
   if (isTRUE(options$eval)) {
-    message('Evaluating Rust extendr code chunk...')
+    ui_v('Evaluating Rust extendr code chunk...')
     out <- utils::capture.output({
       result <- withVisible(
         do.call(rextendr_fun, c(list(code = code), opts))
