@@ -15,7 +15,7 @@
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-use_extendr <- function(path = ".", quiet = FALSE) {
+use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   pkg_name <- x$get("Package")
 
@@ -24,20 +24,20 @@ use_extendr <- function(path = ".", quiet = FALSE) {
 
   if (dir.exists(src_dir)) {
     if (!isTRUE(quiet)) {
-      cli::cli_alert_danger("Directory {.file src} already present in package source. No action taken.")
+      ui_x("Directory {.file src} already present in package source. No action taken.")
     }
     return(invisible(FALSE))
   }
   if (file.exists(wrappers_file)) {
     if (!isTRUE(quiet)) {
-      cli::cli_alert_danger("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
+      ui_x("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
     }
     return(invisible(FALSE))
   }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")
   dir.create(rust_src_dir, recursive = TRUE)
-  cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
+  ui_v("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
   entrypoint_content <- glue(
     r"(
@@ -187,9 +187,9 @@ extendr_module! {{
   make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper, path = path)
 
   if (!isTRUE(quiet)) {
-    cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
-    cli::cli_alert_warning("Please update the system requirement in {.file DESCRIPTION} file.")
-    cli::cli_alert_warning("Please run {.fun rextendr::document} for changes to take effect.")
+    ui_v("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
+    ui_w("Please update the system requirement in {.file DESCRIPTION} file.")
+    ui_w("Please run {.fun rextendr::document} for changes to take effect.")
   }
 
   return(invisible(TRUE))
@@ -227,9 +227,9 @@ make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = N
     )
   }
 
-  brio::write_lines(wrappers_content, outfile)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(outfile, search_from = path)
-    cli::cli_alert_success("Writing wrappers to {.file {rel_path}}.")
+    ui_v("Writing wrappers to {.file {rel_path}}.")
   }
+  brio::write_lines(wrappers_content, outfile)
 }

@@ -100,7 +100,7 @@ get_rust_files <- function(path = ".") {
   src_root <- rprojroot::find_package_root_file("src", path = path)
   if (!dir.exists(src_root)) {
     # No source code found
-    cli::cli_alert_warning("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
+    ui_w("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
     return(character(0))
   }
 
@@ -142,7 +142,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   if (!file.exists(library_path)) {
     if (!isTRUE(quiet)) {
       library_path_rel <- pretty_rel_path(library_path, path)
-      cli::cli_alert_warning("No library found at {.file {library_path_rel}}, recompilation is required.")
+      ui_w("No library found at {.file {library_path_rel}}, recompilation is required.")
     }
     return(TRUE)
   }
@@ -162,7 +162,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   if (!isTRUE(quiet)) {
     purrr::walk(
       pretty_rel_path(modified_files_paths, search_from = path),
-      ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
+      ~ ui_i("File {.file {.x}} has been modified since last compilation.")
     )
   }
 

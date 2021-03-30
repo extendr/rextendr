@@ -29,7 +29,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   pkg_name <- x$get("Package")
 
   if (!isTRUE(quiet)) {
-    cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
+    ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
   }
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
@@ -85,7 +85,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
   if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
     rel_path <- pretty_rel_path(outfile, path)
-    cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
+    ui_i("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
     return(invisible(character(0L)))
   }
