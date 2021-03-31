@@ -20,7 +20,7 @@ eng_extendrsrc <- function(options) {
 
 eng_impl <- function(options, rextendr_fun) {
   if (!requireNamespace("knitr", quietly = TRUE)) {
-    stop("The knitr package is required to run the extendr chunk engine.", call. = TRUE)
+    ui_throw("The knitr package is required to run the extendr chunk engine.")
   }
 
   if (!is.null(options$preamble)) {

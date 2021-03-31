@@ -44,15 +44,12 @@ to_toml <- function(...,
   invalid <- which(map_lgl(args, ~ is_atomic(.x) && !is.null(.x)))
   # If such args found, display an error message
   if (length(invalid) > 0) {
-    stop(
-      glue(
-        get_toml_err_msg(),
+    ui_throw(
+      get_toml_err_msg(),
+      c(
         make_idx_msg(invalid),
-        "i All top-level values should be named.",
-        .sep = "\n  ",
-        .trim = FALSE
-      ),
-      call. = FALSE
+        bullet("i", "All top-level values should be named.")
+      )
     )
   }
 
@@ -94,7 +91,7 @@ make_idx_msg <- function(invalid, args_limit = 5L) {
     idx <- glue("{idx}, ... ")
   }
 
-  glue("x Unnamed arguments found at position(s): {idx}.")
+  bullet("x", "Unnamed arguments found at position(s): {idx}.")
 }
 get_toml_err_msg <- function() "Object cannot be serialzied."
 get_toml_missing_msg <- function() {
@@ -117,14 +114,9 @@ simplify_row <- function(row) {
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 format_toml.default <- function(x, ..., .top_level = FALSE) {
-  stop(
-    glue(
-      get_toml_err_msg(),
-      "x `{typeof(x)}` cannot be converted to toml.",
-      .sep = "\n  ",
-      .trim = FALSE
-    ),
-    call. = FALSE
+  ui_throw(
+    get_toml_err_msg(),
+    bullet("x", "`{typeof(x)}` cannot be converted to toml.")
   )
 }
 
@@ -174,14 +166,7 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
     }
   } else {
     if (is_missing(x)) {
-      stop(
-        glue(
-          get_toml_err_msg(),
-          get_toml_missing_msg(),
-          .sep = "\n  "
-        ),
-        call. = FALSE
-      )
+      ui_throw(get_toml_err_msg(), get_toml_missing_msg())
     } else {
       # This function errors and does not return
       format_toml.default(x, ..., .top_level = .top_level)
@@ -194,14 +179,7 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     return(character(0))
   } else {
-    stop(
-      paste(
-        get_toml_err_msg(),
-        get_toml_missing_msg(),
-        sep = "\n  "
-      ),
-      call. = FALSE
-    )
+    ui_throw(get_toml_err_msg(), get_toml_missing_msg())
   }
 }
 
@@ -286,15 +264,12 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
   if (length(invalid) > 0) {
-    stop(
-      glue(
-        get_toml_err_msg(),
+    ui_throw(
+      get_toml_err_msg(),
+      c(
         make_idx_msg(invalid),
-        "i List values should have names.",
-        .sep = "\n  ",
-        .trim = FALSE
-      ),
-      call. = FALSE
+        bullet("i", "List values should have names.")
+      )
     )
   }
   result <- map2(names, x, function(nm, val) {

@@ -48,7 +48,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
   # Fast path if no comments are found at all.
   if (
     all(is.na(comment_syms[["start"]])) &&
-      all(is.na(comment_syms[["end"]]))
+    all(is.na(comment_syms[["end"]]))
   ) {
     return(
       stringi::stri_split_lines(
@@ -80,16 +80,14 @@ fill_block_comments <- function(lns, fill_with = " ") {
   n_close <- sum(valid_syms[["type"]] == "close")
   # Fails if number of `/*` and `*/` are different.
   if (n_open != n_close) {
-    stop(
-      glue(
-        "Malformed comments.",
-        "x Number of start `/*` and end `*/` delimiters are not equal.",
-        "i Found `{n_open}` occurence(s) of `/*`.",
-        "i Found `{n_close}` occurence(s) of `*/`.",
-        .sep = "\n ",
-        .trim = FALSE
-      ),
-      call. = FALSE
+    ui_throw(
+      "Malformed comments.",
+      c(
+        bullet("x", "Number of start {.code /*} and end {.code */} \\
+               delimiters are not equal."),
+        bullet("i", "Found {n_open} occurence{?s} of {.code /*}."),
+        bullet("i", "Found {n_close} occurence{?s} of {.code */}.")
+      )
     )
   }
 
@@ -114,17 +112,15 @@ fill_block_comments <- function(lns, fill_with = " ") {
   n_valid <- nrow(to_replace)
   if (
     any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") ||
-      any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
+    any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
-    stop(
-      glue(
-        "Malformed comments.",
-        "x `/*` and `*/` are not paired correctly.",
-        "i This error may be caused by a code fragment like `*/ ... /*`.",
-        .sep = "\n ",
-        .trim = FALSE
-      ),
-      call. = FALSE
+    ui_throw(
+      "Malformed comments.",
+      c(
+        bullet("x", "{.code /*} and {.code */} are not paired correctly."),
+        bullet("i", "This error may be caused by a code fragment like \\
+               {.code */ ... /*}.")
+      )
     )
   }
   # Manual `pivot_wider`.

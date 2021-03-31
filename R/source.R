@@ -112,9 +112,9 @@ rust_source <- function(file, code = NULL,
                         use_rtools = TRUE) {
   profile <- match.arg(profile)
   if (is.null(extendr_deps)) {
-    stop(
-      "Invalid argument.\n  x `extendr_deps` cannot be `NULL`.",
-      call. = FALSE
+    ui_throw(
+      "Invalid argument.",
+      bullet("x", "`extendr_deps` cannot be `NULL`.")
     )
   }
 
@@ -258,7 +258,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     stderr = stdout
   )
   if (status != 0L) {
-    stop("Rust code could not be compiled successfully. Aborting.", call. = FALSE)
+    ui_throw("Rust code could not be compiled successfully. Aborting.")
   }
 }
 
@@ -316,7 +316,7 @@ get_specific_target_name <- function() {
       return("i686-pc-windows-gnu")
     }
 
-    stop("Unknown Windows architecture", call. = FALSE)
+    ui_throw("Unknown Windows architecture")
   }
 
   return(NULL)

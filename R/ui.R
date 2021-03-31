@@ -73,10 +73,10 @@ ui_w <- function(text = "") {
 #' Throws an error with formatted message.
 #'
 #' Creates a styled error message that is then thrown
-#' using [`stop()`]. Supports {cli} formatting.
+#' using [`rlang::abort()`]. Supports {cli} formatting.
 #' @param message The primary error message.
 #' @param details An optional character vector of error detais.
-#' can be formatted with `ui_*` helper functions.
+#' can be formatted with `bullet()`.
 #' @examples
 #' \dontrun{
 #' ui_throw(
