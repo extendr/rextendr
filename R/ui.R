@@ -1,3 +1,25 @@
+bullet <- function(type = c("x", "i", "v", "o", "w"), text = "") {
+  type <- match.arg(type)
+  cli_f <- switch(
+    type,
+    x = cli::cli_alert_danger,
+    i = cli::cli_alert_info,
+    v = cli::cli_alert_success,
+    o = cli::cli_ul,
+    w = cli::cli_alert_warning
+  )
+
+  cli::cli_format_method(cli_f(text))
+}
+
+ui_bullet <- function(type, text) {
+  if (getOption("usethis.quiet", FALSE)) {
+    return(invisible())
+  }
+
+  rlang::inform(bullet(type, text))
+}
+
 #' Formats text as an error message.
 #'
 #' Prepends `text` with red cross (`x`).
@@ -5,11 +27,7 @@
 #' @param text String to format.
 #' @noRd
 ui_x <- function(text = "") {
-  if (getOption("usethis.quiet", FALSE)) {
-    return(invisible())
-  }
-
-  cli::cli_format_method(cli::cli_alert_danger(text))
+  ui_bullet("x", text)
 }
 
 #' Formats text as an information message.
@@ -19,11 +37,7 @@ ui_x <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_i <- function(text = "") {
-  if (getOption("usethis.quiet", FALSE)) {
-    return(invisible())
-  }
-
-  cli::cli_format_method(cli::cli_alert_info(text))
+  ui_bullet("i", text)
 }
 
 #' Formats text as a success message.
@@ -33,11 +47,7 @@ ui_i <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_v <- function(text = "") {
-  if (getOption("usethis.quiet", FALSE)) {
-    return(invisible())
-  }
-
-  cli::cli_format_method(cli::cli_alert_success(text))
+  ui_bullet("v", text)
 }
 
 #' Formats text as a bullet point
@@ -47,11 +57,7 @@ ui_v <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_o <- function(text = "") {
-  if (getOption("usethis.quiet", FALSE)) {
-    return(invisible())
-  }
-
-  cli::cli_format_method(cli::cli_ul(text))
+  ui_bullet("o", text)
 }
 
 #' Formats text as a warning message.
@@ -61,11 +67,7 @@ ui_o <- function(text = "") {
 #' @inheritParams ui_x
 #' @noRd
 ui_w <- function(text = "") {
-  if (getOption("usethis.quiet", FALSE)) {
-    return(invisible())
-  }
-
-  cli::cli_format_method(cli::cli_alert_warning(text))
+  ui_bullet("w", text)
 }
 
 #' Throws an error with formatted message.
@@ -80,9 +82,9 @@ ui_w <- function(text = "") {
 #' ui_throw(
 #'   "Something bad has happened!",
 #'   c(
-#'     ui_x("This thing happened."),
-#'     ui_x("That thing happened."),
-#'     ui_o("Are you sure you did it right?")
+#'     bullet("This thing happened.", "x"),
+#'     bullet("That thing happened.", "x"),
+#'     bullet("Are you sure you did it right?", "o")
 #'   )
 #' )
 #' # Error: Something bad has happened!
