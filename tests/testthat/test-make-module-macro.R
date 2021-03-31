@@ -72,17 +72,24 @@ test_that("Macro generation fails on invalid rust code", {
 test_that("Macro generation fails on invalid comments in code", {
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
-    "Malformed comments.
- x Number of start `/\\*` and end `\\*/` delimiters are not equal.
- i Found `3` occurence\\(s\\) of `/\\*`.
- i Found `1` occurence\\(s\\) of `\\*/`."
+    "Malformed comments."
+  )
+  expect_rextendr_error(
+    make_module_macro("/*/*/**/"),
+    "delimiters are not equal"
+  )
+  expect_rextendr_error(
+    make_module_macro("/*/*/**/"),
+    "Found 3 occurences"
+  )
+  expect_rextendr_error(
+    make_module_macro("/*/*/**/"),
+    "Found 1 occurence"
   )
 
   expect_rextendr_error(
     make_module_macro("*/  /*"),
-    "Malformed comments.
- x `/\\*` and `\\*/` are not paired correctly.
- i This error may be caused by a code fragment like `\\*/ ... /\\*`.",
+    "This error may be caused by a code fragment like",
   )
 })
 
