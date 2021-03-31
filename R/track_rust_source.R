@@ -81,11 +81,9 @@ pretty_rel_path <- function(path, search_from = ".") {
 
 get_library_path <- function(path = ".") {
   # Constructs path to the library file (e.g., package_name.dll)
-  pkg <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
-  pkg_name <- pkg$get("Package")
   file.path(
     rprojroot::find_package_root_file("src", path = path),
-    glue::glue("{pkg_name}{.Platform$dynlib.ext}")
+    glue::glue("{pkg_name()}{.Platform$dynlib.ext}")
   )
 }
 
