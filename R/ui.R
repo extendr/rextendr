@@ -91,12 +91,8 @@ ui_w <- function(text = "") {
 #' # o Are you sure you did it right?
 #' }
 #' @noRd
-ui_throw <- function(message, details = character(0)) {
-  if (missing(message) || !nzchar(message)) {
-    message <- "Internal error"
-  } else {
-    message <- cli::cli_format_method(cli::cli_text(message))
-  }
+ui_throw <- function(message = "Internal error", details = character(0)) {
+  message <- cli::cli_format_method(cli::cli_text(message))
 
   if (length(details) != 0L) {
     details <- glue::glue_collapse(details, sep = "\n")
