@@ -37,8 +37,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     ui_throw(
       "Unable to register the extendr module.",
       c(
-        ui_x("Could not find file {.file src/entrypoint.c }."),
-        ui_o("Are you sure this package is using extendr Rust code?")
+        bullet("x", "Could not find file {.file src/entrypoint.c }."),
+        bullet("o", "Are you sure this package is using extendr Rust code?")
       )
     )
   }
@@ -74,7 +74,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       ui_throw(
         msg,
-        ui_i("You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
+        bullet("i", "You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
       )
     }
   }
@@ -104,7 +104,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     error = function(e) {
       ui_throw(
         "Failed to generate wrapper functions.",
-        ui_x(e[["message"]])
+        bullet("x", e[["message"]])
       )
     }
   )
