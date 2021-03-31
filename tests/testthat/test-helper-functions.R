@@ -164,8 +164,8 @@ test_that("find_newer_files_than() works", {
   expect_equal(find_newer_files_than(character(0), old_file), character(0))
   expect_equal(find_newer_files_than(NA_character_, old_file), character(0))
   # invalid cases
-  expect_error(find_newer_files_than(old_file, character(0)))
-  expect_error(find_newer_files_than(old_file, "/no/such/files"))
+  expect_rextendr_error(find_newer_files_than(old_file, character(0)))
+  expect_rextendr_error(find_newer_files_than(old_file, "/no/such/files"))
 })
 
 # Verifies that `ui_*` assemble correct ansi strings.
@@ -251,15 +251,15 @@ test_that("`ui_throw()` formats error messages", {
 
   expected <- paste(expected, collapse = "\n")
 
-  expect_error(
+  expect_rextendr_error(
     # Expresion we test
     object = ui_throw(
       "Something bad has happened!",
       c(
-        ui_x("This bad thing happened."),
-        ui_x("That bad thing happened."),
-        ui_w("{.file File} does not exist."),
-        ui_i("Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
+        bullet("x", "This bad thing happened."),
+        bullet("x", "That bad thing happened."),
+        bullet("w", "{.file File} does not exist."),
+        bullet("i", "Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
       )
     ),
     # (Sub)string equal to the desired output
@@ -295,18 +295,11 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
 
   # Writing using {brio} and {rextendr}
   brio::write_lines(text, temp_file_brio)
-  # `write_file()` produces a {cli} message, so it is captured here
-  ui_message <- cli::cli_format_method(write_file(text, temp_file_rxr))
+  # `write_file()` produces a {cli} message
+  expect_message(write_file(text, temp_file_rxr), "Writing file")
 
   # Verifies file content
   expect_equal(readLines(temp_file_rxr), readLines(temp_file_brio))
   # Obtaines 'relative path' that is displayed to the user.
   rel_path <- pretty_rel_path(temp_file_rxr, ".")
-  # Verifies displayed message
-  expect_equal(
-    ui_message,
-    cli::cli_format_method(
-      cli::cli_alert_success("Writing file {.file {rel_path}}.")
-    )
-  )
 })

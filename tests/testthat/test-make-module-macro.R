@@ -60,7 +60,7 @@ impl Counter {
 })
 
 test_that("Macro generation fails on invalid rust code", {
-  expect_error(
+  expect_rextendr_error(
     make_module_macro("#[extendr]\nlet invalid_var = ();"),
     "Rust code contains invalid attribute macros.
  x No valid `fn` or `impl` block found in the following sample:
@@ -70,7 +70,7 @@ test_that("Macro generation fails on invalid rust code", {
 })
 
 test_that("Macro generation fails on invalid comments in code", {
-  expect_error(
+  expect_rextendr_error(
     make_module_macro("/*/*/**/"),
     "Malformed comments.
  x Number of start `/\\*` and end `\\*/` delimiters are not equal.
@@ -78,7 +78,7 @@ test_that("Macro generation fails on invalid comments in code", {
  i Found `1` occurence\\(s\\) of `\\*/`."
   )
 
-  expect_error(
+  expect_rextendr_error(
     make_module_macro("*/  /*"),
     "Malformed comments.
  x `/\\*` and `\\*/` are not paired correctly.
