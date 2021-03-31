@@ -45,9 +45,9 @@ extract_meta <- function(lns) {
     ui_throw(
       "Rust code contains invalid attribute macros.",
       c(
-        bullet("x", "No valid `fn` or `impl` block found in the following \\
-               sample:"),
-        cli_format_text("{.code {code_sample}}")
+        bullet("x", "No valid {.code fn} or {.code impl} block found in the \\
+          following sample:"),
+        code_sample
       )
     )
   }
