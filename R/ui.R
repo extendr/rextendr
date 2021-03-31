@@ -82,9 +82,9 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' ui_throw(
 #'   "Something bad has happened!",
 #'   c(
-#'     bullet("This thing happened.", "x"),
-#'     bullet("That thing happened.", "x"),
-#'     bullet("Are you sure you did it right?", "o")
+#'     bullet("x", "This thing happened."),
+#'     bullet("x", "That thing happened."),
+#'     bullet("o", "Are you sure you did it right?")
 #'   )
 #' )
 #' # Error: Something bad has happened!
