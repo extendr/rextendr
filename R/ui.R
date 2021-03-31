@@ -88,7 +88,7 @@ ui_w <- function(text = "") {
 #' # Error: Something bad has happened!
 #' # x This thing happened.
 #' # x That thing happened.
-#' # ? Are you sure you did it right?
+#' # o Are you sure you did it right?
 #' }
 #' @noRd
 ui_throw <- function(message, details = character(0)) {
