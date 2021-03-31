@@ -48,7 +48,7 @@ to_toml <- function(...,
       get_toml_err_msg(),
       c(
         make_idx_msg(invalid),
-        bullet("i", "All top-level values should be named.")
+        bullet_i("All top-level values should be named.")
       )
     )
   }
@@ -91,7 +91,7 @@ make_idx_msg <- function(invalid, args_limit = 5L) {
     idx <- glue("{idx}, ... ")
   }
 
-  bullet("x", "Unnamed arguments found at position(s): {idx}.")
+  bullet_x("Unnamed arguments found at position(s): {idx}.")
 }
 get_toml_err_msg <- function() "Object cannot be serialzied."
 get_toml_missing_msg <- function() {
@@ -116,7 +116,7 @@ format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 format_toml.default <- function(x, ..., .top_level = FALSE) {
   ui_throw(
     get_toml_err_msg(),
-    bullet("x", "`{typeof(x)}` cannot be converted to toml.")
+    bullet_x("`{typeof(x)}` cannot be converted to toml.")
   )
 }
 
@@ -268,7 +268,7 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
       get_toml_err_msg(),
       c(
         make_idx_msg(invalid),
-        bullet("i", "List values should have names.")
+        bullet_i("List values should have names.")
       )
     )
   }

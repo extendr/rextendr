@@ -1,23 +1,33 @@
-bullet <- function(type = c("x", "i", "v", "o", "w"), text = "", env = parent.frame()) {
-  type <- match.arg(type)
-  cli_f <- switch(
-    type,
-    x = cli::cli_alert_danger,
-    i = cli::cli_alert_info,
-    v = cli::cli_alert_success,
-    o = cli::cli_ul,
-    w = cli::cli_alert_warning
-  )
-
+bullet <- function(text = "", cli_f = cli::cli_alert_success, env = parent.frame()) {
   cli::cli_format_method(cli_f(text, .envir = env))
 }
 
-ui_bullet <- function(type, text, env = parent.frame()) {
+bullet_x <- function(text = "", env = parent.frame()) {
+  bullet(text, cli::cli_alert_danger, env = env)
+}
+
+bullet_i <- function(text = "", env = parent.frame()) {
+  bullet(text, cli::cli_alert_info, env = env)
+}
+
+bullet_v <- function(text = "", env = parent.frame()) {
+  bullet(text, cli::cli_alert_success, env = env)
+}
+
+bullet_o <- function(text = "", env = parent.frame()) {
+  bullet(text, cli::cli_ul, env = env)
+}
+
+bullet_w <- function(text = "", env = parent.frame()) {
+  bullet(text, cli::cli_alert_warning, env = env)
+}
+
+ui_bullet <- function(text) {
   if (getOption("usethis.quiet", FALSE)) {
     return(invisible())
   }
 
-  rlang::inform(bullet(type, text, env = env))
+  rlang::inform(text)
 }
 
 #' Formats text as an error message.
@@ -27,7 +37,7 @@ ui_bullet <- function(type, text, env = parent.frame()) {
 #' @param text String to format.
 #' @noRd
 ui_x <- function(text = "", env = parent.frame()) {
-  ui_bullet("x", text, env = env)
+  ui_bullet(bullet_x(text, env = env))
 }
 
 #' Formats text as an information message.
@@ -37,7 +47,7 @@ ui_x <- function(text = "", env = parent.frame()) {
 #' @inheritParams ui_x
 #' @noRd
 ui_i <- function(text = "", env = parent.frame()) {
-  ui_bullet("i", text, env = env)
+  ui_bullet(bullet_i(text, env = env))
 }
 
 #' Formats text as a success message.
@@ -47,7 +57,7 @@ ui_i <- function(text = "", env = parent.frame()) {
 #' @inheritParams ui_x
 #' @noRd
 ui_v <- function(text = "", env = parent.frame()) {
-  ui_bullet("v", text, env = env)
+  ui_bullet(bullet_v(text, env = env))
 }
 
 #' Formats text as a bullet point
@@ -57,7 +67,7 @@ ui_v <- function(text = "", env = parent.frame()) {
 #' @inheritParams ui_x
 #' @noRd
 ui_o <- function(text = "", env = parent.frame()) {
-  ui_bullet("o", text, env = env)
+  ui_bullet(bullet_o(text, env = env))
 }
 
 #' Formats text as a warning message.
@@ -67,7 +77,7 @@ ui_o <- function(text = "", env = parent.frame()) {
 #' @inheritParams ui_x
 #' @noRd
 ui_w <- function(text = "", env = parent.frame()) {
-  ui_bullet("w", text, env = env)
+  ui_bullet(bullet_w(text, env = env))
 }
 
 #' Throws an error with formatted message.
@@ -82,9 +92,9 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' ui_throw(
 #'   "Something bad has happened!",
 #'   c(
-#'     bullet("x", "This thing happened."),
-#'     bullet("x", "That thing happened."),
-#'     bullet("o", "Are you sure you did it right?")
+#'     bullet_x("This thing happened."),
+#'     bullet_x("That thing happened."),
+#'     bullet_o("Are you sure you did it right?")
 #'   )
 #' )
 #' # Error: Something bad has happened!

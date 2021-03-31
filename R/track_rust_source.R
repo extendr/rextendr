@@ -199,17 +199,17 @@ find_newer_files_than <- function(files, reference) {
   error_details <- character(0)
 
   if (length(reference) != 1L) {
-    error_details <- bullet("x", "Expected vector of length {.var 1}, got {.var {length(reference)}}.")
+    error_details <- bullet_x("Expected vector of length {.var 1}, got {.var {length(reference)}}.")
   }
 
   if (typeof(reference) != "character") {
-    error_details <- c(error_details, bullet("x", "Expected type {.var character}, got {.var {typeof(reference)}}."))
+    error_details <- c(error_details, bullet_x("Expected type {.var character}, got {.var {typeof(reference)}}."))
   }
 
   # if `reference` is already found invalid, skip checking the existence
   # Here we want path, i.e the value of `reference`.
   if (length(error_details) == 0L && !file.exists(reference)) {
-    error_details <- bullet("x", "File {.file {reference}} doesn't exist.")
+    error_details <- bullet_x("File {.file {reference}} doesn't exist.")
   }
 
   if (length(error_details) > 0L) {

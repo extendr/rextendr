@@ -83,10 +83,10 @@ fill_block_comments <- function(lns, fill_with = " ") {
     ui_throw(
       "Malformed comments.",
       c(
-        bullet("x", "Number of start {.code /*} and end {.code */} \\
+        bullet_x("Number of start {.code /*} and end {.code */} \\
                delimiters are not equal."),
-        bullet("i", "Found {n_open} occurence{?s} of {.code /*}."),
-        bullet("i", "Found {n_close} occurence{?s} of {.code */}.")
+        bullet_i("Found {n_open} occurence{?s} of {.code /*}."),
+        bullet_i("Found {n_close} occurence{?s} of {.code */}.")
       )
     )
   }
@@ -117,8 +117,8 @@ fill_block_comments <- function(lns, fill_with = " ") {
     ui_throw(
       "Malformed comments.",
       c(
-        bullet("x", "{.code /*} and {.code */} are not paired correctly."),
-        bullet("i", "This error may be caused by a code fragment like \\
+        bullet_x("{.code /*} and {.code */} are not paired correctly."),
+        bullet_i("This error may be caused by a code fragment like \\
                {.code */ ... /*}.")
       )
     )

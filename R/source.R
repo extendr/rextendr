@@ -114,7 +114,7 @@ rust_source <- function(file, code = NULL,
   if (is.null(extendr_deps)) {
     ui_throw(
       "Invalid argument.",
-      bullet("x", "`extendr_deps` cannot be `NULL`.")
+      bullet_x("`extendr_deps` cannot be `NULL`.")
     )
   }
 

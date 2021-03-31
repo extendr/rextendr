@@ -177,14 +177,14 @@ test_that("`ui_*` generate correct ansi strings", {
   # Simplified version of the generated message:
   # x This is an error in `package::function()`.
   msg_danger <- "This is an error in {.fun package::function}."
-  danger_rxr <- bullet("x", msg_danger)
+  danger_rxr <- bullet_x(msg_danger)
   danger_cli <- cli::cli_format_method(
     cli::cli_alert_danger(msg_danger)
   )
 
   # i Index out of bounds at `1`, `2`, `3`, `4`, and `5`,
   msg_info <- "Index out of bounds at {.val {1:5}}."
-  info_rxr <- bullet("i", msg_info)
+  info_rxr <- bullet_i(msg_info)
   info_cli <- cli::cli_format_method(
     cli::cli_alert_info(
       msg_info
@@ -193,21 +193,21 @@ test_that("`ui_*` generate correct ansi strings", {
 
   # ! File path/to/file.ext already exists.
   msg_warning <- "File {.file path/to/file.ext} already exists."
-  warning_rxr <- bullet("w", msg_warning)
+  warning_rxr <- bullet_w(msg_warning)
   warning_cli <- cli::cli_format_method(
     cli::cli_alert_warning(msg_warning)
   )
 
   # v Successfully updated pkg! Press [Y] to continue.
   msg_success <- "Successfully udpated {.pkg {.emph a.package}}! Press {.key Y} to continue."
-  success_rxr <- bullet("v", msg_success)
+  success_rxr <- bullet_v(msg_success)
   success_cli <- cli::cli_format_method(
     cli::cli_alert_success(msg_success)
   )
 
   # o Are you sure file DESCRIPTION exists?
   msg_question <- "Are you sure file {.path DESCRIPTION} exists?"
-  question_rxr <- bullet("o", msg_question)
+  question_rxr <- bullet_o(msg_question)
   question_cli <- cli::cli_format_method(
     cli::cli_ul(msg_question)
   )
@@ -256,10 +256,10 @@ test_that("`ui_throw()` formats error messages", {
     object = ui_throw(
       "Something bad has happened!",
       c(
-        bullet("x", "This bad thing happened."),
-        bullet("x", "That bad thing happened."),
-        bullet("w", "{.file File} does not exist."),
-        bullet("i", "Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
+        bullet_x("This bad thing happened."),
+        bullet_x("That bad thing happened."),
+        bullet_w("{.file File} does not exist."),
+        bullet_i("Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
       )
     ),
     # (Sub)string equal to the desired output
