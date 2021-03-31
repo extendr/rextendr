@@ -1,4 +1,4 @@
-bullet <- function(type = c("x", "i", "v", "o", "w"), text = "") {
+bullet <- function(type = c("x", "i", "v", "o", "w"), text = "", env = parent.frame()) {
   type <- match.arg(type)
   cli_f <- switch(
     type,
@@ -9,15 +9,15 @@ bullet <- function(type = c("x", "i", "v", "o", "w"), text = "") {
     w = cli::cli_alert_warning
   )
 
-  cli::cli_format_method(cli_f(text))
+  cli::cli_format_method(cli_f(text, .envir = env))
 }
 
-ui_bullet <- function(type, text) {
+ui_bullet <- function(type, text, env = parent.frame()) {
   if (getOption("usethis.quiet", FALSE)) {
     return(invisible())
   }
 
-  rlang::inform(bullet(type, text))
+  rlang::inform(bullet(type, text, env = env))
 }
 
 #' Formats text as an error message.
@@ -26,8 +26,8 @@ ui_bullet <- function(type, text) {
 #' Supports {cli}'s inline styles and string interpolation.
 #' @param text String to format.
 #' @noRd
-ui_x <- function(text = "") {
-  ui_bullet("x", text)
+ui_x <- function(text = "", env = parent.frame()) {
+  ui_bullet("x", text, env = env)
 }
 
 #' Formats text as an information message.
@@ -36,8 +36,8 @@ ui_x <- function(text = "") {
 #' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
-ui_i <- function(text = "") {
-  ui_bullet("i", text)
+ui_i <- function(text = "", env = parent.frame()) {
+  ui_bullet("i", text, env = env)
 }
 
 #' Formats text as a success message.
@@ -46,8 +46,8 @@ ui_i <- function(text = "") {
 #' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
-ui_v <- function(text = "") {
-  ui_bullet("v", text)
+ui_v <- function(text = "", env = parent.frame()) {
+  ui_bullet("v", text, env = env)
 }
 
 #' Formats text as a bullet point
@@ -56,8 +56,8 @@ ui_v <- function(text = "") {
 #' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
-ui_o <- function(text = "") {
-  ui_bullet("o", text)
+ui_o <- function(text = "", env = parent.frame()) {
+  ui_bullet("o", text, env = env)
 }
 
 #' Formats text as a warning message.
@@ -66,8 +66,8 @@ ui_o <- function(text = "") {
 #' Supports {cli}'s inline styles and string interpolation.
 #' @inheritParams ui_x
 #' @noRd
-ui_w <- function(text = "") {
-  ui_bullet("w", text)
+ui_w <- function(text = "", env = parent.frame()) {
+  ui_bullet("w", text, env = env)
 }
 
 #' Throws an error with formatted message.
@@ -93,8 +93,8 @@ ui_w <- function(text = "") {
 #' # o Are you sure you did it right?
 #' }
 #' @noRd
-ui_throw <- function(message = "Internal error", details = character(0)) {
-  message <- cli::cli_format_method(cli::cli_text(message))
+ui_throw <- function(message = "Internal error", details = character(0), env = parent.frame()) {
+  message <- cli::cli_format_method(cli::cli_text(message, .envir = env))
 
   if (length(details) != 0L) {
     details <- glue::glue_collapse(details, sep = "\n")
