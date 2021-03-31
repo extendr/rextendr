@@ -47,9 +47,10 @@ extract_meta <- function(lns) {
       c(
         bullet("x", "No valid `fn` or `impl` block found in the following \\
                sample:"),
-        "{.code {code_sample}}"
+        cli_format_text("{.code {code_sample}}")
       )
     )
   }
   result
 }
+
