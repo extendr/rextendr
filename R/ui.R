@@ -93,25 +93,15 @@ ui_w <- function(text = "") {
 #' @noRd
 ui_throw <- function(message, details = character(0)) {
   if (missing(message) || !nzchar(message)) {
-    message <- "Internal error."
+    message <- "Internal error"
   } else {
     message <- cli::cli_format_method(cli::cli_text(message))
   }
 
   if (length(details) != 0L) {
-    details <- glue::glue_collapse(
-      details,
-      sep = "\n"
-    )
-    stop(
-      glue::glue(
-        message,
-        details,
-        .sep = "\n"
-      ),
-      call. = FALSE
-    )
-  } else {
-    stop(message, call. = FALSE)
+    details <- glue::glue_collapse(details, sep = "\n")
+    message <- glue::glue(message, details, .sep = "\n")
   }
+
+  rlang::abort(message, call. = FALSE, class = "rextendr_error")
 }
