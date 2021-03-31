@@ -53,9 +53,7 @@ Suggests:
     knitr,
     rmarkdown,
     rstudioapi,
-    testthat,
-    usethis,
-    withr
+    testthat
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
