@@ -205,15 +205,11 @@ test_that("`ui_*` generate correct ansi strings", {
     cli::cli_alert_success(msg_success)
   )
 
-  # ? Are you sure file DESCRIPTION exists?
+  # o Are you sure file DESCRIPTION exists?
   msg_question <- "Are you sure file {.path DESCRIPTION} exists?"
-  question_rxr <- ui_q(msg_question)
+  question_rxr <- ui_o(msg_question)
   question_cli <- cli::cli_format_method(
-    cli::cli_alert(
-      cli::cli_format_method(
-        cli::cli_text(cli::col_yellow("?"), " ", msg_question)
-      )
-    )
+    cli::cli_ul(msg_question)
   )
 
   expect_equal(danger_rxr, danger_cli)
@@ -278,9 +274,9 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   # The initial text fragment is split into several lines.
   text <- stringi::stri_split_lines1(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat 
-    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
     anim id est laborum."
   )
 
