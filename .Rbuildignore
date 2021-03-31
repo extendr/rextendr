@@ -6,3 +6,4 @@
 ^\.github$
 ^docs$
 ^_pkgdown\.yml$
+^principles\.md$
