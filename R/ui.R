@@ -99,5 +99,5 @@ ui_throw <- function(message = "Internal error", details = character(0)) {
     message <- glue::glue(message, details, .sep = "\n")
   }
 
-  rlang::abort(message, call. = FALSE, class = "rextendr_error")
+  rlang::abort(message, class = "rextendr_error")
 }
