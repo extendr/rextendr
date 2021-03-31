@@ -16,7 +16,7 @@
 #' generated or not.
 #' @export
 use_extendr <- function(path = ".", quiet = FALSE) {
-  pkg_name <- pkg_name()
+  pkg_name <- pkg_name(path)
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)

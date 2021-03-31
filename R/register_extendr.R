@@ -25,7 +25,7 @@
 #' @return (Invisibly) Path to the file containing generated wrappers.
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-  pkg_name <- pkg_name()
+  pkg_name <- pkg_name(path)
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
