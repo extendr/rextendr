@@ -62,10 +62,7 @@ impl Counter {
 test_that("Macro generation fails on invalid rust code", {
   expect_rextendr_error(
     make_module_macro("#[extendr]\nlet invalid_var = ();"),
-    "Rust code contains invalid attribute macros.
- x No valid `fn` or `impl` block found in the following sample:
- `#\\[extendr\\]
-  let invalid_var = \\(\\);`"
+    "Rust code contains invalid attribute macros."
   )
 })
 
