@@ -104,7 +104,6 @@ ui_throw <- function(message = "Internal error", details = character(0), env = p
   rlang::abort(message, class = "rextendr_error")
 }
 
-
 cli_format_text <- function(message, env = parent.frame()) {
   cli::cli_format_method(cli::cli_text(message, .envir = env))
 }
