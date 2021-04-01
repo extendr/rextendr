@@ -8,7 +8,7 @@ rextendr uses the cli package to format messages to the user, which are generall
 
 | function | purpose                                                                                                       |
 |----------|---------------------------------------------------------------------------------------------------------------|
-| `ui_v()` | communicate that rextendr has done something, such as write a file                                            |
+| `ui_v()` | communicate that rextendr has done something successfully, such as write a file                               |
 | `ui_i()` | provide extra information to the user                                                                         |
 | `ui_w()` | warn the user about something (note: this is still condition of class `message`, not `warning`)               |
 | `ui_o()` | indicate that the user has something to do                                                                    |
