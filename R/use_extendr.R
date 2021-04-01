@@ -16,8 +16,7 @@
 #' generated or not.
 #' @export
 use_extendr <- function(path = ".", quiet = FALSE) {
-  x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
-  pkg_name <- x$get("Package")
+  pkg_name <- pkg_name(path)
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
@@ -232,4 +231,9 @@ make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = N
     rel_path <- pretty_rel_path(outfile, search_from = path)
     cli::cli_alert_success("Writing wrappers to {.file {rel_path}}.")
   }
+}
+
+pkg_name <- function(path =  ".") {
+  x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
+  x$get("Package")
 }
