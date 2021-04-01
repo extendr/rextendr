@@ -71,3 +71,9 @@ z
 #> Hello from Rust!
 #> [1] 35
 ```
+
+------------------------------------------------------------------------
+
+Please note that this project is released with a [Contributor Code of
+Conduct](https://github.com/extendr/rextendr/blob/main/CODE-OF-CONDUCT.md).
+By participating in this project you agree to abide by its terms.
