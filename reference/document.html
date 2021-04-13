@@ -142,7 +142,7 @@ Specifically, it ensures that Rust code is recompiled (when necessary) and that
 up-to-date R wrappers are generated before re-generating the package documentation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>document</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='st'>"."</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span>, roclets <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>document</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='st'>"."</span>, quiet <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"usethis.quiet"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>, roclets <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Set up a package for use with Rust extendr code — use_extendr • rextendr</title>
+<title>rextendr design prinicples • rextendr</title>
 
 
 <!-- jquery -->
@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
-<link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script>
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
@@ -33,17 +33,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Set up a package for use with Rust extendr code — use_extendr" />
-<meta property="og:description" content="Create the scaffolding needed to add Rust extendr code to an R package. use_extendr()
-adds a small Rust library with a single Rust function that returns the string
-&quot;Hello world!&quot;. It also adds wrapper code so this Rust function can be called from
-R with hello_world()." />
+<meta property="og:title" content="rextendr design prinicples" />
 
 
 
@@ -62,7 +58,7 @@ R with hello_world()." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -74,7 +70,7 @@ R with hello_world()." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">rextendr</a>
+        <a class="navbar-link" href="index.html">rextendr</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9000</span>
       </span>
     </div>
@@ -82,13 +78,13 @@ R with hello_world()." />
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
+  <a href="index.html">
     <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -98,10 +94,10 @@ R with hello_world()." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a>
+      <a href="articles/rmarkdown.html">Using Rust code in R Markdown documents</a>
     </li>
     <li>
-      <a href="../articles/setting_up_rust.html">Setting up a Rust build environment</a>
+      <a href="articles/setting_up_rust.html">Setting up a Rust build environment</a>
     </li>
   </ul>
 </li>
@@ -124,53 +120,80 @@ R with hello_world()." />
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>Set up a package for use with Rust extendr code</h1>
-    <small class="dont-index">Source: <a href='https://github.com/extendr/rextendr/blob/master/R/use_extendr.R'><code>R/use_extendr.R</code></a></small>
-    <div class="hidden name"><code>use_extendr.Rd</code></div>
+      <h1>rextendr design prinicples</h1>
     </div>
 
-    <div class="ref-description">
-    <p>Create the scaffolding needed to add Rust extendr code to an R package. <code>use_extendr()</code>
-adds a small Rust library with a single Rust function that returns the string
-<code>"Hello world!"</code>. It also adds wrapper code so this Rust function can be called from
-R with <code>hello_world()</code>.</p>
-    </div>
+<div id="rextendr-design-prinicples" class="section level1">
 
-    <pre class="usage"><span class='fu'>use_extendr</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"."</span>, quiet <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"usethis.quiet"</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>path</th>
-      <td><p>File path to the package for which to generate wrapper code.</p></td>
-    </tr>
-    <tr>
-      <th>quiet</th>
-      <td><p>Logical indicating whether any progress messages should be
-generated or not. Also checks the <code>usethis.quiet</code> option.</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A logical value (invisible) indicating whether any package files were
-generated or not.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>To avoid possibly messing up your R package, <code>use_extendr()</code> will not do anything if
-either a directory <code>src</code> or a file <code>R/extendr-wrappers.R</code> is already present in your
-package source.</p>
+<p>This guide documents important internal coding conventions used in rextendr.</p>
+<div id="communicating-with-the-user" class="section level2">
+<h2 class="hasAnchor">
+<a href="#communicating-with-the-user" class="anchor"></a>Communicating with the user</h2>
+<p>rextendr uses the cli package to format messages to the user, which are generally then routed through <code><a href="https://rlang.r-lib.org/reference/abort.html">rlang::inform()</a></code>. Most UI will happen through <code>ui_*()</code> functions:</p>
+<table>
+<colgroup>
+<col width="8%">
+<col width="91%">
+</colgroup>
+<thead><tr class="header">
+<th>function</th>
+<th>purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>ui_v()</code></td>
+<td>communicate that rextendr has done something successfully, such as write a file</td>
+</tr>
+<tr class="even">
+<td><code>ui_i()</code></td>
+<td>provide extra information to the user</td>
+</tr>
+<tr class="odd">
+<td><code>ui_w()</code></td>
+<td>warn the user about something (note: this is still condition of class <code>message</code>, not <code>warning</code>)</td>
+</tr>
+<tr class="even">
+<td><code>ui_o()</code></td>
+<td>indicate that the user has something to do</td>
+</tr>
+<tr class="odd">
+<td><code>ui_x()</code></td>
+<td>tell the user that something has gone wrong (note: this still is a condition of class <code>message</code>, not <code>error</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Each <code>ui_*()</code> function has a corresponding <code>bullet_*()</code> function that formats text to use in the message.</p>
+<p>Because each <code>ui_*()</code> and <code>bullet_*()</code> function is processed through cli, they support <a href="https://cli.r-lib.org/articles/semantic-cli.html#interpolation">glue-based interpolation</a> and <a href="https://cli.r-lib.org/articles/semantic-cli.html#inline-text-formatting">inline text formatting</a>.</p>
+</div>
+<div id="throwing-and-testing-errors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#throwing-and-testing-errors" class="anchor"></a>Throwing and testing errors</h2>
+<p>Pass all errors via <code>ui_throw()</code>. You can also add additional details via the <code>details</code> argument. This can be a good place to provide more information with <code>bullet_*()</code> functions, e.g.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ui_throw</span><span class="op">(</span>
+  <span class="st">"Unable to register the extendr module."</span>,
+  details <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="fu">bullet_x</span><span class="op">(</span><span class="st">"Could not find file {.file src/entrypoint.c }."</span><span class="op">)</span>,
+    <span class="fu">bullet_o</span><span class="op">(</span><span class="st">"Are you sure this package is using extendr Rust code?"</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p><code>ui_throw()</code> emits an error of class <code>rextendr_error</code>. This makes it easier to know that an error is coming from rextendr. It also allows downstream users to catch and handle rextendr errors more easily with <code><a href="https://rdrr.io/r/base/conditions.html">tryCatch(..., rextender_error = function(re) ...)</a></code></p>
+<p>To test for errors from rextendr, use <code>expect_rextendr_error()</code></p>
+</div>
+</div>
 
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
+
 
 
       <footer>
