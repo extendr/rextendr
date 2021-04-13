@@ -98,7 +98,7 @@ get_rust_files <- function(path = ".") {
   src_root <- rprojroot::find_package_root_file("src", path = path)
   if (!dir.exists(src_root)) {
     # No source code found
-    cli::cli_alert_warning("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
+    ui_w("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
     return(character(0))
   }
 
@@ -132,7 +132,7 @@ get_rust_files <- function(path = ".") {
 #'   or verbose (`FALSE`).
 #' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
 #' @noRd
-needs_compilation <- function(path = ".", quiet = FALSE) {
+needs_compilation <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   library_path <- get_library_path(path)
 
   # This will likely never happen.
@@ -140,7 +140,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   if (!file.exists(library_path)) {
     if (!isTRUE(quiet)) {
       library_path_rel <- pretty_rel_path(library_path, path)
-      cli::cli_alert_warning("No library found at {.file {library_path_rel}}, recompilation is required.")
+      ui_w("No library found at {.file {library_path_rel}}, recompilation is required.")
     }
     return(TRUE)
   }
@@ -160,7 +160,7 @@ needs_compilation <- function(path = ".", quiet = FALSE) {
   if (!isTRUE(quiet)) {
     purrr::walk(
       pretty_rel_path(modified_files_paths, search_from = path),
-      ~ cli::cli_alert_info("File {.file {.x}} has been modified since last compilation.")
+      ~ ui_i("File {.file {.x}} has been modified since last compilation.")
     )
   }
 
@@ -197,17 +197,17 @@ find_newer_files_than <- function(files, reference) {
   error_details <- character(0)
 
   if (length(reference) != 1L) {
-    error_details <- ui_x("Expected vector of length {.var 1}, got {.var {length(reference)}}.")
+    error_details <- bullet_x("Expected vector of length {.var 1}, got {.var {length(reference)}}.")
   }
 
   if (typeof(reference) != "character") {
-    error_details <- c(error_details, ui_x("Expected type {.var character}, got {.var {typeof(reference)}}."))
+    error_details <- c(error_details, bullet_x("Expected type {.var character}, got {.var {typeof(reference)}}."))
   }
 
   # if `reference` is already found invalid, skip checking the existence
   # Here we want path, i.e the value of `reference`.
   if (length(error_details) == 0L && !file.exists(reference)) {
-    error_details <- ui_x("File {.file {reference}} doesn't exist.")
+    error_details <- bullet_x("File {.file {reference}} doesn't exist.")
   }
 
   if (length(error_details) > 0L) {

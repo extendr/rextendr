@@ -6,5 +6,6 @@
 ^\.github$
 ^docs$
 ^_pkgdown\.yml$
+^principles\.md$
 ^CODE-OF-CONDUCT\.md$
 ^CONTRIBUTING\.md$

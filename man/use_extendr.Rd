@@ -4,13 +4,13 @@
 \alias{use_extendr}
 \title{Set up a package for use with Rust extendr code}
 \usage{
-use_extendr(path = ".", quiet = FALSE)
+use_extendr(path = ".", quiet = getOption("usethis.quiet", FALSE))
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
-generated or not.}
+generated or not. Also checks the \code{usethis.quiet} option.}
 }
 \value{
 A logical value (invisible) indicating whether any package files were

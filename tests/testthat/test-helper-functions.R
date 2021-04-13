@@ -164,8 +164,8 @@ test_that("find_newer_files_than() works", {
   expect_equal(find_newer_files_than(character(0), old_file), character(0))
   expect_equal(find_newer_files_than(NA_character_, old_file), character(0))
   # invalid cases
-  expect_error(find_newer_files_than(old_file, character(0)))
-  expect_error(find_newer_files_than(old_file, "/no/such/files"))
+  expect_rextendr_error(find_newer_files_than(old_file, character(0)))
+  expect_rextendr_error(find_newer_files_than(old_file, "/no/such/files"))
 })
 
 # Verifies that `ui_*` assemble correct ansi strings.
@@ -177,14 +177,14 @@ test_that("`ui_*` generate correct ansi strings", {
   # Simplified version of the generated message:
   # x This is an error in `package::function()`.
   msg_danger <- "This is an error in {.fun package::function}."
-  danger_rxr <- ui_x(msg_danger)
+  danger_rxr <- bullet_x(msg_danger)
   danger_cli <- cli::cli_format_method(
     cli::cli_alert_danger(msg_danger)
   )
 
   # i Index out of bounds at `1`, `2`, `3`, `4`, and `5`,
   msg_info <- "Index out of bounds at {.val {1:5}}."
-  info_rxr <- ui_i(msg_info)
+  info_rxr <- bullet_i(msg_info)
   info_cli <- cli::cli_format_method(
     cli::cli_alert_info(
       msg_info
@@ -193,27 +193,23 @@ test_that("`ui_*` generate correct ansi strings", {
 
   # ! File path/to/file.ext already exists.
   msg_warning <- "File {.file path/to/file.ext} already exists."
-  warning_rxr <- ui_w(msg_warning)
+  warning_rxr <- bullet_w(msg_warning)
   warning_cli <- cli::cli_format_method(
     cli::cli_alert_warning(msg_warning)
   )
 
   # v Successfully updated pkg! Press [Y] to continue.
   msg_success <- "Successfully udpated {.pkg {.emph a.package}}! Press {.key Y} to continue."
-  success_rxr <- ui_v(msg_success)
+  success_rxr <- bullet_v(msg_success)
   success_cli <- cli::cli_format_method(
     cli::cli_alert_success(msg_success)
   )
 
-  # ? Are you sure file DESCRIPTION exists?
+  # o Are you sure file DESCRIPTION exists?
   msg_question <- "Are you sure file {.path DESCRIPTION} exists?"
-  question_rxr <- ui_q(msg_question)
+  question_rxr <- bullet_o(msg_question)
   question_cli <- cli::cli_format_method(
-    cli::cli_alert(
-      cli::cli_format_method(
-        cli::cli_text(cli::col_yellow("?"), " ", msg_question)
-      )
-    )
+    cli::cli_ul(msg_question)
   )
 
   expect_equal(danger_rxr, danger_cli)
@@ -255,15 +251,15 @@ test_that("`ui_throw()` formats error messages", {
 
   expected <- paste(expected, collapse = "\n")
 
-  expect_error(
+  expect_rextendr_error(
     # Expresion we test
     object = ui_throw(
       "Something bad has happened!",
       c(
-        ui_x("This bad thing happened."),
-        ui_x("That bad thing happened."),
-        ui_w("{.file File} does not exist."),
-        ui_i("Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
+        bullet_x("This bad thing happened."),
+        bullet_x("That bad thing happened."),
+        bullet_w("{.file File} does not exist."),
+        bullet_i("Ensure {.val {21 + 21}} == {.val {21 * 2}}.")
       )
     ),
     # (Sub)string equal to the desired output
@@ -278,9 +274,9 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   # The initial text fragment is split into several lines.
   text <- stringi::stri_split_lines1(
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat 
-    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
     anim id est laborum."
   )
 
@@ -299,18 +295,11 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
 
   # Writing using {brio} and {rextendr}
   brio::write_lines(text, temp_file_brio)
-  # `write_file()` produces a {cli} message, so it is captured here
-  ui_message <- cli::cli_format_method(write_file(text, temp_file_rxr))
+  # `write_file()` produces a {cli} message
+  expect_message(write_file(text, temp_file_rxr), "Writing file")
 
   # Verifies file content
   expect_equal(readLines(temp_file_rxr), readLines(temp_file_brio))
   # Obtaines 'relative path' that is displayed to the user.
   rel_path <- pretty_rel_path(temp_file_rxr, ".")
-  # Verifies displayed message
-  expect_equal(
-    ui_message,
-    cli::cli_format_method(
-      cli::cli_alert_success("Writing file {.file {rel_path}}.")
-    )
-  )
 })

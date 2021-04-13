@@ -28,7 +28,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   pkg_name <- pkg_name(path)
 
   if (!isTRUE(quiet)) {
-    cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
+    ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
   }
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
@@ -36,8 +36,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     ui_throw(
       "Unable to register the extendr module.",
       c(
-        ui_x("Could not find file {.file src/entrypoint.c }."),
-        ui_q("Are you sure this package is using extendr Rust code?")
+        bullet_x("Could not find file {.file src/entrypoint.c }."),
+        bullet_o("Are you sure this package is using extendr Rust code?")
       )
     )
   }
@@ -73,7 +73,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       ui_throw(
         msg,
-        ui_i("You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
+        bullet_i("You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
       )
     }
   }
@@ -84,7 +84,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
   if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
     rel_path <- pretty_rel_path(outfile, path)
-    cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
+    ui_i("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
     return(invisible(character(0L)))
   }
@@ -103,7 +103,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     error = function(e) {
       ui_throw(
         "Failed to generate wrapper functions.",
-        ui_x(e[["message"]])
+        bullet_x(e[["message"]])
       )
     }
   )
