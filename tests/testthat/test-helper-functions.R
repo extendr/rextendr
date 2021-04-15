@@ -15,7 +15,7 @@ test_that("`pretty_rel_path()` works", {
     devtools::create(pkg_root),
     finally = sink()
   )
-  rextendr::use_extendr(pkg_root, quiet = TRUE)
+  rextendr::use_extendr(pkg_root)
 
   # Find relative path from package root, trivial case
   expect_equal(
@@ -296,6 +296,7 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   # Writing using {brio} and {rextendr}
   brio::write_lines(text, temp_file_brio)
   # `write_file()` produces a {cli} message
+  withr::local_options(usethis.quiet = FALSE)
   expect_message(write_file(text, temp_file_rxr), "Writing file")
 
   # Verifies file content
