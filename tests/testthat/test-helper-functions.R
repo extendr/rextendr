@@ -15,7 +15,7 @@ test_that("`pretty_rel_path()` works", {
     devtools::create(pkg_root),
     finally = sink()
   )
-  rextendr::use_extendr(pkg_root)
+  use_extendr(pkg_root)
 
   # Find relative path from package root, trivial case
   expect_equal(
