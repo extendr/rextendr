@@ -281,17 +281,8 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   )
 
   # Creating two temp files for {rextendr} and {brio}.
-  temp_file_rxr <- tempfile(pattern = "rxr_")
-  temp_file_brio <- tempfile(pattern = "brio_")
-
-  # Explicitly removing temporary files
-  on.exit(
-    {
-      unlink(temp_file_rxr)
-      unlink(temp_file_brio)
-    },
-    add = TRUE
-  )
+  temp_file_rxr <- withr::local_tempfile(pattern = "rxr_")
+  temp_file_brio <- withr::local_tempfile(pattern = "brio_")
 
   # Writing using {brio} and {rextendr}
   brio::write_lines(text, temp_file_brio)
