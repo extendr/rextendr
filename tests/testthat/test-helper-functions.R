@@ -2,7 +2,7 @@
 # Test if `pretty_rel_path` determines relative paths correctly.
 # Edge cases include initiating the search from a directory outside of
 # package directory (an ancestor/parent in the hierarchy), and
-# from a non-exstenst/invalid directory (such as `NA` or `""`),
+# from a non-existent/invalid directory (such as `NA` or `""`),
 # in which case `pretty_rel_path` should return absolute path of itr
 # first argument.
 test_that("`pretty_rel_path()` works", {
