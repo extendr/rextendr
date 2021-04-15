@@ -6,16 +6,8 @@
 # in which case `pretty_rel_path` should return absolute path of itr
 # first argument.
 test_that("`pretty_rel_path()` works", {
-  tempdir <- tempdir()
-  pkg_root <- file.path(tempdir, "testpkg")
-  dir.create(pkg_root, recursive = TRUE)
-  pkg_root <- normalizePath(pkg_root, winslash = "/")
-  sink(nullfile())
-  tryCatch(
-    devtools::create(pkg_root),
-    finally = sink()
-  )
-  use_extendr(pkg_root)
+  pkg_root <- local_package("testpkg")
+  use_extendr()
 
   # Find relative path from package root, trivial case
   expect_equal(
