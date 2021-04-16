@@ -35,13 +35,13 @@ install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, p
   cargo.toml <- c(
     '[package]\nname = "build-libR-sys"\nversion = "0.0.1"\nedition = "2018"',
     glue('[dependencies]\nlibR-sys = "{version}"'),
-    '[patch.crates-io]',
+    "[patch.crates-io]",
     patch.crates_io
   )
   brio::write_lines(cargo.toml, file.path(dir, "Cargo.toml"))
   lib.rs <- c(
-    '#![allow(non_snake_case)]',
-    'pub const DUMMY: u32 = 0;'
+    "#![allow(non_snake_case)]",
+    "pub const DUMMY: u32 = 0;"
   )
   brio::write_lines(lib.rs, file.path(dir, "src", "lib.rs"))
   on.exit(unlink(dir, recursive = TRUE))
@@ -72,7 +72,7 @@ install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, p
     cargo.lock <- brio::read_lines(file.path(dir, "Cargo.lock"))
     idx <- which(grepl("name = \"libR-sys\"", cargo.lock))
     version_line <- cargo.lock[idx + 1]
-    #message("Installed libR-sys version:\n", version_line)
+    # message("Installed libR-sys version:\n", version_line)
 
     # patch Cargo.toml file
     installed_cargo.toml <- file.path(package_dir, "rust", "libR-sys", "Cargo.toml")

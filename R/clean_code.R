@@ -48,7 +48,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
   # Fast path if no comments are found at all.
   if (
     all(is.na(comment_syms[["start"]])) &&
-    all(is.na(comment_syms[["end"]]))
+      all(is.na(comment_syms[["end"]]))
   ) {
     return(
       stringi::stri_split_lines(
@@ -112,7 +112,7 @@ fill_block_comments <- function(lns, fill_with = " ") {
   n_valid <- nrow(to_replace)
   if (
     any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") ||
-    any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
+      any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
     ui_throw(
       "Malformed comments.",

@@ -1,5 +1,4 @@
 test_that("Multiple rust functions with the same name", {
-
   rust_src_1 <- "
   #[extendr]
   fn rust_fn_1() -> i32 { 1i32 }
@@ -18,9 +17,9 @@ test_that("Multiple rust functions with the same name", {
 
   rust_source(
     code = rust_src_1,
-    quiet = FALSE#,
-    #toolchain = rust_source_defaults[["toolchain"]],
-    #patch.crates_io = rust_source_defaults[["patch.crates_io"]]
+    quiet = FALSE # ,
+    # toolchain = rust_source_defaults[["toolchain"]],
+    # patch.crates_io = rust_source_defaults[["patch.crates_io"]]
   )
 
   # At this point:
@@ -33,9 +32,9 @@ test_that("Multiple rust functions with the same name", {
 
   rust_source(
     code = rust_src_2,
-    quiet = FALSE#,
-    #toolchain = rust_source_defaults[["toolchain"]],
-    #patch.crates_io = rust_source_defaults[["patch.crates_io"]]
+    quiet = FALSE # ,
+    # toolchain = rust_source_defaults[["toolchain"]],
+    # patch.crates_io = rust_source_defaults[["patch.crates_io"]]
   )
 
   # At this point:
