@@ -188,8 +188,8 @@ extendr_module! {{
 
   if (!isTRUE(quiet)) {
     ui_v("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
-    ui_w("Please update the system requirement in {.file DESCRIPTION} file.")
-    ui_w("Please run {.fun rextendr::document} for changes to take effect.")
+    ui_o("Please update the system requirement in {.file DESCRIPTION} file.")
+    ui_o("Please run {.fun rextendr::document} for changes to take effect.")
   }
 
   return(invisible(TRUE))

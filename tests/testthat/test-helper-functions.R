@@ -2,20 +2,12 @@
 # Test if `pretty_rel_path` determines relative paths correctly.
 # Edge cases include initiating the search from a directory outside of
 # package directory (an ancestor/parent in the hierarchy), and
-# from a non-exstenst/invalid directory (such as `NA` or `""`),
+# from a non-existent/invalid directory (such as `NA` or `""`),
 # in which case `pretty_rel_path` should return absolute path of itr
 # first argument.
 test_that("`pretty_rel_path()` works", {
-  tempdir <- tempdir()
-  pkg_root <- file.path(tempdir, "testpkg")
-  dir.create(pkg_root, recursive = TRUE)
-  pkg_root <- normalizePath(pkg_root, winslash = "/")
-  sink(nullfile())
-  tryCatch(
-    devtools::create(pkg_root),
-    finally = sink()
-  )
-  rextendr::use_extendr(pkg_root, quiet = TRUE)
+  pkg_root <- local_package("testpkg")
+  use_extendr()
 
   # Find relative path from package root, trivial case
   expect_equal(
@@ -281,21 +273,13 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   )
 
   # Creating two temp files for {rextendr} and {brio}.
-  temp_file_rxr <- tempfile(pattern = "rxr_")
-  temp_file_brio <- tempfile(pattern = "brio_")
-
-  # Explicitly removing temporary files
-  on.exit(
-    {
-      unlink(temp_file_rxr)
-      unlink(temp_file_brio)
-    },
-    add = TRUE
-  )
+  temp_file_rxr <- withr::local_tempfile(pattern = "rxr_")
+  temp_file_brio <- withr::local_tempfile(pattern = "brio_")
 
   # Writing using {brio} and {rextendr}
   brio::write_lines(text, temp_file_brio)
   # `write_file()` produces a {cli} message
+  withr::local_options(usethis.quiet = FALSE)
   expect_message(write_file(text, temp_file_rxr), "Writing file")
 
   # Verifies file content
