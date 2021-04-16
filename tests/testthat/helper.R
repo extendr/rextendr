@@ -14,7 +14,7 @@ expect_rextendr_error <- function(...) {
 #' It also sets the local working directory and usethis project to the temporary
 #' package. These settings are reverted and the package removed via
 #' `withr::defer()`. This clean-up happens at the end of the local scope,
-#' usually the end of a `testthat()` call.
+#' usually the end of a `test_that()` call.
 #'
 #' @param nm The name of the temporary package
 #' @param envir An environment where `withr::defer()`'s exit handler is
@@ -34,7 +34,7 @@ local_package <- function(nm, envir = parent.frame()) {
 #'
 #' `local_temp_dir()` creates a local temporary directory and sets the created
 #' directory as the working directory. These are then cleaned up with
-#' `withr::defer()` at the end of the scope, usually the end of the `testthat()`
+#' `withr::defer()` at the end of the scope, usually the end of the `test_that()`
 #' scope.
 #'
 #' @param envir An environment where `withr::defer()`'s exit handler is
@@ -64,7 +64,7 @@ local_temp_dir <- function(envir = parent.frame()) {
 #'
 #' `local_proj_set()` locally sets a new usethis project. The project is
 #' reverted with `withr::defer()` at the end of the scope, usually the end of
-#' the `testthat()` scope.
+#' the `test_that()` scope.
 #'
 #' @param envir An environment where `withr::defer()`'s exit handler is
 #'   attached, usually the `parent.frame()` to exist locally
