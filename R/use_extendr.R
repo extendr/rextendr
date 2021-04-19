@@ -234,7 +234,7 @@ make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = N
   brio::write_lines(wrappers_content, outfile)
 }
 
-pkg_name <- function(path =  ".") {
+pkg_name <- function(path = ".") {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))
   x$get("Package")
 }
