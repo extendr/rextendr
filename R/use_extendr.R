@@ -34,7 +34,7 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     return(invisible(FALSE))
   }
 
-  rust_src_dir <- file.path("src", "rust", "src")
+  rust_src_dir <- file.path(src_dir, "rust", "src")
   dir.create(rust_src_dir, recursive = TRUE)
   ui_v("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
