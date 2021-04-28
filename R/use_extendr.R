@@ -223,8 +223,7 @@ use_rextendr_template <- function(template, save_as = template, data = list()) {
     .open = "{{{", .close = "}}}"
   )
 
-  ui_v("Writing {.file save_as}")
-  brio::write_file(template_content, path = save_as)
+  write_file(template_content, path = save_as, search_root_from = path)
 
   invisible(TRUE)
 }
