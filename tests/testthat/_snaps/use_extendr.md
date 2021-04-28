@@ -3,7 +3,7 @@
     Code
       use_extendr()
     Message <message>
-      v Creating src/rust/src.
+      v Creating 'src/rust/src'.
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
@@ -12,7 +12,7 @@
       v Writing 'src/rust/src/lib.rs'
       v Writing 'R/extendr-wrappers.R'
       v Finished configuring extendr for package testpkg.
-      * Please update the system requirement in DESCRIPTION file.
+      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 ---
