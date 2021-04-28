@@ -65,7 +65,7 @@ test_that("use_rextendr_template() works when usethis not available", {
     file.path("src", "rust", "src", "lib.rs")
   )
 
-  usethis_generated_templates <- purrr::map(files, brio::read_file)
+  usethis_generated_templates <- purrr::map(files, brio::read_lines)
 
   unlink("src", recursive = TRUE)
   unlink(file.path("R", "extendr-wrappers.R"))
@@ -77,7 +77,7 @@ test_that("use_rextendr_template() works when usethis not available", {
     .env = "rextendr"
   )
 
-  rextendr_generated_templates <- purrr::map(files, brio::read_file)
+  rextendr_generated_templates <- purrr::map(files, brio::read_lines)
 
   expect_identical(usethis_generated_templates, rextendr_generated_templates)
 })
