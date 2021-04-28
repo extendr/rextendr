@@ -15,6 +15,7 @@
 #' @noRd
 write_file <- function(text, path, search_root_from = ".", quiet = getOption("usethis.quiet", FALSE)) {
   line_ending <- if (.Platform$OS.type == "windows") "\r\n" else "\n"
+  text <- gsub("\r?\n", line_ending, text)
   output <- brio::write_lines(text = text, path = path, eol = line_ending)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from)
