@@ -195,6 +195,45 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
+use_rextendr_template <- function(template, save_as = template, data = list()) {
+  if (is_installed("usethis")) {
+    created <- usethis::use_template(
+      template,
+      save_as = save_as,
+      data = data,
+      open = FALSE,
+      package = "rextendr"
+    )
+
+    return(invisible(created))
+  }
+
+  template_path <- system.file(
+    "templates",
+    template,
+    package = "rextendr",
+    mustWork = TRUE
+  )
+
+  template_content <- brio::read_file(template_path)
+
+  template_content <- glue::glue_data(
+    template_content,
+    .envir = data,
+    .open = "{{{", .close = "}}}"
+  )
+
+  ui_v("Writing {.file save_as}")
+  brio::write_file(template_content, path = save_as)
+
+  invisible(TRUE)
+}
+
+#' Wrap `rlang::is_installed()` for ease of mocking installed packages
+is_installed <- function(pkg) {
+  rlang::is_installed(pkg)
+}
+
 #' Creates example R wrappers for Rust functions.
 #'
 #' Writes simple R wrappers, without which initial compilation of the
