@@ -10,12 +10,16 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_true(dir.exists(file.path("src", "rust", "src")))
 
   # extendr files
-  expect_true(file.exists(file.path("R", "extendr-wrappers.R")))
-  expect_true(file.exists(file.path("src", "Makevars")))
-  expect_true(file.exists(file.path("src", "Makevars.win")))
-  expect_true(file.exists(file.path("src", "entrypoint.c")))
-  expect_true(file.exists(file.path("src", "rust", "Cargo.toml")))
-  expect_true(file.exists(file.path("src", "rust", "src", "lib.rs")))
+  cat_file <- function(...) {
+    cat(brio::read_file(file.path(...)))
+  }
+
+  expect_snapshot(cat_file("R", "extendr-wrappers.R"))
+  expect_snapshot(cat_file("src", "Makevars"))
+  expect_snapshot(cat_file("src", "Makevars.win"))
+  expect_snapshot(cat_file("src", "entrypoint.c"))
+  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
+  expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
 })
 
 test_that("use_extendr() does not set up packages with pre-existing src", {
