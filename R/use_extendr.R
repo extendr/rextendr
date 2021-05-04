@@ -112,6 +112,7 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
 #' @noRd
 use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE)) {
   if (is_installed("usethis")) {
+    withr::local_options(usethis.quiet = quiet)
     created <- usethis::use_template(
       template,
       save_as = save_as,
