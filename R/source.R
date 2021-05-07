@@ -236,7 +236,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     ) {
       ui_throw(
         "Unable to find Rtools that are needed for compilation.",
-        details = bullet_i("Required version is {.emph {pkgbuild::rtools_needed()}}."))
+        details = bullet_i("Required version is {.emph {pkgbuild::rtools_needed()}}.")
+      )
     }
 
     # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
