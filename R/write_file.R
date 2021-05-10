@@ -17,7 +17,7 @@ write_file <- function(text, path, search_root_from = ".", quiet = getOption("us
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from)
-    ui_v("Writing file {.file {rel_path}}.")
+    ui_v("Writing {.file {rel_path}}.")
   }
   invisible(output)
 }

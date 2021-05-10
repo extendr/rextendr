@@ -15,7 +15,6 @@
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-
 use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   pkg_name <- pkg_name(path)
 
@@ -39,94 +38,30 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   dir.create(rust_src_dir, recursive = TRUE)
   ui_v("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
-  entrypoint_content <- glue(
-    r"(
-// We need to forward routine registration from C to Rust
-// to avoid the linker removing the static library.
-
-void R_init_{pkg_name}_extendr(void *dll);
-
-void R_init_{pkg_name}(void *dll) {{
-    R_init_{pkg_name}_extendr(dll);
-}}
-)"
+  use_rextendr_template(
+    "entrypoint.c",
+    save_as = file.path("src", "entrypoint.c"),
+    quiet = quiet,
+    data = list(pkg_name = pkg_name)
   )
 
-  write_file(
-    text = entrypoint_content,
-    path = file.path(src_dir, "entrypoint.c"),
-    search_root_from = path,
-    quiet = quiet
+  use_rextendr_template(
+    "Makevars",
+    save_as = file.path("src", "Makevars"),
+    quiet = quiet,
+    data = list(pkg_name = pkg_name)
   )
 
-  makevars_content <- glue(
-    "
-LIBDIR = ./rust/target/release
-STATLIB = $(LIBDIR)/lib{pkg_name}.a
-PKG_LIBS = -L$(LIBDIR) -l{pkg_name}
-
-all: C_clean
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB):
-\tcargo build --lib --release --manifest-path=./rust/Cargo.toml
-
-C_clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-
-clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-"
+  use_rextendr_template(
+    "Makevars.win",
+    save_as = file.path("src", "Makevars.win"),
+    quiet = quiet,
+    data = list(pkg_name = pkg_name)
   )
 
-  write_file(
-    text = makevars_content,
-    path = file.path(src_dir, "Makevars"),
-    search_root_from = path,
-    quiet = quiet
-  )
-
-  makevars_win_content <- glue(
-    "
-TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-LIBDIR = ./rust/target/$(TARGET)/release
-STATLIB = $(LIBDIR)/lib{pkg_name}.a
-PKG_LIBS = -L$(LIBDIR) -l{pkg_name} -lws2_32 -ladvapi32 -luserenv
-
-all: C_clean
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB):
-\tcargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
-
-C_clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-
-clean:
-\trm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-"
-  )
-
-  write_file(
-    text = makevars_win_content,
-    path = file.path(src_dir, "Makevars.win"),
-    search_root_from = path,
-    quiet = quiet
-  )
-
-
-  gitignore_content <- "*.o
-*.so
-*.dll
-target
-"
-
-  write_file(
-    text = gitignore_content,
-    path = file.path(src_dir, ".gitignore"),
-    search_root_from = path,
+  use_rextendr_template(
+    "_gitignore",
+    save_as = file.path("src", ".gitignore"),
     quiet = quiet
   )
 
@@ -138,53 +73,24 @@ target
 
   write_file(
     text = cargo_toml_content,
-    path = file.path(src_dir, "rust", "Cargo.toml"),
+    path = file.path("src", "rust", "Cargo.toml"),
     search_root_from = path,
     quiet = quiet
   )
 
-
-  lib_rs_content <- glue(
-    r"(
-use extendr_api::prelude::*;
-
-/// Return string `"Hello world!"` to R.
-/// @export
-#[extendr]
-fn hello_world() -> &'static str {{
-    "Hello world!"
-}}
-
-// Macro to generate exports.
-// This ensures exported functions are registered with R.
-// See corresponding C code in `entrypoint.c`.
-extendr_module! {{
-    mod {pkg_name};
-    fn hello_world;
-}}
-)"
+  use_rextendr_template(
+    "lib.rs",
+    save_as = file.path("src", "rust", "src", "lib.rs"),
+    quiet = quiet,
+    data = list(pkg_name = pkg_name)
   )
 
-
-  write_file(
-    text = lib_rs_content,
-    path = file.path(rust_src_dir, "lib.rs"),
-    search_root_from = path,
-    quiet = quiet
+  use_rextendr_template(
+    "extendr-wrappers.R",
+    save_as = file.path("R", "extendr-wrappers.R"),
+    quiet = quiet,
+    data = list(pkg_name = pkg_name)
   )
-
-
-  roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
-
-  example_function_wrapper <- glue(
-    r"(
-    {roxcmt} Return string `"Hello world!"` to R.
-    {roxcmt} @export
-    hello_world <- function() .Call(wrap__hello_world)
-    )"
-  )
-
-  make_example_wrappers(pkg_name, wrappers_file, extra_items = example_function_wrapper, path = path)
 
   if (!isTRUE(quiet)) {
     ui_v("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
@@ -195,43 +101,57 @@ extendr_module! {{
   return(invisible(TRUE))
 }
 
-#' Creates example R wrappers for Rust functions.
+#' Write templates from `inst/templates`
 #'
-#' Writes simple R wrappers, without which initial compilation of the
-#' package is impossible. Does not require a compiled library.
-#' Can be used as a fallback.
-#' @param pkg_name The name of the package.
-#' @param outfile Determines where to write wrapper code.
-#' @param path Path from which package root is looked up. Used for pretty message formatting.
-#' @param extra_items Character vector or `NULL` containing additional wrappers.
-#' Should be valid R code.
-#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`).
+#' `use_rextendr_template()` is a wrapper around `usethis::use_template()` when
+#' it's available and otherwise implements a simple version of `use_template()`.
+#'
+#' @inheritParams usethis::use_template
+#' @inheritParams use_extendr
+#'
 #' @noRd
-make_example_wrappers <- function(pkg_name, outfile, path = ".", extra_items = NULL, quiet = FALSE) {
-  roxcmt <- "#'" # workaround for roxygen parsing bug in raw strings
+use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE)) {
+  if (is_installed("usethis")) {
+    withr::local_options(usethis.quiet = quiet)
+    created <- usethis::use_template(
+      template,
+      save_as = save_as,
+      data = data,
+      open = FALSE,
+      package = "rextendr"
+    )
 
-  wrappers_content <- glue::glue(
-    r"(
-    {roxcmt} @docType package
-    {roxcmt} @usage NULL
-    {roxcmt} @useDynLib {pkg_name}, .registration = TRUE
-    NULL
-    )"
+    return(invisible(created))
+  }
+
+  template_path <- system.file(
+    "templates",
+    template,
+    package = "rextendr",
+    mustWork = TRUE
   )
 
-  if (!is.null(extra_items)) {
-    wrappers_content <- glue::glue_collapse(
-      c(wrappers_content, extra_items),
-      sep = "\n"
-    )
-  }
+  template_content <- brio::read_file(template_path)
 
-  if (!isTRUE(quiet)) {
-    rel_path <- pretty_rel_path(outfile, search_from = path)
-    ui_v("Writing wrappers to {.file {rel_path}}.")
-  }
-  brio::write_lines(wrappers_content, outfile)
+  template_content <- glue::glue_data(
+    template_content,
+    .x = data,
+    .open = "{{{", .close = "}}}"
+  )
+
+  write_file(
+    template_content,
+    path = save_as,
+    search_root_from = rprojroot::find_package_root_file(),
+    quiet = quiet
+  )
+
+  invisible(TRUE)
+}
+
+# Wrap `rlang::is_installed()` for ease of mocking installed packages
+is_installed <- function(pkg) {
+  rlang::is_installed(pkg)
 }
 
 pkg_name <- function(path = ".") {

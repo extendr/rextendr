@@ -52,15 +52,16 @@ Imports:
     rlang (>= 0.4.10),
     rprojroot,
     stringi,
-    tibble
+    tibble,
+    withr
 Suggests: 
     devtools,
     knitr,
+    mockr,
     rmarkdown,
     rstudioapi,
     testthat (>= 3.0.0),
-    usethis,
-    withr
+    usethis
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3

@@ -10,12 +10,16 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_true(dir.exists(file.path("src", "rust", "src")))
 
   # extendr files
-  expect_true(file.exists(file.path("R", "extendr-wrappers.R")))
-  expect_true(file.exists(file.path("src", "Makevars")))
-  expect_true(file.exists(file.path("src", "Makevars.win")))
-  expect_true(file.exists(file.path("src", "entrypoint.c")))
-  expect_true(file.exists(file.path("src", "rust", "Cargo.toml")))
-  expect_true(file.exists(file.path("src", "rust", "src", "lib.rs")))
+  cat_file <- function(...) {
+    cat(brio::read_file(file.path(...)))
+  }
+
+  expect_snapshot(cat_file("R", "extendr-wrappers.R"))
+  expect_snapshot(cat_file("src", "Makevars"))
+  expect_snapshot(cat_file("src", "Makevars.win"))
+  expect_snapshot(cat_file("src", "entrypoint.c"))
+  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
+  expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
 })
 
 test_that("use_extendr() does not set up packages with pre-existing src", {
@@ -41,4 +45,39 @@ test_that("use_extendr() does not set up packages with pre-existing wrappers", {
   )
 
   expect_false(created)
+})
+
+test_that("use_rextendr_template() works when usethis not available", {
+  path <- local_package("testpkg.wrap")
+  mockr::with_mock(
+    # mock that usethis installed
+    is_installed = function(...) TRUE,
+    use_extendr(),
+    .env = "rextendr"
+  )
+
+  files <- c(
+    file.path("R", "extendr-wrappers.R"),
+    file.path("src", "Makevars"),
+    file.path("src", "Makevars.win"),
+    file.path("src", "entrypoint.c"),
+    file.path("src", "rust", "Cargo.toml"),
+    file.path("src", "rust", "src", "lib.rs")
+  )
+
+  usethis_generated_templates <- purrr::map(files, brio::read_lines)
+
+  unlink("src", recursive = TRUE)
+  unlink(file.path("R", "extendr-wrappers.R"))
+
+  mockr::with_mock(
+    # mock that usethis not installed
+    is_installed = function(...) FALSE,
+    use_extendr(),
+    .env = "rextendr"
+  )
+
+  rextendr_generated_templates <- purrr::map(files, brio::read_lines)
+
+  expect_identical(usethis_generated_templates, rextendr_generated_templates)
 })
