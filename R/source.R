@@ -121,9 +121,9 @@ rust_source <- function(file, code = NULL,
   dir <- get_build_dir(cache_build)
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
-    stdout <- "" # to be used by `system2()` below
+    out <- "" # to be used by `system2()` below
   } else {
-    stdout <- NULL
+    out <- NULL
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -166,8 +166,8 @@ rust_source <- function(file, code = NULL,
     specific_target = specific_target,
     dir = dir,
     profile = profile,
-    stdout = stdout,
-    stderr = stderr,
+    stdout = out,
+    stderr = out,
     use_rtools = use_rtools
   )
 
@@ -273,7 +273,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       if (profile == "release") "--release" else NULL
     ),
     stdout = stdout,
-    stderr = stdout
+    stderr = stderr
   )
   if (status != 0L) {
     ui_throw("Rust code could not be compiled successfully. Aborting.")
