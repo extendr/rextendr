@@ -219,7 +219,23 @@ rust_function <- function(code, env = parent.frame(), ...) {
   rust_source(code = code, env = env, ...)
 }
 
-# Wrapps call to cargo, allowing modification of PATH variable
+#' Sets up environment and invokes Rust's cargo.
+#'
+#' Configures the environment and makes a call to [system2()],
+#'   assuming `cargo` is avaialble on the `PATH`.
+#' Function parameters control the formatting of `cargo` arguments.
+#'
+#' @param toolchain (string) Rust toolchain used for compilation.
+#' @param specific_target (string or `NULL`) Build target (`NULL` if the same as `toolchain`).
+#' @param dir (string) Path to a folder containing`Cargo.toml` file.
+#' @param profile (string) Indicates wether to build dev or release versions.
+#'   If `"release"`, emits `--release` argument to `cargo`.
+#'   Otherwise, does nothing.
+#' @param stdout,stderr (string or `NULL`) Controls the standard output and standard error of `cargo`.
+#'   Passed unmodified to [system2()].
+#' @param use_rtools (logical, windows_only) Indicates wether path RTools should be appended to `PATH` variable
+#'   for the duration of compilation. Has no effect on systems other than Windows.
+#' @noRd
 invoke_cargo <- function(toolchain, specific_target, dir, profile,
                          stdout, stderr, use_rtools) {
   # Append rtools path to the end of PATH on Windows
