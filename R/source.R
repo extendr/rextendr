@@ -119,11 +119,22 @@ rust_source <- function(file, code = NULL,
   }
 
   dir <- get_build_dir(cache_build)
+
+  # to be used by `system2()` below
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
-    out <- "" # to be used by `system2()` below
+
+    # `""` sends `cargo` output to R's standard output.
+    # R console displays to the user informaion about compilation steps and
+    # potenatial compilation errors.
+    out <- ""
+
   } else {
+
+    # `NULL` or `FALSE` intercepts standard output from `cargo`.
+    # No compilation information is displayed to the user.
     out <- NULL
+
   }
 
   # copy rust code into src/lib.rs and determine library name
