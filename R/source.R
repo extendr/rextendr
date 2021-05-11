@@ -225,24 +225,42 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   # Append rtools path to the end of PATH on Windows
   if (
     isTRUE(use_rtools) &&
-      .Platform$OS.type == "windows" &&
-      nzchar(Sys.getenv("RTOOLS40_HOME"))
+      .Platform$OS.type == "windows"
   ) {
-    env_path <- Sys.getenv("PATH")
-    # This retores PATH when function returns, i.e. after cargo finishes.
-    on.exit(Sys.setenv(PATH = env_path))
+    if (
+      !isTRUE(
+        suppressMessages(
+          pkgbuild::has_rtools()
+        )
+      )
+    ) {
+      ui_throw(
+        "Unable to find Rtools that are needed for compilation.",
+        details = bullet_i("Required version is {.emph {pkgbuild::rtools_needed()}}.")
+      )
+    }
 
-    r_tools_path <-
+    # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
+    # but we need RTOOLS40_HOME\mingw{argch}\bin, hence the "../.."
+    rtools_home <- normalizePath(
+      file.path(pkgbuild::rtools_path(), "..", ".."),
+      winslash = "/",
+      mustWork = TRUE
+    )
+
+    rtools_bin_path <-
       normalizePath(
         file.path(
-          Sys.getenv("RTOOLS40_HOME"), # {rextendr} targets R >= 4.0
+          rtools_home,
           paste0("mingw", ifelse(R.version$arch == "i386", "32", "64")),
           "bin"
         )
       )
-    Sys.setenv(PATH = paste(env_path, r_tools_path, sep = .Platform$path.sep))
+    # Appends path to rtools\mingw{arch}\bin using a correct arch
+    withr::local_path(rtools_bin_path, action = "suffix")
+    # If RTOOLS40_HOME is properly set, this will have no real effect
+    withr::local_envvar(RTOOLS40_HOME = rtools_home)
   }
-
   status <- system2(
     command = "cargo",
     args = c(
