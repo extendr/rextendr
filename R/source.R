@@ -119,11 +119,22 @@ rust_source <- function(file, code = NULL,
   }
 
   dir <- get_build_dir(cache_build)
+
+  # to be used by `system2()` below
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
-    stdout <- "" # to be used by `system2()` below
+
+    # `""` sends `cargo` output to R's standard output.
+    # R console displays to the user informaion about compilation steps and
+    # potenatial compilation errors.
+    out <- ""
+
   } else {
-    stdout <- NULL
+
+    # `NULL` or `FALSE` intercepts standard output from `cargo`.
+    # No compilation information is displayed to the user.
+    out <- NULL
+
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -166,8 +177,8 @@ rust_source <- function(file, code = NULL,
     specific_target = specific_target,
     dir = dir,
     profile = profile,
-    stdout = stdout,
-    stderr = stderr,
+    stdout = out,
+    stderr = out,
     use_rtools = use_rtools
   )
 
@@ -219,7 +230,23 @@ rust_function <- function(code, env = parent.frame(), ...) {
   rust_source(code = code, env = env, ...)
 }
 
-# Wrapps call to cargo, allowing modification of PATH variable
+#' Sets up environment and invokes Rust's cargo.
+#'
+#' Configures the environment and makes a call to [system2()],
+#'   assuming `cargo` is avaialble on the `PATH`.
+#' Function parameters control the formatting of `cargo` arguments.
+#'
+#' @param toolchain \[string\] Rust toolchain used for compilation.
+#' @param specific_target \[string or `NULL`\] Build target (`NULL` if the same as `toolchain`).
+#' @param dir \[string\] Path to a folder containing`Cargo.toml` file.
+#' @param profile \[string\] Indicates wether to build dev or release versions.
+#'   If `"release"`, emits `--release` argument to `cargo`.
+#'   Otherwise, does nothing.
+#' @param stdout,stderr \[string or `NULL`\] Controls the standard output and standard error of `cargo`.
+#'   Passed unmodified to [system2()].
+#' @param use_rtools \[logical, windows_only\] Indicates wether path RTools should be appended to `PATH` variable
+#'   for the duration of compilation. Has no effect on systems other than Windows.
+#' @noRd
 invoke_cargo <- function(toolchain, specific_target, dir, profile,
                          stdout, stderr, use_rtools) {
   # Append rtools path to the end of PATH on Windows
@@ -273,7 +300,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       if (profile == "release") "--release" else NULL
     ),
     stdout = stdout,
-    stderr = stdout
+    stderr = stderr
   )
   if (status != 0L) {
     ui_throw("Rust code could not be compiled successfully. Aborting.")
