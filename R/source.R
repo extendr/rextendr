@@ -120,13 +120,11 @@ rust_source <- function(file, code = NULL,
     # R console displays to the user informaion about compilation steps and
     # potenatial compilation errors.
     out <- ""
-
   } else {
 
     # `NULL` or `FALSE` intercepts standard output from `cargo`.
     # No compilation information is displayed to the user.
     out <- NULL
-
   }
 
   # copy rust code into src/lib.rs and determine library name
