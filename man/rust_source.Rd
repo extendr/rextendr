@@ -99,12 +99,6 @@ fn hello() -> &'static str {
 fn test( a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
-
-extendr_module! {
-    mod rextendr;
-    fn hello;
-    fn test;
-}
 )"
 
 rust_source(code = code)
@@ -126,13 +120,11 @@ code <- r"(
     html::push_html(&mut output, parser);
     output
   }
-
-  extendr_module! {
-    mod rextendr;
-    fn md_to_html;
-  }
 )"
-rust_source(code = code, dependencies = 'pulldown-cmark = "0.8"')
+rust_source(
+  code = code,
+  dependencies = list(`pulldown-cmark` = "0.8")
+)
 
 md_text <- "# The story of the fox
 The quick brown fox **jumps over** the lazy dog.

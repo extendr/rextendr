@@ -33,12 +33,12 @@ rust_eval(
 
 # Rust code with return value
 rust_eval(
-  code = '
+  code = "
     let x = 5;
     let y = 7;
     let z = x * y;
     z // return to R; rust_eval() takes care of type conversion code
- '
+ "
 )
 }
 }
