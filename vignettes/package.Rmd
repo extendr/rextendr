@@ -14,20 +14,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-The rextendr package provides two utility functions for developing R package with
+The rextendr package provides two utility functions for developing R packages with
 Rust code using extendr:
 
 * `rextendr::use_extendr()`: create the scaffolding to use extendr, similar to `usethis::use_cpp11()`.
 * `rextendr::document()`: compile Rust code and generate package documentation, similar to `devtools::document()`.
 
-One thing I want to emphasize here is that these functions are needed solely for
-package development. The package doesn't depend on rextendr package, just like that
-a package never add devtools package to `Depends` or `Imports` no matter how often
+One thing we want to emphasize here is that these functions are needed solely for
+package development. The package doesn't depend on the rextendr package, just like that
+a package never adds the devtools package to `Depends` or `Imports` no matter how often
 we use the functions of devtools.
 
 ## Create a template package
 
-Creating an R package with extendr is very easy with rextendr package.
+Creating an R package with extendr is very easy with the rextendr package.
 
 First, create an empty R package. `usethis::create_package()` is useful for this.
 Let's pick `myextendr` as the package name.
@@ -55,7 +55,7 @@ rextendr::use_extendr()
 #> • Please run `rextendr::document()` for changes to take effect.
 ```
 
-Now we are just one step away (as the message says, we need to run `rextendr::document()`) from calling Rust fucntions from R.
+Now we are just one step away (as the message says, we need to run `rextendr::document()`) from calling Rust functions from R.
 But, before moving forward, let's look at the files added.
 
 ## Package structure
@@ -78,7 +78,7 @@ The below files are the ones `rextendr::use_extendr()` added.
 ```
 
 * **`R/extendr-wrappers.R`**: This file contains auto-generated R functions from Rust code. We don't modify this by hand.
-* **`src/Makevars`**, **`src/Makevars.win`**: This hooks `cargo build` at the installation of the R package. In most of the cases, we don't edit these.
+* **`src/Makevars`**, **`src/Makevars.win`**: These hook `cargo build` at the installation of the R package. In most cases, we don't edit these.
 * **`src/entrypoint.c`**: This is needed to avoid the linker removing the static library. In 99.9% of the cases, we don't edit this (except for changing the crate name).
 * **`src/rust/`**: Rust code of a crate using extendr-api. This is where we mainly write code.
 
@@ -100,8 +100,8 @@ crate-type = [ 'staticlib' ]
 extendr-api = '*'
 ```
 
-The create name is the same name as the R package's name by default. You can change this,
-but it might be a bit tired to tweak other files accordingly, so I recommend leaving this.
+The crate name is the same name as the R package's name by default. You can change this,
+but it might be a bit cumbersome to tweak other files accordingly, so we recommend leaving this.
 
 To try the dev version of the extendr, you can modify the last line to
 
@@ -143,9 +143,9 @@ and copied to the auto-generated R code. This is analogous to Rcpp/cpp11's `//'`
 /// @export
 ```
 
-The next line is the core of `extendr`'s mechanism. If the function is marked with this
-macro, the corresponding R function will be generated automatically (I'll explain
-the detail later). This is analogous to Rcpp's `[[Rcpp::export]]` and cpp11's `[[cpp11::register]]`.
+The next line is the core of extendr's mechanism. If the function is marked with this
+macro, the corresponding R function will be generated automatically.
+This is analogous to Rcpp's `[[Rcpp::export]]` and cpp11's `[[cpp11::register]]`.
 
 ``` rs
 #[extendr]
@@ -229,17 +229,17 @@ Anyway, by doing above, the following files are updated or generated:
 
 1. **`src/rust/target/release/libmyextendr.a`** (the extension depends on the OS): 
 This is the static library built from Rust code. This will be then used for compiling
-shared library `myextendr.so`.
+the shared object `myextendr.so`.
 2. **`src/myextendr.so`** (the extension depends on the OS): This is the
 shared object that is actually called from R.
 3. **`R/extendr-wrappers.R`**: The auto-generated R functions, including roxygen
-comments, goes to this file. The roxygen comments are accordingly converted into
+comments, go into this file. The roxygen comments are accordingly converted into
 Rd files and `NAMESPACE`.
 4. **`man/`**, **`NAMESPACE`**: These are generated from roxygen comments.
 
 ### Load and use
 
-As all things are done by `rexetndr::document()` already, we can just load it 
+As all things are done by `rexetndr::document()` already, we can just load the package 
 (or install it if you want) and call the function.
 
 ``` r
@@ -252,7 +252,7 @@ hello_world()
 ## Rust code vs generated R code
 
 While we never edit it by hand, it might be good to know what R code is
-generated from a Rust code. Let's look at `R/extendr-wrappers.R`:
+generated from the above Rust code. Let's look at `R/extendr-wrappers.R`:
 
 ``` r
 # Generated by extendr: Do not edit by hand
@@ -273,7 +273,7 @@ hello_world <- function() .Call(wrap__hello_world)
 `.Call("wrap__make_myextendr_wrappers", use_symbols = ...` is
 what was actually done inside `rextendr::document()`.
 
-A section of `@docType package` is needed to generate `useDynLib(myextendr, .registration = TRUE)` entry
+A section of `@docType package` is needed to generate the `useDynLib(myextendr, .registration = TRUE)` entry
 in `NAMESPACE`.
 
 The last section is for `hello_world()`. We can see the roxygen comments are copied
@@ -343,7 +343,3 @@ devtools::load_all(".")
 add(1L, 2L)
 #> [1] 3
 ```
-
-## What's next?
-
-...
