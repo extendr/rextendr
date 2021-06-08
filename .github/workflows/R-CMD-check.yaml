@@ -38,10 +38,8 @@ jobs:
           toolchain: ${{ matrix.config.rust-version }}
           default: true
 
-      # Uses @master branch to address rtools path issue
-      # https://github.com/r-lib/actions/issues/228
       - name: Set up R
-        uses: r-lib/actions/setup-r@master
+        uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
           windows-path-include-mingw: false
