@@ -19,7 +19,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 No further action should be needed.
 
-On Windows, things are a little more involved. First download `rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it, following the onscreen instructions. Then execute the following rustup commands:
+On Windows, things are a little more involved. First download `rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it, following the on-screen instructions. Rust may require installation of [VC++ build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (more instructions can be found [here](https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup)).
+Once installed, execute the following rustup commands:
 
 ```
 rustup default stable-x86_64-pc-windows-msvc
@@ -27,15 +28,13 @@ rustup target add x86_64-pc-windows-gnu
 rustup target add i686-pc-windows-gnu
 ```
 
-Then install [msys2](https://www.msys2.org/). You need to do this even if you have Rtools installed already. At present, the Rust compiler doesn't play well with the tools shipped by Rtools.
-
-Once msys2 is installed, install the mingw toolchain. We recommend doing this for both 32 and 64 bit.
+Second, install Rtools. The latest installer is available on [CRAN](https://cran.r-project.org/bin/windows/Rtools/). 
+Alternatively, Rtools can be installed using chocolatey:
 ```
-pacman -S --noconfirm mingw-w64-x86_64-toolchain   # 64-bit
-pacman -S --noconfirm mingw-w64-i686-toolchain     # 32-bit
+choco install rtools -y
 ```
 
-Finally, add the msys2 bin paths to the `PATH` environment variable. For example, if you installed msys2 into `C:\msys64`, these would be `C:\msys64\usr\bin`, `C:\msys64\mingw64\bin`, and `C:\msys64\mingw32\bin`, and you could run (using the CMD shell):
-```
-set PATH=C:\msys64\usr\bin;C:\msys64\mingw64\bin;C:\msys64\mingw32\bin;%PATH%
-```
+Finally, make sure that environment variables are set up correctly.
+`R_HOME` should point to the R folder, e.g. `C:\Program Files\R\R-4.1.0` (be careful with spaces in the path).
+`RTOOLS40_HOME` should point to the Rtools folder (usually set up automatically by the installer), which is `C:\rtools40` by default.
+`PATH` should contain paths to `%R_HOME%\bin` and `%RTOOLS40_HOME%\usr\bin`, as well as cargo, which is found at `%USERPROFILE%\.cargo\bin` if installed using `rustup-init.exe`.
