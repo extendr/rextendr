@@ -2,7 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  package: package.html
   rmarkdown: rmarkdown.html
   setting_up_rust: setting_up_rust.html
-last_built: 2021-06-08T17:51Z
+last_built: 2021-06-09T03:47Z
 
