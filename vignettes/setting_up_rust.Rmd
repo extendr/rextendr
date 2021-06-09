@@ -35,6 +35,6 @@ choco install rtools -y
 ```
 
 Finally, make sure that environment variables are set up correctly.
-`R_HOME` should point to R folder, e.g. `C:\Program Files\R\R-4.1.0` (be careful with spaces in the path).
-`RTOOLS40_HOME` should point to Rtools folder (usually set up automatically by the installer), which is `C:\rtools40` by default.
+`R_HOME` should point to the R folder, e.g. `C:\Program Files\R\R-4.1.0` (be careful with spaces in the path).
+`RTOOLS40_HOME` should point to the Rtools folder (usually set up automatically by the installer), which is `C:\rtools40` by default.
 `PATH` should contain paths to `%R_HOME%\bin` and `%RTOOLS40_HOME%\usr\bin`, as well as cargo, which is found at `%USERPROFILE%\.cargo\bin` if installed using `rustup-init.exe`.
