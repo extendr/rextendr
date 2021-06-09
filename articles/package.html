@@ -194,7 +194,7 @@ extendr-api = '*'</code></pre>
 <span id="cb6-16"><a href="#cb6-16"></a>}</span></code></pre></div>
 <p>Let’s explain this part by part.</p>
 <p>The first line <code>use extendr_api::prelude::*;</code> loads functions used frequently.</p>
-<p>Next, your eyes might notice the <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> are repeated 3 times, while the usual Rust comment requires only twice (i.e. <code>//</code>). These are treated as roxygen comments and copied to the auto-generated R code. This is analogous to Rcpp/cpp11’s <code>//'</code>.</p>
+<p>Next, your eyes might notice <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> is repeated 3 times, while the usual Rust comment requires only twice (i.e. <code>//</code>). This is one of Rust’s “<a href="https://doc.rust-lang.org/reference/comments.html#doc-comments">doc comment</a>” notation to generate the crate’s documentation. In extendr, these lines are copied to the auto-generated R code as roxygen comment. This is analogous to Rcpp/cpp11’s <code>//'</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="co">/// @export</span></span></code></pre></div>
 <p>The next line is the core of extendr’s mechanism. If the function is marked with this macro, the corresponding R function will be generated automatically. This is analogous to Rcpp’s <code>[[Rcpp::export]]</code> and cpp11’s <code>[[cpp11::register]]</code>.</p>
