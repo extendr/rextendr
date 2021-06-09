@@ -134,9 +134,12 @@ Let's explain this part by part.
 
 The first line `use extendr_api::prelude::*;` loads functions used frequently.
 
-Next, your eyes might notice the `/` are repeated 3 times, while the usual
-Rust comment requires only twice (i.e. `//`). These are treated as roxygen comments
-and copied to the auto-generated R code. This is analogous to Rcpp/cpp11's `//'`.
+Next, your eyes might notice `/` is repeated 3 times, while the usual Rust
+comment requires only twice (i.e. `//`). This is one of Rust's "[doc
+comment](https://doc.rust-lang.org/reference/comments.html#doc-comments)"
+notation to generate the crate's documentation. In extendr, these lines are
+copied to the auto-generated R code as roxygen comment. This is analogous to
+Rcpp/cpp11's `//'`.
 
 ``` rs
 /// Return string `"Hello world!"` to R.
