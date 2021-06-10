@@ -102,12 +102,12 @@
 <li>
 <code><a href="../reference/document.html">rextendr::document()</a></code>: compile Rust code and generate package documentation, similar to <code><a href="https://devtools.r-lib.org//reference/document.html">devtools::document()</a></code>.</li>
 </ul>
-<p>One thing we want to emphasize here is that these functions are needed solely for package development. The package doesn’t depend on the rextendr package, just like that a package never adds the devtools package to <code>Depends</code> or <code>Imports</code> no matter how often we use the functions of devtools.</p>
+<p>One thing we want to emphasize here is that these functions are needed solely for package development. An R package using extendr Rust code doesn’t have to depend on or import the rextendr package, just like R packages don’t usually add the devtools package to <code>Depends</code> or <code>Imports</code> no matter how often the package developers use the functions provided by devtools.</p>
 <div id="create-a-template-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-a-template-package" class="anchor"></a>Create a template package</h2>
 <p>Creating an R package with extendr is very easy with the rextendr package.</p>
-<p>First, create an empty R package. <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package()</a></code> is useful for this. Let’s pick <code>myextendr</code> as the package name.</p>
+<p>First, create an empty R package. You can do this with <code><a href="https://usethis.r-lib.org/reference/create_package.html">usethis::create_package()</a></code>. Let’s pick <code>myextendr</code> as the package name.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/create_package.html">create_package</a></span><span class="op">(</span><span class="st">"path/to/myextendr"</span><span class="op">)</span></code></pre></div>
 <p>Then, execute <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code> inside the package directory to create the scaffolding to use extendr.</p>
@@ -125,12 +125,12 @@
 <span class="co">#&gt; ✓ Finished configuring extendr for package myextendr.</span>
 <span class="co">#&gt; • Please update the system requirement in DESCRIPTION file.</span>
 <span class="co">#&gt; • Please run `rextendr::document()` for changes to take effect.</span></code></pre></div>
-<p>Now we are just one step away (as the message says, we need to run <code><a href="../reference/document.html">rextendr::document()</a></code>) from calling Rust functions from R. But, before moving forward, let’s look at the files added.</p>
+<p>Now we are just one step away from calling Rust functions from R. As the message says, we need to run <code><a href="../reference/document.html">rextendr::document()</a></code>. But, before moving forward, let’s look at the files added.</p>
 </div>
 <div id="package-structure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#package-structure" class="anchor"></a>Package structure</h2>
-<p>The below files are the ones <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code> added.</p>
+<p>The following files have been added by <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code>:</p>
 <pre><code>.
 ├── R
 │   └── extendr-wrappers.R
@@ -145,11 +145,11 @@
             └── lib.rs</code></pre>
 <ul>
 <li>
-<strong><code>R/extendr-wrappers.R</code></strong>: This file contains auto-generated R functions from Rust code. We don’t modify this by hand.</li>
+<strong><code>R/extendr-wrappers.R</code></strong>: This file contains auto-generated R functions from Rust code. We don’t modify this file by hand.</li>
 <li>
-<strong><code>src/Makevars</code></strong>, <strong><code>src/Makevars.win</code></strong>: These hook <code>cargo build</code> at the installation of the R package. In most cases, we don’t edit these.</li>
+<strong><code>src/Makevars</code></strong>, <strong><code>src/Makevars.win</code></strong>: These files hook <code>cargo build</code> at the installation of the R package. In most cases, we don’t edit these.</li>
 <li>
-<strong><code>src/entrypoint.c</code></strong>: This is needed to avoid the linker removing the static library. In 99.9% of the cases, we don’t edit this (except for changing the crate name).</li>
+<strong><code>src/entrypoint.c</code></strong>: This file is needed to avoid the linker removing the static library. In 99.9% of cases, we don’t edit this (except for changing the crate name).</li>
 <li>
 <strong><code>src/rust/</code></strong>: Rust code of a crate using extendr-api. This is where we mainly write code.</li>
 </ul>
@@ -169,7 +169,7 @@ crate-type = [ 'staticlib' ]
 [dependencies]
 extendr-api = '*'</code></pre>
 <p>The crate name is the same name as the R package’s name by default. You can change this, but it might be a bit cumbersome to tweak other files accordingly, so we recommend leaving this.</p>
-<p>To try the dev version of the extendr, you can modify the last line to</p>
+<p>You will probably want to specify a concrete extendr version, for example <code>extendr-api = '0.2'</code>. To try the development version of the extendr, you can modify the last line to read</p>
 <pre class="toml"><code>extendr-api = { git = 'https://github.com/extendr/extendr' }</code></pre>
 </div>
 <div id="srcrustsrclib-rs" class="section level3">
@@ -192,19 +192,23 @@ extendr-api = '*'</code></pre>
 <span id="cb6-14"><a href="#cb6-14"></a>    <span class="kw">mod</span> myextendr;</span>
 <span id="cb6-15"><a href="#cb6-15"></a>    <span class="kw">fn</span> hello_world;</span>
 <span id="cb6-16"><a href="#cb6-16"></a>}</span></code></pre></div>
-<p>Let’s explain this part by part.</p>
-<p>The first line <code>use extendr_api::prelude::*;</code> loads functions used frequently.</p>
-<p>Next, your eyes might notice <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> is repeated 3 times, while the usual Rust comment requires only twice (i.e. <code>//</code>). This is one of Rust’s “<a href="https://doc.rust-lang.org/reference/comments.html#doc-comments">doc comment</a>” notation to generate the crate’s documentation. In extendr, these lines are copied to the auto-generated R code as roxygen comment. This is analogous to Rcpp/cpp11’s <code>//'</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="co">/// @export</span></span></code></pre></div>
+<p>Let’s explain this file line by line.</p>
+<p>The first line, containing the <code>use</code> statement, declares the commonly used extendr API functions to the Rust compiler.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">use</span> <span class="pp">extendr_api::prelude::</span>*;</span></code></pre></div>
+<p>Next, you may notice that <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> is repeated three times, while the usual Rust comments require only two slashes (i.e., <code>//</code>). This is one of Rust’s “<a href="https://doc.rust-lang.org/reference/comments.html#doc-comments">doc comment</a>” notation to generate the crate’s documentation. In extendr, these lines are copied to the auto-generated R code as roxygen comments. This is analogous to Rcpp/cpp11’s <code>//'</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">/// @export</span></span></code></pre></div>
 <p>The next line is the core of extendr’s mechanism. If the function is marked with this macro, the corresponding R function will be generated automatically. This is analogous to Rcpp’s <code>[[Rcpp::export]]</code> and cpp11’s <code>[[cpp11::register]]</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#[extendr]</span></code></pre></div>
-<p>The last 3 lines are the macro for generating exports, as the comment explains. If we implement another function than <code>hello_world</code>, it needs to be listed here as well as marking it with <code>#[extendr]</code> macro.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>    <span class="kw">mod</span> myextendr;</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    <span class="kw">fn</span> hello_world;</span>
-<span id="cb9-4"><a href="#cb9-4"></a>}</span></code></pre></div>
+<p>The last 3 lines are the macro for generating exports, as the comment explains. If we implement another function than just <code>hello_world</code>, it needs to be listed here as well as marking it with <code>#[extendr]</code> macro.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">// Macro to generate exports.</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="co">// This ensures exported functions are registered with R.</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">// See corresponding C code in `entrypoint.c`.</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>    <span class="kw">mod</span> myextendr;</span>
+<span id="cb10-6"><a href="#cb10-6"></a>    <span class="kw">fn</span> hello_world;</span>
+<span id="cb10-7"><a href="#cb10-7"></a>}</span></code></pre></div>
 </div>
 </div>
 <div id="compile-and-use-the-package" class="section level2">
@@ -213,8 +217,8 @@ extendr-api = '*'</code></pre>
 <div id="compile" class="section level3">
 <h3 class="hasAnchor">
 <a href="#compile" class="anchor"></a>Compile</h3>
-<p>Compiling Rust code into R functions is as easy as this one command:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>Compiling Rust code into R functions is as easy as executing this one command:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rextendr</span><span class="fu">::</span><span class="fu"><a href="../reference/document.html">document</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; ✓ Saving changes in the open files.</span>
 <span class="co">#&gt; ℹ Generating extendr wrapper functions for package: myextendr.</span>
@@ -248,8 +252,8 @@ extendr-api = '*'</code></pre>
 <span class="co">#&gt; Writing NAMESPACE</span>
 <span class="co">#&gt; Writing NAMESPACE</span>
 <span class="co">#&gt; Writing hello_world.Rd</span></code></pre></div>
-<p>You might wonder why compilation is triggered while the function name is just <code><a href="../reference/document.html">document()</a></code>. Well, this is because the compilation is actually needed to generate document from Rust code. This is consistent with <code><a href="https://devtools.r-lib.org//reference/document.html">devtools::document()</a></code>’s behavior for C/C++ codes.</p>
-<p>Anyway, by doing above, the following files are updated or generated:</p>
+<p>You might wonder why compilation is triggered while the function name is just <code><a href="../reference/document.html">document()</a></code>. Well, this is because the compilation is actually needed to generate documentation and R wrapper code from the Rust code. This is consistent with the behavior of <code><a href="https://devtools.r-lib.org//reference/document.html">devtools::document()</a></code> for packages using C or C++.</p>
+<p>By doing the above, the following files are updated or generated:</p>
 <pre><code>.
 ...
 ├── NAMESPACE                       ----------(4)
@@ -278,8 +282,8 @@ extendr-api = '*'</code></pre>
 <div id="load-and-use" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-and-use" class="anchor"></a>Load and use</h3>
-<p>As all things are done by <code>rexetndr::document()</code> already, we can just load the package (or install it if you want) and call the function.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>After running <code><a href="../reference/document.html">rextendr::document()</a></code>, we can just load the package with <code><a href="https://devtools.r-lib.org//reference/load_all.html">devtools::load_all()</a></code> (or alternatively install it and call with <code><a href="https://rdrr.io/r/base/library.html">library()</a></code>) and then call the function we have implemented in Rust.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
 
 <span class="fu">hello_world</span><span class="op">(</span><span class="op">)</span>
@@ -289,8 +293,8 @@ extendr-api = '*'</code></pre>
 <div id="rust-code-vs-generated-r-code" class="section level2">
 <h2 class="hasAnchor">
 <a href="#rust-code-vs-generated-r-code" class="anchor"></a>Rust code vs generated R code</h2>
-<p>While we never edit it by hand, it might be good to know what R code is generated from the above Rust code. Let’s look at <code>R/extendr-wrappers.R</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>While we never edit the R wrapper code by hand, it might be good to know what R code is generated from the Rust code. Let’s look at <code>R/extendr-wrappers.R</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Generated by extendr: Do not edit by hand</span>
 <span class="co">#</span>
 <span class="co"># This file was created with the following call:</span>
@@ -304,20 +308,20 @@ extendr-api = '*'</code></pre>
 <span class="co">#' Return string `"Hello world!"` to R.</span>
 <span class="co">#' @export</span>
 <span class="va">hello_world</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/CallExternal.html">.Call</a></span><span class="op">(</span><span class="va">wrap__hello_world</span><span class="op">)</span></code></pre></div>
-<p><code>.Call("wrap__make_myextendr_wrappers", use_symbols = ...</code> is what was actually done inside <code><a href="../reference/document.html">rextendr::document()</a></code>.</p>
+<p>Here, <code>.Call("wrap__make_myextendr_wrappers", use_symbols = ...</code> is a function call that was executed by <code><a href="../reference/document.html">rextendr::document()</a></code>.</p>
 <p>A section of <code>@docType package</code> is needed to generate the <code>useDynLib(myextendr, .registration = TRUE)</code> entry in <code>NAMESPACE</code>.</p>
-<p>The last section is for <code>hello_world()</code>. We can see the roxygen comments are copied to here. As the Rust function <code>hello_world()</code> has no arguments so this R function also has no arguments. If the function is like this,</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>    x + y</span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="op">}</span></span></code></pre></div>
-<p>then the generated function also has arguments like this:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>The last section is for <code>hello_world()</code>. We can see the roxygen comments are copied to here. As the Rust function <code>hello_world()</code> has no arguments this R function also has no arguments. If the function had arguments, such as</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>    x + y</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="op">}</span></span></code></pre></div>
+<p>then the generated function wrapper also would have arguments:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">add</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/CallExternal.html">.Call</a></span><span class="op">(</span><span class="va">wrap__add</span>, <span class="va">x</span>, <span class="va">y</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="implement-a-new-rust-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#implement-a-new-rust-function" class="anchor"></a>Implement a new Rust function</h2>
-<p>Now that we roughly figured out how extendr works, let’s implement a new Rust function. The development flow would be:</p>
+<p>Now that we have roughly figured out how extendr works, let’s implement a new Rust function. The development flow would be:</p>
 <ol style="list-style-type: decimal">
 <li>Modify <code>src/rust/src/lib.rs</code>
 </li>
@@ -325,37 +329,37 @@ extendr-api = '*'</code></pre>
 </li>
 <li>Run <code><a href="https://devtools.r-lib.org//reference/load_all.html">devtools::load_all(".")</a></code> and test the function</li>
 </ol>
-<p>As an exercise, let’s add <code>add(i32, i32)</code> I showed above.</p>
+<p>As an exercise, let’s add the <code>add(i32, i32)</code> function from the previous subsection.</p>
 <div id="modify-srcrustsrclib-rs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#modify-srcrustsrclib-rs" class="anchor"></a>1. Modify <code>src/rust/src/lib.rs</code>
 </h3>
-<p>Add the function with <code>@export</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">/// @export</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a>    x + y</span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="op">}</span></span></code></pre></div>
-<p>Don’t forget to add the function to <code>extendr_module!</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>    <span class="kw">mod</span> myextendr;</span>
-<span id="cb17-3"><a href="#cb17-3"></a>    <span class="kw">fn</span> hello_world;</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    fn add;</span>
-<span id="cb17-5"><a href="#cb17-5"></a>}</span></code></pre></div>
+<p>Add the function with <code>@export</code>, so it will get exported from the generated R package. (Without this tag, the function would be available internally for package programming but not externally to users of the package.)</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">/// @export</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>    x + y</span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="op">}</span></span></code></pre></div>
+<p>Don’t forget to add the function to <code>extendr_module!</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>    <span class="kw">mod</span> myextendr;</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="kw">fn</span> hello_world;</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    fn add;</span>
+<span id="cb18-5"><a href="#cb18-5"></a>}</span></code></pre></div>
 </div>
 <div id="run-rextendrdocument" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-rextendrdocument" class="anchor"></a>2. Run <code>rextendr::document()</code>
 </h3>
 <p>Just run this command:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rextendr</span><span class="fu">::</span><span class="fu"><a href="../reference/document.html">document</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="run-devtoolsload_all--and-test-the-function" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-devtoolsload_all--and-test-the-function" class="anchor"></a>3. Run <code>devtools::load_all(".")</code> and test the function</h3>
-<p>Now you can call <code>add()</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<p>Now you can load the package and call <code>add()</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span>
 
 <span class="fu">add</span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">2L</span><span class="op">)</span>

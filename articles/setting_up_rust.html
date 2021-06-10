@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Setting up a Rust build environment</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2021-06-09</h4>
+            <h4 class="date">2021-06-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/master/vignettes/setting_up_rust.Rmd"><code>vignettes/setting_up_rust.Rmd</code></a></small>
       <div class="hidden name"><code>setting_up_rust.Rmd</code></div>
@@ -100,16 +100,13 @@
 <p>Regardless of which operating system you use, we recommend using <a href="https://rustup.rs/">rustup</a> to install and maintain your Rust toolchain. On Linux and OS X, you simply run the following command in a shell:</p>
 <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
 <p>No further action should be needed.</p>
-<p>On Windows, things are a little more involved. First download <code>rustup‑init.exe</code> from the <a href="https://rustup.rs/">rustup site</a> and run it, following the onscreen instructions. Then execute the following rustup commands:</p>
+<p>On Windows, things are a little more involved. First download <code>rustup‑init.exe</code> from the <a href="https://rustup.rs/">rustup site</a> and run it, following the on-screen instructions. Rust may require installation of <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">VC++ build tools</a> (more instructions can be found <a href="https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup">here</a>). Once installed, execute the following rustup commands:</p>
 <pre><code>rustup default stable-x86_64-pc-windows-msvc
 rustup target add x86_64-pc-windows-gnu
 rustup target add i686-pc-windows-gnu</code></pre>
-<p>Then install <a href="https://www.msys2.org/">msys2</a>. You need to do this even if you have Rtools installed already. At present, the Rust compiler doesn’t play well with the tools shipped by Rtools.</p>
-<p>Once msys2 is installed, install the mingw toolchain. We recommend doing this for both 32 and 64 bit.</p>
-<pre><code>pacman -S --noconfirm mingw-w64-x86_64-toolchain   # 64-bit
-pacman -S --noconfirm mingw-w64-i686-toolchain     # 32-bit</code></pre>
-<p>Finally, add the msys2 bin paths to the <code>PATH</code> environment variable. For example, if you installed msys2 into <code>C:\msys64</code>, these would be <code>C:\msys64\usr\bin</code>, <code>C:\msys64\mingw64\bin</code>, and <code>C:\msys64\mingw32\bin</code>, and you could run (using the CMD shell):</p>
-<pre><code>set PATH=C:\msys64\usr\bin;C:\msys64\mingw64\bin;C:\msys64\mingw32\bin;%PATH%</code></pre>
+<p>Second, install Rtools. The latest installer is available on <a href="https://cran.r-project.org/bin/windows/Rtools/">CRAN</a>. Alternatively, Rtools can be installed using chocolatey:</p>
+<pre><code>choco install rtools -y</code></pre>
+<p>Finally, make sure that environment variables are set up correctly. <code>R_HOME</code> should point to the R folder, e.g. <code>C:\Program Files\R\R-4.1.0</code> (be careful with spaces in the path). <code>RTOOLS40_HOME</code> should point to the Rtools folder (usually set up automatically by the installer), which is <code>C:\rtools40</code> by default. <code>PATH</code> should contain paths to <code>%R_HOME%\bin</code> and <code>%RTOOLS40_HOME%\usr\bin</code>, as well as cargo, which is found at <code>%USERPROFILE%\.cargo\bin</code> if installed using <code>rustup-init.exe</code>.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
