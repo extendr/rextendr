@@ -1,6 +1,6 @@
 Package: rextendr
 Title: Call Rust Code from R using the 'extendr' Crate
-Version: 0.1.0.9000
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Claus O.",
              family = "Wilke",
@@ -35,7 +35,7 @@ Description: Call Rust code from R. This package provides functions to
     allow easy interfacing with C++ code. Under the hood, the package uses
     the Rust 'extendr' crate to do all the heavy lifting.
 License: MIT + file LICENSE
-URL: https://github.com/extendr/rextendr
+URL: https://extendr.github.io/rextendr/
 BugReports: https://github.com/extendr/rextendr/issues
 Depends:
     R (>= 4.0)
