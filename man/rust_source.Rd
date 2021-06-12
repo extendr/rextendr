@@ -67,16 +67,16 @@ calls to \code{\link[=rust_source]{rust_source()}}.}
 
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 
-\item{use_rtools}{Logical indicating whether to append path to Rtools
-to the \code{PATH} variable on Windows using \code{RTOOLS40_HOME} environent variable
-(if it is set). Appended path depends on the process architecture.
-Does nothing on other platforms.}
+\item{use_rtools}{Logical indicating whether to append the path to Rtools
+to the \code{PATH} variable on Windows using the \code{RTOOLS40_HOME} environment
+variable (if it is set). The appended path depends on the process
+architecture. Does nothing on other platforms.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }
 \value{
-The result from \code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}. See
-\code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more details.
+The result from \code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}.
+See \code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more details.
 }
 \description{
 \code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R. \code{\link[=rust_function]{rust_function()}}

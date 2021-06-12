@@ -3,8 +3,8 @@
 #' [to_toml()] can be used to build `Cargo.toml`.
 #' The cargo manifest can be represented in terms of
 #' R objects, allowing limited validation and syntax verification.
-#' This function converts mainfests written using R objects into
-#' toml represenation, applying basic formatting,
+#' This function converts manifests written using R objects into
+#' toml representation, applying basic formatting,
 #' which is ideal for generating cargo
 #' manifests at runtime.
 #'
