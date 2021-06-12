@@ -60,7 +60,7 @@ Suggests:
     mockr,
     rmarkdown,
     rstudioapi,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.2),
     usethis
 VignetteBuilder: 
     knitr
