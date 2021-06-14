@@ -9,6 +9,7 @@
 #' for generics.
 #' @param code Character vector containing Rust code.
 #' @param module_name Module name
+#' @return Character vector holding the contents of the generated macro statement.
 #' @keywords internal
 #' @export
 make_module_macro <- function(code, module_name = "rextendr") {

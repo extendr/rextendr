@@ -11,6 +11,9 @@ make_module_macro(code, module_name = "rextendr")
 
 \item{module_name}{Module name}
 }
+\value{
+Character vector holding the contents of the generated macro statement.
+}
 \description{
 Read some Rust source code, find functions or implementations with the
 \verb{#[extendr]} attribute, and generate an \verb{extendr_module!} macro statement.

@@ -1,4 +1,6 @@
-This is the first submission of a package that enables calling Rust code from R and integrating Rust code into R packages.
+I have revised the package in response to the feedback on the previous submission:
+- All functions now have their return value documented.
+- The long-form description of the package no longer starts with "This package" or similar.
 
 ## Test environment
 * ubuntu 20.04, devel and release
