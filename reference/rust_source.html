@@ -73,7 +73,7 @@ compiles and loads a single Rust function for use in R." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rextendr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -105,6 +105,9 @@ compiles and loads a single Rust function for use in R." />
       <a href="../articles/setting_up_rust.html">Setting up a Rust build environment</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -229,10 +232,10 @@ calls to <code>rust_source()</code>.</p></td>
     </tr>
     <tr>
       <th>use_rtools</th>
-      <td><p>Logical indicating whether to append path to Rtools
-to the <code>PATH</code> variable on Windows using <code>RTOOLS40_HOME</code> environent variable
-(if it is set). Appended path depends on the process architecture.
-Does nothing on other platforms.</p></td>
+      <td><p>Logical indicating whether to append the path to Rtools
+to the <code>PATH</code> variable on Windows using the <code>RTOOLS40_HOME</code> environment
+variable (if it is set). The appended path depends on the process
+architecture. Does nothing on other platforms.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -242,8 +245,8 @@ Does nothing on other platforms.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result from <code><a href='https://rdrr.io/r/base/dynload.html'>dyn.load()</a></code>, which is an object of class <code>DLLInfo</code>. See
-<code><a href='https://rdrr.io/r/base/getLoadedDLLs.html'>getLoadedDLLs()</a></code> for more details.</p>
+    <p>The result from <code><a href='https://rdrr.io/r/base/dynload.html'>dyn.load()</a></code>, which is an object of class <code>DLLInfo</code>.
+See <code><a href='https://rdrr.io/r/base/getLoadedDLLs.html'>getLoadedDLLs()</a></code> for more details.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
