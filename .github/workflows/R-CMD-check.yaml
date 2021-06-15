@@ -3,6 +3,7 @@ on:
     branches:
       - main
       - master
+      - 'rust_eval'
   pull_request:
     branches:
       - main
