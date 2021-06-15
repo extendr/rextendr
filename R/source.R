@@ -32,12 +32,12 @@
 #' @param cache_build Logical indicating whether builds should be cached between
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
-#' @param use_rtools Logical indicating whether to append path to Rtools
-#'   to the `PATH` variable on Windows using `RTOOLS40_HOME` environent variable
-#'   (if it is set). Appended path depends on the process architecture.
-#'   Does nothing on other platforms.
-#' @return The result from [dyn.load()], which is an object of class `DLLInfo`. See
-#'   [getLoadedDLLs()] for more details.
+#' @param use_rtools Logical indicating whether to append the path to Rtools
+#'   to the `PATH` variable on Windows using the `RTOOLS40_HOME` environment
+#'   variable (if it is set). The appended path depends on the process
+#'   architecture. Does nothing on other platforms.
+#' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
+#'  See [getLoadedDLLs()] for more details.
 #' @examples
 #' \dontrun{
 #' # creating a single rust function

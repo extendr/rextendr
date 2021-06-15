@@ -3,12 +3,14 @@
 #' This function generates wrapper code corresponding to the extendr module
 #' for an R package. This is useful in package development, where we generally
 #' want appropriate R code wrapping the Rust functions implemented via extendr.
+#' In most development settings, you will not want to call this function directly,
+#' but instead call `rextendr::document()`.
 #'
-#' To run `register_extendr()`, the R package containing extendr code must have
-#' previously been compiled and installed. If this condition is met, the
-#' wrapper code will be retrieved from the compiled Rust code and saved into
-#' `R/extendr-wrappers.R`. Afterwards, you will have to re-document and then
-#' re-install the package for the wrapper functions to take effect.
+#' The function `register_extendr()` compiles the package Rust code if
+#' required, and then the wrapper code is retrieved from the compiled
+#' Rust code and saved into `R/extendr-wrappers.R`. Afterwards, you will have
+#' to re-document and then re-install the package for the wrapper functions to
+#' take effect.
 #'
 #' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
@@ -23,6 +25,7 @@
 #'     \item{`FALSE`}{never recompiles}
 #'   }
 #' @return (Invisibly) Path to the file containing generated wrappers.
+#' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
   pkg_name <- pkg_name(path)

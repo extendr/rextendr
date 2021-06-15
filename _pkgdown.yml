@@ -11,6 +11,7 @@ reference:
 - title: Package development
   contents:
   - use_extendr
+  - document
   - register_extendr
 
 - title: Various utility functions

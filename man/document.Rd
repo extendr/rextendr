@@ -16,6 +16,9 @@ package object.  See \code{\link[devtools:as.package]{as.package()}} for more in
 The default, \code{NULL}, uses the roxygen \code{roclets} option,
 which defaults to \code{c("collate", "namespace", "rd")}.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 The function \code{rextendr::document()} updates the package documentation for an
 R package that uses \code{extendr} code, taking into account any changes that were

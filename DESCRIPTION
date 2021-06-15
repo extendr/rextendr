@@ -1,6 +1,6 @@
 Package: rextendr
 Title: Call Rust Code from R using the 'extendr' Crate
-Version: 0.1.0.9000
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Claus O.",
              family = "Wilke",
@@ -30,12 +30,12 @@ Authors@R:
              role = "aut",
              email = "malcolmbarrett@gmail.com",
              comment = c(ORCID = "0000-0003-0299-5825")))
-Description: Call Rust code from R. This package provides functions to
-    compile and load Rust code from R, similar to how 'Rcpp' or 'cpp11'
-    allow easy interfacing with C++ code. Under the hood, the package uses
-    the Rust 'extendr' crate to do all the heavy lifting.
+Description: Provides functions to compile and load Rust code from R, similar
+    to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Also provides
+    helper functions to create R packages that use Rust code. Under the hood,
+    the Rust crate 'extendr' is used to do all the heavy lifting.
 License: MIT + file LICENSE
-URL: https://github.com/extendr/rextendr
+URL: https://extendr.github.io/rextendr/
 BugReports: https://github.com/extendr/rextendr/issues
 Depends:
     R (>= 4.0)
@@ -67,7 +67,6 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile
