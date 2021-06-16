@@ -52,7 +52,16 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
     ui_throw("decoy function; should never be called.")
   }
 
+  # Snippet hash is constructed from the Rust source code and
+  # a unique identifier of the compiled dll.
+  # Every time any rust code is dynamically compiled,
+  # `the$count` is incremented.
+  # This ensures that any two (even bytewise-identical)
+  # Rust source code strings will have different
+  # hashes.
   snippet_hash <- rlang::hash(list(the$count, code))
+
+  # The unique hash is then used to generate unique function names
   fn_name <- glue("rextendr_rust_eval_fun_{snippet_hash}")
 
   # wrap code into Rust function
