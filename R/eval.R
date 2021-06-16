@@ -29,6 +29,21 @@
 #' }
 #' @export
 rust_eval <- function(code, env = parent.frame(), ...) {
+  rust_eval_deferred(code = code, env = env, ...)()
+}
+
+#' Evaluate Rust code (deferred)
+#'
+#' Compiles a chunk of Rust code and returns an R function,
+#' which, when called, executes Rust code.
+#' This allows to separate Rust code compilation and execution.
+#' The function can be called only once, it cleans up resources on exit,
+#' including loaded dll and sourced R wrapper.
+#'
+#' @inheritParams rust_eval
+#' @return \[`function()`\] An R function with no argumetns.
+#' @noRd
+rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   # make sure code is given as a single character string
   code <- glue_collapse(code, sep = "\n")
 
@@ -37,27 +52,81 @@ rust_eval <- function(code, env = parent.frame(), ...) {
     ui_throw("decoy function; should never be called.")
   }
 
+  # Snippet hash is constructed from the Rust source code and
+  # a unique identifier of the compiled dll.
+  # Every time any rust code is dynamically compiled,
+  # `the$count` is incremented.
+  # This ensures that any two (even bytewise-identical)
+  # Rust source code strings will have different
+  # hashes.
+  snippet_hash <- rlang::hash(list(the$count, code))
+
+  # The unique hash is then used to generate unique function names
+  fn_name <- glue("rextendr_rust_eval_fun_{snippet_hash}")
+
   # wrap code into Rust function
   code_wrapped <- glue(r"(
-fn rextendr_rust_eval_fun() -> Result<Robj> {{
+fn {fn_name}() -> Result<Robj> {{
   let x = {{
     {code}
   }};
   Ok(x.into())
 }}
 )")
-  out <- rust_function(code = code_wrapped, ...)
-  result <- do.call(rextendr_rust_eval_fun, list(), envir = env)
-  dyn.unload(out[["path"]])
 
   # Attempt to figure out whether the Rust code returns a result or not,
   # and make the result invisible or not accordingly. This regex approach
   # is not perfect, but since it only affects the visibility of the result
   # that's Ok. Worst case scenario a result that should be invisible is
   # shown as visible.
-  if (grepl(".*;\\s*$", code, perl = TRUE)) {
-    invisible(result)
+  has_no_return <- grepl(".*;\\s*$", code, perl = TRUE)
+
+  out <- rust_function(code = code_wrapped, env = env, ...)
+
+  generated_fn <- function() {
+    fn_handle <- get0(fn_name, envir = env, ifnotfound = NULL)
+    dll_handle <- find_loaded_dll(out[["name"]])
+    if (
+      rlang::is_null(fn_handle) ||
+        rlang::is_null(dll_handle)
+    ) {
+      ui_throw(
+        "The Rust code fragment is no longer available for execution.",
+        details = c(
+          bullet_i("Code fragment can only be executed once."),
+          bullet_w("Make sure you are not re-using an outdated fragment.")
+        )
+      )
+    }
+
+    withr::defer(dyn.unload(out[["path"]]))
+    withr::defer(rm(list = fn_name, envir = env))
+
+    result <- rlang::exec(fn_name, .env = env)
+    if (has_no_return) {
+      invisible(result)
+    } else {
+      result
+    }
+  }
+
+  attr(generated_fn, "function_name") <- fn_name
+  attr(generated_fn, "dll_path") <- out[["path"]]
+
+  generated_fn
+}
+
+
+#' Find loaded dll by name
+#' @param name \[`string`\] Name of the dll (as returned by `dyn.load(...)[["name"]]`).
+#' @return \[`DllInfo`|`NULL`\] An object representing a loaded dll or
+#'   `NULL` if no such dll is loaded.
+#' @noRd
+find_loaded_dll <- function(name) {
+  dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["name"]] == name)
+  if (rlang::is_empty(dlls)) {
+    NULL
   } else {
-    result
+    dlls[[1]]
   }
 }
