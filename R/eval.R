@@ -85,9 +85,8 @@ fn {fn_name}() -> Result<Robj> {{
       )
     }
 
-
-    on.exit(dyn.unload(out[["path"]]), add = TRUE)
-    on.exit(rm(list = fn_name, envir = env), add = TRUE)
+    withr::defer(dyn.unload(out[["path"]]))
+    withr::defer(rm(list = fn_name, envir = env))
 
     result <- rlang::exec(fn_name, .env = env)
     if (has_no_return) {
