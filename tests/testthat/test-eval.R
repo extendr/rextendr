@@ -75,3 +75,27 @@ test_that("`rust_eval_deferred()` disallows multiple executions of the same chun
   )
 
 })
+
+# Test if `rust_eval_deferred()` correctly cleans up environment.
+#
+# Create a simple Rust code chunk and compile it.
+# Use attributes to get the name of the Rust (and R wrapper) function and
+# the path to the dynamically compiled dll.
+# Test if the wrapper is in the environement and the dll is loaded.
+# Execute code chunk and verify result.
+# Test if the wrapper has been removed and dll unloaded.
+test_that("`rust_eval_deferred()` environment cleanup", {
+  handle <- rust_eval_deferred("42i32")
+  fn_name <- attr(handle, "function_name")
+  dll_path <- attr(handle, "dll_path")
+
+  testthat::expect_true(exists(fn_name))
+  dlls <- purrr::keep(getLoadedDLLs(), ~.x[["path"]] == dll_path)
+  testthat::expect_length(dlls, 1L)
+
+  testthat::expect_equal(handle(), 42L)
+
+  testthat::expect_false(exists(fn_name))
+  dlls <- purrr::keep(getLoadedDLLs(), ~.x[["path"]] == dll_path)
+  testthat::expect_length(dlls, 0L)
+})
