@@ -74,6 +74,11 @@ fn {fn_name}() -> Result<Robj> {{
 }}
 )")
 
+  # Attempt to figure out whether the Rust code returns a result or not,
+  # and make the result invisible or not accordingly. This regex approach
+  # is not perfect, but since it only affects the visibility of the result
+  # that's Ok. Worst case scenario a result that should be invisible is
+  # shown as visible.
   has_no_return <- grepl(".*;\\s*$", code, perl = TRUE)
 
   out <- rust_function(code = code_wrapped, env = env, ...)
