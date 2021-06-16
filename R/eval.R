@@ -73,8 +73,8 @@ fn {fn_name}() -> Result<Robj> {{
     fn_handle <- get0(fn_name, envir = env, ifnotfound = NULL)
     dll_handle <- find_loaded_dll(out[["name"]])
     if (
-      rlang::is_null(fn_handle)  ||
-      rlang::is_null(dll_handle)
+      rlang::is_null(fn_handle) ||
+        rlang::is_null(dll_handle)
     ) {
       ui_throw(
         "The Rust code fragment is no longer available for execution.",
@@ -109,7 +109,7 @@ fn {fn_name}() -> Result<Robj> {{
 #'   `NULL` if no such dll is loaded.
 #' @noRd
 find_loaded_dll <- function(name) {
-  dlls <- purrr::keep(getLoadedDLLs(), ~.x[["name"]] == name)
+  dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["name"]] == name)
   if (rlang::is_empty(dlls)) {
     NULL
   } else {
