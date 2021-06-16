@@ -11,8 +11,8 @@ test_that("`rust_eval()` works", {
 #
 # Generate `n` integers (1..n) and then compile Rust chunks that
 # return `n` as `i32`.
-# Collect all deferred handles first, and then execute them in
-# the the order of compilation.
+# Collect all deferred handles first, then execute them in
+# the order of compilation.
 # Returned integer values should be identical to the input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly", {
   provided_values <- seq_len(5)
@@ -32,12 +32,12 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
 
 # Test if multiple Rust chunks can be compiled and then executed
 # in the reverse order. This ensures that the order of compilation and
-# execution does not matter.
+# execution do not affect each other.
 #
 # Generate `n` integers (1..n) and then compile Rust chunks that
 # return `n` as `i32`.
-# Collect all deferred handles first, and then execute them in
-# the the reverse order.
+# Collect all deferred handles first, then execute them in
+# the reverse order.
 # Returned integer values should be identical to the reversed input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
   provided_values <- seq_len(5)
