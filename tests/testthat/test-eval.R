@@ -98,3 +98,26 @@ test_that("`rust_eval_deferred()` environment cleanup", {
   dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
   testthat::expect_length(dlls, 0L)
 })
+
+
+# Test that wrapper function names are unique even for identical Rust source
+#
+# Use the same string to compile two Rust chunks.
+# Compare wrapper function names and dll paths (should be unequal).
+# Execute both chunks and test results (should be equal).
+test_that("`rust_eval_deferred()` generates unique function names", {
+  rust_code <- "42f64"
+
+  handle_1 <- rust_eval_deferred(rust_code)
+  handle_2 <- rust_eval_deferred(rust_code)
+
+  testthat::expect_false(
+    attr(handle_1, "function_name") == attr(handle_2, "function_name")
+  )
+
+  testthat::expect_false(
+    attr(handle_1, "dll_path") == attr(handle_2, "dll_path")
+  )
+
+  testthat::expect_equal(handle_1(), handle_2())
+})
