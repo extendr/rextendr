@@ -47,11 +47,6 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   # make sure code is given as a single character string
   code <- glue_collapse(code, sep = "\n")
 
-  # define to make R code check happy; is not used
-  rextendr_rust_eval_fun <- function() {
-    ui_throw("decoy function; should never be called.")
-  }
-
   # Snippet hash is constructed from the Rust source code and
   # a unique identifier of the compiled dll.
   # Every time any rust code is dynamically compiled,
