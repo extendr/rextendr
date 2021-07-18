@@ -126,9 +126,11 @@ test_that("Rust metadata capturing", {
       "#[extendr]",
       "    # 3  ",
       " #\t [ \textendr   ]",
-      "#5"
+      "#5",
+      "#[extendr(some_option=true)]",
+      "#[extendr ( some_option =  true ) ]"
     )),
-    c(2L, 4L)
+    c(2L, 4L, 6L, 7L)
   )
 
   expect_equal(
