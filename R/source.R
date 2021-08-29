@@ -18,6 +18,8 @@
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to
 #'   \code{list(`extendr-api` = "*")}.
+#' @param features List of features that control conditional compilation and 
+#'   optional dependencies.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
@@ -96,6 +98,7 @@ rust_source <- function(file, code = NULL,
                         profile = c("dev", "release"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_deps = getOption("rextendr.extendr_deps"),
+                        features = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
@@ -155,7 +158,8 @@ rust_source <- function(file, code = NULL,
     libname = libname,
     dependencies = dependencies,
     patch.crates_io = patch.crates_io,
-    extendr_deps = extendr_deps
+    extendr_deps = extendr_deps,
+    features = features
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
@@ -300,7 +304,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 generate_cargo.toml <- function(libname = "rextendr",
                                 dependencies = NULL,
                                 patch.crates_io = NULL,
-                                extendr_deps = NULL) {
+                                extendr_deps = NULL,
+                                features = NULL) {
   to_toml(
     package = list(
       name = libname,
@@ -314,7 +319,8 @@ generate_cargo.toml <- function(libname = "rextendr",
       extendr_deps,
       dependencies
     ),
-    `patch.crates-io` = patch.crates_io
+    `patch.crates-io` = patch.crates_io,
+    features = features
   )
 }
 

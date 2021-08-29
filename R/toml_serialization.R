@@ -187,12 +187,17 @@ format_toml_atomic <- function(x,
                                ...,
                                .top_level = FALSE,
                                .formatter) {
-  if (length(x) == 0L) {
+  # Cache dimensions because slicing drops attributes
+  dims <- dim(x)
+  x <- x[!is.na(x)]
+  len <- length(x)
+  
+  if (len == 0L) {
     "[ ]"
   } else {
     formatter <- as_function(.formatter)
     items <- glue_collapse(formatter(x, ...), ", ")
-    if (length(x) > 1L || !is.null(dim(x))) {
+    if (len > 1L || !is.null(dims)) {
       items <- glue("[ {items} ]")
     }
     # Ensure type-stability
