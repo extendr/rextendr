@@ -18,7 +18,7 @@ find_exports <- function(clean_lns) {
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
 find_extendr_attrs_ids <- function(lns) {
-  which(stringi::stri_detect_regex(lns, r"{#\s*\[\s*extendr(\s*\(.+\))?\s*\]}"))
+  which(stringi::stri_detect_regex(lns, r"{#\s*\[\s*extendr(\s*\(.*\))?\s*\]}"))
 }
 
 # Gets function/module metadata from a subset of lines.
