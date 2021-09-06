@@ -12,6 +12,8 @@
 document <- function(pkg = ".", quiet = getOption("usethis.quiet", FALSE), roclets = NULL) {
   try_save_all(quiet = quiet)
 
+  withr::local_envvar(devtools::r_env_vars())
+
   register_extendr(path = pkg, quiet = quiet)
 
   rlang::check_installed("devtools")

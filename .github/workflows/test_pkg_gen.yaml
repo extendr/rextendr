@@ -118,6 +118,17 @@ jobs:
             file.path("tests", "testthat", "test-hello.R")
           )
 
+          # test NOT_CRAN envvar
+          brio::write_lines(
+            c(
+              "if [ \"$NOT_CRAN\" != \"true\" ]; then",
+              "  exit 1",
+              "fi"
+            ),
+            file.path("configure")
+          )
+          Sys.chmod("configure", "0755")
+
           # check if rextendr::document() compiles and generates wrappers properly
           rextendr::document()
           rcmdcheck::rcmdcheck(
