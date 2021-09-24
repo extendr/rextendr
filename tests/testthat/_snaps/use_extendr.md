@@ -57,6 +57,7 @@
       cat_file("src", "Makevars.win")
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+      TOOLCHAIN = stable-msvc
       LIBDIR = ./rust/target/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv
@@ -66,7 +67,7 @@
       $(SHLIB): $(STATLIB)
       
       $(STATLIB):
-      	cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
+      	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
