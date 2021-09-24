@@ -175,7 +175,7 @@ use_rextendr_template <- function(template, save_as = template, data = list(), q
     quiet = quiet
   )
 
-  if (is.null(mode)) {
+  if (!is.null(mode)) {
     Sys.chmod(save_as, mode)
   }
 
