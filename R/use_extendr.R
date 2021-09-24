@@ -20,6 +20,8 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
+  configure_file <- rprojroot::find_package_root_file("configure", path = path)
+  configure_win_file <- rprojroot::find_package_root_file("configure.win", path = path)
 
   if (dir.exists(src_dir)) {
     if (!isTRUE(quiet)) {
@@ -30,6 +32,12 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   if (file.exists(wrappers_file)) {
     if (!isTRUE(quiet)) {
       ui_x("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
+    }
+    return(invisible(FALSE))
+  }
+  if (file.exists(configure_file) || file.exists(configure_win_file)) {
+    if (!isTRUE(quiet)) {
+      ui_x("File {.file configure(.win)} already present in package source. No action taken.")
     }
     return(invisible(FALSE))
   }
@@ -62,6 +70,23 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
+    quiet = quiet
+  )
+
+  use_rextendr_template("configure", quiet = quiet, mode = "0775")
+  use_rextendr_template("configure.win", quiet = quiet, mode = "0775")
+
+  dir.create("tools", showWarnings = TRUE)
+
+  use_rextendr_template(
+    "extendr_configure_functions.sh",
+    save_as = file.path("tools", "extendr_configure_functions.sh"),
+    quiet = quiet
+  )
+
+  use_rextendr_template(
+    "extendr_configure_settings.sh",
+    save_as = file.path("tools", "extendr_configure_settings.sh"),
     quiet = quiet
   )
 
@@ -109,8 +134,12 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
 #' @inheritParams usethis::use_template
 #' @inheritParams use_extendr
 #'
+#' @param mode
+#'   If specified, set the permission of the file (e.g. `"0775"` to make it executable)
+#'
 #' @noRd
-use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE)) {
+use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE),
+                                  mode = NULL) {
   if (is_installed("usethis")) {
     withr::local_options(usethis.quiet = quiet)
     created <- usethis::use_template(
@@ -145,6 +174,10 @@ use_rextendr_template <- function(template, save_as = template, data = list(), q
     search_root_from = rprojroot::find_package_root_file(),
     quiet = quiet
   )
+
+  if (is.null(mode)) {
+    Sys.chmod(save_as, mode)
+  }
 
   invisible(TRUE)
 }

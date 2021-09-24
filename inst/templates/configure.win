@@ -1,0 +1,10 @@
+# In configure scripts, Rscript cannot be used without path specified
+RSCRIPT="${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe"
+
+# Load the variables to customize the checks (e.g. minimum supported rust versions)
+. ./tools/extendr_configure_settings.sh
+
+# Load the function to check the Rust installation (e.g. check_cargo)
+. ./tools/extendr_configure_functions.sh
+
+check_cargo
