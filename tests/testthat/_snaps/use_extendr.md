@@ -34,7 +34,12 @@
     Code
       cat_file("src", "Makevars")
     Output
-      LIBDIR = ./rust/target/release
+      ifeq ($(CARGO_TARGET_DIR),)
+      TARGET_DIR = ./rust/target
+      else
+      TARGET_DIR = $(CARGO_TARGET_DIR)
+      endif
+      LIBDIR = $(TARGET_DIR)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
@@ -58,7 +63,12 @@
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       TOOLCHAIN = stable-msvc
-      LIBDIR = ./rust/target/$(TARGET)/release
+      ifeq ($(CARGO_TARGET_DIR),)
+      TARGET_DIR = ./rust/target
+      else
+      TARGET_DIR = $(subst \,/,$(CARGO_TARGET_DIR))
+      endif
+      LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv
       
