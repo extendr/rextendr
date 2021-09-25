@@ -1,0 +1,84 @@
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+Basic use example:
+
+```{r}
+library(rextendr)
+
+# create a Rust function
+rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
+
+# call it from R
+add(2.5, 4.7)
+```
+
+The package also enables a new chunk type for knitr, `extendr`, which compiles and evaluates Rust code. For example, a code chunk such as this one:
+````markdown
+`r ''````{extendr}
+rprintln!("Hello from Rust!");
+
+let x = 5;
+let y = 7;
+let z = x*y;
+
+z
+```
+````
+
+would create the following output in the knitted document:
+```{extendr}
+rprintln!("Hello from Rust!");
+
+let x = 5;
+let y = 7;
+let z = x*y;
+
+z
+```
+
+Define variable `_x`:
+
+```{extendr chunk_x, eval = FALSE}
+let _x = 1;
+```
+
+Define variable `_y`:
+
+```{extendr chunk_y, eval = FALSE}
+let _y = 2;
+```
+
+Print:
+
+```{extendr out, preamble = c("chunk_x", "chunk_y")}
+rprintln!("x = {}, y = {}", _x, _y);
+```
+
+```{extendrsrc engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))}
+use pulldown_cmark::{Parser, Options, html};
+
+#[extendr]
+fn md_to_html(input: &str) -> String {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_TABLES);
+    let parser = Parser::new_ext(input, options);
+    let mut output = String::new();
+    html::push_html(&mut output, parser);
+    output
+}
+```
+
+```{r}
+md_text <- "# The story of the fox
+The quick brown fox **jumps over** the lazy dog.
+The quick *brown fox* jumps over the lazy dog."
+
+md_to_html(md_text)
+```
