@@ -73,3 +73,10 @@ local_proj_set <- function(envir = parent.frame()) {
   withr::defer(usethis::proj_set(old_proj), envir = envir)
 }
 
+#' Helper function for snapshot testing.
+#' Wraps `brio::read_file` and writes content to output using `cat`.
+#' @param ... Path to the file being read.
+#' @noRd
+cat_file <- function(...) {
+  cat(brio::read_file(file.path(...)))
+}
