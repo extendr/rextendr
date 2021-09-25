@@ -34,11 +34,7 @@
     Code
       cat_file("src", "Makevars")
     Output
-      ifeq ($(CARGO_TARGET_DIR),)
       TARGET_DIR = ./rust/target
-      else
-      TARGET_DIR = $(CARGO_TARGET_DIR)
-      endif
       LIBDIR = $(TARGET_DIR)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
@@ -48,7 +44,7 @@
       $(SHLIB): $(STATLIB)
       
       $(STATLIB):
-      	cargo build --lib --release --manifest-path=./rust/Cargo.toml
+      	cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
@@ -63,11 +59,7 @@
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       TOOLCHAIN = stable-msvc
-      ifeq ($(CARGO_TARGET_DIR),)
       TARGET_DIR = ./rust/target
-      else
-      TARGET_DIR = $(subst \,/,$(CARGO_TARGET_DIR))
-      endif
       LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv
@@ -77,7 +69,7 @@
       $(SHLIB): $(STATLIB)
       
       $(STATLIB):
-      	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
+      	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)

@@ -1,10 +1,6 @@
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 TOOLCHAIN = stable-msvc
-ifeq ($(CARGO_TARGET_DIR),)
 TARGET_DIR = ./rust/target
-else
-TARGET_DIR = $(subst \,/,$(CARGO_TARGET_DIR))
-endif
 LIBDIR = $(TARGET_DIR)/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{{{pkg_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{pkg_name}}} -lws2_32 -ladvapi32 -luserenv
@@ -14,7 +10,7 @@ all: C_clean
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml
+	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
