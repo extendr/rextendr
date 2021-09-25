@@ -1,4 +1,9 @@
-LIBDIR = ./rust/target/release
+ifeq ($(CARGO_TARGET_DIR),)
+TARGET_DIR = ./rust/target
+else
+TARGET_DIR = $(CARGO_TARGET_DIR)
+endif
+LIBDIR = $(TARGET_DIR)/release
 STATLIB = $(LIBDIR)/lib{{{pkg_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{pkg_name}}}
 
