@@ -9,11 +9,6 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_true(dir.exists(file.path("src", "rust")))
   expect_true(dir.exists(file.path("src", "rust", "src")))
 
-  # extendr files
-  cat_file <- function(...) {
-    cat(brio::read_file(file.path(...)))
-  }
-
   expect_snapshot(cat_file("R", "extendr-wrappers.R"))
   expect_snapshot(cat_file("src", "Makevars"))
   expect_snapshot(cat_file("src", "Makevars.win"))
