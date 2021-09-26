@@ -18,7 +18,7 @@ eng_extendrsrc <- function(options) {
 
 
 
-eng_impl <- function(options, rextendr_fun) {
+eng_impl <- function(options, extendr_engine) {
   if (!requireNamespace("knitr", quietly = TRUE)) {
     ui_throw("The {.pkg knitr} package is required to run the extendr chunk engine.")
   }
@@ -47,7 +47,7 @@ eng_impl <- function(options, rextendr_fun) {
   }
 
   ui_v("Compiling Rust extendr code chunk...")
-  compilation <- do.call(rextendr_fun, c(list(code = code), opts))
+  compilation <- do.call(extendr_engine, c(list(code = code), opts))
 
   if (isTRUE(options$eval) && rlang::is_function(compilation)) {
     ui_v("Evaluating Rust extendr code chunk...")
