@@ -1,4 +1,5 @@
-LIBDIR = ./rust/target/release
+TARGET_DIR = ./rust/target
+LIBDIR = $(TARGET_DIR)/release
 STATLIB = $(LIBDIR)/lib{{{pkg_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{pkg_name}}}
 
@@ -7,7 +8,7 @@ all: C_clean
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	cargo build --lib --release --manifest-path=./rust/Cargo.toml
+	cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
