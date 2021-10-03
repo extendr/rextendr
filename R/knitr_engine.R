@@ -47,14 +47,14 @@ eng_impl <- function(options, extendr_engine) {
   }
 
   ui_v("Compiling Rust extendr code chunk...")
-  compilation <- do.call(extendr_engine, c(list(code = code), opts))
+  compiled_code <- do.call(extendr_engine, c(list(code = code), opts))
 
-  if (isTRUE(options$eval) && rlang::is_function(compilation)) {
+  if (isTRUE(options$eval) && rlang::is_function(compiled_code)) {
     ui_v("Evaluating Rust extendr code chunk...")
 
     out <- utils::capture.output({
       result <- withVisible(
-        compilation()
+        compiled_code()
       )
       if (isTRUE(result$visible)) {
         print(result$value)
