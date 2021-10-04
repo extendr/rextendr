@@ -7,7 +7,7 @@
 #' @return A character string representing the engine output.
 #' @export
 eng_extendr <- function(options) {
-  eng_impl(options, rust_eval)
+  eng_impl(options, rust_eval_deferred)
 }
 
 #' @rdname eng_extendr
@@ -18,7 +18,7 @@ eng_extendrsrc <- function(options) {
 
 
 
-eng_impl <- function(options, rextendr_fun) {
+eng_impl <- function(options, extendr_engine) {
   if (!requireNamespace("knitr", quietly = TRUE)) {
     ui_throw("The {.pkg knitr} package is required to run the extendr chunk engine.")
   }
@@ -38,16 +38,23 @@ eng_impl <- function(options, rextendr_fun) {
   code_out <- glue_collapse(options$code, sep = "\n") # code to output to html
 
   # engine.opts is a list of arguments to be passed to rust_eval, e.g.
-  # engine.opts = list(dependencies = 'pulldown-cmark = "0.8"')
+  # engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))
   opts <- options$engine.opts
 
-  if (!is.environment(opts$env)) opts$env <- knitr::knit_global() # default env is knit_global()
+  if (!is.environment(opts$env)) {
+    # default env is knit_global()
+    opts$env <- knitr::knit_global()
+  }
 
-  if (isTRUE(options$eval)) {
+  ui_v("Compiling Rust extendr code chunk...")
+  compiled_code <- do.call(extendr_engine, c(list(code = code), opts))
+
+  if (isTRUE(options$eval) && rlang::is_function(compiled_code)) {
     ui_v("Evaluating Rust extendr code chunk...")
+
     out <- utils::capture.output({
       result <- withVisible(
-        do.call(rextendr_fun, c(list(code = code), opts))
+        compiled_code()
       )
       if (isTRUE(result$visible)) {
         print(result$value)
