@@ -274,6 +274,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   message_buffer <- character(0)
   env <- rlang::current_env()
 
+  tty_has_colors <- isTRUE(cli::num_ansi_colors() > 1L)
+
   compilation_result <- processx::run(
     command = "cargo",
     args = c(
@@ -289,7 +291,11 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       sprintf("--target-dir=%s", file.path(dir, "target")),
       if (profile == "release") "--release" else NULL,
       "--message-format=json-diagnostic-rendered-ansi",
-      "--color=always"
+      ifelse(
+        tty_has_colors,
+        "--color=always",
+        "--color=never"
+      )
     ),
     echo_cmd = FALSE,
     windows_verbatim_args = FALSE,
@@ -302,7 +308,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   )
 
   if (!isTRUE(compilation_result$status == 0)) {
-    error_messages <-
+    errors <-
       message_buffer %>%
       purrr::map_chr(stringi::stri_trim) %>%
       purrr::map(jsonlite::parse_json) %>%
@@ -310,9 +316,14 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         ~.x$reason == "compiler-message" && .x$message$level == "error"
       )
 
+    error_messages <- purrr::map_chr(errors, ~.x$message$rendered)
+    if (!tty_has_colors) {
+      error_messages <- cli::ansi_strip(error_messages)
+    }
+
     ui_throw(
       "Rust code could not be compiled successfully. Aborting.",
-      purrr::map_chr(error_messages, ~.x$message$rendered),
+      error_messages,
       glue_open = "{<{",
       glue_close = "}>}"
     )
