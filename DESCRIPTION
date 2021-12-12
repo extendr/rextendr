@@ -49,6 +49,7 @@ Imports:
     jsonlite,
     pkgbuild,
     pkgload,
+    processx,
     purrr,
     rlang (>= 0.4.10),
     rprojroot,
