@@ -103,12 +103,12 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' # o Are you sure you did it right?
 #' }
 #' @noRd
-ui_throw <- function(message = "Internal error", details = character(0), env = parent.frame()) {
+ui_throw <- function(message = "Internal error", details = character(0), env = parent.frame(), glue_open = "{", glue_close = "}") {
   message <- cli_format_text(message, env = env)
 
   if (length(details) != 0L) {
     details <- glue::glue_collapse(details, sep = "\n")
-    message <- glue::glue(message, details, .sep = "\n")
+    message <- glue::glue(message, details, .sep = "\n", .open = glue_open, .close = glue_close)
   }
 
   rlang::abort(message, class = "rextendr_error")
