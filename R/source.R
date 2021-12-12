@@ -118,16 +118,6 @@ rust_source <- function(file, code = NULL,
   # to be used by `system2()` below
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
-
-    # `""` sends `cargo` output to R's standard output.
-    # R console displays to the user informaion about compilation steps and
-    # potenatial compilation errors.
-    out <- ""
-  } else {
-
-    # `NULL` or `FALSE` intercepts standard output from `cargo`.
-    # No compilation information is displayed to the user.
-    out <- NULL
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -171,8 +161,7 @@ rust_source <- function(file, code = NULL,
     specific_target = specific_target,
     dir = dir,
     profile = profile,
-    stdout = out,
-    stderr = out,
+    quiet = quiet,
     use_rtools = use_rtools
   )
 
@@ -236,13 +225,12 @@ rust_function <- function(code, env = parent.frame(), ...) {
 #' @param profile \[string\] Indicates wether to build dev or release versions.
 #'   If `"release"`, emits `--release` argument to `cargo`.
 #'   Otherwise, does nothing.
-#' @param stdout,stderr \[string or `NULL`\] Controls the standard output and standard error of `cargo`.
-#'   Passed unmodified to [system2()].
+#' @param quiet Logical indicating whether compile output should be generated or not.
 #' @param use_rtools \[logical, windows_only\] Indicates wether path RTools should be appended to `PATH` variable
 #'   for the duration of compilation. Has no effect on systems other than Windows.
 #' @noRd
 invoke_cargo <- function(toolchain, specific_target, dir, profile,
-                         stdout, stderr, use_rtools) {
+                         quiet, use_rtools) {
   # Append rtools path to the end of PATH on Windows
   if (
     isTRUE(use_rtools) &&
@@ -282,22 +270,52 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # If RTOOLS40_HOME is properly set, this will have no real effect
     withr::local_envvar(RTOOLS40_HOME = rtools_home)
   }
-  status <- system2(
+
+  message_buffer <- character(0)
+  env <- rlang::current_env()
+
+  compilation_result <- processx::run(
     command = "cargo",
     args = c(
       sprintf("+%s", toolchain),
       "build",
       "--lib",
-      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
-      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target")),
-      if (profile == "release") "--release" else NULL
+      if (!is.null(specific_target)) {
+        sprintf("--target=%s", specific_target)
+      } else {
+        NULL
+      },
+      sprintf("--manifest-path=%s", file.path(dir, "Cargo.toml")),
+      sprintf("--target-dir=%s", file.path(dir, "target")),
+      if (profile == "release") "--release" else NULL,
+      "--message-format=json-diagnostic-rendered-ansi",
+      "--color=always"
     ),
-    stdout = stdout,
-    stderr = stderr
+    echo_cmd = FALSE,
+    windows_verbatim_args = FALSE,
+    stderr = ifelse(isTRUE(quiet), "|", ""),
+    stdout = "|",
+    error_on_status = FALSE,
+    stdout_line_callback = function(line, ...) {
+      assign("message_buffer", c(message_buffer, line), envir = env)
+    }
   )
-  if (status != 0L) {
-    ui_throw("Rust code could not be compiled successfully. Aborting.")
+
+  if (!isTRUE(compilation_result$status == 0)) {
+    error_messages <-
+      message_buffer %>%
+      purrr::map_chr(stringi::stri_trim) %>%
+      purrr::map(jsonlite::parse_json) %>%
+      purrr::keep(
+        ~.x$reason == "compiler-message" && .x$message$level == "error"
+      )
+
+    ui_throw(
+      "Rust code could not be compiled successfully. Aborting.",
+      purrr::map_chr(error_messages, ~.x$message$rendered),
+      glue_open = "{<{",
+      glue_close = "}>}"
+    )
   }
 }
 
