@@ -82,8 +82,6 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-          #TODO: remove this when testthat is fixed
-          remotes::install_version("testthat", "3.1.0")
         shell: Rscript {0}
 
       - name: Check
