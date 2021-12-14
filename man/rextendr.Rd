@@ -3,8 +3,31 @@
 \docType{package}
 \name{rextendr}
 \alias{rextendr}
+\alias{rextendr-package}
 \title{Call Rust code from R using the 'extendr' Crate}
 \description{
 The rextendr package implements functions to interface with Rust code from R.
 See \code{\link[=rust_source]{rust_source()}} for details.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://extendr.github.io/rextendr/}
+  \item Report bugs at \url{https://github.com/extendr/rextendr/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Claus O. Wilke \email{wilke@austin.utexas.edu} (\href{https://orcid.org/0000-0002-7470-9261}{ORCID})
+
+Authors:
+\itemize{
+  \item Andy Thomason \email{andy@andythomason.com}
+  \item Mossa M. Reimert \email{mossa@sund.ku.dk}
+  \item Ilia Kosenkov \email{ilia.kosenkov@outlook.com} (\href{https://orcid.org/0000-0001-5563-7840}{ORCID})
+  \item Hiroaki Yutani \email{yutani.ini@gmail.com} (\href{https://orcid.org/0000-0002-3385-7233}{ORCID})
+  \item Malcolm Barrett \email{malcolmbarrett@gmail.com} (\href{https://orcid.org/0000-0003-0299-5825}{ORCID})
+}
+
+}
+\keyword{internal}
