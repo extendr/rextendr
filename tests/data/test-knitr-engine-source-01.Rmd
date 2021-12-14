@@ -10,6 +10,7 @@ knitr::opts_chunk$set(
 Basic use example:
 
 ```{r}
+# foo
 library(rextendr)
 
 # create a Rust function
