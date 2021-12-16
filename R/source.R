@@ -321,6 +321,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       error_messages <- cli::ansi_strip(error_messages)
     }
 
+    error_messages <- purrr::map_chr(error_messages, bullet_x)
+
     ui_throw(
       "Rust code could not be compiled successfully. Aborting.",
       error_messages,

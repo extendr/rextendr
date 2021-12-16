@@ -1,5 +1,5 @@
 bullet <- function(text = "", cli_f = cli::cli_alert_success, env = parent.frame()) {
-  cli::cli_format_method(cli_f(text, .envir = env))
+  glue_collapse(cli::cli_format_method(cli_f(text, .envir = env)), sep = "\n")
 }
 
 bullet_x <- function(text = "", env = parent.frame()) {
@@ -106,25 +106,14 @@ ui_w <- function(text = "", env = parent.frame()) {
 ui_throw <- function(message = "Internal error", details = character(0),
                      env = parent.frame(),
                      glue_open = "{", glue_close = "}") {
-  message <- glue(
-    cli_format_text(message, env = env),
+  message <- cli_format_text(message, env = env)
+
+  error_messages <- purrr::map(
+    c(message, details),
+    glue,
     .open = glue_open,
     .close = glue_close
   )
-
-  details <- purrr::map_chr(
-    details,
-    ~ glue(
-        glue::glue_collapse(
-          bullet_x(.x), # This call splits lines
-          sep = "\n"
-        ),
-        .open = glue_open,
-        .close = glue_close
-      )
-    )
-
-  error_messages <- c(message, details)
 
   error_messages <- trim_to_fit_in_limit(error_messages, 8000L)
 
