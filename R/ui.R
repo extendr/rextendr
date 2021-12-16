@@ -132,10 +132,9 @@ cli_format_text <- function(message, env = parent.frame()) {
   cli::cli_format_method(cli::cli_text(message, .envir = env))
 }
 
-trim_to_fit_in_limit <- function(
-                                  lines,
-                                  max_length = 1000,
-                                  truncation_notification = "{.val {n_truncated}} compiler messages not shown.") {
+trim_to_fit_in_limit <- function(lines,
+                                 max_length = 1000,
+                                 truncation_notification = "{.val {n_truncated}} compiler messages not shown.") {
   n_truncated <- 100L
   truncation_notification_size <- nchar(bullet_i(truncation_notification))
 

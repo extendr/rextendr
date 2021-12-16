@@ -18,7 +18,7 @@
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to
 #'   \code{list(`extendr-api` = "*")}.
-#' @param features List of features that control conditional compilation and 
+#' @param features List of features that control conditional compilation and
 #'   optional dependencies.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
@@ -313,10 +313,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       purrr::map_chr(stringi::stri_trim) %>%
       purrr::map(jsonlite::parse_json) %>%
       purrr::keep(
-        ~.x$reason == "compiler-message" && .x$message$level == "error"
+        ~ .x$reason == "compiler-message" && .x$message$level == "error"
       )
 
-    error_messages <- purrr::map_chr(errors, ~.x$message$rendered)
+    error_messages <- purrr::map_chr(errors, ~ .x$message$rendered)
     if (!tty_has_colors) {
       error_messages <- cli::ansi_strip(error_messages)
     }
