@@ -103,17 +103,61 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' # o Are you sure you did it right?
 #' }
 #' @noRd
-ui_throw <- function(message = "Internal error", details = character(0), env = parent.frame(), glue_open = "{", glue_close = "}") {
-  message <- cli_format_text(message, env = env)
+ui_throw <- function(message = "Internal error", details = character(0),
+                     env = parent.frame(),
+                     glue_open = "{", glue_close = "}") {
+  message <- glue(
+    cli_format_text(message, env = env),
+    .open = glue_open,
+    .close = glue_close
+  )
 
-  if (length(details) != 0L) {
-    details <- glue::glue_collapse(details, sep = "\n")
-    message <- glue::glue(message, details, .sep = "\n", .open = glue_open, .close = glue_close)
-  }
+  details <- purrr::map_chr(
+    details,
+    ~ glue(
+        glue::glue_collapse(
+          bullet_x(.x), # This call splits lines
+          sep = "\n"
+        ),
+        .open = glue_open,
+        .close = glue_close
+      )
+    )
 
-  rlang::abort(message, class = "rextendr_error")
+  error_messages <- c(message, details)
+
+  error_messages <- trim_to_fit_in_limit(error_messages, 8000L)
+
+  message <- glue_collapse(error_messages, sep = "\n")
+
+  withr::with_options(
+    # Valid values are something between 1000 and 8170
+    # This will be set by {rlang} in the future release,
+    # https://github.com/r-lib/rlang/pull/1214
+    list(warning.length = 8000),
+    rlang::abort(message, class = "rextendr_error")
+  )
 }
 
 cli_format_text <- function(message, env = parent.frame()) {
   cli::cli_format_method(cli::cli_text(message, .envir = env))
+}
+
+trim_to_fit_in_limit <- function(
+                                  lines,
+                                  max_length = 1000,
+                                  truncation_notification = "{.val {n_truncated}} compiler messages not shown.") {
+  n_truncated <- 100L
+  truncation_notification_size <- nchar(bullet_i(truncation_notification))
+
+  max_length <- max_length - truncation_notification_size
+
+  selected_lines <- lines[cumsum(nchar(lines)) <= max_length]
+  n_truncated <- length(lines) - length(selected_lines)
+
+  if (n_truncated > 0) {
+    c(selected_lines, bullet_i(truncation_notification))
+  } else {
+    lines
+  }
 }
