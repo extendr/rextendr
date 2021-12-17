@@ -115,7 +115,7 @@ ui_throw <- function(message = "Internal error", details = character(0),
     .close = glue_close
   )
 
-  error_messages <- trim_to_fit_in_limit(error_messages, 8000L)
+  error_messages <- subset_lines_to_fit_in_limit(error_messages, 8000L)
 
   message <- glue_collapse(error_messages, sep = "\n")
 
@@ -132,18 +132,35 @@ cli_format_text <- function(message, env = parent.frame()) {
   cli::cli_format_method(cli::cli_text(message, .envir = env))
 }
 
-trim_to_fit_in_limit <- function(lines,
-                                 max_length = 1000,
-                                 truncation_notification = "{.val {n_truncated}} compiler messages not shown.") {
-  n_truncated <- 100L
+#' Subset lines to fit within provided character limit.
+#'
+#' Verifies that `lines` fit within given limit of `max_length`.
+#' If not, lines are subset and an additional `truncation_notification`
+#' is appended to `lines`. The function ensures that the output message
+#' constructed by combining `lines` with `\n` separator
+#' fits within `max_length` limit.
+#'
+#' @param lines \[ ansi_character(n) \] Error messages.
+#' @param max_length Maximum total length of the collapsed message
+#' (measured using `nchar()`).
+#' @param truncation_notification Message pattern appended if any `lines`
+#' were removed. Understands `cli` interpolation and
+#' `n_removed` integer variable, which is set to the number of removed lines.
+#' @return \[ ansi_character(n) \] A subset of `lines` with
+#' `truncation_notification` appended (if needed).
+#' @noRd
+subset_lines_to_fit_in_limit <- function(lines,
+                                         max_length = 1000,
+                                         truncation_notification = "{.val {n_removed}} compiler messages not shown.") {
+  n_removed <- 100L
   truncation_notification_size <- nchar(bullet_i(truncation_notification))
 
   max_length <- max_length - truncation_notification_size
 
-  selected_lines <- lines[cumsum(nchar(lines)) <= max_length]
-  n_truncated <- length(lines) - length(selected_lines)
+  selected_lines <- lines[cumsum(nchar(lines) + 1L) <= max_length]
+  n_removed <- length(lines) - length(selected_lines)
 
-  if (n_truncated > 0) {
+  if (n_removed > 0) {
     c(selected_lines, bullet_i(truncation_notification))
   } else {
     lines
