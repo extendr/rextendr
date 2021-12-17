@@ -287,3 +287,16 @@ test_that("`write_file()` does the same as `brio::write_lines()`", {
   # Obtaines 'relative path' that is displayed to the user.
   rel_path <- pretty_rel_path(temp_file_rxr, ".")
 })
+
+# Verifies that any Rust compilation errors produced by `rust_*` functions
+# are correctly captured and thrown by `ui_throw()`
+test_that(
+  "`ui_throw()` called by `rust_function()` captures Rust compilation errors",
+  {
+    expect_snapshot_error(
+      rust_function(
+        "fn failed_fn(_x : i33, _y : i34, _z : i35) -> f100 {}"
+      )
+    )
+  }
+)
