@@ -296,7 +296,9 @@ test_that(
     expect_snapshot_error(
       rust_function(
         "fn failed_fn(_x : i33, _y : i34, _z : i35) -> f100 {}"
-      )
+      ),
+      # Saves OS-specific snapshots, allowing to have differnt file path seps.
+      variant = .Platform[["OS.type"]]
     )
   }
 )
