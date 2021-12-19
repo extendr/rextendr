@@ -115,7 +115,6 @@ rust_source <- function(file, code = NULL,
 
   dir <- get_build_dir(cache_build)
 
-  # to be used by `system2()` below
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
   }
