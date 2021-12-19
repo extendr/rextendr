@@ -302,28 +302,78 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     }
   )
 
-  if (!isTRUE(compilation_result$status == 0)) {
-    errors <-
-      message_buffer %>%
-      purrr::map_chr(stringi::stri_trim) %>%
-      purrr::map(jsonlite::parse_json) %>%
-      purrr::keep(
-        ~ .x$reason == "compiler-message" && .x$message$level == "error"
-      )
+  check_cargo_output(compilation_result, message_buffer, tty_has_colors, quiet)
+}
 
-    error_messages <- purrr::map_chr(errors, ~ .x$message$rendered)
-    if (!tty_has_colors) {
-      error_messages <- cli::ansi_strip(error_messages)
-    }
+#' Gathers ANSI-formatted cargo output
+#'
+#' Checks the output of cargo and filters messages according to `level`.
+#' Retrieves rendered ANSI strings and prepares them
+#' for `cli` and `glue` formatting.
+#' @param json_output \[ JSON(n) \] JSON messages produced by cargo.
+#' @param level \[ string \] Log level.
+#' Commonly used values are `"error"` and `"warning"`.
+#' @param tty_has_colors \[ logical(1) \] Indicates if output
+#' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
+#' @return \[ character(n) \] Vector of strings
+#' that can be passed to `ui_*`, `cli` or `glue` functions.
+#' @noRd
+gather_cargo_output <- function(json_output, level, tty_has_colors) {
+  rendered_output <-
+    json_output %>%
+    purrr::keep(
+      ~ .x$reason == "compiler-message" && .x$message$level == level
+    ) %>%
+    purrr::map_chr(~ .x$message$rendered)
 
-    error_messages <- purrr::map_chr(
-      error_messages, 
-      stringi::stri_replace_all_fixed,
-      pattern = c("{", "}"), 
-      replacement = c("{{", "}}"),
-      vectorize_all = FALSE
+  if (!tty_has_colors) {
+    rendered_output <- cli::ansi_strip(rendered_output)
+  }
+
+  purrr::map_chr(
+    rendered_output,
+    stringi::stri_replace_all_fixed,
+    pattern = c("{", "}"),
+    replacement = c("{{", "}}"),
+    vectorize_all = FALSE
+  )
+}
+
+#' Processes output of cargo compilation process.
+#'
+#' Displays warnings emitted by the compiler
+#' and throws errors if compilation was unsuccessful.
+#' @param compilation_result The output of `processx::run()`.
+#' @param message_buffer \[ character(n) \] Messages emitted by cargo to stdout.
+#' @param tty_has_colors \[ logical(1) \] Indicates if output
+#' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
+#' @param quiet Logical indicating whether compile output should be generated or not.
+#' @noRd
+check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet) {
+  cargo_output <- message_buffer %>%
+    purrr::map_chr(stringi::stri_trim) %>%
+    purrr::map(jsonlite::parse_json)
+
+  if (!isTRUE(quiet)) {
+    purrr::walk(
+      gather_cargo_output(
+        cargo_output,
+        "warning",
+        tty_has_colors
+      ),
+      ui_w
     )
-    error_messages <- purrr::map_chr(error_messages, bullet_x)
+  }
+
+  if (!isTRUE(compilation_result$status == 0)) {
+    error_messages <- purrr::map_chr(
+      gather_cargo_output(
+        cargo_output,
+        "error",
+        tty_has_colors
+      ),
+      bullet_x
+    )
 
     ui_throw(
       "Rust code could not be compiled successfully. Aborting.",
