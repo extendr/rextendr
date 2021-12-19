@@ -279,23 +279,19 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   compilation_result <- processx::run(
     command = "cargo",
     args = c(
-      sprintf("+%s", toolchain),
+      glue("+{toolchain}"),
       "build",
       "--lib",
-      if (!is.null(specific_target)) {
-        sprintf("--target=%s", specific_target)
-      } else {
-        NULL
-      },
-      sprintf("--manifest-path=%s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir=%s", file.path(dir, "target")),
+      glue("--target={specific_target}"),
+      glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
+      glue("--target-dir={file.path(dir, 'target')}"),
       if (profile == "release") "--release" else NULL,
       "--message-format=json-diagnostic-rendered-ansi",
-      ifelse(
-        tty_has_colors,
-        "--color=always",
+      if (tty_has_colors) {
+        "--color=always"
+      } else {
         "--color=never"
-      )
+      }
     ),
     echo_cmd = FALSE,
     windows_verbatim_args = FALSE,
