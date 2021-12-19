@@ -330,9 +330,8 @@ gather_cargo_output <- function(json_output, level, tty_has_colors) {
     rendered_output <- cli::ansi_strip(rendered_output)
   }
 
-  purrr::map_chr(
+  stringi::stri_replace_all_fixed(
     rendered_output,
-    stringi::stri_replace_all_fixed,
     pattern = c("{", "}"),
     replacement = c("{{", "}}"),
     vectorize_all = FALSE
