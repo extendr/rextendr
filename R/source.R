@@ -192,7 +192,7 @@ rust_source <- function(file, code = NULL,
     package_name = dll_info[["name"]],
     outfile = wrapper_file,
     use_symbols = FALSE,
-    quiet = FALSE
+    quiet = quiet
   )
   source(wrapper_file, local = env)
 
@@ -249,7 +249,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     }
 
     # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
-    # but we need RTOOLS40_HOME\mingw{argch}\bin, hence the "../.."
+    # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
     rtools_home <- normalizePath(
       file.path(pkgbuild::rtools_path(), "..", ".."),
       winslash = "/",
