@@ -349,9 +349,10 @@ gather_cargo_output <- function(json_output, level, tty_has_colors) {
 #' @param quiet Logical indicating whether compile output should be generated or not.
 #' @noRd
 check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet) {
-  cargo_output <- message_buffer %>%
-    purrr::map_chr(stringi::stri_trim) %>%
-    purrr::map(jsonlite::parse_json)
+  cargo_output <- purrr::map(
+    message_buffer, 
+    jsonlite::parse_json
+  )
 
   if (!isTRUE(quiet)) {
     purrr::walk(
