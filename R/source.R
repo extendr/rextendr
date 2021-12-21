@@ -251,7 +251,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
     # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
     rtools_home <- normalizePath(
-      file.path(pkgbuild::rtools_path(), "..", ".."),
+      # `pkgbuild` may return two paths for R < 4.2 if Rtools42 is present
+      file.path(pkgbuild::rtools_path()[1], "..", ".."),
       winslash = "/",
       mustWork = TRUE
     )
