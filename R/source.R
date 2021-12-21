@@ -294,7 +294,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     ),
     echo_cmd = FALSE,
     windows_verbatim_args = FALSE,
-    stderr = ifelse(isTRUE(quiet), "|", ""),
+    stderr = if (isTRUE(quiet)) "|" else "",
     stdout = "|",
     error_on_status = FALSE,
     stdout_line_callback = function(line, ...) {
