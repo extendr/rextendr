@@ -350,7 +350,7 @@ gather_cargo_output <- function(json_output, level, tty_has_colors) {
 #' @noRd
 check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet) {
   cargo_output <- purrr::map(
-    message_buffer, 
+    message_buffer,
     jsonlite::parse_json
   )
 
