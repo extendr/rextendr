@@ -115,7 +115,11 @@ ui_throw <- function(message = "Internal error", details = character(0),
     .close = glue_close
   )
 
-  error_messages <- subset_lines_to_fit_in_limit(error_messages, 8000L)
+  message_limit_bytes <- 8000L
+  error_messages <- subset_lines_to_fit_in_limit(
+    error_messages,
+    message_limit_bytes
+  )
 
   message <- glue_collapse(error_messages, sep = "\n")
 
@@ -123,7 +127,7 @@ ui_throw <- function(message = "Internal error", details = character(0),
     # Valid values are something between 1000 and 8170
     # This will be set by {rlang} in the future release,
     # https://github.com/r-lib/rlang/pull/1214
-    list(warning.length = 8000),
+    list(warning.length = message_limit_bytes),
     rlang::abort(message, class = "rextendr_error")
   )
 }
@@ -141,8 +145,8 @@ cli_format_text <- function(message, env = parent.frame()) {
 #' fits within `max_length` limit.
 #'
 #' @param lines \[ ansi_character(n) \] Error messages.
-#' @param max_length Maximum total length of the collapsed message
-#' (measured using `nchar()`).
+#' @param max_length_in_bytes Maximum total length of the collapsed message
+#' (measured using `nchar(type = "byte")`).
 #' @param truncation_notification Message pattern appended if any `lines`
 #' were removed. Understands `cli` interpolation and
 #' `n_removed` integer variable, which is set to the number of removed lines.
@@ -150,14 +154,14 @@ cli_format_text <- function(message, env = parent.frame()) {
 #' `truncation_notification` appended (if needed).
 #' @noRd
 subset_lines_to_fit_in_limit <- function(lines,
-                                         max_length = 1000,
+                                         max_length_in_bytes = 1000,
                                          truncation_notification = "{.val {n_removed}} compiler messages not shown.") {
   n_removed <- 100L
-  truncation_notification_size <- nchar(bullet_i(truncation_notification))
+  truncation_notification_size <- nchar(bullet_i(truncation_notification), type = "byte")
 
-  max_length <- max_length - truncation_notification_size
+  max_length <- max_length_in_bytes - truncation_notification_size
 
-  selected_lines <- lines[cumsum(nchar(lines) + 1L) <= max_length]
+  selected_lines <- lines[cumsum(nchar(lines, type = "byte") + 1L) <= max_length]
   n_removed <- length(lines) - length(selected_lines)
 
   if (n_removed > 0) {
