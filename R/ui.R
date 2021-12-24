@@ -1,5 +1,5 @@
 bullet <- function(text = "", cli_f = cli::cli_alert_success, env = parent.frame()) {
-  cli::cli_format_method(cli_f(text, .envir = env))
+  glue_collapse(cli::cli_format_method(cli_f(text, .envir = env)), sep = "\n")
 }
 
 bullet_x <- function(text = "", env = parent.frame()) {
@@ -103,17 +103,100 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' # o Are you sure you did it right?
 #' }
 #' @noRd
-ui_throw <- function(message = "Internal error", details = character(0), env = parent.frame()) {
+ui_throw <- function(message = "Internal error", details = character(0),
+                     env = parent.frame(),
+                     glue_open = "{", glue_close = "}") {
   message <- cli_format_text(message, env = env)
 
-  if (length(details) != 0L) {
-    details <- glue::glue_collapse(details, sep = "\n")
-    message <- glue::glue(message, details, .sep = "\n")
-  }
+  error_messages <- purrr::map(
+    c(message, details),
+    glue,
+    .open = glue_open,
+    .close = glue_close
+  )
 
-  rlang::abort(message, class = "rextendr_error")
+  message_limit_bytes <- 8000L
+  error_messages <- subset_lines_to_fit_in_limit(
+    error_messages,
+    message_limit_bytes
+  )
+
+  message <- glue_collapse(error_messages, sep = "\n")
+
+  withr::with_options(
+    # Valid values are something between 1000 and 8170
+    # This will be set by {rlang} in the future release,
+    # https://github.com/r-lib/rlang/pull/1214
+    list(warning.length = message_limit_bytes),
+    rlang::abort(message, class = "rextendr_error")
+  )
 }
 
 cli_format_text <- function(message, env = parent.frame()) {
   cli::cli_format_method(cli::cli_text(message, .envir = env))
+}
+
+#' Subset lines to fit within provided character limit.
+#'
+#' Verifies that `lines` fit within given limit of `max_length`.
+#' If not, lines are subset and an additional `truncation_notification`
+#' is appended to `lines`. The function ensures that the output message
+#' constructed by combining `lines` with `\n` separator
+#' fits within `max_length` limit.
+#'
+#' @param lines \[ ansi_character(n) \] Error messages.
+#' @param max_length_in_bytes Maximum total length of the collapsed message
+#' (measured using `nchar(type = "byte")`).
+#' @param truncation_notification Message pattern appended if any `lines`
+#' were removed. Understands `cli` interpolation and
+#' `n_removed` integer variable, which is set to the number of removed lines.
+#' @return \[ ansi_character(n) \] A subset of `lines` with
+#' `truncation_notification` appended (if needed).
+#' @noRd
+subset_lines_to_fit_in_limit <- function(lines,
+                                         max_length_in_bytes = 1000,
+                                         truncation_notification = "{.val {n_removed}} compiler messages not shown.") {
+
+  # This is a shortcut. If `lines` collapsed using `\n` separator
+  # have length less than or equal to `max_length_in_bytes`, return `lines`.
+  # With `max_length_in_bytes` set close to 8000, this should be the hot path.
+  if (sum(nchar(lines, type = "byte") + 1L) <= max_length_in_bytes) {
+    return(lines)
+  }
+
+  # We want to display only a subset of `lines` plus an additional
+  # `truncation_notification` message at the end.
+  # All of these messages combined should still be shorter
+  # than `max_length_in_bytes`.
+
+  # `n_removed` is the number of removed items from `lines`,
+  # which is unknown at this point. We use a 3-digit integer to
+  # interpolate `truncation_notification` and obtain its length.
+  # This length is un upper estimate for `n_removed < 1000`, which should cover
+  # all real cases (`n_removed <= length(lines)`,
+  # which is the number of compiler messages).
+  n_removed <- 100L
+  # Here we count the size in bytes of the interpolated message.
+  truncation_notification_size <- nchar(
+    bullet_i(truncation_notification),
+    type = "byte"
+  )
+
+  # We decrease the max length by the size of the `truncation_notification`
+  # and an extra `1L` for `\n`.
+  max_length <- max_length_in_bytes - truncation_notification_size - 1L
+
+  # We filter out `lines` such that the collapsed with `\n` separator string
+  # is shorter than new `max_length` in bytes.
+  selected_lines <- lines[
+    cumsum(nchar(lines, type = "byte") + 1L) <= max_length
+  ]
+  # Here we finally get the number of lines actually removed.
+  n_removed <- length(lines) - length(selected_lines)
+
+  # We return a subset of `lines` plus an appended
+  # interpolated truncation notification.
+  # These lines when combined using `\n` produce a string that is shorter than
+  # `max_length_in_bytes`.
+  c(selected_lines, bullet_i(truncation_notification))
 }

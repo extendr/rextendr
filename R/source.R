@@ -18,7 +18,7 @@
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to
 #'   \code{list(`extendr-api` = "*")}.
-#' @param features List of features that control conditional compilation and 
+#' @param features List of features that control conditional compilation and
 #'   optional dependencies.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
@@ -115,19 +115,8 @@ rust_source <- function(file, code = NULL,
 
   dir <- get_build_dir(cache_build)
 
-  # to be used by `system2()` below
   if (!isTRUE(quiet)) {
     ui_i("build directory: {.file {dir}}")
-
-    # `""` sends `cargo` output to R's standard output.
-    # R console displays to the user informaion about compilation steps and
-    # potenatial compilation errors.
-    out <- ""
-  } else {
-
-    # `NULL` or `FALSE` intercepts standard output from `cargo`.
-    # No compilation information is displayed to the user.
-    out <- NULL
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -171,8 +160,7 @@ rust_source <- function(file, code = NULL,
     specific_target = specific_target,
     dir = dir,
     profile = profile,
-    stdout = out,
-    stderr = out,
+    quiet = quiet,
     use_rtools = use_rtools
   )
 
@@ -204,7 +192,7 @@ rust_source <- function(file, code = NULL,
     package_name = dll_info[["name"]],
     outfile = wrapper_file,
     use_symbols = FALSE,
-    quiet = FALSE
+    quiet = quiet
   )
   source(wrapper_file, local = env)
 
@@ -236,13 +224,12 @@ rust_function <- function(code, env = parent.frame(), ...) {
 #' @param profile \[string\] Indicates wether to build dev or release versions.
 #'   If `"release"`, emits `--release` argument to `cargo`.
 #'   Otherwise, does nothing.
-#' @param stdout,stderr \[string or `NULL`\] Controls the standard output and standard error of `cargo`.
-#'   Passed unmodified to [system2()].
+#' @param quiet Logical indicating whether compile output should be generated or not.
 #' @param use_rtools \[logical, windows_only\] Indicates wether path RTools should be appended to `PATH` variable
 #'   for the duration of compilation. Has no effect on systems other than Windows.
 #' @noRd
 invoke_cargo <- function(toolchain, specific_target, dir, profile,
-                         stdout, stderr, use_rtools) {
+                         quiet, use_rtools) {
   # Append rtools path to the end of PATH on Windows
   if (
     isTRUE(use_rtools) &&
@@ -262,9 +249,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     }
 
     # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
-    # but we need RTOOLS40_HOME\mingw{argch}\bin, hence the "../.."
+    # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
     rtools_home <- normalizePath(
-      file.path(pkgbuild::rtools_path(), "..", ".."),
+      # `pkgbuild` may return two paths for R < 4.2 if Rtools42 is present
+      file.path(pkgbuild::rtools_path()[1], "..", ".."),
       winslash = "/",
       mustWork = TRUE
     )
@@ -282,22 +270,118 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # If RTOOLS40_HOME is properly set, this will have no real effect
     withr::local_envvar(RTOOLS40_HOME = rtools_home)
   }
-  status <- system2(
+
+  message_buffer <- character(0)
+  env <- rlang::current_env()
+
+  tty_has_colors <- isTRUE(cli::num_ansi_colors() > 1L)
+
+  compilation_result <- processx::run(
     command = "cargo",
     args = c(
-      sprintf("+%s", toolchain),
+      glue("+{toolchain}"),
       "build",
       "--lib",
-      if (!is.null(specific_target)) sprintf("--target %s", specific_target) else NULL,
-      sprintf("--manifest-path %s", file.path(dir, "Cargo.toml")),
-      sprintf("--target-dir %s", file.path(dir, "target")),
-      if (profile == "release") "--release" else NULL
+      glue("--target={specific_target}"),
+      glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
+      glue("--target-dir={file.path(dir, 'target')}"),
+      if (profile == "release") "--release" else NULL,
+      "--message-format=json-diagnostic-rendered-ansi",
+      if (tty_has_colors) {
+        "--color=always"
+      } else {
+        "--color=never"
+      }
     ),
-    stdout = stdout,
-    stderr = stderr
+    echo_cmd = FALSE,
+    windows_verbatim_args = FALSE,
+    stderr = if (isTRUE(quiet)) "|" else "",
+    stdout = "|",
+    error_on_status = FALSE,
+    stdout_line_callback = function(line, ...) {
+      assign("message_buffer", c(message_buffer, line), envir = env)
+    }
   )
-  if (status != 0L) {
-    ui_throw("Rust code could not be compiled successfully. Aborting.")
+
+  check_cargo_output(compilation_result, message_buffer, tty_has_colors, quiet)
+}
+
+#' Gathers ANSI-formatted cargo output
+#'
+#' Checks the output of cargo and filters messages according to `level`.
+#' Retrieves rendered ANSI strings and prepares them
+#' for `cli` and `glue` formatting.
+#' @param json_output \[ JSON(n) \] JSON messages produced by cargo.
+#' @param level \[ string \] Log level.
+#' Commonly used values are `"error"` and `"warning"`.
+#' @param tty_has_colors \[ logical(1) \] Indicates if output
+#' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
+#' @return \[ character(n) \] Vector of strings
+#' that can be passed to `ui_*`, `cli` or `glue` functions.
+#' @noRd
+gather_cargo_output <- function(json_output, level, tty_has_colors) {
+  rendered_output <-
+    json_output %>%
+    purrr::keep(
+      ~ .x$reason == "compiler-message" && .x$message$level == level
+    ) %>%
+    purrr::map_chr(~ .x$message$rendered)
+
+  if (!tty_has_colors) {
+    rendered_output <- cli::ansi_strip(rendered_output)
+  }
+
+  stringi::stri_replace_all_fixed(
+    rendered_output,
+    pattern = c("{", "}"),
+    replacement = c("{{", "}}"),
+    vectorize_all = FALSE
+  )
+}
+
+#' Processes output of cargo compilation process.
+#'
+#' Displays warnings emitted by the compiler
+#' and throws errors if compilation was unsuccessful.
+#' @param compilation_result The output of `processx::run()`.
+#' @param message_buffer \[ character(n) \] Messages emitted by cargo to stdout.
+#' @param tty_has_colors \[ logical(1) \] Indicates if output
+#' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
+#' @param quiet Logical indicating whether compile output should be generated or not.
+#' @noRd
+check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet) {
+  cargo_output <- purrr::map(
+    message_buffer,
+    jsonlite::parse_json
+  )
+
+  if (!isTRUE(quiet)) {
+    purrr::walk(
+      gather_cargo_output(
+        cargo_output,
+        "warning",
+        tty_has_colors
+      ),
+      ui_w
+    )
+  }
+
+  if (!isTRUE(compilation_result$status == 0)) {
+    error_messages <- purrr::map_chr(
+      gather_cargo_output(
+        cargo_output,
+        "error",
+        tty_has_colors
+      ),
+      bullet_x
+    )
+
+    ui_throw(
+      "Rust code could not be compiled successfully. Aborting.",
+      error_messages,
+      glue_open = "{<{",
+      glue_close = "}>}"
+    )
   }
 }
 
