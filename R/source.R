@@ -280,9 +280,9 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # On Windows, PATH to Rust toolchain should be set by the installer
     processx_env <- NULL
   } else {
-    # On Unix-alike, ~/.cargo/bin might not be included in PATH, so we need to
-    # add it here to make sure. It's added to the tail as a fallback, which is
-    # used only when cargo is not found in the user's PATH
+    # In some environments, ~/.cargo/bin might not be included in PATH, so we need
+    # to set it here to ensure cargo can be invoked. It's added to the tail as a
+    # fallback, which is used only when cargo is not found in the user's PATH.
     path_envvar <- Sys.getenv("PATH", unset = "")
     cargo_path <- path.expand("~/.cargo/bin")
     # "current" means appending or overwriting the envvars in addition to the current ones.

@@ -8,8 +8,10 @@ all: C_clean
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	# In some environment, ~/.cargo/bin is not included in PATH, so we need to set it here to make sure
-	export PATH="$(HOME)/.cargo/bin:$(PATH)" && \
+	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
+	# to set it here to ensure cargo can be invoked. It's added to the tail as a
+	# fallback, which is used only when cargo is not found in the user's PATH.
+	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
 		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 C_clean:
