@@ -63,7 +63,7 @@ test_that("`rust_source` works even when the PATH is not set correctly", {
   # Construct PATH without ~/.cargo/bin
   local_path <- Sys.getenv("PATH")
   local_path <- stringi::stri_split_fixed(local_path, ":")[[1]]
-  local_path <- stringi::stri_subset_fixed(local_path, ".cargo/bin")
+  local_path <- stringi::stri_subset_fixed(local_path, ".cargo/bin", negate = TRUE)
   local_path <- glue_collapse(local_path, sep = ":")
 
   withr::local_envvar(PATH = local_path)
