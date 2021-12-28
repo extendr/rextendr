@@ -45,7 +45,8 @@
       
       $(STATLIB):
       	# In some environment, ~/.cargo/bin is not included in PATH, so we need to set it here to make sure
-      	PATH="$(HOME)/.cargo/bin:$(PATH)" cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	export PATH="$(HOME)/.cargo/bin:$(PATH)" && \
+      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
