@@ -58,7 +58,9 @@ test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
 })
 
 test_that("`rust_source` works even when the PATH is not set correctly", {
-  skip_on_os("windows")
+  skip_on_os("windows")  # On Windows, we have no concern as the only installation method is the official installer
+  skip_on_os("linux")    # On Linux, `cargo` might be on somewhere like `/usr/bin`, which is hard to eliminate
+  skip_on_cran()
 
   # Construct PATH without ~/.cargo/bin
   local_path <- Sys.getenv("PATH")
