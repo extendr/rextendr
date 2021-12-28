@@ -283,7 +283,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   	# On Unix-alike, ~/.cargo/bin is not included in PATH, so we need to set it here to make sure
     path_envvar <- Sys.getenv("PATH", unset = "")
     cargo_path <- path.expand("~/.cargo/bin")
-    processx_env <- c(PATH = glue("{cargo_path}:{path_envvar}"))
+    # "current" means appending or overwriting the envvars in addition to the current ones.
+    processx_env <- c("current", PATH = glue("{cargo_path}:{path_envvar}"))
   }
 
   compilation_result <- processx::run(
