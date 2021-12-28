@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+* Claus Wilke is stepping down as a formal maintainer. Ilia Kosenkov is accepting the role of maintainer.
+
 * Support extendr macro with options (#128).
 
 * `rust_source()` got `features` argument to specify Cargo features to activate
