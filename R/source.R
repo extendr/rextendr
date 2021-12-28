@@ -278,7 +278,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
   # If there's no `cargo` found, show some helpful messages.
   no_cargo_found <- isTRUE(nchar(Sys.which("cargo")) == 0)
-  if (no_cargo_found) {
+  if (no_cargo_found && !isTRUE(quiet)) {
     ui_w("Can't find {.code cargo} on the PATH. Please review your Rust installation and PATH setups.")
   }
 
@@ -289,8 +289,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # Whether or not `cargo` is found on the PATH, we append `~/.cargo/bin` because
     # it's possible that `rustc` is not found while `cargo` is (c.f. https://github.com/extendr/rextendr/pull/166#discussion_r775803072).
     # So, we use `no_cargo_found` as a condition only for the friendly message.
-    if (no_cargo_found) {
-      ui_i("For now, {.pkg rextendr} will include {.file ${{HOME}}/.cargo/bin} in PATH temporarily. Please consider adding it in {.file ~/.Renviron}.")
+    if (no_cargo_found && !isTRUE(quiet)) {
+      ui_i("{.pkg rextendr} will temporarily include {.file ${{HOME}}/.cargo/bin} in PATH. Please consider adding it to {.file ~/.Renviron}.")
     }
 
     # In some environments, ~/.cargo/bin might not be included in PATH, so we need
