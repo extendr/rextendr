@@ -276,6 +276,16 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
   tty_has_colors <- isTRUE(cli::num_ansi_colors() > 1L)
 
+  if (identical(.Platform$OS.type, "windows")) {
+    # On Windows, PATH to Rust toolchain should be set by the installer
+    processx_env <- NULL
+  } else {
+  	# On Unix-alike, ~/.cargo/bin is not included in PATH, so we need to set it here to make sure
+    path_envvar <- Sys.getenv("PATH", unset = "")
+    cargo_path <- path.expand("~/.cargo/bin")
+    processx_env <- c(PATH = glue("{cargo_path}:{path_envvar}"))
+  }
+
   compilation_result <- processx::run(
     command = "cargo",
     args = c(
@@ -300,7 +310,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     error_on_status = FALSE,
     stdout_line_callback = function(line, ...) {
       assign("message_buffer", c(message_buffer, line), envir = env)
-    }
+    },
+    env = processx_env
   )
 
   check_cargo_output(compilation_result, message_buffer, tty_has_colors, quiet)
