@@ -1,6 +1,6 @@
 # rextendr (development version)
 
-* Claus Wilke is stepping down as a formal maintainer. Ilia Kosenkov is accepting the role of maintainer.
+* Ilia Kosenkov is now the official maintainer.
 
 * Support extendr macro with options (#128).
 
