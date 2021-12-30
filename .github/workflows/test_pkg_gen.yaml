@@ -64,7 +64,7 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Configure Windows
-        if: startsWith(runner.os, 'Windows') && matrix.config.r == 'release'
+        if: startsWith(runner.os, 'Windows') && matrix.config.r != 'devel'
         run: |
           rustup target add x86_64-pc-windows-gnu
           rustup target add i686-pc-windows-gnu
