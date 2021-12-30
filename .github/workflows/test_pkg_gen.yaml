@@ -78,6 +78,9 @@ jobs:
         run: |
           rustup target add x86_64-pc-windows-gnu
           echo "${env:RTOOLS40_HOME}\ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          # To confirm the tests work without the legacy toolchains, remove them
+          Remove-Item -Recurse -Force "${env:RTOOLS40_HOME}\mingw64"
+          Remove-Item -Recurse -Force "${env:RTOOLS40_HOME}\mingw32"
         shell: pwsh
 
       - name: Configure Linux
