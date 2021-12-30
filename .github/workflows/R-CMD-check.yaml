@@ -45,11 +45,11 @@ jobs:
 
       # Rtools40 contains the GCC10 toolchains in /ucrt64 directory
       - name: Use ucrt64
-        if: startsWith(runner.os, 'Windows') && ${{ matrix.config.r }} == 'devel'
+        if: startsWith(runner.os, 'Windows') && '${{ matrix.config.r }}' == 'devel'
         run: |
           # debug
           echo "${env:RTOOLS40_HOME}"
-          ls -d "${env:RTOOLS40_HOME}/ucrt64"
+          ls "${env:RTOOLS40_HOME}\ucrt64"
           # edd to PATH
           echo "${env:RTOOLS40_HOME}\ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           # confirm
