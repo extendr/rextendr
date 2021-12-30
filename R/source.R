@@ -248,23 +248,28 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       )
     }
 
-    # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
-    # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
-    rtools_home <- normalizePath(
-      # `pkgbuild` may return two paths for R < 4.2 if Rtools42 is present
-      file.path(pkgbuild::rtools_path()[1], "..", ".."),
-      winslash = "/",
-      mustWork = TRUE
-    )
+    if (identical(R.version$crt, "ucrt")) {
+      # TODO: rtools_path() currently returns RTOOLS42_HOME for R >= 4.2, but
+      # current R-devel still uses Rtools40 (c.f. https://community.rstudio.com/t/what-is-or-can-be-the-plan-to-support-rtools42-on-r-lib-actions/125114/4).
+      # So, we need a tweak for now. Eventually, this can be removed.
+      rtools_home <- Sys.getenv("RTOOLS40_HOME", "C:\\rtools42")
 
-    rtools_bin_path <-
-      normalizePath(
-        file.path(
-          rtools_home,
-          paste0("mingw", ifelse(R.version$arch == "i386", "32", "64")),
-          "bin"
-        )
+      # This will be also changed with Rtools42 (x86_64-w64-mingw32.static.posix).
+      subdir <- "ucrt64"
+    } else {
+      # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
+      # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
+      rtools_home <- normalizePath(
+        # `pkgbuild` may return two paths for R < 4.2 with Rtools40v2
+        file.path(pkgbuild::rtools_path()[1], "..", ".."),
+        winslash = "/",
+        mustWork = TRUE
       )
+      subdir <- paste0("mingw", ifelse(R.version$arch == "i386", "32", "64"))
+    }
+
+    rtools_bin_path <- normalizePath(file.path(rtools_home, subdir,"bin"))
+
     # Appends path to rtools\mingw{arch}\bin using a correct arch
     withr::local_path(rtools_bin_path, action = "suffix")
     # If RTOOLS40_HOME is properly set, this will have no real effect
