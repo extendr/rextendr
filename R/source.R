@@ -276,23 +276,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
   tty_has_colors <- isTRUE(cli::num_ansi_colors() > 1L)
 
-  # If there's no `cargo` found, show some helpful messages.
-  no_cargo_found <- isTRUE(nchar(Sys.which("cargo")) == 0)
-  if (no_cargo_found && !isTRUE(quiet)) {
-    ui_w("Can't find {.code cargo} on the PATH. Please review your Rust installation and PATH setups.")
-  }
-
   if (identical(.Platform$OS.type, "windows")) {
     # On Windows, PATH to Rust toolchain should be set by the installer
     cargo_envvars <- NULL
   } else {
-    # Whether or not `cargo` is found on the PATH, we append `~/.cargo/bin` because
-    # it's possible that `rustc` is not found while `cargo` is (c.f. https://github.com/extendr/rextendr/pull/166#discussion_r775803072).
-    # So, we use `no_cargo_found` as a condition only for the friendly message.
-    if (no_cargo_found && !isTRUE(quiet)) {
-      ui_i("{.pkg rextendr} will temporarily include {.file ${{HOME}}/.cargo/bin} in PATH. Please consider adding it to {.file ~/.Renviron}.")
-    }
-
     # In some environments, ~/.cargo/bin might not be included in PATH, so we need
     # to set it here to ensure cargo can be invoked. It's added to the tail as a
     # fallback, which is used only when cargo is not found in the user's PATH.
