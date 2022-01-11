@@ -57,7 +57,7 @@ test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
   expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
-test_that("`rust_source` works even when the PATH is not set correctly", {
+test_that("`rust_source` works even when the PATH is not set correctly, which mainly happens on macOS", {
   skip_on_os("windows")  # On Windows, we have no concern as the only installation method is the official installer
   skip_on_os("linux")    # On Linux, `cargo` might be on somewhere like `/usr/bin`, which is hard to eliminate
   skip_on_cran()
