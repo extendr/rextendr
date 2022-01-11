@@ -56,3 +56,27 @@ test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
   withr::local_options(rextendr.extendr_deps = list(`extendr-api` = "-1"))
   expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
+
+test_that("`rust_source` works even when the PATH is not set correctly, which mainly happens on macOS", {
+  skip_on_os("windows")  # On Windows, we have no concern as the only installation method is the official installer
+  skip_on_os("linux")    # On Linux, `cargo` might be on somewhere like `/usr/bin`, which is hard to eliminate
+  skip_on_cran()
+
+  # Construct PATH without ~/.cargo/bin
+  local_path <- Sys.getenv("PATH")
+  local_path <- stringi::stri_split_fixed(local_path, ":")[[1]]
+  local_path <- stringi::stri_subset_fixed(local_path, ".cargo/bin", negate = TRUE)
+  local_path <- glue_collapse(local_path, sep = ":")
+
+  withr::local_envvar(PATH = local_path)
+
+  # confirm cargo is not found
+  expect_equal(Sys.which("cargo"), c(cargo = ""))
+
+  # confirm `rust_function()` succeeds with a warning
+  warn_msg <- "Can't find cargo on the PATH. Please review your Rust installation and PATH setups."
+  expect_error(
+    expect_warning(rust_function("fn rust_test() {}"), warn_msg),
+    NULL
+  )
+})

@@ -136,11 +136,12 @@ use_rextendr_template <- function(template, save_as = template, data = list(), q
   template_content <- glue::glue_data(
     template_content,
     .x = data,
-    .open = "{{{", .close = "}}}"
+    .open = "{{{", .close = "}}}",
+    .trim = FALSE
   )
 
   write_file(
-    template_content,
+    stringi::stri_trim(template_content),
     path = save_as,
     search_root_from = rprojroot::find_package_root_file(),
     quiet = quiet
