@@ -51,10 +51,7 @@ jobs:
         with:
           # increment this version number when we need to clear the cache
           cache-version: 1
-          extra-packages: |<
-            rcmdcheck
-            devtools
-            usethis
+          extra-packages: rcmdcheck, devtools, usethis
 
       - name: Configure Windows
         if: startsWith(runner.os, 'Windows')
