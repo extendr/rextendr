@@ -49,10 +49,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-        extra-packages: |<
-          rcmdcheck
-          devtools
-          usethis
+          extra-packages: |<
+            rcmdcheck
+            devtools
+            usethis
 
       - name: Configure Windows
         if: startsWith(runner.os, 'Windows')
