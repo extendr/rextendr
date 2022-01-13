@@ -49,6 +49,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          # increment this version number when we need to clear the cache
+          cache-version: 1
           extra-packages: |<
             rcmdcheck
             devtools
