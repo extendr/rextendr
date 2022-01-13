@@ -67,7 +67,8 @@
     
   </div>
 </nav><div class="container template-article">
-<script src="package_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Using Rust code in R packages</h1>
             
@@ -141,57 +142,57 @@
 <h3 id="srcrustcargo-toml">
 <code>src/rust/Cargo.toml</code><a class="anchor" aria-label="anchor" href="#srcrustcargo-toml"></a>
 </h3>
-<pre class="toml"><code>[package]
-name = 'myextendr'
-version = '0.1.0'
-edition = '2018'
-
-[lib]
-crate-type = [ 'staticlib' ]
-
-[dependencies]
-extendr-api = '*'</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode toml"><code class="sourceCode toml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">package</span><span class="kw">]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">'</span><span class="vs">myextendr</span><span class="st">'</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">'</span><span class="vs">0.1.0</span><span class="st">'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">edition</span> <span class="op">=</span> <span class="st">'</span><span class="vs">2018</span><span class="st">'</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">lib</span><span class="kw">]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">crate-type</span> <span class="op">=</span> <span class="op">[</span> <span class="st">'</span><span class="vs">staticlib</span><span class="st">'</span> <span class="op">]</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">dependencies</span><span class="kw">]</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dt">extendr-api</span> <span class="op">=</span> <span class="st">'</span><span class="vs">*</span><span class="st">'</span></span></code></pre></div>
 <p>The crate name is the same name as the R package’s name by default. You can change this, but it might be a bit cumbersome to tweak other files accordingly, so we recommend leaving this.</p>
 <p>You will probably want to specify a concrete extendr version, for example <code>extendr-api = '0.2'</code>. To try the development version of the extendr, you can modify the last line to read</p>
-<pre class="toml"><code><span class="va">extendr</span><span class="op">-</span><span class="va">api</span> <span class="op">=</span> <span class="op">{</span> <span class="va">git</span> <span class="op">=</span> <span class="st">'https://github.com/extendr/extendr'</span> <span class="op">}</span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode toml"><code class="sourceCode toml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">extendr-api</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">'</span><span class="vs">https://github.com/extendr/extendr</span><span class="st">'</span> <span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="srcrustsrclib-rs">
 <code>src/rust/src/lib.rs</code><a class="anchor" aria-label="anchor" href="#srcrustsrclib-rs"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">use</span> <span class="pp">extendr_api::prelude::</span>*;</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">/// @export</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">fn</span> hello_world() -&gt; &amp;<span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a>    <span class="st">"Hello world!"</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="op">}</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="co">// Macro to generate exports.</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">// This ensures exported functions are registered with R.</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co">// See corresponding C code in `entrypoint.c`.</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a>    <span class="kw">mod</span> myextendr;</span>
-<span id="cb6-15"><a href="#cb6-15"></a>    <span class="kw">fn</span> hello_world;</span>
-<span id="cb6-16"><a href="#cb6-16"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">extendr_api::prelude::</span><span class="op">*;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">/// @export</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> hello_world() <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hello world!"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Macro to generate exports.</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">// This ensures exported functions are registered with R.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">// See corresponding C code in `entrypoint.c`.</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">mod</span> myextendr<span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> hello_world;</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Let’s explain this file line by line.</p>
 <p>The first line, containing the <code>use</code> statement, declares the commonly used extendr API functions to the Rust compiler.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">use</span> <span class="pp">extendr_api::prelude::</span>*;</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">extendr_api::prelude::</span><span class="op">*;</span></span></code></pre></div>
 <p>Next, you may notice that <code>/</code> is repeated three times, while the usual Rust comments require only two slashes (i.e., <code>//</code>). This is one of Rust’s “<a href="https://doc.rust-lang.org/reference/comments.html#doc-comments" class="external-link">doc comment</a>” notation to generate the crate’s documentation. In extendr, these lines are copied to the auto-generated R code as roxygen comments. This is analogous to Rcpp/cpp11’s <code>//'</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co">/// @export</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// Return string `"Hello world!"` to R.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">/// @export</span></span></code></pre></div>
 <p>The next line is the core of extendr’s mechanism. If the function is marked with this macro, the corresponding R function will be generated automatically. This is analogous to Rcpp’s <code>[[Rcpp::export]]</code> and cpp11’s <code>[[cpp11::register]]</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#[extendr]</span></code></pre></div>
 <p>The last 3 lines are the macro for generating exports, as the comment explains. If we implement another function than just <code>hello_world</code>, it needs to be listed here as well as marking it with <code>#[extendr]</code> macro.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">// Macro to generate exports.</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co">// This ensures exported functions are registered with R.</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">// See corresponding C code in `entrypoint.c`.</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>    <span class="kw">mod</span> myextendr;</span>
-<span id="cb10-6"><a href="#cb10-6"></a>    <span class="kw">fn</span> hello_world;</span>
-<span id="cb10-7"><a href="#cb10-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Macro to generate exports.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">// This ensures exported functions are registered with R.</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">// See corresponding C code in `entrypoint.c`.</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">mod</span> myextendr<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> hello_world;</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -294,9 +295,9 @@ extendr-api = '*'</code></pre>
 <p>Here, <code>.Call("wrap__make_myextendr_wrappers", use_symbols = ...</code> is a function call that was executed by <code><a href="../reference/document.html">rextendr::document()</a></code>.</p>
 <p>A section of <code>@docType package</code> is needed to generate the <code>useDynLib(myextendr, .registration = TRUE)</code> entry in <code>NAMESPACE</code>.</p>
 <p>The last section is for <code>hello_world()</code>. We can see the roxygen comments are copied to here. As the Rust function <code>hello_world()</code> has no arguments this R function also has no arguments. If the function had arguments, such as</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>    x + y</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> add(x<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">i32</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> y</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>then the generated function wrapper also would have arguments:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">add</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/CallExternal.html" class="external-link">.Call</a></span><span class="op">(</span><span class="va">wrap__add</span>, <span class="va">x</span>, <span class="va">y</span><span class="op">)</span></code></pre></div>
@@ -317,17 +318,17 @@ extendr-api = '*'</code></pre>
 <h3 id="modify-srcrustsrclib-rs">1. Modify <code>src/rust/src/lib.rs</code><a class="anchor" aria-label="anchor" href="#modify-srcrustsrclib-rs"></a>
 </h3>
 <p>Add the function with <code>@export</code>, so it will get exported from the generated R package. (Without this tag, the function would be available internally for package programming but not externally to users of the package.)</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">/// @export</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">fn</span> add(x: <span class="dt">i32</span>, y: <span class="dt">i32</span>) -&gt; <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb17-4"><a href="#cb17-4"></a>    x + y</span>
-<span id="cb17-5"><a href="#cb17-5"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// @export</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> add(x<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">i32</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> y</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Don’t forget to add the function to <code>extendr_module!</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>    <span class="kw">mod</span> myextendr;</span>
-<span id="cb18-3"><a href="#cb18-3"></a>    <span class="kw">fn</span> hello_world;</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    fn add;</span>
-<span id="cb18-5"><a href="#cb18-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode rs"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">extendr_module!</span> <span class="op">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">mod</span> myextendr<span class="op">;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> hello_world;</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    fn add;</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="run-rextendrdocument">2. Run <code>rextendr::document()</code><a class="anchor" aria-label="anchor" href="#run-rextendrdocument"></a>
