@@ -50,7 +50,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           # increment this version number when we need to clear the cache
-          cache-version: 1
+          cache-version: 2
           extra-packages: rcmdcheck, devtools, usethis
 
       - name: Configure Windows
