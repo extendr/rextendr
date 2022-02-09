@@ -2,7 +2,7 @@
 
     Code
       use_extendr()
-    Message <rlang_message>
+    Message
       v Creating 'src/rust/src'.
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
