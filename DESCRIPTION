@@ -39,7 +39,7 @@ URL: https://extendr.github.io/rextendr/
 BugReports: https://github.com/extendr/rextendr/issues
 Depends:
     R (>= 4.0)
-Imports: 
+Imports:
     brio,
     callr,
     cli,
@@ -50,12 +50,12 @@ Imports:
     pkgbuild,
     processx,
     purrr,
-    rlang (>= 0.4.10),
+    rlang (>= 1.0.0),
     rprojroot,
     stringi,
     tibble,
     withr
-Suggests: 
+Suggests:
     devtools,
     knitr,
     mockr,
