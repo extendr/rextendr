@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+* Ilia Kosenkov is now the official maintainer.
+
 * Support extendr macro with options (#128).
 
 * `rust_source()` got `features` argument to specify Cargo features to activate
