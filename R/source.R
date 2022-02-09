@@ -362,8 +362,9 @@ gather_cargo_output <- function(json_output, level, tty_has_colors) {
 #' @param tty_has_colors \[ logical(1) \] Indicates if output
 #' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
 #' @param quiet Logical indicating whether compile output should be generated or not.
+#' @param call Caller environment used for error message formatting.
 #' @noRd
-check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet) {
+check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet, call = caller_env()) {
   cargo_output <- purrr::map(
     message_buffer,
     jsonlite::parse_json
@@ -393,6 +394,7 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     ui_throw(
       "Rust code could not be compiled successfully. Aborting.",
       error_messages,
+      call = call,
       glue_open = "{<{",
       glue_close = "}>}"
     )

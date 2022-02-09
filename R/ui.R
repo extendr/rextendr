@@ -85,7 +85,13 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' Creates a styled error message that is then thrown
 #' using [`rlang::abort()`]. Supports {cli} formatting.
 #' @param message The primary error message.
-#' @param details An optional character vector of error detais.
+#' @param details An optional character vector of error details.
+#' @param env Caller environment used for string interpolation.
+#' @param call Environment of the 'origin' of the error.
+#' It is used to determine what function name to show in the error message.
+#' Passed to [rlang::abort()].
+#' @param glue_open,glue_close Opening and closing delimiters,
+#' passed to [glue::glue()] as `.open` and `.close` parameters.
 #' can be formatted with `bullet()`.
 #' @examples
 #' \dontrun{
@@ -104,7 +110,8 @@ ui_w <- function(text = "", env = parent.frame()) {
 #' }
 #' @noRd
 ui_throw <- function(message = "Internal error", details = character(0),
-                     env = parent.frame(),
+                     env = caller_env(),
+                     call = env,
                      glue_open = "{", glue_close = "}") {
   message <- cli_format_text(message, env = env)
 
@@ -128,7 +135,7 @@ ui_throw <- function(message = "Internal error", details = character(0),
     # This will be set by {rlang} in the future release,
     # https://github.com/r-lib/rlang/pull/1214
     list(warning.length = message_limit_bytes),
-    rlang::abort(message, class = "rextendr_error")
+    rlang::abort(message, class = "rextendr_error", call = call)
   )
 }
 
