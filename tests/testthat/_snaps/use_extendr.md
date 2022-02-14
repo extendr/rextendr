@@ -8,7 +8,7 @@
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
       v Writing 'src/.gitignore'
-      v Writing 'src/rust/Cargo.toml'.
+      v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'R/extendr-wrappers.R'
       v Finished configuring extendr for package testpkg.
@@ -107,6 +107,7 @@
       
       [lib]
       crate-type = [ 'staticlib' ]
+      name = 'testpkg'
       
       [dependencies]
       extendr-api = '*'
