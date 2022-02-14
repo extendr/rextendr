@@ -18,13 +18,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Claus O. Wilke \email{wilke@austin.utexas.edu} (\href{https://orcid.org/0000-0002-7470-9261}{ORCID})
+\strong{Maintainer}: Ilia Kosenkov \email{ilia.kosenkov@outlook.com} (\href{https://orcid.org/0000-0001-5563-7840}{ORCID})
 
 Authors:
 \itemize{
+  \item Claus O. Wilke \email{wilke@austin.utexas.edu} (\href{https://orcid.org/0000-0002-7470-9261}{ORCID})
   \item Andy Thomason \email{andy@andythomason.com}
   \item Mossa M. Reimert \email{mossa@sund.ku.dk}
-  \item Ilia Kosenkov \email{ilia.kosenkov@outlook.com} (\href{https://orcid.org/0000-0001-5563-7840}{ORCID})
   \item Hiroaki Yutani \email{yutani.ini@gmail.com} (\href{https://orcid.org/0000-0002-3385-7233}{ORCID})
   \item Malcolm Barrett \email{malcolmbarrett@gmail.com} (\href{https://orcid.org/0000-0003-0299-5825}{ORCID})
 }
