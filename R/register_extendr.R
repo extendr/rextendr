@@ -132,7 +132,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 #' @noRd
 make_wrappers <- function(module_name, package_name, outfile,
                           path = ".", use_symbols = FALSE, quiet = FALSE) {
-  wrapper_function <- glue("wrap__make_{module_name}_wrappers")
+  wrapper_function <- glue("wrap__make_{as_valid_rust_name(module_name)}_wrappers")
   x <- .Call(
     wrapper_function,
     use_symbols = use_symbols,
