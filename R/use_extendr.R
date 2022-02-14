@@ -10,13 +10,33 @@
 #' package source.
 #'
 #' @param path File path to the package for which to generate wrapper code.
+#' @param crate_name String that is used as the name of the Rust crate.
+#' If `NULL`, sanitized R package name is used instead.
+#' @param lib_name String that is used as the name of the Rust library.
+#' If `NULL`, sanitized R package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not. Also checks the `usethis.quiet` option.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
+use_extendr <- function(path = ".",
+                        crate_name = NULL,
+                        lib_name = NULL,
+                        quiet = getOption("usethis.quiet", FALSE)) {
   pkg_name <- pkg_name(path)
+  mod_name <- as_valid_rust_name(pkg_name)
+
+  if (is.null(crate_name)) {
+    crate_name <- mod_name
+  } else {
+    throw_if_invalid_rust_name(crate_name)
+  }
+
+  if (is.null(lib_name)) {
+    lib_name <- mod_name
+  } else {
+    throw_if_invalid_rust_name(lib_name)
+  }
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
@@ -42,21 +62,21 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(pkg_name = mod_name)
   )
 
   use_rextendr_template(
     "Makevars",
     save_as = file.path("src", "Makevars"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(pkg_name = lib_name)
   )
 
   use_rextendr_template(
     "Makevars.win",
     save_as = file.path("src", "Makevars.win"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(pkg_name = lib_name)
   )
 
   use_rextendr_template(
@@ -66,8 +86,8 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   )
 
   cargo_toml_content <- to_toml(
-    package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
-    lib = list(`crate-type` = array("staticlib", 1)),
+    package = list(name = crate_name, version = "0.1.0", edition = "2018"),
+    lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
   )
 
@@ -82,7 +102,7 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(pkg_name = mod_name)
   )
 
   use_rextendr_template(
