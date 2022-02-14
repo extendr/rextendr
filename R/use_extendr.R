@@ -101,6 +101,44 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   return(invisible(TRUE))
 }
 
+#' Checks if provided name is a valid Rust name (identifier)
+#'
+#' @param name \[ character(n) \] Names to test.
+#' @return \[ logical(n) \] `TRUE` if the name is valid, otherwise `FALSE`.
+#' @noRd
+is_valid_rust_name <- function(name) {
+  # We require the name starts with a letter,
+  # ends with a letter or digit,
+  # and contains only alphanumeric ASCII chars, `-` or `_`.
+  stringi::stri_detect_regex(name, "^[A-z][\\w-]*[A-z0-9]$")
+}
+
+#' Convert R package name into equivalent valid Rust name.
+#'
+#' @param r_name \[ character(n) \] R names to convert.
+#' @return \[ character(n) \] Equivalent Rust name (if exists), otherwise `NA`.
+#' @noRd
+as_valid_rust_name <- function(r_name) {
+  rust_name <- stringi::stri_replace_all_fixed(r_name, ".", "_")
+  throw_if_invalid_rust_name(rust_name)
+  rust_name
+}
+
+#' Verifies if a function argument is a valid Rust name.
+#'
+#' @param name \[ string \] Tested caller function argument.
+#' @param call \[ env \] Environment of the caller, passed to `ui_throw()`.
+#' @noRd
+throw_if_invalid_rust_name <- function(name, call = caller_env()) {
+  quo <- enquo(name)
+  if (!is.character(name) || length(name) != 1 || !is_valid_rust_name(name)) {
+    ui_throw(
+      "Argument {.arg {as_name(quo)}} is invalid.",
+      bullet_w("{.code {as_label(name)}} cannot be used as Rust package or library name."),
+      call = call
+    )
+  }
+}
 #' Write templates from `inst/templates`
 #'
 #' `use_rextendr_template()` is a wrapper around `usethis::use_template()` when
