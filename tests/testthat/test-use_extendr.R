@@ -78,10 +78,7 @@ test_that("use_rextendr_template() works when usethis not available", {
 })
 
 test_that("R/ folder is created when not present", {
-  path <- local_temp_dir()
-  path <- file.path(path, "my.pkg")
-  dir.create(path)
-  setwd(path)
+  path <- local_temp_dir("my.pkg")
   usethis::proj_set(path, force = TRUE)
   usethis::use_description()
 
