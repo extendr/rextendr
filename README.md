@@ -72,6 +72,9 @@ z
 #> [1] 35
 ```
 
+To create library based on Rust source code, see the following
+[docs](https://extendr.github.io/rextendr/articles/package.html)
+
 ------------------------------------------------------------------------
 
 Please note that this project is released with a [Contributor Code of
