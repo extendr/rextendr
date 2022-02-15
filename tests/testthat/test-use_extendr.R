@@ -85,6 +85,8 @@ test_that("R/ folder is created when not present", {
   usethis::proj_set(path, force = TRUE)
   usethis::use_description()
 
+  expect_false(dir.exists("R/"))
+
   # expect no error
   expect_error(use_extendr(), regexp = NA)
   expect_true(dir.exists("R/"))
