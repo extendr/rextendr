@@ -62,21 +62,21 @@ use_extendr <- function(path = ".",
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
     quiet = quiet,
-    data = list(pkg_name = mod_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
     "Makevars",
     save_as = file.path("src", "Makevars"),
     quiet = quiet,
-    data = list(pkg_name = lib_name)
+    data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
     "Makevars.win",
     save_as = file.path("src", "Makevars.win"),
     quiet = quiet,
-    data = list(pkg_name = lib_name)
+    data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
@@ -102,7 +102,7 @@ use_extendr <- function(path = ".",
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
     quiet = quiet,
-    data = list(pkg_name = mod_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
