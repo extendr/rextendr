@@ -33,6 +33,9 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     }
     return(invisible(FALSE))
   }
+  if(!dir.exists("R")) {
+    stop("No R folder, please create it before proceeding.")
+  }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")
   dir.create(rust_src_dir, recursive = TRUE)
