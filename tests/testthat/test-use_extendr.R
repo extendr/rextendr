@@ -76,3 +76,30 @@ test_that("use_rextendr_template() works when usethis not available", {
 
   expect_identical(usethis_generated_templates, rextendr_generated_templates)
 })
+
+# Check that {rextendr} works in packages containing dots in their names.
+# The check is performed by compiling the sample package and checking that
+# `hello_world()` template function is available and works.
+test_that("use_extendr() handles R packages with dots in the name", {
+  path <- local_package("package.with.dots")
+  use_extendr()
+  document()
+  document()
+  expect_equal(hello_world(), "Hello world!")
+})
+
+# Specify crate name and library names explicitly
+test_that("use_extendr() handles R package name, crate name and library name separately", {
+  path <- local_package("testPackage")
+  use_extendr(crate_name = "crate_name", lib_name = "lib_name")
+  document()
+  document()
+  expect_equal(hello_world(), "Hello world!")
+})
+
+# Pass unsupported values to `crate_name` and `lib_name` and expect errors.
+test_that("use_extendr() does not allow invalid rust names", {
+  path <- local_package("testPackage")
+  expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
+  expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
+})
