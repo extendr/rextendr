@@ -41,10 +41,10 @@ local_package <- function(nm, envir = parent.frame()) {
 #'   attached, usually the `parent.frame()` to exist locally
 #'
 #' @return A path to the temporary directory
-local_temp_dir <- function(envir = parent.frame()) {
+local_temp_dir <- function(..., envir = parent.frame()) {
   current_wd <- getwd()
-  path <- tempfile()
-  dir.create(path)
+  path <- file.path(tempfile(), ...)
+  dir.create(path, recursive = TRUE)
 
   setwd(path)
 

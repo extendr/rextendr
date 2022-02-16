@@ -103,3 +103,14 @@ test_that("use_extendr() does not allow invalid rust names", {
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
   expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
+
+test_that("R/ folder is created when not present", {
+  path <- local_temp_dir("my.pkg")
+  usethis::proj_set(path, force = TRUE)
+  usethis::use_description()
+
+  expect_false(dir.exists("R/"))
+
+  # expect no error
+  expect_error(use_extendr(), regexp = NA)
+})

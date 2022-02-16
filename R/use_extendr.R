@@ -39,7 +39,14 @@ use_extendr <- function(path = ".",
   }
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
+  r_dir <- rprojroot::find_package_root_file("R", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
+  if (!dir.exists(r_dir)) {
+    if (!isTRUE(quiet)) {
+      ui_v("Writing {.file R/}")
+    }
+    dir.create(r_dir)
+  }
 
   if (dir.exists(src_dir)) {
     if (!isTRUE(quiet)) {
