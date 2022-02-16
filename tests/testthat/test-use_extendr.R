@@ -76,3 +76,15 @@ test_that("use_rextendr_template() works when usethis not available", {
 
   expect_identical(usethis_generated_templates, rextendr_generated_templates)
 })
+
+test_that("R/ folder is created when not present", {
+  path <- local_temp_dir("my.pkg")
+  usethis::proj_set(path, force = TRUE)
+  usethis::use_description()
+
+  expect_false(dir.exists("R/"))
+
+  # expect no error
+  expect_error(use_extendr(), regexp = NA)
+  expect_true(dir.exists("R/"))
+})
