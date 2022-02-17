@@ -158,7 +158,7 @@ as_valid_rust_name <- function(r_name) {
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
   quo <- enquo(name)
-  if (!is.character(name) || length(name) != 1 || !is_valid_rust_name(name)) {
+  if (length(name) != 1 || !is.character(name) || !is_valid_rust_name(name)) {
     ui_throw(
       "Argument {.arg {as_name(quo)}} is invalid.",
       bullet_w("{.code {as_label(name)}} cannot be used as Rust package or library name."),
