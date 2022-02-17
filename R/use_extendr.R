@@ -137,7 +137,7 @@ is_valid_rust_name <- function(name) {
   # We require the name starts with a letter,
   # ends with a letter or digit,
   # and contains only alphanumeric ASCII chars, `-` or `_`.
-  stringi::stri_detect_regex(name, "^[A-z][\\w-]*[A-z0-9]$")
+  stringi::stri_detect_regex(name, "^[A-z][\\A-z0-9_-]*[A-z0-9]$")
 }
 
 #' Convert R package name into equivalent valid Rust name.
