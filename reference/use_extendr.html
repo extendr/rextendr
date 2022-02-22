@@ -68,13 +68,24 @@ R with <code>hello_world()</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">use_extendr</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, quiet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"usethis.quiet"</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">use_extendr</span><span class="op">(</span>
+  path <span class="op">=</span> <span class="st">"."</span>,
+  crate_name <span class="op">=</span> <span class="cn">NULL</span>,
+  lib_name <span class="op">=</span> <span class="cn">NULL</span>,
+  quiet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"usethis.quiet"</span>, <span class="cn">FALSE</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>path</dt>
 <dd><p>File path to the package for which to generate wrapper code.</p></dd>
+<dt>crate_name</dt>
+<dd><p>String that is used as the name of the Rust crate.
+If <code>NULL</code>, sanitized R package name is used instead.</p></dd>
+<dt>lib_name</dt>
+<dd><p>String that is used as the name of the Rust library.
+If <code>NULL</code>, sanitized R package name is used instead.</p></dd>
 <dt>quiet</dt>
 <dd><p>Logical indicating whether any progress messages should be
 generated or not. Also checks the <code>usethis.quiet</code> option.</p></dd>
