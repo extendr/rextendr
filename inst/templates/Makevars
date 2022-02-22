@@ -1,7 +1,7 @@
 TARGET_DIR = ./rust/target
 LIBDIR = $(TARGET_DIR)/release
-STATLIB = $(LIBDIR)/lib{{{pkg_name}}}.a
-PKG_LIBS = -L$(LIBDIR) -l{{{pkg_name}}}
+STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
+PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 
 all: C_clean
 

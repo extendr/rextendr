@@ -10,13 +10,33 @@
 #' package source.
 #'
 #' @param path File path to the package for which to generate wrapper code.
+#' @param crate_name String that is used as the name of the Rust crate.
+#' If `NULL`, sanitized R package name is used instead.
+#' @param lib_name String that is used as the name of the Rust library.
+#' If `NULL`, sanitized R package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not. Also checks the `usethis.quiet` option.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
-use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
+use_extendr <- function(path = ".",
+                        crate_name = NULL,
+                        lib_name = NULL,
+                        quiet = getOption("usethis.quiet", FALSE)) {
   pkg_name <- pkg_name(path)
+  mod_name <- as_valid_rust_name(pkg_name)
+
+  if (is.null(crate_name)) {
+    crate_name <- mod_name
+  } else {
+    throw_if_invalid_rust_name(crate_name)
+  }
+
+  if (is.null(lib_name)) {
+    lib_name <- mod_name
+  } else {
+    throw_if_invalid_rust_name(lib_name)
+  }
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   r_dir <- rprojroot::find_package_root_file("R", path = path)
@@ -49,21 +69,21 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
     "Makevars",
     save_as = file.path("src", "Makevars"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
     "Makevars.win",
     save_as = file.path("src", "Makevars.win"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
@@ -73,8 +93,8 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   )
 
   cargo_toml_content <- to_toml(
-    package = list(name = pkg_name, version = "0.1.0", edition = "2018"),
-    lib = list(`crate-type` = array("staticlib", 1)),
+    package = list(name = crate_name, version = "0.1.0", edition = "2018"),
+    lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
   )
 
@@ -89,7 +109,7 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
     quiet = quiet,
-    data = list(pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
@@ -108,6 +128,44 @@ use_extendr <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
   return(invisible(TRUE))
 }
 
+#' Checks if provided name is a valid Rust name (identifier)
+#'
+#' @param name \[ character(n) \] Names to test.
+#' @return \[ logical(n) \] `TRUE` if the name is valid, otherwise `FALSE`.
+#' @noRd
+is_valid_rust_name <- function(name) {
+  # We require the name starts with a letter,
+  # ends with a letter or digit,
+  # and contains only alphanumeric ASCII chars, `-` or `_`.
+  stringi::stri_detect_regex(name, "^[A-z][\\A-z0-9_-]*[A-z0-9]$")
+}
+
+#' Convert R package name into equivalent valid Rust name.
+#'
+#' @param r_name \[ character(n) \] R names to convert.
+#' @return \[ character(n) \] Equivalent Rust name (if exists), otherwise `NA`.
+#' @noRd
+as_valid_rust_name <- function(r_name) {
+  rust_name <- stringi::stri_replace_all_fixed(r_name, ".", "_")
+  throw_if_invalid_rust_name(rust_name)
+  rust_name
+}
+
+#' Verifies if a function argument is a valid Rust name.
+#'
+#' @param name \[ string \] Tested caller function argument.
+#' @param call \[ env \] Environment of the caller, passed to `ui_throw()`.
+#' @noRd
+throw_if_invalid_rust_name <- function(name, call = caller_env()) {
+  quo <- enquo(name)
+  if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
+    ui_throw(
+      "Argument {.arg {as_name(quo)}} is invalid.",
+      bullet_w("{.code {as_label(name)}} cannot be used as Rust package or library name."),
+      call = call
+    )
+  }
+}
 #' Write templates from `inst/templates`
 #'
 #' `use_rextendr_template()` is a wrapper around `usethis::use_template()` when

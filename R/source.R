@@ -188,7 +188,7 @@ rust_source <- function(file, code = NULL,
 
 
   make_wrappers(
-    module_name = module_name,
+    module_name = as_valid_rust_name(module_name),
     package_name = dll_info[["name"]],
     outfile = wrapper_file,
     use_symbols = FALSE,

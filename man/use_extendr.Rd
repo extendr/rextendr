@@ -4,10 +4,21 @@
 \alias{use_extendr}
 \title{Set up a package for use with Rust extendr code}
 \usage{
-use_extendr(path = ".", quiet = getOption("usethis.quiet", FALSE))
+use_extendr(
+  path = ".",
+  crate_name = NULL,
+  lib_name = NULL,
+  quiet = getOption("usethis.quiet", FALSE)
+)
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
+
+\item{crate_name}{String that is used as the name of the Rust crate.
+If \code{NULL}, sanitized R package name is used instead.}
+
+\item{lib_name}{String that is used as the name of the Rust library.
+If \code{NULL}, sanitized R package name is used instead.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not. Also checks the \code{usethis.quiet} option.}

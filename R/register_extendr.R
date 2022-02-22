@@ -96,7 +96,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     # Call the wrapper generation in a separate R process to avoid the problem
     # of loading and unloading the same name of a DLL (c.f. #64).
     make_wrappers_externally(
-      module_name = pkg_name,
+      module_name = as_valid_rust_name(pkg_name),
       package_name = pkg_name,
       outfile = outfile,
       path = path,
