@@ -7,6 +7,7 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
@@ -41,45 +42,6 @@
       
       void R_init_testpkg(void *dll) {
           R_init_testpkg_extendr(dll);
-      }
-
----
-
-    Code
-      cat_file("src", "rust", "Cargo.toml")
-    Output
-      [package]
-      name = 'testpkg'
-      version = '0.1.0'
-      edition = '2018'
-      
-      [lib]
-      crate-type = [ 'staticlib' ]
-      name = 'testpkg'
-      
-      [dependencies]
-      extendr-api = '*'
-
----
-
-    Code
-      cat_file("src", "rust", "src", "lib.rs")
-    Output
-      use extendr_api::prelude::*;
-      
-      /// Return string `"Hello world!"` to R.
-      /// @export
-      #[extendr]
-      fn hello_world() -> &'static str {
-          "Hello world!"
-      }
-      
-      // Macro to generate exports.
-      // This ensures exported functions are registered with R.
-      // See corresponding C code in `entrypoint.c`.
-      extendr_module! {
-          mod testpkg;
-          fn hello_world;
       }
 
 ---
@@ -138,4 +100,57 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+
+---
+
+    Code
+      cat_file("src", "Makevars.ucrt")
+    Output
+      # Use GNU toolchain for R >= 4.2
+      TOOLCHAIN = stable-gnu
+      
+      # Rtools42 doesn't have the linker in the location that cargo expects, so we
+      # need to overwrite it via configuration.
+      CARGO_LINKER = x86_64-w64-mingw32.static.posix-gcc.exe
+      
+      include Makevars.win
+
+---
+
+    Code
+      cat_file("src", "rust", "Cargo.toml")
+    Output
+      [package]
+      name = 'testpkg'
+      version = '0.1.0'
+      edition = '2018'
+      
+      [lib]
+      crate-type = [ 'staticlib' ]
+      name = 'testpkg'
+      
+      [dependencies]
+      extendr-api = '*'
+
+---
+
+    Code
+      cat_file("src", "rust", "src", "lib.rs")
+    Output
+      use extendr_api::prelude::*;
+      
+      /// Return string `"Hello world!"` to R.
+      /// @export
+      #[extendr]
+      fn hello_world() -> &'static str {
+          "Hello world!"
+      }
+      
+      // Macro to generate exports.
+      // This ensures exported functions are registered with R.
+      // See corresponding C code in `entrypoint.c`.
+      extendr_module! {
+          mod testpkg;
+          fn hello_world;
+      }
 

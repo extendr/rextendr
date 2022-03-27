@@ -11,14 +11,11 @@ test_that("use_extendr() sets up extendr files correctly", {
 
   expect_snapshot(cat_file("R", "extendr-wrappers.R"))
   expect_snapshot(cat_file("src", "entrypoint.c"))
-  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
-  expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
   expect_snapshot(cat_file("src", "Makevars"))
-
-  # These files diverge before and after R 4.2
-  skip_if_not(identical(R.version$crt, "ucrt"))
   expect_snapshot(cat_file("src", "Makevars.win"))
   expect_snapshot(cat_file("src", "Makevars.ucrt"))
+  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
+  expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
 })
 
 test_that("use_extendr() does not set up packages with pre-existing src", {
