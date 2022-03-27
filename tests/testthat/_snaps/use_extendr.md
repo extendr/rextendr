@@ -32,58 +32,6 @@
 ---
 
     Code
-      cat_file("src", "Makevars")
-    Output
-      TARGET_DIR = ./rust/target
-      LIBDIR = $(TARGET_DIR)/release
-      STATLIB = $(LIBDIR)/libtestpkg.a
-      PKG_LIBS = -L$(LIBDIR) -ltestpkg
-      
-      all: C_clean
-      
-      $(SHLIB): $(STATLIB)
-      
-      $(STATLIB):
-      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
-      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
-      	# therefore is only used if cargo is absent from the user's PATH.
-      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-      
-      clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-
----
-
-    Code
-      cat_file("src", "Makevars.win")
-    Output
-      TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-      TOOLCHAIN = stable-msvc
-      TARGET_DIR = ./rust/target
-      LIBDIR = $(TARGET_DIR)/$(TARGET)/release
-      STATLIB = $(LIBDIR)/libtestpkg.a
-      PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt
-      
-      all: C_clean
-      
-      $(SHLIB): $(STATLIB)
-      
-      $(STATLIB):
-      	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
-      
-      clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
-
----
-
-    Code
       cat_file("src", "entrypoint.c")
     Output
       // We need to forward routine registration from C to Rust
@@ -133,4 +81,61 @@
           mod testpkg;
           fn hello_world;
       }
+
+---
+
+    Code
+      cat_file("src", "Makevars")
+    Output
+      TARGET_DIR = ./rust/target
+      LIBDIR = $(TARGET_DIR)/release
+      STATLIB = $(LIBDIR)/libtestpkg.a
+      PKG_LIBS = -L$(LIBDIR) -ltestpkg
+      
+      all: C_clean
+      
+      $(SHLIB): $(STATLIB)
+      
+      $(STATLIB):
+      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
+      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
+      	# therefore is only used if cargo is absent from the user's PATH.
+      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+      C_clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      
+      clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+
+---
+
+    Code
+      cat_file("src", "Makevars.win")
+    Output
+      TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+      
+      # This is provided in Makevars.ucrt for R >= 4.2
+      TOOLCHAIN ?= stable-msvc
+      
+      TARGET_DIR = ./rust/target
+      LIBDIR = $(TARGET_DIR)/$(TARGET)/release
+      STATLIB = $(LIBDIR)/libtestpkg.a
+      PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt
+      
+      all: C_clean
+      
+      $(SHLIB): $(STATLIB)
+      
+      $(STATLIB):
+      	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+      	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+      	  cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+      C_clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      
+      clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
 

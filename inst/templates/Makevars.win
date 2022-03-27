@@ -1,5 +1,8 @@
 TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-TOOLCHAIN = stable-msvc
+
+# This is provided in Makevars.ucrt for R >= 4.2
+TOOLCHAIN ?= stable-msvc
+
 TARGET_DIR = ./rust/target
 LIBDIR = $(TARGET_DIR)/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
@@ -10,7 +13,9 @@ all: C_clean
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+	  cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
