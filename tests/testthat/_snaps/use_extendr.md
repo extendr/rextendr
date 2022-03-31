@@ -33,20 +33,6 @@
 ---
 
     Code
-      cat_file("src", "entrypoint.c")
-    Output
-      // We need to forward routine registration from C to Rust
-      // to avoid the linker removing the static library.
-      
-      void R_init_testpkg_extendr(void *dll);
-      
-      void R_init_testpkg(void *dll) {
-          R_init_testpkg_extendr(dll);
-      }
-
----
-
-    Code
       cat_file("src", "Makevars")
     Output
       TARGET_DIR = ./rust/target
@@ -114,6 +100,20 @@
       CARGO_LINKER = x86_64-w64-mingw32.static.posix-gcc.exe
       
       include Makevars.win
+
+---
+
+    Code
+      cat_file("src", "entrypoint.c")
+    Output
+      // We need to forward routine registration from C to Rust
+      // to avoid the linker removing the static library.
+      
+      void R_init_testpkg_extendr(void *dll);
+      
+      void R_init_testpkg(void *dll) {
+          R_init_testpkg_extendr(dll);
+      }
 
 ---
 
