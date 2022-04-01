@@ -82,7 +82,7 @@ test_that("use_rextendr_template() works when usethis not available", {
 # The check is performed by compiling the sample package and checking that
 # `hello_world()` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
-  path <- local_package("package.with.dots")
+  path <- local_package("a.b.c")
   use_extendr()
   document()
   document()
