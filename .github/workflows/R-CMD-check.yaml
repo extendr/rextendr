@@ -59,18 +59,6 @@ jobs:
           Remove-Item -Recurse -Force "${env:RTOOLS40_HOME}\mingw32"
           Remove-Item -Recurse -Force "${env:RTOOLS40_HOME}\ucrt64"
 
-          $rtools42_home = "C:\rtools42"
-
-          # rustc adds -lgcc_eh and -lgcc_s flag to the compiler, but there's no libgcc_eh or libgcc_a in Rtools42.
-          # For more details, please refer to https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
-          cp `
-            "${rtools42_home}\x86_64-w64-mingw32.static.posix\lib\gcc\x86_64-w64-mingw32.static.posix\10.3.0\libgcc.a" `
-            "${rtools42_home}\x86_64-w64-mingw32.static.posix\lib\gcc\x86_64-w64-mingw32.static.posix\10.3.0\libgcc_eh.a"
-
-          cp `
-            "${rtools42_home}\x86_64-w64-mingw32.static.posix\lib\gcc\x86_64-w64-mingw32.static.posix\10.3.0\libgcc.a" `
-            "${rtools42_home}\x86_64-w64-mingw32.static.posix\lib\gcc\x86_64-w64-mingw32.static.posix\10.3.0\libgcc_s.a"
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 2
