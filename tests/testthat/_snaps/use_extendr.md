@@ -77,9 +77,17 @@
       $(SHLIB): $(STATLIB)
       
       $(STATLIB):
+      	mkdir -p $(TARGET_DIR)/libgcc_mock
+      	cd $(TARGET_DIR)/libgcc_mock && \
+      		touch gcc_mock.c && \
+      		gcc -c gcc_mock.c -o gcc_mock.o && \
+      		ar -r libgcc_eh.a gcc_mock.o && \
+      		cp libgcc_eh.a libgcc_s.a
+      
       	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
       	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
-      	  cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+      		cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
