@@ -1,0 +1,14 @@
+# `rustc` adds `-lgcc_eh` and `-lgcc_s` flags to the compiler, but Rtools' GCC
+# doesn't have `libgcc_eh` or `libgcc_a` due to the compilation settings. So, in
+# order to please the compiler, we need to add empty `libgcc_eh` or `libgcc_a`
+# to the library search paths.
+#
+# For more details, please refer to
+# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
+
+mkdir -p inst/libgcc_mock
+cd inst/libgcc_mock && \
+	touch gcc_mock.c && \
+	gcc -c gcc_mock.c -o gcc_mock.o && \
+	ar -r libgcc_eh.a gcc_mock.o && \
+	cp libgcc_eh.a libgcc_s.a
