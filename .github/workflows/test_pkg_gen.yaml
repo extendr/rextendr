@@ -20,9 +20,14 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release', rust-version: 'stable-msvc'}
+          - {os: windows-latest, r: 'release', rust-version: 'stable-gnu', rtools-version: '42'}
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-gnu', rtools-version: '42'}
+          # For R < 4.2, the MSVC toolchain is used to support cross-compilation for the 32-bit.
+          # TODO: Remove this runner when we drop the support for R < 4.2
+          - {os: windows-latest, r: '4.1',     rust-version: 'stable-msvc'}
+
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'}
+
           - {os: ubuntu-20.04,   r: 'release', rust-version: 'stable'}
           - {os: ubuntu-20.04,   r: 'devel',   rust-version: 'stable'}
 
@@ -55,22 +60,22 @@ jobs:
           cache-version: 2
           extra-packages: rcmdcheck, devtools, usethis
 
-      - name: Configure Windows
-        if: startsWith(runner.os, 'Windows') && matrix.config.r != 'devel'
+      - name: Configure Windows (R >= 4.2)
+        if: startsWith(runner.os, 'Windows') && matrix.config.r != '4.1'
+        run: |
+          rustup target add x86_64-pc-windows-gnu
+          echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        shell: pwsh
+
+      # TODO: Remove this runner when we drop the support for R < 4.2
+      - name: Configure Windows (R < 4.2)
+        if: startsWith(runner.os, 'Windows') && matrix.config.r == '4.1'
         run: |
           rustup target add x86_64-pc-windows-gnu
           rustup target add i686-pc-windows-gnu
           echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         shell: pwsh
-
-      - name: Configure Windows (R-devel)
-        if: startsWith(runner.os, 'Windows') && matrix.config.r == 'devel'
-        run: |
-          rustup target add x86_64-pc-windows-gnu
-          echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        shell: pwsh
-
 
       - name: Test package generation
         env:
