@@ -46,7 +46,8 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
-          use-public-rspm: true
+          # TODO: enable RSPM when all the packages are available
+          use-public-rspm: false
 
       - name: Configure Windows (R >= 4.2)
         if: startsWith(runner.os, 'Windows') && matrix.config.r != '4.1'
