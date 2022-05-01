@@ -69,6 +69,11 @@ let z = x*y;
 z
 ```
 
+## See also
+
+- The [cargo-framework](https://github.com/dbdahl/cargo-framework) and associated R package [cargo](https://cran.r-project.org/package=cargo)
+- The [r-rust](https://github.com/r-rust) organization
+
 -----
 
 Please note that this project is released with a [Contributor Code of Conduct](https://github.com/extendr/rextendr/blob/main/CODE-OF-CONDUCT.md). By participating in this project you agree to abide by its terms.
