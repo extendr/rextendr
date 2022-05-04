@@ -1,4 +1,4 @@
-clean_rust_code <- function(lines) {
+sanitize_rust_code <- function(lines) {
   lines %>%
     remove_empty_or_whitespace() %>%
     fill_block_comments() %>%
