@@ -43,16 +43,16 @@ clean <- function(path = ".") {
   cargo_envvars <- get_cargo_envvars()
 
   args <- c(
-      "clean",
-      glue("--manifest-path={toml_path}"),
-      glue("--target-dir={target_dir}"),
-      if (tty_has_colors()) {
-        "--color=always"
-      } else {
-        "--color=never"
-      },
-      "--quiet"
-    )
+    "clean",
+    glue("--manifest-path={toml_path}"),
+    glue("--target-dir={target_dir}"),
+    if (tty_has_colors()) {
+      "--color=always"
+    } else {
+      "--color=never"
+    },
+    "--quiet"
+  )
   exec_result <- processx::run(
     command = "cargo",
     args = args,
