@@ -48,7 +48,7 @@ test_that("use_rextendr_template() works when usethis not available", {
   mockr::with_mock(
     # mock that usethis installed
     is_installed = function(...) TRUE,
-    use_extendr(),
+    { use_extendr() },
     .env = "rextendr"
   )
 
@@ -69,7 +69,7 @@ test_that("use_rextendr_template() works when usethis not available", {
   mockr::with_mock(
     # mock that usethis not installed
     is_installed = function(...) FALSE,
-    use_extendr(),
+    { use_extendr() },
     .env = "rextendr"
   )
 
