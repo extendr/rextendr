@@ -72,8 +72,12 @@ z
 #> [1] 35
 ```
 
-To create library based on Rust source code, see the following
-[docs](https://extendr.github.io/rextendr/articles/package.html)
+## See also
+
+-   The [cargo-framework](https://github.com/dbdahl/cargo-framework) and
+    associated R package
+    [cargo](https://cran.r-project.org/package=cargo)
+-   The [r-rust](https://github.com/r-rust) organization
 
 ------------------------------------------------------------------------
 
