@@ -7,6 +7,7 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
@@ -62,7 +63,10 @@
       cat_file("src", "Makevars.win")
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-      TOOLCHAIN = stable-msvc
+      
+      # This is provided in Makevars.ucrt for R >= 4.2
+      TOOLCHAIN ?= stable-msvc
+      
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
@@ -73,13 +77,37 @@
       $(SHLIB): $(STATLIB)
       
       $(STATLIB):
-      	cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	mkdir -p $(TARGET_DIR)/libgcc_mock
+      	cd $(TARGET_DIR)/libgcc_mock && \
+      		touch gcc_mock.c && \
+      		gcc -c gcc_mock.c -o gcc_mock.o && \
+      		ar -r libgcc_eh.a gcc_mock.o && \
+      		cp libgcc_eh.a libgcc_s.a
+      
+      	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+      	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+      		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+      		cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+
+---
+
+    Code
+      cat_file("src", "Makevars.ucrt")
+    Output
+      # Use GNU toolchain for R >= 4.2
+      TOOLCHAIN = stable-gnu
+      
+      # Rtools42 doesn't have the linker in the location that cargo expects, so we
+      # need to overwrite it via configuration.
+      CARGO_LINKER = x86_64-w64-mingw32.static.posix-gcc.exe
+      
+      include Makevars.win
 
 ---
 

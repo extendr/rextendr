@@ -41,3 +41,4 @@ vignettes/*.pdf
 
 **/.vscode/*
 
+/inst/libgcc_mock

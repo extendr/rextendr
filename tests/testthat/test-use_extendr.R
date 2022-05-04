@@ -12,6 +12,7 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_snapshot(cat_file("R", "extendr-wrappers.R"))
   expect_snapshot(cat_file("src", "Makevars"))
   expect_snapshot(cat_file("src", "Makevars.win"))
+  expect_snapshot(cat_file("src", "Makevars.ucrt"))
   expect_snapshot(cat_file("src", "entrypoint.c"))
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
   expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
@@ -81,7 +82,7 @@ test_that("use_rextendr_template() works when usethis not available", {
 # The check is performed by compiling the sample package and checking that
 # `hello_world()` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
-  path <- local_package("package.with.dots")
+  path <- local_package("a.b.c")
   use_extendr()
   document()
   document()

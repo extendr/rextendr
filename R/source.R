@@ -251,24 +251,25 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
     # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
     rtools_home <- normalizePath(
-      # `pkgbuild` may return two paths for R < 4.2 if Rtools42 is present
+      # `pkgbuild` may return two paths for R < 4.2 with Rtools40v2
       file.path(pkgbuild::rtools_path()[1], "..", ".."),
       winslash = "/",
       mustWork = TRUE
     )
 
-    rtools_bin_path <-
-      normalizePath(
-        file.path(
-          rtools_home,
-          paste0("mingw", ifelse(R.version$arch == "i386", "32", "64")),
-          "bin"
-        )
-      )
-    # Appends path to rtools\mingw{arch}\bin using a correct arch
+    if (identical(R.version$crt, "ucrt")) {
+      # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71
+      subdir <- c("x86_64-w64-mingw32.static.posix", "usr")
+      # If RTOOLS42_HOME is properly set, this will have no real effect
+      withr::local_envvar(RTOOLS42_HOME = rtools_home)
+    } else {
+      subdir <- paste0("mingw", ifelse(R.version$arch == "i386", "32", "64"))
+      # If RTOOLS40_HOME is properly set, this will have no real effect
+      withr::local_envvar(RTOOLS40_HOME = rtools_home)
+    }
+
+    rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"))
     withr::local_path(rtools_bin_path, action = "suffix")
-    # If RTOOLS40_HOME is properly set, this will have no real effect
-    withr::local_envvar(RTOOLS40_HOME = rtools_home)
   }
 
   message_buffer <- character(0)
@@ -277,8 +278,24 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   tty_has_colors <- isTRUE(cli::num_ansi_colors() > 1L)
 
   if (identical(.Platform$OS.type, "windows")) {
-    # On Windows, PATH to Rust toolchain should be set by the installer
-    cargo_envvars <- NULL
+    # On Windows, PATH to Rust toolchain should be set by the installer.
+    # If R >= 4.2, we need to override the linker setting.
+    if (identical(R.version$crt, "ucrt")) {
+      # libgcc_mock is created in configure.ucrt on installation.
+      libgcc_path <- system.file("libgcc_mock", package = "rextendr")
+      if (identical(libgcc_path, "")) {
+        ui_throw(
+          "Unable to find {.file inst/libgcc_mock}. Please reinstall the rextendr package",
+        )
+      }
+
+      cargo_envvars <- c("current",
+        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "x86_64-w64-mingw32.static.posix-gcc.exe",
+        LIBRARY_PATH = paste0(libgcc_path, ";", Sys.getenv("LIBRARY_PATH"))
+      )
+    } else {
+      cargo_envvars <- NULL
+    }
   } else {
     # In some environments, ~/.cargo/bin might not be included in PATH, so we need
     # to set it here to ensure cargo can be invoked. It's added to the tail as a
