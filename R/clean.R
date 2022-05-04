@@ -1,3 +1,12 @@
+#' Clean Rust binaries and package cache.
+#'
+#' Removes Rust binaries (such as `.dll`/`.so` libraries), C wrapper object files,
+#' invokes `cargo clean` to reset cargo target directory
+#' (found by default at `pkg_root/src/rust/target/`).
+#' Useful when Rust code should be recompiled from scratch.
+#' @param path \[ string \] Path to the package root.
+#' @param profile \[ release | dev \] Whether to clean `release` or `development` versions.
+#' @export
 clean <- function(path = ".", profile = c("release", "dev")) {
   profile <- match.arg(profile)
   root <- rprojroot::find_package_root_file(path = path)
