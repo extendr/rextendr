@@ -5,10 +5,8 @@
 #' (found by default at `pkg_root/src/rust/target/`).
 #' Useful when Rust code should be recompiled from scratch.
 #' @param path \[ string \] Path to the package root.
-#' @param profile \[ release | dev \] Whether to clean `release` or `development` versions.
 #' @export
-clean <- function(path = ".", profile = c("release", "dev")) {
-  profile <- match.arg(profile)
+clean <- function(path = ".") {
   root <- rprojroot::find_package_root_file(path = path)
 
   rust_folder <- normalizePath(
@@ -44,20 +42,20 @@ clean <- function(path = ".", profile = c("release", "dev")) {
   env <- rlang::current_env()
   cargo_envvars <- get_cargo_envvars()
 
-  exec_result <- processx::run(
-    command = "cargo",
-    args = c(
+  args <- c(
       "clean",
       glue("--manifest-path={toml_path}"),
       glue("--target-dir={target_dir}"),
-      if (profile == "release") "--release" else NULL,
       if (tty_has_colors()) {
         "--color=always"
       } else {
         "--color=never"
       },
       "--quiet"
-    ),
+    )
+  exec_result <- processx::run(
+    command = "cargo",
+    args = args,
     echo_cmd = FALSE,
     windows_verbatim_args = FALSE,
     stderr = "|",
