@@ -16,6 +16,7 @@ reference:
   - use_extendr
   - document
   - register_extendr
+  - clean
 
 - title: Various utility functions
   contents:
