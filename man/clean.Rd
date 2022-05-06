@@ -4,12 +4,10 @@
 \alias{clean}
 \title{Clean Rust binaries and package cache.}
 \usage{
-clean(path = ".", profile = c("release", "dev"))
+clean(path = ".")
 }
 \arguments{
 \item{path}{[ string ] Path to the package root.}
-
-\item{profile}{[ release | dev ] Whether to clean \code{release} or \code{development} versions.}
 }
 \description{
 Removes Rust binaries (such as \code{.dll}/\code{.so} libraries), C wrapper object files,
