@@ -27,7 +27,8 @@ on_error_return_default <- function(expr, default = NULL) {
 #' @param search_from Path from which package root is looked up.
 #' @returns `path`, relative to the package root.
 #' @noRd
-pretty_rel_path <- function(path, search_from = ".") {
+pretty_rel_single_path <- function(path, search_from = ".") {
+  stopifnot("`path` may only be one single path" = length(path) == 1)
   # Absolute path to the package root.
   # If package root cannot be identified,
   # an error is thrown, which gets converted into
@@ -49,11 +50,11 @@ pretty_rel_path <- function(path, search_from = ".") {
   # return `path` unchanged (for simplicity).
   if (
     !nzchar(package_root) ||
-      !all(stringi::stri_detect_fixed(
+      !stringi::stri_detect_fixed(
         str = path,
         pattern = package_root,
         case_insensitive = TRUE
-      ))
+      )
   ) {
     return(path)
   }
@@ -73,10 +74,20 @@ pretty_rel_path <- function(path, search_from = ".") {
   # Removes leading `/` if present.
   path <- stringi::stri_replace_first_regex(path, "^/", "")
 
-  # empty paths are root
-  path[!nzchar(path)] <- "."
+  if (!nzchar(path)) {
+    path <- "."
+  }
 
   path
+}
+
+#' See [pretty_rel_single_path] for implementation details
+#' 
+#' @inheritParams pretty_rel_single_path
+#' 
+#' @noRd
+pretty_rel_path <- function(path, search_from = ".") {
+   purrr::map_chr(path, pretty_rel_single_path, search_from = search_from)
 }
 
 get_library_path <- function(path = ".") {
