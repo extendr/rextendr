@@ -49,11 +49,11 @@ pretty_rel_path <- function(path, search_from = ".") {
   # return `path` unchanged (for simplicity).
   if (
     !nzchar(package_root) ||
-      !stringi::stri_detect_fixed(
+      !all(stringi::stri_detect_fixed(
         str = path,
         pattern = package_root,
         case_insensitive = TRUE
-      )
+      ))
   ) {
     return(path)
   }
@@ -73,9 +73,8 @@ pretty_rel_path <- function(path, search_from = ".") {
   # Removes leading `/` if present.
   path <- stringi::stri_replace_first_regex(path, "^/", "")
 
-  if (!nzchar(path)) {
-    path <- "."
-  }
+  # empty paths are root
+  path[!nzchar(path)] <- "."
 
   path
 }
