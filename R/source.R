@@ -95,7 +95,7 @@ rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
-                        profile = c("dev", "release"),
+                        profile = c("dev", "release", "optim"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_deps = getOption("rextendr.extendr_deps"),
                         features = NULL,
@@ -105,7 +105,7 @@ rust_source <- function(file, code = NULL,
                         cache_build = TRUE,
                         quiet = FALSE,
                         use_rtools = TRUE) {
-  profile <- match.arg(profile)
+  profile <- match.arg(profile, several.ok = FALSE)
   if (is.null(extendr_deps)) {
     ui_throw(
       "Invalid argument.",
@@ -176,7 +176,7 @@ rust_source <- function(file, code = NULL,
   shared_lib <- file.path(
     dir,
     target_folder,
-    ifelse(profile == "dev", "debug", "release"),
+    ifelse(profile == "dev", "debug", profile),
     libfilename
   )
 
@@ -315,7 +315,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       glue("--target={specific_target}"),
       glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
       glue("--target-dir={file.path(dir, 'target')}"),
-      if (profile == "release") "--release" else NULL,
+      glue("--profile {profile}"),
       "--message-format=json-diagnostic-rendered-ansi",
       if (tty_has_colors) {
         "--color=always"
