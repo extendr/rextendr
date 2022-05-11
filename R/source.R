@@ -427,7 +427,8 @@ generate_cargo.toml <- function(libname = "rextendr",
     package = list(
       name = libname,
       version = "0.0.1",
-      edition = "2018"
+      edition = "2021",
+      resolver = "2"
     ),
     lib = list(
       `crate-type` = array("cdylib", 1)
