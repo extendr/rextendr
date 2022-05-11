@@ -11,8 +11,8 @@
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
-#' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
-#'   `"dev"`, compiles faster but produces slower code.
+#' @param profile Rust profile. Can be either `"dev"`, `"release"` or `"optim"`.
+#'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
@@ -40,6 +40,7 @@
 #'   architecture. Does nothing on other platforms.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
 #'  See [getLoadedDLLs()] for more details.
+#' 
 #' @examples
 #' \dontrun{
 #' # creating a single rust function

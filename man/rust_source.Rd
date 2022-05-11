@@ -11,7 +11,7 @@ rust_source(
   module_name = "rextendr",
   dependencies = NULL,
   patch.crates_io = getOption("rextendr.patch.crates_io"),
-  profile = c("dev", "release"),
+  profile = c("dev", "release", "optim"),
   toolchain = getOption("rextendr.toolchain"),
   extendr_deps = getOption("rextendr.extendr_deps"),
   features = NULL,
@@ -39,8 +39,8 @@ rust_function(code, env = parent.frame(), ...)
 \item{patch.crates_io}{Character vector of patch statements for crates.io to
 be added to the \code{Cargo.toml} file.}
 
-\item{profile}{Rust profile. Can be either \code{"dev"} or \code{"release"}. The default,
-\code{"dev"}, compiles faster but produces slower code.}
+\item{profile}{Rust profile. Can be either \code{"dev"}, \code{"release"} or \code{"optim"}.
+The default, \code{"dev"}, compiles faster but produces slower code.}
 
 \item{toolchain}{Rust toolchain. The default, \code{NULL}, compiles with the
 system default toolchain. Accepts valid Rust toolchain qualifiers,
