@@ -315,7 +315,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       glue("--target={specific_target}"),
       glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
       glue("--target-dir={file.path(dir, 'target')}"),
-      glue("--profile {profile}"),
+      glue("--profile={profile}"),
       "--message-format=json-diagnostic-rendered-ansi",
       if (tty_has_colors) {
         "--color=always"
