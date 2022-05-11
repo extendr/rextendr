@@ -438,7 +438,14 @@ generate_cargo.toml <- function(libname = "rextendr",
       dependencies
     ),
     `patch.crates-io` = patch.crates_io,
-    features = features
+    features = features,
+    `profile.optim` = list(
+      inherits = "release",
+      lto = "thin",
+      `opt-level` = 3,
+      panic = "abort",
+      `codegen-units` = 1
+    )
   )
 }
 
