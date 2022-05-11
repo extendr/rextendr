@@ -33,7 +33,7 @@ install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, p
   dir.create(dir)
   dir.create(file.path(dir, "src"))
   cargo.toml <- c(
-    '[package]\nname = "build-libR-sys"\nversion = "0.0.1"\nedition = "2018"',
+    '[package]\nname = "build-libR-sys"\nversion = "0.0.1"\nedition = "2021"',
     glue('[dependencies]\nlibR-sys = "{version}"'),
     "[patch.crates-io]",
     patch.crates_io
