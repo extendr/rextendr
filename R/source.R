@@ -152,6 +152,10 @@ rust_source <- function(file, code = NULL,
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
+  # add cargo configuration file to the package
+  cargo_config.toml_content <- generate_cargo_config.toml()
+  brio::write_lines(cargo_config.toml_content, file.path(dir, ".cargo", "config.toml"))
+  
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 
@@ -449,6 +453,14 @@ generate_cargo.toml <- function(libname = "rextendr",
   )
 }
 
+generate_cargo_config.toml <- function() {
+  to_toml(
+    build = list(
+      rustflags = array(c("-C", "target-cpu=native")),
+      `target-dir` = "target"
+    )
+  )
+}
 
 get_dynlib_ext <- function() {
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
