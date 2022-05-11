@@ -515,6 +515,7 @@ get_build_dir <- function(cache_build) {
     dir.create(dir)
     dir.create(file.path(dir, "R"))
     dir.create(file.path(dir, "src"))
+    dir.create(file.path(dir, ".cargo"))
     the$build_dir <- normalizePath(dir, winslash = "/")
   }
   the$build_dir
