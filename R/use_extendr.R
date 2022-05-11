@@ -16,13 +16,15 @@
 #' If `NULL`, sanitized R package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not. Also checks the `usethis.quiet` option.
+#' @param edition String indicating which Rust edition is used; Default `"2021"`.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
 #' @export
 use_extendr <- function(path = ".",
                         crate_name = NULL,
                         lib_name = NULL,
-                        quiet = getOption("usethis.quiet", FALSE)) {
+                        quiet = getOption("usethis.quiet", FALSE),
+                        edition = c("2021", "2018", "2015")) {
   pkg_name <- pkg_name(path)
   mod_name <- as_valid_rust_name(pkg_name)
 
@@ -99,8 +101,9 @@ use_extendr <- function(path = ".",
     quiet = quiet
   )
 
+  edition <- match.arg(edition, several.ok = FALSE)
   cargo_toml_content <- to_toml(
-    package = list(name = crate_name, version = "0.1.0", edition = "2018"),
+    package = list(name = crate_name, version = "0.1.0", edition = edition),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
   )
