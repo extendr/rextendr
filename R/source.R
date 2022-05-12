@@ -11,7 +11,7 @@
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
-#' @param profile Rust profile. Can be either `"dev"`, `"release"` or `"optim"`.
+#' @param profile Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
 #'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
@@ -96,7 +96,7 @@ rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
-                        profile = c("dev", "release", "optim"),
+                        profile = c("dev", "release", "perf"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_deps = getOption("rextendr.extendr_deps"),
                         features = NULL,
@@ -444,7 +444,7 @@ generate_cargo.toml <- function(libname = "rextendr",
     ),
     `patch.crates-io` = patch.crates_io,
     features = features,
-    `profile.optim` = list(
+    `profile.perf` = list(
       inherits = "release",
       lto = "thin",
       `opt-level` = 3,
