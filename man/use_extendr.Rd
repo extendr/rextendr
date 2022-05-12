@@ -9,7 +9,7 @@ use_extendr(
   crate_name = NULL,
   lib_name = NULL,
   quiet = getOption("usethis.quiet", FALSE),
-  edition = c("2021", "2018", "2015")
+  edition = c("2021", "2018")
 )
 }
 \arguments{
