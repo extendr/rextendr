@@ -457,7 +457,7 @@ generate_cargo.toml <- function(libname = "rextendr",
 generate_cargo_config.toml <- function() {
   to_toml(
     build = list(
-      rustflags = array(c("-C", "target-cpu=native")),
+      rustflags = c("-C", "target-cpu=native"),
       `target-dir` = "target"
     )
   )
