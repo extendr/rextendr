@@ -24,7 +24,7 @@ use_extendr <- function(path = ".",
                         crate_name = NULL,
                         lib_name = NULL,
                         quiet = getOption("usethis.quiet", FALSE),
-                        edition = c("2021", "2018", "2015")) {
+                        edition = c("2021", "2018")) {
   pkg_name <- pkg_name(path)
   mod_name <- as_valid_rust_name(pkg_name)
 
