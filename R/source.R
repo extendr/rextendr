@@ -11,8 +11,8 @@
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
 #'   be added to the `Cargo.toml` file.
-#' @param profile Rust profile. Can be either `"dev"` or `"release"`. The default,
-#'   `"dev"`, compiles faster but produces slower code.
+#' @param profile Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
+#'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
@@ -40,6 +40,7 @@
 #'   architecture. Does nothing on other platforms.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
 #'  See [getLoadedDLLs()] for more details.
+#' 
 #' @examples
 #' \dontrun{
 #' # creating a single rust function
@@ -95,7 +96,7 @@ rust_source <- function(file, code = NULL,
                         module_name = "rextendr",
                         dependencies = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
-                        profile = c("dev", "release"),
+                        profile = c("dev", "release", "perf"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_deps = getOption("rextendr.extendr_deps"),
                         features = NULL,
@@ -105,7 +106,7 @@ rust_source <- function(file, code = NULL,
                         cache_build = TRUE,
                         quiet = FALSE,
                         use_rtools = TRUE) {
-  profile <- match.arg(profile)
+  profile <- match.arg(profile, several.ok = FALSE)
   if (is.null(extendr_deps)) {
     ui_throw(
       "Invalid argument.",
@@ -152,6 +153,10 @@ rust_source <- function(file, code = NULL,
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
+  # add cargo configuration file to the package
+  cargo_config.toml_content <- generate_cargo_config.toml()
+  brio::write_lines(cargo_config.toml_content, file.path(dir, ".cargo", "config.toml"))
+  
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 
@@ -176,7 +181,7 @@ rust_source <- function(file, code = NULL,
   shared_lib <- file.path(
     dir,
     target_folder,
-    ifelse(profile == "dev", "debug", "release"),
+    ifelse(profile == "dev", "debug", profile),
     libfilename
   )
 
@@ -315,7 +320,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       glue("--target={specific_target}"),
       glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
       glue("--target-dir={file.path(dir, 'target')}"),
-      if (profile == "release") "--release" else NULL,
+      glue("--profile={profile}"),
       "--message-format=json-diagnostic-rendered-ansi",
       if (tty_has_colors) {
         "--color=always"
@@ -427,7 +432,8 @@ generate_cargo.toml <- function(libname = "rextendr",
     package = list(
       name = libname,
       version = "0.0.1",
-      edition = "2021"
+      edition = "2021",
+      resolver = "2"
     ),
     lib = list(
       `crate-type` = array("cdylib", 1)
@@ -437,10 +443,25 @@ generate_cargo.toml <- function(libname = "rextendr",
       dependencies
     ),
     `patch.crates-io` = patch.crates_io,
-    features = features
+    features = features,
+    `profile.perf` = list(
+      inherits = "release",
+      lto = "thin",
+      `opt-level` = 3,
+      panic = "abort",
+      `codegen-units` = 1
+    )
   )
 }
 
+generate_cargo_config.toml <- function() {
+  to_toml(
+    build = list(
+      rustflags = c("-C", "target-cpu=native"),
+      `target-dir` = "target"
+    )
+  )
+}
 
 get_dynlib_ext <- function() {
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
@@ -494,6 +515,7 @@ get_build_dir <- function(cache_build) {
     dir.create(dir)
     dir.create(file.path(dir, "R"))
     dir.create(file.path(dir, "src"))
+    dir.create(file.path(dir, ".cargo"))
     the$build_dir <- normalizePath(dir, winslash = "/")
   }
   the$build_dir
