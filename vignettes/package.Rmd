@@ -88,7 +88,7 @@ So, in short, what we should really look at is only these two files:
 [package]
 name = 'myextendr'
 version = '0.1.0'
-edition = '2018'
+edition = '2021'
 
 [lib]
 crate-type = [ 'staticlib' ]
