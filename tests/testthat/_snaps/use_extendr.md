@@ -131,7 +131,7 @@
       [package]
       name = 'testpkg'
       version = '0.1.0'
-      edition = '2018'
+      edition = '2021'
       
       [lib]
       crate-type = [ 'staticlib' ]

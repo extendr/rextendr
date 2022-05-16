@@ -18,15 +18,17 @@ on_error_return_default <- function(expr, default = NULL) {
   )
 }
 
-# Converts any path to path, relative to the package root
-# E.g., outer_root/some_folder/code/packages/my_package/src/rust/src/lib.rs
-# becomes src/rust/src/lib.rs.
-# Used for pretty printing.
-# Assumes that `path` is within `package_root`.
-# @param path Scalar path to format.
-# @param search_from Path from which package root is looked up.
-# @returns `path`, relative to the package root.
-pretty_rel_path <- function(path, search_from = ".") {
+#' Converts any path to path, relative to the package root
+#' E.g., outer_root/some_folder/code/packages/my_package/src/rust/src/lib.rs
+#' becomes src/rust/src/lib.rs.
+#' Used for pretty printing.
+#' Assumes that `path` is within `package_root`.
+#' @param path Scalar path to format.
+#' @param search_from Path from which package root is looked up.
+#' @returns `path`, relative to the package root.
+#' @noRd
+pretty_rel_single_path <- function(path, search_from = ".") {
+  stopifnot("`path` may only be one single path" = length(path) == 1)
   # Absolute path to the package root.
   # If package root cannot be identified,
   # an error is thrown, which gets converted into
@@ -77,6 +79,15 @@ pretty_rel_path <- function(path, search_from = ".") {
   }
 
   path
+}
+
+#' See [pretty_rel_single_path] for implementation details
+#' 
+#' @inheritParams pretty_rel_single_path
+#' 
+#' @noRd
+pretty_rel_path <- function(path, search_from = ".") {
+   purrr::map_chr(path, pretty_rel_single_path, search_from = search_from)
 }
 
 get_library_path <- function(path = ".") {
@@ -167,15 +178,16 @@ needs_compilation <- function(path = ".", quiet = getOption("usethis.quiet", FAL
   TRUE
 }
 
-# Equivalent to `fs::file_info`.
-#
-# Takes paths, retrieves info using `file.info`
-# and converts obtained `data.frame` in a more suitable `tibble`
-# with `path` column representing file paths (instead of row names).
-#
-# @param path File paths to inspect (accepts multiple value).
-# @returns A `tibble::tibble()` with information about files,
-# including `path` and `mtime`, which are used elsewhere in `rextendr`.
+#' Equivalent to `fs::file_info`.
+#'
+#' Takes paths, retrieves info using `file.info`
+#' and converts obtained `data.frame` in a more suitable `tibble`
+#' with `path` column representing file paths (instead of row names).
+#'
+#' @param path File paths to inspect (accepts multiple value).
+#' @returns A `tibble::tibble()` with information about files,
+#' including `path` and `mtime`, which are used elsewhere in `rextendr`.
+#' @noRd
 get_file_info <- function(path) {
   # We do not need extra columns, only `mtime`
   info <- file.info(path, extra_cols = FALSE)
