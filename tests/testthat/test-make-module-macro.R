@@ -109,7 +109,7 @@ test_that("Rust code cleaning", {
   )
 
   expect_equal(
-    clean_rust_code(c(
+    sanitize_rust_code(c(
       "/* Comment #1 */",
       "   // Comment #2",
       "              ",

@@ -19,7 +19,7 @@ make_module_macro <- function(code, module_name = "rextendr") {
     omit_empty = TRUE
   )[[1]]
 
-  idents <- find_exports(clean_rust_code(lines))
+  idents <- find_exports(sanitize_rust_code(lines))
   outlines <- c("extendr_module! {", glue("mod {module_name};"))
   outlines <- c(outlines, glue::glue_data(idents, "{type} {name};"))
   outlines <- c(outlines, "}")
