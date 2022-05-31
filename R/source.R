@@ -127,7 +127,7 @@ rust_source <- function(file, code = NULL,
       code <- c(code, make_module_macro(code, module_name))
     }
     if (isTRUE(use_extendr_api)) {
-      code <- c("use extendr_api::*;", code)
+      code <- c("use extendr_api::prelude::*;", code)
     }
     brio::write_lines(code, rust_file)
 
