@@ -40,7 +40,7 @@
 #'   architecture. Does nothing on other platforms.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
 #'  See [getLoadedDLLs()] for more details.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # creating a single rust function
@@ -140,7 +140,7 @@ rust_source <- function(file, code = NULL,
   }
 
   if (!isTRUE(cache_build)) {
-    on.exit(clean_build_dir())
+    withr::defer(clean_build_dir())
   }
 
   # generate Cargo.toml file and compile shared library
@@ -156,7 +156,7 @@ rust_source <- function(file, code = NULL,
   # add cargo configuration file to the package
   cargo_config.toml_content <- generate_cargo_config.toml()
   brio::write_lines(cargo_config.toml_content, file.path(dir, ".cargo", "config.toml"))
-  
+
   # Get target name, not null for Windows
   specific_target <- get_specific_target_name()
 

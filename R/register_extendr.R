@@ -163,7 +163,7 @@ make_wrappers_externally <- function(module_name, package_name, outfile,
     # Loads native library
     lib <- dyn.load(library_path)
     # Registers library unloading to be invoked at the end of this function
-    on.exit(dyn.unload(lib[["path"]]), add = TRUE)
+    withr::defer(dyn.unload(lib[["path"]]))
 
     make_wrappers(
       module_name = module_name,

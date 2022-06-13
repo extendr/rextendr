@@ -1,6 +1,4 @@
-old_test_settings <- options(
-  usethis.quiet = TRUE
-)
+withr::local_options(usethis.quiet = TRUE, .local_envir = teardown_env())
 
 # Ensure inst/libgcc_mock exists (Note that `quiet = TRUE` seems mandatory here,
 # otherwise it crashes probably because of broken pipe?)

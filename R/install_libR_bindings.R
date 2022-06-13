@@ -44,7 +44,7 @@ install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, p
     "pub const DUMMY: u32 = 0;"
   )
   brio::write_lines(lib.rs, file.path(dir, "src", "lib.rs"))
-  on.exit(unlink(dir, recursive = TRUE))
+  withr::defer(unlink(dir, recursive = TRUE))
 
   if (!isTRUE(quiet)) {
     cat(sprintf("build directory: %s\n", dir))
