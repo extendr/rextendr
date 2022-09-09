@@ -50,7 +50,7 @@ Imports:
     pkgbuild,
     processx,
     purrr,
-    rlang (>= 1.0.0),
+    rlang (>= 1.0.5),
     rprojroot,
     stringi,
     tibble,
