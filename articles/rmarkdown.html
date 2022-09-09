@@ -8,8 +8,8 @@
 <meta name="description" content="rextendr">
 <title>Using Rust code in R Markdown documents • rextendr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using Rust code in R Markdown documents">
 <meta property="og:description" content="rextendr">
@@ -76,7 +76,7 @@
       <img src="" class="logo" alt=""><h1>Using Rust code in R Markdown documents</h1>
                         <h4 data-toc-skip class="author">Claus O. Wilke</h4>
             
-            <h4 data-toc-skip class="date">2022-06-13</h4>
+            <h4 data-toc-skip class="date">2022-09-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/HEAD/vignettes/rmarkdown.Rmd" class="external-link"><code>vignettes/rmarkdown.Rmd</code></a></small>
       <div class="d-none name"><code>rmarkdown.Rmd</code></div>
@@ -86,7 +86,7 @@
     
 <p>The rextendr package enables two new chunk types for knitr, <code>extendr</code> and <code>extendrsrc</code>. The former can be used to evaluate individual Rust statements while the latter can be used to define Rust functions and export them to R. To use either chunk type, you need to first load the rextendr package in a regular R chunk. You would normally do this in a hidden setup chunk at the top of your R Markdown document.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="evaluating-rust-statements">Evaluating Rust statements<a class="anchor" aria-label="anchor" href="#evaluating-rust-statements"></a>
 </h2>
@@ -108,23 +108,23 @@
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div>
-<pre><code><span class="co">## Hello from Rust!</span>
-<span class="co">## [1] 35</span></code></pre>
+<pre><code><span><span class="co">## Hello from Rust!</span></span>
+<span><span class="co">## [1] 35</span></span></code></pre>
 <p>In the background, the <code>extendr</code> knit engine casts the Rust integer variable into type <code>Result&lt;Robj&gt;</code> and returns its value to R. Notice the lack of a semicolon (<code>;</code>) at the end of this line, to indicate that you want to return a value. You can also write code that doesn’t return any result to R. In this case, the last line would end in a semicolon, as in this example:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"{}*{} = {}"</span><span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> z)<span class="op">;</span></span></code></pre></div>
-<pre><code><span class="co">## 5*7 = 35</span></code></pre>
+<pre><code><span><span class="co">## 5*7 = 35</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="accessing-r-values-from-rust">Accessing R values from Rust<a class="anchor" aria-label="anchor" href="#accessing-r-values-from-rust"></a>
 </h2>
 <p>It is possible to access variables defined in R from Rust. Let’s define two R variables, a numeric and a string:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">5.3</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="st">"hello"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">5.3</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="st">"hello"</span></span></code></pre></div>
 <p>We can read these variables from Rust using the <code>R!()</code> macro. Unfortunately, it takes a bit of error checking and type-converting to get these into native Rust values. This is the case because things could go wrong at each step. We’re handling the errors with <code>?</code>. For example, <code>R!()</code> calls the R interpreter and it could generate an error. And even if it returns a value, we’re not guaranteed that the value can be coerced into a real value or a string. However, <code>as_real()</code> and <code>as_str()</code> don’t return errors, they return options, so we need to turn the <code>None</code> option into an error via <code>ok_or()</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x<span class="op">:</span><span class="dt">f64</span> <span class="op">=</span> <span class="pp">R!</span>(x)<span class="op">?</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>as_real()</span>
@@ -136,8 +136,8 @@
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>to_string()<span class="op">;</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"The value of x: {}</span><span class="sc">\n</span><span class="st">The value of y: {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
-<pre><code><span class="co">## The value of x: 5.3</span>
-<span class="co">## The value of y: hello</span></code></pre>
+<pre><code><span><span class="co">## The value of x: 5.3</span></span>
+<span><span class="co">## The value of y: hello</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="chaining-chunks-together">Chaining chunks together<a class="anchor" aria-label="anchor" href="#chaining-chunks-together"></a>
@@ -168,7 +168,7 @@
 <div class="sourceCode" id="cb12"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span></code></pre></div>
 <p>Print:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"x = {}, y = {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
-<pre><code><span class="co">## x = 1, y = 2</span></code></pre>
+<pre><code><span><span class="co">## x = 1, y = 2</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="exporting-rust-functions-or-objects-to-r">Exporting Rust functions or objects to R<a class="anchor" aria-label="anchor" href="#exporting-rust-functions-or-objects-to-r"></a>
@@ -235,21 +235,21 @@
 <span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>However, now we can call the functions <code>hello()</code> and <code>foo()</code> from R and use the <code>Counter</code> object:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">hello</span><span class="op">(</span><span class="op">)</span>
-<span class="va">out</span></code></pre></div>
-<pre><code><span class="co">## [1] "Hello from Rust!"</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">hello</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">out</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "Hello from Rust!"</span></span></code></pre>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">foo</span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Data sent to Rust: Hello from Rust!, 16</span></code></pre>
+<code class="sourceCode R"><span><span class="fu">foo</span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Data sent to Rust: Hello from Rust!, 16</span></span></code></pre>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Counter</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Counter</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0</span></span></code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 2</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 2</span></span></code></pre>
 <p>If your code requires external crates, you can set dependencies via the <code>engine.opts</code> chunk option, like so:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>``<span class="in">`{extendrsrc engine.opts = list(dependencies = list(`</span>pulldown-cmark` = "0.8"))}</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>use pulldown_cmark::{Parser, Options, html};</span>
@@ -278,12 +278,12 @@
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>And the generated functions can be used from R:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">md_text</span> <span class="op">&lt;-</span> <span class="st">"# The story of the fox
-The quick brown fox **jumps over** the lazy dog.
-The quick *brown fox* jumps over the lazy dog."</span>
-
-<span class="fu">md_to_html</span><span class="op">(</span><span class="va">md_text</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "&lt;h1&gt;The story of the fox&lt;/h1&gt;\n&lt;p&gt;The quick brown fox &lt;strong&gt;jumps over&lt;/strong&gt; the lazy dog.\nThe quick &lt;em&gt;brown fox&lt;/em&gt; jumps over the lazy dog.&lt;/p&gt;\n"</span></code></pre>
+<code class="sourceCode R"><span><span class="va">md_text</span> <span class="op">&lt;-</span> <span class="st">"# The story of the fox</span></span>
+<span><span class="st">The quick brown fox **jumps over** the lazy dog.</span></span>
+<span><span class="st">The quick *brown fox* jumps over the lazy dog."</span></span>
+<span></span>
+<span><span class="fu">md_to_html</span><span class="op">(</span><span class="va">md_text</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "&lt;h1&gt;The story of the fox&lt;/h1&gt;\n&lt;p&gt;The quick brown fox &lt;strong&gt;jumps over&lt;/strong&gt; the lazy dog.\nThe quick &lt;em&gt;brown fox&lt;/em&gt; jumps over the lazy dog.&lt;/p&gt;\n"</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -298,7 +298,7 @@ The quick *brown fox* jumps over the lazy dog."</span>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
