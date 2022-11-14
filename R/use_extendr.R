@@ -123,6 +123,13 @@ use_extendr <- function(path = ".",
   )
 
   use_rextendr_template(
+    "win.def",
+    save_as = file.path("src", paste0(mod_name, "-win.def")),
+    quiet = quiet,
+    data <- list(mod_name = mod_name)
+  )
+
+  use_rextendr_template(
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
