@@ -3,10 +3,10 @@ test_that("rextendr::clean() removes cargo target directory & binaries", {
   use_extendr()
   document()
 
-  expect_equal(length(dir("src", pattern = "testpkg.*")), 1)
+  expect_equal(length(dir("src", pattern = "testpkg.*")), 2)
   expect_true(dir.exists(file.path("src", "rust", "target")))
   clean()
 
-  expect_equal(length(dir("src", pattern = "testpkg.*")), 0)
+  expect_equal(length(dir("src", pattern = "testpkg.*")), 1)
   expect_false(dir.exists(file.path("src", "rust", "target")))
 })
