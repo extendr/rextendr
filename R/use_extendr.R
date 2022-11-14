@@ -124,7 +124,7 @@ use_extendr <- function(path = ".",
 
   use_rextendr_template(
     "win.def",
-    save_as = file.path("src", paste0(mod_name, "-win.def")),
+    save_as = file.path("src", paste0(pkg_name, "-win.def")),
     quiet = quiet,
     data <- list(mod_name = mod_name)
   )
