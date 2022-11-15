@@ -127,6 +127,14 @@
 ---
 
     Code
+      cat_file("src", "testpkg-win.def")
+    Output
+      EXPORTS
+      R_init_testpkg
+
+---
+
+    Code
       cat_file("src", "rust", "Cargo.toml")
     Output
       [package]
