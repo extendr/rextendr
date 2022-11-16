@@ -11,6 +11,7 @@
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
+      v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
       v Finished configuring extendr for package testpkg.
       * Please update the system requirement in 'DESCRIPTION' file.
@@ -122,6 +123,14 @@
       void R_init_testpkg(void *dll) {
           R_init_testpkg_extendr(dll);
       }
+
+---
+
+    Code
+      cat_file("src", "testpkg-win.def")
+    Output
+      EXPORTS
+      R_init_testpkg
 
 ---
 
