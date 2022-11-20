@@ -18,6 +18,12 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 To install the package, run:
 
 ``` r
+install.packages("rextendr")
+```
+
+To install the development version run:
+
+``` r
 remotes::install_github("extendr/rextendr")
 ```
 
