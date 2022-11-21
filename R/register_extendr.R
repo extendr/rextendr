@@ -139,10 +139,18 @@ make_wrappers <- function(module_name, package_name, outfile,
     package_name = package_name,
     PACKAGE = package_name
   )
-  x <- stringi::stri_split_lines1(x)
+  generated_wrappers <- stringi::stri_split_lines1(x)
+
+  generated_wrappers <- c(
+    "# nolint start",
+    "",
+    generated_wrappers,
+    "",
+    "# nolint end"
+  )
 
   write_file(
-    text = x,
+    text = generated_wrappers,
     path = outfile,
     search_root_from = path,
     quiet = quiet
