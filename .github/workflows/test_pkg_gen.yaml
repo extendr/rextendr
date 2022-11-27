@@ -3,6 +3,7 @@ on:
     branches:
       - main
       - master
+      - '*' # DEBUG: Enable for all branches
   pull_request:
     branches:
       - main
