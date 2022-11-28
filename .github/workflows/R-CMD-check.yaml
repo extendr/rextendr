@@ -1,6 +1,6 @@
 on:
   push:
-    branches: '*' # [main, master] DEBUG: enable for all branches
+    branches: [main, master]
   pull_request:
     branches: [main, master]
 
