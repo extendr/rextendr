@@ -6,12 +6,9 @@ get_cargo_envvars <- function() {
     # If R >= 4.2, we need to override the linker setting.
     if (identical(R.version$crt, "ucrt")) {
       # libgcc_mock is created in configure.ucrt on installation.
-      libgcc_path <- system.file("libgcc_mock", package = "rextendr")
-      if (identical(libgcc_path, "")) {
-        ui_throw(
-          "Unable to find {.file inst/libgcc_mock}. Please reinstall the rextendr package",
-        )
-      }
+      libgcc_path <- file.path(system.file(package = "rextendr"), "libgcc_mock")
+      dir.create(libgcc_path, showWarnings = FALSE)
+      file.create(file.path(libgcc_path, "libgcc_eh.a"))
 
       cargo_envvars <- c("current",
         CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "x86_64-w64-mingw32.static.posix-gcc.exe",

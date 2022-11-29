@@ -14,11 +14,7 @@ $(SHLIB): $(STATLIB)
 
 $(STATLIB):
 	mkdir -p $(TARGET_DIR)/libgcc_mock
-	cd $(TARGET_DIR)/libgcc_mock && \
-		touch gcc_mock.c && \
-		gcc -c gcc_mock.c -o gcc_mock.o && \
-		ar -r libgcc_eh.a gcc_mock.o && \
-		cp -n libgcc_eh.a libgcc_s.a
+	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
 	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
 	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
