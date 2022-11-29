@@ -5,10 +5,9 @@ get_cargo_envvars <- function() {
     # On Windows, PATH to Rust toolchain should be set by the installer.
     # If R >= 4.2, we need to override the linker setting.
     if (identical(R.version$crt, "ucrt")) {
-      # `rustc` adds `-lgcc_eh` and `-lgcc_s` flags to the compiler, but Rtools' GCC
-      # doesn't have `libgcc_eh` or `libgcc_a` due to the compilation settings. So, in
-      # order to please the compiler, we need to add empty `libgcc_eh` or `libgcc_a`
-      # to the library search paths.
+      # `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
+      # `libgcc_eh` due to the compilation settings. So, in order to please the
+      # compiler, we need to add empty `libgcc_eh` to the library search paths.
       #
       # For more details, please refer to
       # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
