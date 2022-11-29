@@ -5,7 +5,13 @@ get_cargo_envvars <- function() {
     # On Windows, PATH to Rust toolchain should be set by the installer.
     # If R >= 4.2, we need to override the linker setting.
     if (identical(R.version$crt, "ucrt")) {
-      # libgcc_mock is created in configure.ucrt on installation.
+      # `rustc` adds `-lgcc_eh` and `-lgcc_s` flags to the compiler, but Rtools' GCC
+      # doesn't have `libgcc_eh` or `libgcc_a` due to the compilation settings. So, in
+      # order to please the compiler, we need to add empty `libgcc_eh` or `libgcc_a`
+      # to the library search paths.
+      #
+      # For more details, please refer to
+      # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
       libgcc_path <- file.path(system.file(package = "rextendr"), "libgcc_mock")
       dir.create(libgcc_path, showWarnings = FALSE)
       file.create(file.path(libgcc_path, "libgcc_eh.a"))
