@@ -74,9 +74,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Setting up a Rust build environment</h1>
-                        <h4 data-toc-skip class="author">Claus O. Wilke</h4>
+                        <h4 data-toc-skip class="author">Claus O.
+Wilke</h4>
             
-            <h4 data-toc-skip class="date">2022-10-24</h4>
+            <h4 data-toc-skip class="date">2022-11-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/HEAD/vignettes/setting_up_rust.Rmd" class="external-link"><code>vignettes/setting_up_rust.Rmd</code></a></small>
       <div class="d-none name"><code>setting_up_rust.Rmd</code></div>
@@ -84,16 +85,32 @@
 
     
     
-<p>Regardless of which operating system you use, we recommend using <a href="https://rustup.rs/" class="external-link">rustup</a> to install and maintain your Rust toolchain. On Linux and OS X, you simply run the following command in a shell:</p>
+<p>Regardless of which operating system you use, we recommend using <a href="https://rustup.rs/" class="external-link">rustup</a> to install and maintain your Rust
+toolchain. On Linux and OS X, you simply run the following command in a
+shell:</p>
 <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
 <p>No further action should be needed.</p>
-<p>On Windows, things are a little more involved. First download <code>rustup‑init.exe</code> from the <a href="https://rustup.rs/" class="external-link">rustup site</a> and run it, following the on-screen instructions. Rust may require installation of <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="external-link">VC++ build tools</a> (more instructions can be found <a href="https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup" class="external-link">here</a>). Once installed, execute the following rustup commands:</p>
+<p>On Windows, things are a little more involved. First download
+<code>rustup‑init.exe</code> from the <a href="https://rustup.rs/" class="external-link">rustup site</a> and run it, following the
+on-screen instructions. Rust may require installation of <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="external-link">VC++
+build tools</a> (more instructions can be found <a href="https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup" class="external-link">here</a>).
+Once installed, execute the following rustup commands:</p>
 <pre><code>rustup default stable-x86_64-pc-windows-msvc
 rustup target add x86_64-pc-windows-gnu
 rustup target add i686-pc-windows-gnu</code></pre>
-<p>Second, install Rtools. The latest installer is available on <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">CRAN</a>. Alternatively, Rtools can be installed using chocolatey:</p>
+<p>Second, install Rtools. The latest installer is available on <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">CRAN</a>.
+Alternatively, Rtools can be installed using chocolatey:</p>
 <pre><code>choco install rtools -y</code></pre>
-<p>Finally, make sure that environment variables are set up correctly. <code>R_HOME</code> should point to the R folder, e.g. <code>C:\Program Files\R\R-4.1.0</code> (be careful with spaces in the path). <code>RTOOLS40_HOME</code> should point to the Rtools folder (usually set up automatically by the installer), which is <code>C:\rtools40</code> by default. <code>PATH</code> should contain paths to <code>%R_HOME%\bin</code> and <code>%RTOOLS40_HOME%\usr\bin</code>, as well as cargo, which is found at <code>%USERPROFILE%\.cargo\bin</code> if installed using <code>rustup-init.exe</code>.</p>
+<p>Finally, make sure that environment variables are set up correctly.
+<code>R_HOME</code> should point to the R folder,
+e.g. <code>C:\Program Files\R\R-4.1.0</code> (be careful with spaces in
+the path). <code>RTOOLS40_HOME</code> should point to the Rtools folder
+(usually set up automatically by the installer), which is
+<code>C:\rtools40</code> by default. <code>PATH</code> should contain
+paths to <code>%R_HOME%\bin</code> and
+<code>%RTOOLS40_HOME%\usr\bin</code>, as well as cargo, which is found
+at <code>%USERPROFILE%\.cargo\bin</code> if installed using
+<code>rustup-init.exe</code>.</p>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>
