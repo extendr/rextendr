@@ -142,9 +142,11 @@ make_wrappers <- function(module_name, package_name, outfile,
   generated_wrappers <- stringi::stri_split_lines1(x)
 
   generated_wrappers <- c(
+    generated_wrappers[1],
+    "",
     "# nolint start",
     "",
-    generated_wrappers,
+    generated_wrappers[-1],
     "",
     "# nolint end"
   )
