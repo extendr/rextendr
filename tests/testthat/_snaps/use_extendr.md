@@ -22,6 +22,8 @@
     Code
       cat_file("R", "extendr-wrappers.R")
     Output
+      # nolint start
+      
       #' @docType package
       #' @usage NULL
       #' @useDynLib testpkg, .registration = TRUE
@@ -30,6 +32,8 @@
       #' Return string `"Hello world!"` to R.
       #' @export
       hello_world <- function() .Call(wrap__hello_world)
+      
+      # nolint end
 
 ---
 
