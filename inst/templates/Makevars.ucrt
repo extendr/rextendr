@@ -1,5 +1,5 @@
 # The default toolchain is used whether it's GNU or MSVC.
-TOOLCHAIN ?= stable
+CARGO_CMD ?= cargo
 
 # Rtools42 doesn't have the linker in the location that cargo expects, so we
 # need to overwrite it via configuration.
