@@ -107,8 +107,7 @@
     Code
       cat_file("src", "Makevars.ucrt")
     Output
-      # Use GNU toolchain for R >= 4.2
-      TOOLCHAIN ?= stable-gnu
+      TOOLCHAIN ?= stable
       
       # Rtools42 doesn't have the linker in the location that cargo expects, so we
       # need to overwrite it via configuration.
