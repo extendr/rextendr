@@ -107,6 +107,7 @@
     Code
       cat_file("src", "Makevars.ucrt")
     Output
+      # The default toolchain is used whether it's GNU or MSVC.
       TOOLCHAIN ?= stable
       
       # Rtools42 doesn't have the linker in the location that cargo expects, so we
