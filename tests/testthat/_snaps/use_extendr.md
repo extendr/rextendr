@@ -69,9 +69,6 @@
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       
-      # This is provided in Makevars.ucrt for R >= 4.2
-      TOOLCHAIN ?= stable-msvc
-      
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
@@ -94,7 +91,7 @@
       	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
       	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
       		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      		cargo +$(TOOLCHAIN) build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
@@ -107,9 +104,6 @@
     Code
       cat_file("src", "Makevars.ucrt")
     Output
-      # The default toolchain is used whether it's GNU or MSVC.
-      TOOLCHAIN ?= stable
-      
       # Rtools42 doesn't have the linker in the location that cargo expects, so we
       # need to overwrite it via configuration.
       CARGO_LINKER = x86_64-w64-mingw32.static.posix-gcc.exe
