@@ -82,9 +82,9 @@ pretty_rel_single_path <- function(path, search_from = ".") {
 }
 
 #' See [pretty_rel_single_path] for implementation details
-#' 
+#'
 #' @inheritParams pretty_rel_single_path
-#' 
+#'
 #' @noRd
 pretty_rel_path <- function(path, search_from = ".") {
    purrr::map_chr(path, pretty_rel_single_path, search_from = search_from)
@@ -133,49 +133,6 @@ get_rust_files <- function(path = ".") {
 
   result <- c(cargo_toml_paths, rust_src_paths)
   result
-}
-
-#' Checks if re-compilation is needed.
-#'
-#' Tracks changes in Rust source files (`*.rs`) and `Cargo.toml`.
-#' @param path Path from which package root is looked up.
-#' @param quiet Logical scalar indicating wether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`).
-#' @returns Logical `TRUE` if Rust source has been modified, `FALSE` otherwise.
-#' @noRd
-needs_compilation <- function(path = ".", quiet = getOption("usethis.quiet", FALSE)) {
-  library_path <- get_library_path(path)
-
-  # This will likely never happen.
-  # Shortcut: missing library file requires compilation in any case.
-  if (!file.exists(library_path)) {
-    if (!isTRUE(quiet)) {
-      library_path_rel <- pretty_rel_path(library_path, path)
-      ui_w("No library found at {.file {library_path_rel}}, recompilation is required.")
-    }
-    return(TRUE)
-  }
-
-  # Leaves files that were modified *after* the library
-  modified_files_paths <- find_newer_files_than(get_rust_files(path), library_path)
-
-  # Shortcut: no files have been modified since last compilation.
-  if (length(modified_files_paths) == 0L) {
-    return(FALSE)
-  }
-
-  # Takes relative to the project root paths of all modified files and walks it,
-  # informing user of each modification.
-  # This perhaps should have an `isFALSE(quiet)` check, but right now rextendr rocelts
-  # do not support `quiet` arg.
-  if (!isTRUE(quiet)) {
-    purrr::walk(
-      pretty_rel_path(modified_files_paths, search_from = path),
-      ~ ui_i("File {.file {.x}} has been modified since last compilation.")
-    )
-  }
-
-  TRUE
 }
 
 #' Equivalent to `fs::file_info`.

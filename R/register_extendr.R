@@ -51,7 +51,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 
   # If compile is NA, compile if the DLL is newer than the source files
   if (isTRUE(is.na(compile))) {
-    compile <- needs_compilation(path, quiet) || pkgbuild::needs_compile(path)
+    compile <- pkgbuild::needs_compile(path)
   }
 
   if (isTRUE(compile)) {
