@@ -47,7 +47,7 @@ Imports:
     dplyr,
     glue,
     jsonlite,
-    pkgbuild,
+    pkgbuild (>= 1.4.0),
     processx,
     purrr,
     rlang (>= 1.0.5),
