@@ -20,9 +20,6 @@ which defaults to \code{c("collate", "namespace", "rd")}.}
 No return value, called for side effects.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
-}
-\details{
 \code{rextendr::document()} was a wrapper for \code{\link[devtools:document]{devtools::document()}} to ensure
 that Rust code is recompiled (when necessary) and that up-to-date R wrappers
 are generated before re-generating the package documentation. However, as of

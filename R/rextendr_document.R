@@ -1,7 +1,5 @@
 #' Compile Rust code and generate package documentation.
 #'
-#' `r lifecycle::badge("superseded")`
-#'
 #' `rextendr::document()` was a wrapper for [devtools::document()] to ensure
 #' that Rust code is recompiled (when necessary) and that up-to-date R wrappers
 #' are generated before re-generating the package documentation. However, as of
