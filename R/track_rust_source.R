@@ -82,9 +82,9 @@ pretty_rel_single_path <- function(path, search_from = ".") {
 }
 
 #' See [pretty_rel_single_path] for implementation details
-#' 
+#'
 #' @inheritParams pretty_rel_single_path
-#' 
+#'
 #' @noRd
 pretty_rel_path <- function(path, search_from = ".") {
    purrr::map_chr(path, pretty_rel_single_path, search_from = search_from)
@@ -96,43 +96,6 @@ get_library_path <- function(path = ".") {
     rprojroot::find_package_root_file("src", path = path),
     glue::glue("{pkg_name(path)}{.Platform$dynlib.ext}")
   )
-}
-
-#' Obtains paths to the Rust source files.
-#'
-#' Enumerates all Rust files, changes to which should trigger re-compilation.
-#' This inclides `*.rs` and `Cargo.toml`.
-#' @param path Path from which package root is looked up.
-#' @returns A vector of file paths (can be empty).
-#' @noRd
-get_rust_files <- function(path = ".") {
-  src_root <- rprojroot::find_package_root_file("src", path = path)
-  if (!dir.exists(src_root)) {
-    # No source code found
-    ui_w("{.file src} directory is missing. Are you sure the package is set up to use Rust?")
-    return(character(0))
-  }
-
-  # Recursively enumerating files wihtin pkg_root/src
-
-  # This handles Cargo.toml files,
-  cargo_toml_paths <- dir(
-    path = src_root,
-    recursive = TRUE,
-    pattern = "Cargo\\.toml$",
-    full.names = TRUE
-  )
-
-  # This handles *rs files
-  rust_src_paths <- dir(
-    path = src_root,
-    recursive = TRUE,
-    pattern = "\\.rs$",
-    full.names = TRUE
-  )
-
-  result <- c(cargo_toml_paths, rust_src_paths)
-  result
 }
 
 #' Equivalent to `fs::file_info`.
