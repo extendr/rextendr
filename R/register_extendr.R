@@ -49,21 +49,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 
   path <- rprojroot::find_package_root_file(path = path)
 
-  # If compile is NA, compile if the DLL is newer than the source files
-  if (isTRUE(is.na(compile))) {
-    compile <- needs_compilation(path, quiet) || pkgbuild::needs_compile(path)
-  }
-
-  if (isTRUE(compile)) {
-    # This relies on [`pkgbuild::needs_compile()`], which
-    # does not know about Rust files modifications.
-    # `force = TRUE` enforces compilation.
-    pkgbuild::compile_dll(
-      path = path,
-      force = TRUE,
-      quiet = quiet
-    )
-  }
+  # As of version 1.4.0, pkgbuild can detect the changes on Rust code.
+  pkgbuild::compile_dll(path = path, quiet = quiet, force = force)
 
   library_path <- get_library_path(path)
 
