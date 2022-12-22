@@ -74,7 +74,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # by the latest DLL, which should mean it doesn't need to be re-generated.
   # This isn't always the case (e.g. when the user accidentally edited the
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
-  if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
+  if (!isTRUE(force) && file.info(outfile)[["mtime"]] > file.info(library_path)[["mtime"]]) {
     rel_path <- pretty_rel_path(outfile, path)
     ui_i("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
