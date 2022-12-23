@@ -49,20 +49,9 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 
   path <- rprojroot::find_package_root_file(path = path)
 
-  # If compile is NA, compile if the DLL is newer than the source files
-  if (isTRUE(is.na(compile))) {
-    compile <- needs_compilation(path, quiet) || pkgbuild::needs_compile(path)
-  }
-
-  if (isTRUE(compile)) {
-    # This relies on [`pkgbuild::needs_compile()`], which
-    # does not know about Rust files modifications.
-    # `force = TRUE` enforces compilation.
-    pkgbuild::compile_dll(
-      path = path,
-      force = TRUE,
-      quiet = quiet
-    )
+  if (!isFALSE(compile)) {
+    # As of version 1.4.0, pkgbuild can detect the changes in Rust code.
+    pkgbuild::compile_dll(path = path, quiet = quiet, force = compile)
   }
 
   library_path <- get_library_path(path)
@@ -85,7 +74,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # by the latest DLL, which should mean it doesn't need to be re-generated.
   # This isn't always the case (e.g. when the user accidentally edited the
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
-  if (!isTRUE(force) && length(find_newer_files_than(outfile, library_path)) > 0) {
+  if (!isTRUE(force) && file.info(outfile)[["mtime"]] > file.info(library_path)[["mtime"]]) {
     rel_path <- pretty_rel_path(outfile, path)
     ui_i("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
