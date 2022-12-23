@@ -50,7 +50,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   path <- rprojroot::find_package_root_file(path = path)
 
   if (!isFALSE(compile)) {
-    # As of version 1.4.0, pkgbuild can detect the changes on Rust code.
+    # As of version 1.4.0, pkgbuild can detect the changes in Rust code.
     pkgbuild::compile_dll(path = path, quiet = quiet, force = compile)
   }
 
