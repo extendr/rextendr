@@ -128,5 +128,5 @@ test_that("Warn if using older rextendr", {
   use_extendr()
   desc::desc_set(`Config/rextendr/version` = "999.999")
 
-  expect_message(document(), "Installed rextendr is older than the version used with this package")
+  expect_message(document(quiet = FALSE), "Installed rextendr is older than the version used with this package")
 })
