@@ -28,11 +28,13 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
+  usethis_quiet <- getOption("usethis.quiet")
+  on.exit(options(usethis.quiet = usethis_quiet))
+  options(usethis.quiet = quiet)
+
   pkg_name <- pkg_name(path)
 
-  if (!isTRUE(quiet)) {
-    ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
-  }
+  ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
