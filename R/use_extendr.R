@@ -29,6 +29,8 @@ use_extendr <- function(path = ".",
   on.exit(options(usethis.quiet = usethis_quiet))
   options(usethis.quiet = quiet)
 
+  rextendr_setup(path = path)
+
   pkg_name <- pkg_name(path)
   mod_name <- as_valid_rust_name(pkg_name)
 

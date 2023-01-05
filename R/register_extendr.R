@@ -32,6 +32,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   on.exit(options(usethis.quiet = usethis_quiet))
   options(usethis.quiet = quiet)
 
+  rextendr_setup(path = path)
+
   pkg_name <- pkg_name(path)
 
   ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
