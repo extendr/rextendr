@@ -3,6 +3,8 @@
     Code
       use_extendr()
     Message
+      i First time using rextendr. Upgrading automatically...
+      i Setting `Config/rextendr/version` to "0.2.0.9000"
       v Creating 'src/rust/src'.
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
