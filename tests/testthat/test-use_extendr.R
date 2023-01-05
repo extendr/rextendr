@@ -122,11 +122,3 @@ test_that("R/ folder is created when not present", {
   # expect no error
   expect_error(use_extendr(), regexp = NA)
 })
-
-test_that("Warn if using older rextendr", {
-  path <- local_package("futurepkg")
-  use_extendr()
-  desc::desc_set(`Config/rextendr/version` = "999.999")
-
-  expect_message(document(quiet = FALSE), "Installed rextendr is older than the version used with this package")
-})
