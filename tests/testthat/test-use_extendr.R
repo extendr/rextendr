@@ -19,6 +19,12 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
 })
 
+test_that("use_extendr() quiet if quiet=TRUE", {
+    path <- local_package("quiet")
+    expect_snapshot(use_extendr(quiet = TRUE))
+  }
+)
+
 test_that("use_extendr() does not set up packages with pre-existing src", {
   path <- local_package("testpkg.src")
   dir.create("src")

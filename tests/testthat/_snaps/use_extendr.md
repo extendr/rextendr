@@ -173,3 +173,8 @@
           fn hello_world;
       }
 
+# use_extendr() quiet if quiet=TRUE
+
+    Code
+      use_extendr(quiet = TRUE)
+
