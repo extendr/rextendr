@@ -25,6 +25,10 @@ use_extendr <- function(path = ".",
                         lib_name = NULL,
                         quiet = getOption("usethis.quiet", FALSE),
                         edition = c("2021", "2018")) {
+  usethis_quiet <- getOption("usethis.quiet")
+  on.exit(options(usethis.quiet = usethis_quiet))
+  options(usethis.quiet = quiet)
+
   pkg_name <- pkg_name(path)
   mod_name <- as_valid_rust_name(pkg_name)
 
@@ -44,22 +48,16 @@ use_extendr <- function(path = ".",
   r_dir <- rprojroot::find_package_root_file("R", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
   if (!dir.exists(r_dir)) {
-    if (!isTRUE(quiet)) {
-      ui_v("Writing {.file R/}")
-    }
+    ui_v("Writing {.file R/}")
     dir.create(r_dir)
   }
 
   if (dir.exists(src_dir)) {
-    if (!isTRUE(quiet)) {
-      ui_x("Directory {.file src} already present in package source. No action taken.")
-    }
+    ui_x("Directory {.file src} already present in package source. No action taken.")
     return(invisible(FALSE))
   }
   if (file.exists(wrappers_file)) {
-    if (!isTRUE(quiet)) {
-      ui_x("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
-    }
+    ui_x("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
     return(invisible(FALSE))
   }
 
