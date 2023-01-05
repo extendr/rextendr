@@ -1,6 +1,6 @@
 rextendr_setup <- function(path = ".", cur_version = NULL) {
   if (!file.exists(file.path(path, "DESCRIPTION"))) {
-    cli::cli_abort(
+    ui_throw(
       "{.arg package.dir} ({.path {path}}) does not contain a DESCRIPTION"
     )
   }
@@ -8,7 +8,7 @@ rextendr_setup <- function(path = ".", cur_version = NULL) {
   is_first <- is.na(rextendr_version(path))
 
   if (is_first) {
-    cli::cli_inform("First time using rextendr. Upgrading automatically...")
+    ui_i("First time using rextendr. Upgrading automatically...")
   }
 
   update_rextendr_version(path, cur_version = cur_version)
@@ -21,12 +21,12 @@ update_rextendr_version <- function(path, cur_version = NULL) {
   prev <- rextendr_version(path)
 
   if (!is.na(cur) && !is.na(prev) && package_version(cur) < package_version(prev)) {
-    cli::cli_warn(c(
-      "Installed rextendr is older than the version used with this package",
-      i = "You have {.str {cur}} but you need {.str {prev}}"
+    ui_w(c(
+      "Installed rextendr is older than the version used with this package\n",
+      "You have {.str {cur}} but you need {.str {prev}}"
     ))
   } else if (!identical(cur, prev)) {
-    cli::cli_inform("Setting {.var Config/rextendr/version} to {.str {cur}}")
+    ui_i("Setting {.var Config/rextendr/version} to {.str {cur}}")
     desc::desc_set(`Config/rextendr/version` = cur, file = path)
   }
 }
