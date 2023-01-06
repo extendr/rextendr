@@ -4,6 +4,10 @@ test_that("use_extendr() sets up extendr files correctly", {
   withr::local_options(usethis.quiet = FALSE)
   expect_snapshot(use_extendr())
 
+  # DESCRITION file
+  version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
+  expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
+
   # directory structure
   expect_true(dir.exists("src"))
   expect_true(dir.exists(file.path("src", "rust")))
@@ -18,6 +22,12 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
   expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
 })
+
+test_that("use_extendr() quiet if quiet=TRUE", {
+    path <- local_package("quiet")
+    expect_snapshot(use_extendr(quiet = TRUE))
+  }
+)
 
 test_that("use_extendr() does not set up packages with pre-existing src", {
   path <- local_package("testpkg.src")

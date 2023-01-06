@@ -10,3 +10,22 @@ test_that("Running `document` after adding multiple files", {
 
   expect_error(rextendr::document(), NA)
 })
+
+test_that("Warn if using older rextendr", {
+  path <- local_package("futurepkg")
+  use_extendr()
+  desc::desc_set(`Config/rextendr/version` = "999.999")
+
+  expect_message(document(quiet = FALSE), "Installed rextendr is older than the version used with this package")
+})
+
+test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
+  path <- local_package("oldpkg")
+  use_extendr()
+  desc::desc_set(`Config/rextendr/version` = "0.1")
+
+  expect_message(document(quiet = FALSE), "Setting `Config/rextendr/version` to")
+
+  version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
+  expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
+})
