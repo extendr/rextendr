@@ -39,7 +39,6 @@ clean <- function(path = ".") {
     )
   }
 
-  env <- rlang::current_env()
   cargo_envvars <- get_cargo_envvars()
 
   args <- c(

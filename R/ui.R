@@ -176,13 +176,6 @@ subset_lines_to_fit_in_limit <- function(lines,
   # All of these messages combined should still be shorter
   # than `max_length_in_bytes`.
 
-  # `n_removed` is the number of removed items from `lines`,
-  # which is unknown at this point. We use a 3-digit integer to
-  # interpolate `truncation_notification` and obtain its length.
-  # This length is un upper estimate for `n_removed < 1000`, which should cover
-  # all real cases (`n_removed <= length(lines)`,
-  # which is the number of compiler messages).
-  n_removed <- 100L
   # Here we count the size in bytes of the interpolated message.
   truncation_notification_size <- nchar(
     bullet_i(truncation_notification),
@@ -198,8 +191,6 @@ subset_lines_to_fit_in_limit <- function(lines,
   selected_lines <- lines[
     cumsum(nchar(lines, type = "byte") + 1L) <= max_length
   ]
-  # Here we finally get the number of lines actually removed.
-  n_removed <- length(lines) - length(selected_lines)
 
   # We return a subset of `lines` plus an appended
   # interpolated truncation notification.

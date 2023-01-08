@@ -446,7 +446,7 @@ get_dynlib_ext <- function() {
 }
 
 get_dynlib_name <- function(libname) {
-  libfilename <- if (.Platform$OS.type == "windows") {
+  if (.Platform$OS.type == "windows") {
     libname
   } else {
     paste0("lib", libname)
