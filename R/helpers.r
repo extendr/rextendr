@@ -26,8 +26,8 @@ get_cargo_envvars <- function() {
     # In some environments, ~/.cargo/bin might not be included in PATH, so we need
     # to set it here to ensure cargo can be invoked. It's added to the tail as a
     # fallback, which is used only when cargo is not found in the user's PATH.
-    path_envvar <- Sys.getenv("PATH", unset = "") # nolint
-    cargo_path <- path.expand("~/.cargo/bin") # nolint
+    path_envvar <- Sys.getenv("PATH", unset = "") # nolint: object_usage_linter
+    cargo_path <- path.expand("~/.cargo/bin") # nolint: object_usage_linter
     # "current" means appending or overwriting the envvars in addition to the current ones.
     cargo_envvars <- c("current", PATH = glue("{path_envvar}:{cargo_path}"))
   }

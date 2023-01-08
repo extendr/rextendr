@@ -22,7 +22,7 @@ clean <- function(path = ".") {
   )
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
-  target_dir <- normalizePath( # nolint
+  target_dir <- normalizePath( # nolint: object_usage_linter
     file.path(rust_folder, "target"),
     winslash = "/",
     mustWork = FALSE
