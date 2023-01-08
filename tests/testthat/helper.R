@@ -5,7 +5,7 @@
 #'
 #' @param ... arguments passed to [testthat::expect_error()]
 expect_rextendr_error <- function(...) {
-  expect_error(..., class = "rextendr_error")
+  testthat::expect_error(..., class = "rextendr_error")
 }
 
 #' Create a local package
