@@ -191,7 +191,7 @@ format_toml_atomic <- function(x,
   dims <- dim(x)
   x <- x[!is.na(x)]
   len <- length(x)
-  
+
   if (len == 0L) {
     "[ ]"
   } else {
