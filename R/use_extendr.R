@@ -192,7 +192,10 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #' @inheritParams use_extendr
 #'
 #' @noRd
-use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE)) {
+use_rextendr_template <- function(template,
+                                  save_as = template,
+                                  data = list(),
+                                  quiet = getOption("usethis.quiet", FALSE)) {
   if (is_installed("usethis")) {
     withr::local_options(usethis.quiet = quiet)
     created <- usethis::use_template(
