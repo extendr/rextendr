@@ -10,7 +10,7 @@ get_cargo_envvars <- function() {
       # compiler, we need to add empty `libgcc_eh` to the library search paths.
       #
       # For more details, please refer to
-      # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316 # nolint
+      # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316 # nolint: line_length_linter
       libgcc_path <- file.path(system.file(package = "rextendr"), "libgcc_mock")
       dir.create(libgcc_path, showWarnings = FALSE)
       file.create(file.path(libgcc_path, "libgcc_eh.a"))
