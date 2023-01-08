@@ -54,7 +54,7 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   # This ensures that any two (even bytewise-identical)
   # Rust source code strings will have different
   # hashes.
-  snippet_hash <- rlang::hash(list(the$count, code))
+  snippet_hash <- rlang::hash(list(the$count, code)) # nolint
 
   # The unique hash is then used to generate unique function names
   fn_name <- glue("rextendr_rust_eval_fun_{snippet_hash}")

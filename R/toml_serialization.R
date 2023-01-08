@@ -83,7 +83,7 @@ make_header <- function(nm, arg) {
 }
 
 make_idx_msg <- function(invalid, args_limit = 5L) {
-  idx <- paste0(
+  idx <- paste0( # nolint
     glue("`{utils::head(invalid, args_limit)}`"),
     collapse = ", "
   )

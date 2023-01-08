@@ -174,7 +174,7 @@ as_valid_rust_name <- function(r_name) {
 #' @param call \[ env \] Environment of the caller, passed to `ui_throw()`.
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
-  quo <- enquo(name)
+  quo <- enquo(name) # nolint
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
     ui_throw(
       "Argument {.arg {as_name(quo)}} is invalid.",
