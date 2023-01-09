@@ -22,7 +22,7 @@ clean <- function(path = ".") {
   )
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
-  target_dir <- normalizePath(
+  target_dir <- normalizePath( # nolint: object_usage_linter
     file.path(rust_folder, "target"),
     winslash = "/",
     mustWork = FALSE
@@ -39,7 +39,6 @@ clean <- function(path = ".") {
     )
   }
 
-  env <- rlang::current_env()
   cargo_envvars <- get_cargo_envvars()
 
   args <- c(

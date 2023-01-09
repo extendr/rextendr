@@ -16,7 +16,7 @@
 write_file <- function(text, path, search_root_from = ".", quiet = getOption("usethis.quiet", FALSE)) {
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
-    rel_path <- pretty_rel_path(path, search_from = search_root_from)
+    rel_path <- pretty_rel_path(path, search_from = search_root_from) # nolint: object_usage_linter
     ui_v("Writing {ui_value(rel_path)}")
   }
   invisible(output)

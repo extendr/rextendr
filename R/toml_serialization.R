@@ -83,7 +83,7 @@ make_header <- function(nm, arg) {
 }
 
 make_idx_msg <- function(invalid, args_limit = 5L) {
-  idx <- paste0(
+  idx <- paste0( # nolint: object_usage_linter
     glue("`{utils::head(invalid, args_limit)}`"),
     collapse = ", "
   )
@@ -191,7 +191,7 @@ format_toml_atomic <- function(x,
   dims <- dim(x)
   x <- x[!is.na(x)]
   len <- length(x)
-  
+
   if (len == 0L) {
     "[ ]"
   } else {

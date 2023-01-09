@@ -58,6 +58,7 @@ Imports:
 Suggests:
     devtools,
     knitr,
+    lintr,
     mockr,
     rmarkdown,
     rstudioapi,

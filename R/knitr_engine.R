@@ -24,7 +24,6 @@ eng_impl <- function(options, extendr_engine) {
   }
 
   if (!is.null(options$preamble)) {
-    preamble <- knitr::knit_code$get(options$preamble)
     code <- c(
       lapply(options$preamble, function(x) knitr::knit_code$get(x)),
       recursive = TRUE

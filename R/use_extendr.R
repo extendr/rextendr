@@ -126,7 +126,7 @@ use_extendr <- function(path = ".",
     "win.def",
     save_as = file.path("src", paste0(pkg_name, "-win.def")),
     quiet = quiet,
-    data <- list(mod_name = mod_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
@@ -174,7 +174,7 @@ as_valid_rust_name <- function(r_name) {
 #' @param call \[ env \] Environment of the caller, passed to `ui_throw()`.
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
-  quo <- enquo(name)
+  quo <- enquo(name) # nolint: object_usage_linter
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
     ui_throw(
       "Argument {.arg {as_name(quo)}} is invalid.",
@@ -192,7 +192,10 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #' @inheritParams use_extendr
 #'
 #' @noRd
-use_rextendr_template <- function(template, save_as = template, data = list(), quiet = getOption("usethis.quiet", FALSE)) {
+use_rextendr_template <- function(template,
+                                  save_as = template,
+                                  data = list(),
+                                  quiet = getOption("usethis.quiet", FALSE)) {
   if (is_installed("usethis")) {
     withr::local_options(usethis.quiet = quiet)
     created <- usethis::use_template(

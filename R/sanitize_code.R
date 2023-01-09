@@ -22,7 +22,7 @@ remove_line_comments <- function(lns) {
 # 3. We build pairs of open-close comment delimiters by collapsing nested
 #   comments.
 # 4. We fill in space between remaining delimiters with spaces (simplest way).
-fill_block_comments <- function(lns, fill_with = " ") {
+fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_linter
   lns <- glue_collapse(lns, sep = "\n")
 
   # Fast path if character input is empty

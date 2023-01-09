@@ -263,7 +263,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
     )
 
     if (identical(R.version$crt, "ucrt")) {
-      # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71
+      # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
       subdir <- c("x86_64-w64-mingw32.static.posix", "usr")
       # If RTOOLS42_HOME is properly set, this will have no real effect
       withr::local_envvar(RTOOLS42_HOME = rtools_home)
@@ -446,7 +446,7 @@ get_dynlib_ext <- function() {
 }
 
 get_dynlib_name <- function(libname) {
-  libfilename <- if (.Platform$OS.type == "windows") {
+  if (.Platform$OS.type == "windows") {
     libname
   } else {
     paste0("lib", libname)

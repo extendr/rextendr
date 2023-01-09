@@ -10,7 +10,7 @@ get_cargo_envvars <- function() {
       # compiler, we need to add empty `libgcc_eh` to the library search paths.
       #
       # For more details, please refer to
-      # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
+      # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316 # nolint: line_length_linter
       libgcc_path <- file.path(system.file(package = "rextendr"), "libgcc_mock")
       dir.create(libgcc_path, showWarnings = FALSE)
       file.create(file.path(libgcc_path, "libgcc_eh.a"))
@@ -26,8 +26,8 @@ get_cargo_envvars <- function() {
     # In some environments, ~/.cargo/bin might not be included in PATH, so we need
     # to set it here to ensure cargo can be invoked. It's added to the tail as a
     # fallback, which is used only when cargo is not found in the user's PATH.
-    path_envvar <- Sys.getenv("PATH", unset = "")
-    cargo_path <- path.expand("~/.cargo/bin")
+    path_envvar <- Sys.getenv("PATH", unset = "") # nolint: object_usage_linter
+    cargo_path <- path.expand("~/.cargo/bin") # nolint: object_usage_linter
     # "current" means appending or overwriting the envvars in addition to the current ones.
     cargo_envvars <- c("current", PATH = glue("{path_envvar}:{cargo_path}"))
   }
