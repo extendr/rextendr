@@ -25,7 +25,7 @@ jobs:
           # * for R < 4.2, the MSVC toolchain must be used to support
           #   cross-compilation for the 32-bit.
           - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rtools-version: '42'}
-          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rtools-version: '42'}
+          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc'}
           - {os: windows-latest, r: 'release', rust-version: 'stable-gnu',  rtools-version: '42'}
           - {os: windows-latest, r: '4.1',     rust-version: 'stable-msvc'}  # TODO: Remove this runner when we drop the support for R < 4.2
 
