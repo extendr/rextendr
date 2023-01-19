@@ -253,21 +253,34 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       )
     }
 
-    # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
-    # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
-    rtools_home <- normalizePath(
-      # `pkgbuild` may return two paths for R < 4.2 with Rtools40v2
-      file.path(pkgbuild::rtools_path()[1], "..", ".."),
-      winslash = "/",
-      mustWork = TRUE
-    )
-
     if (identical(R.version$crt, "ucrt")) {
+      # TODO: update this when R 5.0 is released.
+      if (!identical(R.version$major, "4")) {
+        ui_throw("rextendr currently supports R 4.x")
+      }
+
+      if (package_version(R.version$minor) >= "3.0") {
+        rtools_version <- "43"
+      } else {
+        rtools_version <- "42"
+      }
+
+      # RTOOLS4x_HOME must be set by R itself as it's embeded in R's source code.
+      # c.f. https://github.com/wch/r-source/blob/b29a18150688fb1af338ab9a3d1a3782006a622e/src/library/profile/Rprofile.windows#L73 # nolint: line_length_linter
+      rtools_home <- Sys.getenv(glue("RTOOLS{rtools_version}_HOME"))
+
       # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
       subdir <- c("x86_64-w64-mingw32.static.posix", "usr")
-      # If RTOOLS42_HOME is properly set, this will have no real effect
-      withr::local_envvar(RTOOLS42_HOME = rtools_home)
     } else {
+      # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
+      # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
+      rtools_home <- normalizePath(
+        # `pkgbuild` may return two paths for R < 4.2 with Rtools40v2
+        file.path(pkgbuild::rtools_path()[1], "..", ".."),
+        winslash = "/",
+        mustWork = TRUE
+      )
+
       subdir <- paste0("mingw", ifelse(R.version$arch == "i386", "32", "64"))
       # If RTOOLS40_HOME is properly set, this will have no real effect
       withr::local_envvar(RTOOLS40_HOME = rtools_home)
