@@ -267,7 +267,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
       # RTOOLS4x_HOME must be set by R itself as it's embeded in R's source code.
       # c.f. https://github.com/wch/r-source/blob/b29a18150688fb1af338ab9a3d1a3782006a622e/src/library/profile/Rprofile.windows#L73 # nolint: line_length_linter
-      rtools_home <- Sys.getenv(glue("RTOOLS{rtools_version}_HOME"))
+      rtools_home <- Sys.getenv(paste0("RTOOLS", rtools_version, "_HOME"))
 
       # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
       subdir <- c("x86_64-w64-mingw32.static.posix", "usr")
