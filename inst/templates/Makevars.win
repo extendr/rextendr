@@ -9,6 +9,8 @@ all: C_clean
 
 $(SHLIB): $(STATLIB)
 
+CARGOTMP = $(CURDIR)/.cargo
+
 $(STATLIB):
 	mkdir -p $(TARGET_DIR)/libgcc_mock
 	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
@@ -20,9 +22,14 @@ $(STATLIB):
 	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
 	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+	if [ "$(NOT_CRAN)" != "true" ] && [ "$(NOT_CRAN)" != "TRUE" ]; then \
+		export CARGO_HOME=$(CARGOTMP); \
+	fi && \
 	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
 		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
 		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+	rm -Rf $(CARGOTMP)
+	rm -Rf $(LIBDIR)/build
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
