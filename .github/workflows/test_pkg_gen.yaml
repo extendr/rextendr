@@ -37,7 +37,7 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@master
