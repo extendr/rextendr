@@ -29,8 +29,8 @@ jobs:
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'}
 
-          - {os: ubuntu-20.04,   r: 'release', rust-version: 'stable'}
-          - {os: ubuntu-20.04,   r: 'devel',   rust-version: 'stable'}
+          - {os: ubuntu-latest,  r: 'release', rust-version: 'stable'}
+          - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true

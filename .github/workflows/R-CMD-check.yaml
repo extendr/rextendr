@@ -31,8 +31,8 @@ jobs:
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'     }
 
-          - {os: ubuntu-20.04,   r: 'release', rust-version: 'stable'     }
-          - {os: ubuntu-20.04,   r: 'devel',   rust-version: 'stable'     }
+          - {os: ubuntu-latest,  r: 'release', rust-version: 'stable'     }
+          - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable'     }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
