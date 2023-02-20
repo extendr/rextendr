@@ -4,11 +4,10 @@
 # from a non-existent/invalid directory (such as `NA` or `""`),
 # in which case `pretty_rel_path` should return absolute path of itr
 # first argument.
-test_that("`pretty_rel_path()` works", {
+test_that("Find relative path from package root, trivial case", {
   pkg_root <- local_package("testpkg")
   use_extendr()
 
-  # Find relative path from package root, trivial case
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -16,8 +15,12 @@ test_that("`pretty_rel_path()` works", {
     ),
     "R/extendr-wrappers.R"
   )
+})
 
-  # Find relative path starting from a subdirectory of package
+test_that("Find relative path starting from a subdirectory of package", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -25,9 +28,12 @@ test_that("`pretty_rel_path()` works", {
     ),
     "R/extendr-wrappers.R"
   )
+})
 
-  # Find relative path starting outside of package directory.
-  # This should return the absolute path of the file (not relative).
+test_that("Find relative path starting outside of package directory, return absolute path", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -38,9 +44,12 @@ test_that("`pretty_rel_path()` works", {
       winslash = "/"
     )
   )
+})
 
-  # Find relative path providing no input for the package directory.
-  # This should return the absolute path of the file (not relative).
+test_that("Find relative path providing no input for the package directory, return absolute path", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -51,8 +60,12 @@ test_that("`pretty_rel_path()` works", {
       winslash = "/"
     )
   )
+})
 
-  # Same as the one above, but providing NA_character_
+test_that("Find relative path providing NA as input for the package directory, return absolute path", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -63,8 +76,13 @@ test_that("`pretty_rel_path()` works", {
       winslash = "/"
     )
   )
+})
 
-  # Same as the one above, but providing empty character vector
+test_that("Find relative path providing empty character vector as
+  input for the package directory, return absolute path", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "R", "extendr-wrappers.R"),
@@ -75,8 +93,12 @@ test_that("`pretty_rel_path()` works", {
       winslash = "/"
     )
   )
+})
 
-  # Test path to non-existent file
+test_that("Test path to non-existent file", {
+  pkg_root <- local_package("testpkg")
+  use_extendr()
+
   expect_equal(
     pretty_rel_path(
       file.path(pkg_root, "A", "B", "C", "D.F"),
