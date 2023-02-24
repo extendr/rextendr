@@ -34,13 +34,6 @@ test_that("Find relative path starting outside of package directory, return abso
   pkg_root <- local_package("testpkg")
   use_extendr()
 
-  r_version <- as.numeric_version(glue::glue("{R.version$major}.{R.version$minor}"))
-  is_windows <- .Platform$OS.type == "windows"
-
-  skip_if(
-    condition = is_windows && r_version >= as.numeric_version("4.3.0"),
-    message <- "Skipping flaky test on R-devel-windows, see https://github.com/extendr/rextendr/issues/238"
-  )
 
   expect_equal(
     pretty_rel_path(
