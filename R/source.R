@@ -6,7 +6,8 @@
 #' @param file Input rust file to source.
 #' @param code Input rust code, to be used instead of `file`.
 #' @param module_name Name of the module defined in the Rust source via
-#'   `extendr_module!`. Default is `"rextendr"`.
+#'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
+#'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
 #' @param dependencies Character vector of dependencies lines to be added to the
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to

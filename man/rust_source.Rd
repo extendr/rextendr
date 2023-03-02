@@ -31,7 +31,8 @@ rust_function(code, env = parent.frame(), ...)
 \item{code}{Input rust code, to be used instead of \code{file}.}
 
 \item{module_name}{Name of the module defined in the Rust source via
-\verb{extendr_module!}. Default is \code{"rextendr"}.}
+\verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
+or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
 
 \item{dependencies}{Character vector of dependencies lines to be added to the
 \code{Cargo.toml} file.}
