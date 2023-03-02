@@ -164,7 +164,7 @@ is_valid_rust_name <- function(name) {
 #' @noRd
 as_valid_rust_name <- function(name) {
   rust_name <- stringi::stri_replace_all_regex(name, "[^\\w-]", "_")
-  if(stringi::stri_detect_regex(rust_name, "^\\d")) {
+  if (stringi::stri_detect_regex(rust_name, "^\\d")) {
     rust_name <- paste0("_", rust_name)
   }
   throw_if_invalid_rust_name(rust_name)
