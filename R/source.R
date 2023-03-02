@@ -133,14 +133,17 @@ rust_source <- function(file, code = NULL,
 
     # generate lib name
     libname <- paste0("rextendr", the$count)
-    the$count <- the$count + 1L
   } else {
+    file <- normalizePath(file, winslash = "/")
     file.copy(file, rust_file, overwrite = TRUE)
-    libname <- tools::file_path_sans_ext(basename(file))
+
+    path_hash <- rlang::hash(file)
+    libname <- as_valid_rust_name(paste(tools::file_path_sans_ext(basename(file)), path_hash, the$count, sep = "_"))
   }
+  the$count <- the$count + 1L
 
   if (!isTRUE(cache_build)) {
-    withr::defer(clean_build_dir())
+   withr::defer(clean_build_dir())
   }
 
   # generate Cargo.toml file and compile shared library
@@ -170,7 +173,7 @@ rust_source <- function(file, code = NULL,
   )
 
   # load shared library
-  libfilename <- paste0(get_dynlib_name(libname), get_dynlib_ext())
+  libfilename <- as_rust_lib_file_name(paste0(get_dynlib_name(libname), get_dynlib_ext()))
 
   target_folder <- ifelse(
     is.null(specific_target),
@@ -215,6 +218,22 @@ rust_function <- function(code, env = parent.frame(), ...) {
   )
 
   rust_source(code = code, env = env, ...)
+}
+
+#' Generates valid rust library path given file_name.
+#'
+#' Internally calls [as_valid_rust_name()], but also replaces `-` with `_`, as Rust does.
+#'
+#' @param file_name_no_parent \[string\] File name, no parent.
+#' @returns Sanitized and corrected name.
+#' @noRd
+as_rust_lib_file_name <- function(file_name_no_parent) {
+  ext <- tools::file_ext(file_name_no_parent)
+
+  file_name_no_parent <- tools::file_path_sans_ext(file_name_no_parent)
+  file_name_no_parent <- as_valid_rust_name(file_name_no_parent)
+
+  paste(stringi::stri_replace_all_fixed(file_name_no_parent, "-", "_"), ext, sep = ".")
 }
 
 #' Sets up environment and invokes Rust's cargo.
