@@ -159,11 +159,14 @@ is_valid_rust_name <- function(name) {
 
 #' Convert R package name into equivalent valid Rust name.
 #'
-#' @param r_name \[ character(n) \] R names to convert.
+#' @param name \[ character(n) \] R names to convert.
 #' @return \[ character(n) \] Equivalent Rust name (if exists), otherwise `NA`.
 #' @noRd
-as_valid_rust_name <- function(r_name) {
-  rust_name <- stringi::stri_replace_all_fixed(r_name, ".", "_")
+as_valid_rust_name <- function(name) {
+  rust_name <- stringi::stri_replace_all_regex(name, "[^\\w-]", "_")
+  if(stringi::stri_detect_regex(rust_name, "^\\d")) {
+    rust_name <- paste0("_", rist_name)
+  }
   throw_if_invalid_rust_name(rust_name)
   rust_name
 }
