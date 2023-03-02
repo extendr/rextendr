@@ -144,7 +144,7 @@ rust_source <- function(file, code = NULL,
   the$count <- the$count + 1L
 
   if (!isTRUE(cache_build)) {
-   withr::defer(clean_build_dir())
+    withr::defer(clean_build_dir())
   }
 
   # generate Cargo.toml file and compile shared library
