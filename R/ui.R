@@ -131,13 +131,7 @@ ui_throw <- function(message = "Internal error", details = character(0),
 
   message <- glue_collapse(error_messages, sep = "\n")
 
-  withr::with_options(
-    # Valid values are something between 1000 and 8170
-    # This will be set by {rlang} in the future release,
-    # https://github.com/r-lib/rlang/pull/1214
-    list(warning.length = message_limit_bytes),
-    rlang::abort(message, class = "rextendr_error", call = call)
-  )
+  rlang::abort(message, class = "rextendr_error", call = call)
 }
 
 cli_format_text <- function(message, env = parent.frame()) {
