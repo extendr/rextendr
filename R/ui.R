@@ -123,7 +123,6 @@ ui_throw <- function(message = "Internal error", details = character(0),
   )
 
   message_limit_bytes <- 8000L
-  message_limit_bytes <- Inf
   error_messages <- subset_lines_to_fit_in_limit(
     error_messages,
     message_limit_bytes

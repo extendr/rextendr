@@ -29,15 +29,14 @@ jobs:
           - {os: windows-latest, r: 'release', rust-version: 'stable-gnu',  rtools-version: '42'}
           - {os: windows-latest, r: '4.1',     rust-version: 'stable-msvc'}  # TODO: Remove this runner when we drop the support for R < 4.2
 
-         # - {os: macOS-latest,   r: 'release', rust-version: 'stable'     }
+          - {os: macOS-latest,   r: 'release', rust-version: 'stable'     }
 
           - {os: ubuntu-latest,  r: 'release', rust-version: 'stable'     }
-        #  - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable'     }
+          - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable'     }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      ACTIONS_STEP_DEBUG: true
 
     steps:
       - uses: actions/checkout@v3
