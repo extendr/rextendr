@@ -130,13 +130,7 @@ ui_throw <- function(message = "Internal error", details = character(0),
 
   message <- glue_collapse(error_messages, sep = "\n")
 
-  withr::with_options(
-    # Valid values are something between 1000 and 8170
-    # This will be set by {rlang} in the future release,
-    # https://github.com/r-lib/rlang/pull/1214
-    list(warning.length = message_limit_bytes),
-    rlang::abort(message, class = "rextendr_error", call = call)
-  )
+  rlang::abort(message, class = "rextendr_error", call = call)
 }
 
 cli_format_text <- function(message, env = parent.frame()) {
@@ -176,6 +170,14 @@ subset_lines_to_fit_in_limit <- function(lines,
   # All of these messages combined should still be shorter
   # than `max_length_in_bytes`.
 
+  # `n_removed` is the number of removed items from `lines`,
+  # which is unknown at this point. We use a 3-digit integer to
+  # interpolate `truncation_notification` and obtain its length.
+  # This length is un upper estimate for `n_removed < 1000`, which should cover
+  # all real cases (`n_removed <= length(lines)`,
+  # which is the number of compiler messages).
+  n_removed <- 100L # nolint: object_usage_linter
+
   # Here we count the size in bytes of the interpolated message.
   truncation_notification_size <- nchar(
     bullet_i(truncation_notification),
@@ -191,6 +193,9 @@ subset_lines_to_fit_in_limit <- function(lines,
   selected_lines <- lines[
     cumsum(nchar(lines, type = "byte") + 1L) <= max_length
   ]
+
+  # Here we finally get the number of lines actually removed.
+  n_removed <- length(lines) - length(selected_lines)
 
   # We return a subset of `lines` plus an appended
   # interpolated truncation notification.
