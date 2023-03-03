@@ -139,7 +139,7 @@ rust_source <- function(file, code = NULL,
     file.copy(file, rust_file, overwrite = TRUE)
 
     path_hash <- rlang::hash(file)
-    libname <- as_valid_rust_name(paste(tools::file_path_sans_ext(basename(file)), path_hash, the$count, sep = "_"))
+    libname <- as_valid_rust_name(paste0(tools::file_path_sans_ext(basename(file)), path_hash, the$count))
   }
   the$count <- the$count + 1L
 
