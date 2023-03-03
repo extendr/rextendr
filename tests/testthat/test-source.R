@@ -87,3 +87,24 @@ test_that("`rust_code()` can compile code from rust file", {
   expect_no_error(rust_source(input, module_name = "test_module"))
   expect_equal(test_method(), 42L)
 })
+
+# https://github.com/extendr/rextendr/issues/234
+test_that("`rust_code()` can compile code from rust file multiple times", {
+  input <- file.path("../data/rust_source.rs")
+  expect_no_error(rust_source(input, module_name = "test_module"))
+  expect_no_error(rust_source(input, module_name = "test_module"))
+  expect_no_error(rust_source(input, module_name = "test_module"))
+  expect_equal(test_method(), 42L)
+})
+
+# https://github.com/extendr/rextendr/issues/234
+test_that("`rust_code()` can compile code from rust files with identical names", {
+  input_1 <- file.path("../data/inner_1/rust_source.rs")
+  input_2 <- file.path("../data/inner_2/rust_source.rs")
+
+  expect_no_error(rust_source(input_1, module_name = "test_module"))
+  expect_no_error(rust_source(input_2, module_name = "test_module"))
+
+  expect_equal(test_method_1(), 1L)
+  expect_equal(test_method_2(), 2L)
+})
