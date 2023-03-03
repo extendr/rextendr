@@ -84,6 +84,9 @@ test_that("`rust_source` works even when the PATH is not set correctly, which ma
 # https://github.com/extendr/rextendr/issues/234
 test_that("`rust_code()` can compile code from rust file", {
   input <- file.path("../data/test-rust_source-simple.rs")
+
+  input |> brio::read_lines() |> paste(collapse = "\n") |> stop()
+
   expect_no_error(rust_source(input, module_name = "test_module"))
   expect_equal(test_method(), 42L)
 })
