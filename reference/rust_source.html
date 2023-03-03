@@ -95,7 +95,8 @@ compiles and loads a single Rust function for use in R.</p>
 
 <dt>module_name</dt>
 <dd><p>Name of the module defined in the Rust source via
-<code>extendr_module!</code>. Default is <code>"rextendr"</code>.</p></dd>
+<code>extendr_module!</code>. Default is <code>"rextendr"</code>. If <code>generate_module_macro</code> is <code>FALSE</code>
+or if <code>file</code> is specified, should <em>match exactly</em> the name of the module defined in the source.</p></dd>
 
 
 <dt>dependencies</dt>
