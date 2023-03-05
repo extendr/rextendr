@@ -14,7 +14,7 @@ rust_source(
   profile = c("dev", "release", "perf"),
   toolchain = getOption("rextendr.toolchain"),
   extendr_deps = getOption("rextendr.extendr_deps"),
-  features = NULL,
+  features = character(0),
   env = parent.frame(),
   use_extendr_api = TRUE,
   generate_module_macro = TRUE,
@@ -50,8 +50,8 @@ such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 \item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to
 \code{list(`extendr-api` = "*")}.}
 
-\item{features}{List of features that control conditional compilation and
-optional dependencies.}
+\item{features}{A vector of \code{extendr-api} features that should be enabled.
+Supported values are \code{"ndarray"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
