@@ -19,6 +19,7 @@ merge_named_lists <- function(existing, overwriting,
 }
 
 enable_features <- function(extendr_deps, features) {
+  features <- setdiff(features, "graphics")
   if (length(features) == 0L) {
     return(extendr_deps)
   }
