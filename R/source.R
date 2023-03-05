@@ -435,44 +435,6 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
   }
 }
 
-generate_cargo.toml <- function(libname = "rextendr",
-                                dependencies = NULL,
-                                patch.crates_io = NULL,
-                                extendr_deps = NULL) {
-  to_toml(
-    package = list(
-      name = libname,
-      version = "0.0.1",
-      edition = "2021",
-      resolver = "2"
-    ),
-    lib = list(
-      `crate-type` = array("cdylib", 1)
-    ),
-    dependencies = append(
-      extendr_deps,
-      dependencies
-    ),
-    `patch.crates-io` = patch.crates_io,
-    `profile.perf` = list(
-      inherits = "release",
-      lto = "thin",
-      `opt-level` = 3,
-      panic = "abort",
-      `codegen-units` = 1
-    )
-  )
-}
-
-generate_cargo_config.toml <- function() {
-  to_toml(
-    build = list(
-      rustflags = c("-C", "target-cpu=native"),
-      `target-dir` = "target"
-    )
-  )
-}
-
 get_dynlib_ext <- function() {
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
   sysinf <- Sys.info()
