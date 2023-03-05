@@ -158,7 +158,8 @@ rust_source <- function(file, code = NULL,
     libname = libname,
     dependencies = dependencies,
     patch.crates_io = patch.crates_io,
-    extendr_deps = extendr_deps
+    extendr_deps = extendr_deps,
+    features = features
   )
   brio::write_lines(cargo.toml_content, file.path(dir, "Cargo.toml"))
 
