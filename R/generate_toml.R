@@ -1,23 +1,3 @@
-merge_named_lists <- function(existing, overwriting,
-                              existign_arg = rlang::caller_arg(existing),
-                              overwriting_arg = rlang::caller_arg(overwriting)) {
-  existing <- existing %||% list()
-  existing_names <- unique(names(existing) %||% character(0))
-  if (!is.list(existing) || length(existing_names) != length(existing)) {
-    ui_throw("{.arg {existign_arg}} should be a uniquely named list.")
-  }
-
-  overwriting <- overwriting %||% list()
-  extendr_deps_names <- unique(names(overwriting) %||%  character(0))
-  if (!is.list(overwriting) || length(extendr_deps_names) != length(overwriting)) {
-    ui_throw("{.arg {overwriting_arg}} should be a uniquely named list.")
-  }
-
-  overwritten_names <- base::intersect(names(existing), names(overwriting))
-
-  append(overwriting, existing[setdiff(names(existing), overwritten_names)])
-}
-
 enable_features <- function(extendr_deps, features) {
   features <- setdiff(features, "graphics")
   if (length(features) == 0L) {
@@ -49,7 +29,7 @@ add_features_dependencies <- function(dependencies, features) {
   feature_deps <- rep(list("*"), length(features))
   names(feature_deps) <- features
 
-  merge_named_lists(existing = feature_deps, overwriting = dependencies)
+  purrr::list_modify(feature_deps, !!!dependencies)
 }
 
 
@@ -68,9 +48,9 @@ generate_cargo.toml <- function(libname = "rextendr",
     lib = list(
       `crate-type` = array("cdylib", 1)
     ),
-    dependencies = merge_named_lists(
-      existing = add_features_dependencies(dependencies, features),
-      overwriting = enable_features(extendr_deps, features)
+    dependencies = purrr::list_modify(
+      add_features_dependencies(dependencies, features),
+      !!!enable_features(extendr_deps, features)
     ),
     `patch.crates-io` = patch.crates_io,
     `profile.perf` = list(
