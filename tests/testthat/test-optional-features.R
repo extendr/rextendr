@@ -1,5 +1,5 @@
 test_that("Feature 'ndarray' is enabled when no extra dependencies are specified", {
-  input <- file.path("../data/either_example.rs")
+  input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
     features = "ndarray"
@@ -13,7 +13,7 @@ test_that("Feature 'ndarray' is enabled when no extra dependencies are specified
 })
 
 test_that("Feature 'ndarray' is enabled when dependency is explicitly set", {
-  input <- file.path("../data/either_example.rs")
+  input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
     features = "ndarray",
@@ -28,7 +28,7 @@ test_that("Feature 'ndarray' is enabled when dependency is explicitly set", {
 })
 
 test_that("Feature 'ndarray' is enabled when dependency is explicitly set to a complex value", {
-  input <- file.path("../data/either_example.rs")
+  input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
     features = "ndarray",
@@ -43,7 +43,7 @@ test_that("Feature 'ndarray' is enabled when dependency is explicitly set to a c
 })
 
 test_that("Feature 'ndarray' is enabled when other dependencies are specified", {
-  input <- file.path("../data/either_example.rs")
+  input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
     features = "ndarray",
@@ -58,7 +58,7 @@ test_that("Feature 'ndarray' is enabled when other dependencies are specified", 
 })
 
 test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled", {
-  input <- file.path("../data/either_example.rs")
+  input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
     features = "ndarray",
