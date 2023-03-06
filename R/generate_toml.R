@@ -10,10 +10,8 @@ enable_features <- function(extendr_deps, features) {
   }
 
   if (is.character(extendr_api)) {
-  # extendr-api = "*"
     extendr_api <- list(version = extendr_api, features = array(features))
   } else if (is.list(extendr_api)) {
-  # extendr-api = {git = "extendr/extendr", features = ["feature"]}
     existing_features <- extendr_api[["features"]] %||% character(0)
     extendr_api[["features"]] <- array(unique(c(existing_features, features)))
   } else {
