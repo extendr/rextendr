@@ -77,6 +77,10 @@ test_that("Enable multiple features simultaneously", {
   expect_no_error(test_multiple_features())
 })
 
-test_that("'features' accepts only pre-defined values", {
-  expect_error(rust_function("fn test_two_features() {}", features = "not-a-feature"))
+test_that("Passing integers to `features` results in error", {
+  expect_error(rust_function("fn test() {}", features = 1:10))
+})
+
+test_that("Passing list to `features` results in error", {
+  expect_error(rust_function("fn test() {}", features = list()))
 })
