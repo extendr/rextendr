@@ -1,4 +1,4 @@
-test_that("Feature 'ndarray' is enabled when no extra dependencies are specifiedd", {
+test_that("Feature 'ndarray' is enabled when no extra dependencies are specified", {
   input <- file.path("../data/either_example.rs")
   rust_source(
     file = input,

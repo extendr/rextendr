@@ -1,10 +1,10 @@
 merge_named_lists <- function(existing, overwriting,
-                              existign_arg = rlang::caller_arg(existing),
+                              existing_arg = rlang::caller_arg(existing),
                               overwriting_arg = rlang::caller_arg(overwriting)) {
   existing <- existing %||% list()
   existing_names <- unique(names(existing) %||% character(0))
   if (!is.list(existing) || length(existing_names) != length(existing)) {
-    ui_throw("{.arg {existign_arg}} should be a uniquely named list.")
+    ui_throw("{.arg {existing_arg}} should be a uniquely named list.")
   }
 
   overwriting <- overwriting %||% list()
@@ -30,10 +30,8 @@ enable_features <- function(extendr_deps, features) {
   }
 
   if (is.character(extendr_api)) {
-  # extendr-api = "*"
     extendr_api <- list(version = extendr_api, features = array(features))
   } else if (is.list(extendr_api)) {
-  # extendr-api = {git = "extendr/extendr", features = ["feature"]}
     existing_features <- extendr_api[["features"]] %||% character(0)
     extendr_api[["features"]] <- array(unique(c(existing_features, features)))
   } else {
