@@ -101,7 +101,7 @@ rust_source <- function(file, code = NULL,
                         profile = c("dev", "release", "perf"),
                         toolchain = getOption("rextendr.toolchain"),
                         extendr_deps = getOption("rextendr.extendr_deps"),
-                        features = character(0),
+                        features = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
@@ -227,6 +227,7 @@ rust_function <- function(code, env = parent.frame(), ...) {
 
 validate_extendr_features <- function(features, quiet) {
   known_features <- c("ndarray", "serde", "num-complex", "graphics")
+  features <- features %||% character(0)
   vctrs::vec_assert(features, character())
   features <- unique(features)
 
