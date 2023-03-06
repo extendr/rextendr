@@ -6,6 +6,9 @@
 
 ## New features
 
+* `use_dev_extendr` flag makes `rust_source()` family of functions compile code using development version of `extendr`.
+Development configuration is stored as an option named `rextendr.extendr_dev_deps` ([#251](https://github.com/extendr/rextendr/pull/251)).
+
 * `features` parameter of `rust_source()` now correctly enables features in `extendr-api` and references required crates.
 `features` not available in release version of `extendr` raises a warning ([#249](https://github.com/extendr/rextendr/pull/249)).
 
