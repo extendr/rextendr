@@ -54,6 +54,7 @@ Imports:
     rprojroot,
     stringi,
     tibble,
+    vctrs,
     withr
 Suggests:
     devtools,
