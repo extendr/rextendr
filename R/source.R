@@ -108,7 +108,6 @@ rust_source <- function(file, code = NULL,
                         cache_build = TRUE,
                         quiet = FALSE,
                         use_rtools = TRUE) {
-
   profile <- rlang::arg_match(profile, multiple = FALSE)
   validate_extendr_features(features, quiet)
 
@@ -234,14 +233,12 @@ validate_extendr_features <- function(features, quiet) {
   unknown_features <- setdiff(features, known_features)
   unknown_features <- unknown_features[nzchar(unknown_features)]
 
-  if(!isTRUE(quiet) && length(unknown_features) > 0) {
+  if (!isTRUE(quiet) && length(unknown_features) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
       "i" = "Are you using a development version of {.code extendr}?"
-    )
-    )
+    ))
   }
-
 }
 
 #' Generates valid rust library path given file_name.
@@ -303,9 +300,9 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       }
 
       if (package_version(R.version$minor) >= "3.0") {
-        rtools_version <- "43"  # nolint: object_usage_linter
+        rtools_version <- "43" # nolint: object_usage_linter
       } else {
-        rtools_version <- "42"  # nolint: object_usage_linter
+        rtools_version <- "42" # nolint: object_usage_linter
       }
 
       rtools_home <- normalizePath(
