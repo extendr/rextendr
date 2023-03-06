@@ -7,7 +7,7 @@
 ## New features
 
 * `features` parameter of `rust_source()` now correctly enables features in `extendr-api` and references required crates.
-`features` not available in release version of `extendr` raise a warning ([#249](https://github.com/extendr/rextendr/pull/249))
+`features` not available in release version of `extendr` raises a warning ([#249](https://github.com/extendr/rextendr/pull/249)).
 
 * A `<pkg_name>-win.def` file containing DLL exports is created by `rextendr::use_extendr()`. It is used during linking phase on Windows and solves the problem of compiling very large projects, such as `polars` ([#212](https://github.com/extendr/rextendr/pull/212))
 
