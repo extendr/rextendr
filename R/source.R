@@ -19,8 +19,9 @@
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to
 #'   \code{list(`extendr-api` = "*")}.
-#' @param features List of features that control conditional compilation and
-#'   optional dependencies.
+#' @param features A vector of `extendr-api` features that should be enabled.
+#'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
+#'  Unknown features will produce a warning if `quiet` is not `TRUE`.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
@@ -107,7 +108,9 @@ rust_source <- function(file, code = NULL,
                         cache_build = TRUE,
                         quiet = FALSE,
                         use_rtools = TRUE) {
-  profile <- match.arg(profile, several.ok = FALSE)
+  profile <- rlang::arg_match(profile, multiple = FALSE)
+  features <- validate_extendr_features(features, quiet)
+
   if (is.null(extendr_deps)) {
     ui_throw(
       "Invalid argument.",
@@ -280,9 +283,9 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       }
 
       if (package_version(R.version$minor) >= "3.0") {
-        rtools_version <- "43"  # nolint: object_usage_linter
+        rtools_version <- "43" # nolint: object_usage_linter
       } else {
-        rtools_version <- "42"  # nolint: object_usage_linter
+        rtools_version <- "42" # nolint: object_usage_linter
       }
 
       rtools_home <- normalizePath(
@@ -428,46 +431,6 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
       glue_close = "}>}"
     )
   }
-}
-
-generate_cargo.toml <- function(libname = "rextendr",
-                                dependencies = NULL,
-                                patch.crates_io = NULL,
-                                extendr_deps = NULL,
-                                features = NULL) {
-  to_toml(
-    package = list(
-      name = libname,
-      version = "0.0.1",
-      edition = "2021",
-      resolver = "2"
-    ),
-    lib = list(
-      `crate-type` = array("cdylib", 1)
-    ),
-    dependencies = append(
-      extendr_deps,
-      dependencies
-    ),
-    `patch.crates-io` = patch.crates_io,
-    features = features,
-    `profile.perf` = list(
-      inherits = "release",
-      lto = "thin",
-      `opt-level` = 3,
-      panic = "abort",
-      `codegen-units` = 1
-    )
-  )
-}
-
-generate_cargo_config.toml <- function() {
-  to_toml(
-    build = list(
-      rustflags = c("-C", "target-cpu=native"),
-      `target-dir` = "target"
-    )
-  )
 }
 
 get_dynlib_ext <- function() {
