@@ -1,4 +1,12 @@
-features_config <- new.env(parent = emptyenv())
+features_config <- rlang::env(
+    known_features = tibble::tribble(
+        ~Name, ~RequiresPackage, ~Package,
+        "ndarray", TRUE, "ndarray",
+        "serde", TRUE, "serde",
+        "num-complex", TRUE, "num-complex",
+        "graphics", FALSE, NA
+    )
+)
 features_config[["known_features"]] <- tibble::tribble(
   ~Name, ~RequiresPackage, ~Package,
   "ndarray", TRUE, "ndarray",
@@ -12,7 +20,7 @@ validate_extendr_features <- function(features, quiet) {
   vctrs::vec_assert(features, character())
   features <- unique(features)
 
-  unknown_features <- setdiff(features, features_config[["known_features"]][["Name"]])
+  unknown_features <- setdiff(features, features_config$known_features$Name)
   unknown_features <- unknown_features[nzchar(unknown_features)]
 
   if (!isTRUE(quiet) && length(unknown_features) > 0) {
@@ -51,9 +59,9 @@ enable_features <- function(extendr_deps, features) {
 }
 
 add_features_dependencies <- function(dependencies, features) {
-  required_packages <- features_config[["known_features"]] %>%
+  required_packages <- features_config$known_features %>%
     dplyr::filter(
-      vctrs::vec_in(needles = .data$Name, haystack = features),
+      vctrs::vec_in(needles = .data$Name, haystack = features) &
       .data$RequiresPackage
     ) %>%
     dplyr::pull(.data$Package)
