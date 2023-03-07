@@ -117,7 +117,7 @@ rust_source <- function(file, code = NULL,
   features <- validate_extendr_features(features, quiet)
 
   if (is.null(extendr_deps)) {
-    if(isTRUE(use_dev_extendr)) {
+    if (isTRUE(use_dev_extendr)) {
       extendr_deps <- getOption("rextendr.extendr_dev_deps")
     } else {
       extendr_deps <- getOption("rextendr.extendr_deps")
