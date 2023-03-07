@@ -17,8 +17,10 @@
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
-#' @param extendr_deps Versions of `extendr-*` crates. Defaults to
-#'   \code{list(`extendr-api` = "*")}.
+#' @param extendr_deps Versions of `extendr-*` crates. Defaults to `rextendr.extendr_deps` option
+#'   (\code{list(`extendr-api` = "*")}) if `use_dev_extendr` is not `TRUE`,
+#'   otherwise, uses `rextendr.extendr_dev_deps` option
+#'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
 #' @param features A vector of `extendr-api` features that should be enabled.
 #'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
 #'  Unknown features will produce a warning if `quiet` is not `TRUE`.
@@ -40,6 +42,8 @@
 #'   to the `PATH` variable on Windows using the `RTOOLS40_HOME` environment
 #'   variable (if it is set). The appended path depends on the process
 #'   architecture. Does nothing on other platforms.
+#' @param use_dev_extendr Logical indicating whether to use development version of
+#'   `extendr`. Has no effect if `extendr_deps` are set.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
 #'  See [getLoadedDLLs()] for more details.
 #'
@@ -100,22 +104,24 @@ rust_source <- function(file, code = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
                         profile = c("dev", "release", "perf"),
                         toolchain = getOption("rextendr.toolchain"),
-                        extendr_deps = getOption("rextendr.extendr_deps"),
+                        extendr_deps = NULL,
                         features = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
                         cache_build = TRUE,
                         quiet = FALSE,
-                        use_rtools = TRUE) {
+                        use_rtools = TRUE,
+                        use_dev_extendr = FALSE) {
   profile <- rlang::arg_match(profile, multiple = FALSE)
   features <- validate_extendr_features(features, quiet)
 
   if (is.null(extendr_deps)) {
-    ui_throw(
-      "Invalid argument.",
-      bullet_x("`extendr_deps` cannot be `NULL`.")
-    )
+    if (isTRUE(use_dev_extendr)) {
+      extendr_deps <- getOption("rextendr.extendr_dev_deps")
+    } else {
+      extendr_deps <- getOption("rextendr.extendr_deps")
+    }
   }
 
   dir <- get_build_dir(cache_build)
