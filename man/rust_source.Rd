@@ -51,7 +51,7 @@ such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 \item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to \code{rextendr.extendr_deps} option
 (\code{list(`extendr-api` = "*")}) if \code{use_dev_extendr} is not \code{TRUE},
 otherwise, uses \code{rextendr.extendr_dev_deps} option
-(\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr)}).}
+(\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).}
 
 \item{features}{A vector of \code{extendr-api} features that should be enabled.
 Supported values are \code{"ndarray"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.

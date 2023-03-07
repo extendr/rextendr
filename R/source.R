@@ -20,7 +20,7 @@
 #' @param extendr_deps Versions of `extendr-*` crates. Defaults to `rextendr.extendr_deps` option
 #'   (\code{list(`extendr-api` = "*")}) if `use_dev_extendr` is not `TRUE`,
 #'   otherwise, uses `rextendr.extendr_dev_deps` option
-#'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr)}).
+#'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
 #' @param features A vector of `extendr-api` features that should be enabled.
 #'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
 #'  Unknown features will produce a warning if `quiet` is not `TRUE`.
