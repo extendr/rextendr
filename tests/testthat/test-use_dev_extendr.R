@@ -3,7 +3,8 @@ test_that("`use_dev_extendr = TRUE` works together with `features`", {
     "fn uses_either() -> either::Either<Rint, Rfloat> {either::Either::Left(Rint::from(42i32))}",
     features = "either",
     use_dev_extendr = TRUE,
-    quiet = TRUE            # Suppresses warnings while the feature is still experimental
+    quiet = TRUE, # Suppresses warnings while the feature is still experimental
+    dependencies = list(either = "*") # Crates associated with experimental features are not references automatically
   )
 
   expect_equal(42L, uses_either())
