@@ -51,10 +51,12 @@ enable_features <- function(extendr_deps, features) {
 }
 
 add_features_dependencies <- function(dependencies, features) {
-
   required_packages <- features_config[["known_features"]] %>%
-    dplyr::filter(vctrs::vec_in(needles = Name, haystack = features), RequiresPackage) %>%
-    dplyr::pull(Package)
+    dplyr::filter(
+      vctrs::vec_in(needles = .data$Name, haystack = features),
+      .data$RequiresPackage
+    ) %>%
+    dplyr::pull(.data$Package)
 
   feature_deps <- rep(list("*"), length(required_packages))
   names(feature_deps) <- required_packages
