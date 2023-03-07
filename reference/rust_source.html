@@ -126,8 +126,9 @@ such as <code>"nightly"</code>, or (on Windows) <code>"stable-msvc"</code>.</p><
 
 
 <dt>features</dt>
-<dd><p>List of features that control conditional compilation and
-optional dependencies.</p></dd>
+<dd><p>A vector of <code>extendr-api</code> features that should be enabled.
+Supported values are <code>"ndarray"</code>, <code>"num-complex"</code>, <code>"serde"</code>, and <code>"graphics"</code>.
+Unknown features will produce a warning if <code>quiet</code> is not <code>TRUE</code>.</p></dd>
 
 
 <dt>env</dt>
