@@ -109,7 +109,7 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE) {
   profile <- rlang::arg_match(profile, multiple = FALSE)
-  validate_extendr_features(features, quiet)
+  features <- validate_extendr_features(features, quiet)
 
   if (is.null(extendr_deps)) {
     ui_throw(
@@ -222,23 +222,6 @@ rust_function <- function(code, env = parent.frame(), ...) {
   )
 
   rust_source(code = code, env = env, ...)
-}
-
-validate_extendr_features <- function(features, quiet) {
-  known_features <- c("ndarray", "serde", "num-complex", "graphics")
-  features <- features %||% character(0)
-  vctrs::vec_assert(features, character())
-  features <- unique(features)
-
-  unknown_features <- setdiff(features, known_features)
-  unknown_features <- unknown_features[nzchar(unknown_features)]
-
-  if (!isTRUE(quiet) && length(unknown_features) > 0) {
-    cli::cli_warn(c(
-      "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
-      "i" = "Are you using a development version of {.code extendr}?"
-    ))
-  }
 }
 
 #' Generates valid rust library path given file_name.

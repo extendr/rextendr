@@ -1,0 +1,64 @@
+features_config <- new.env(parent = emptyenv())
+features_config[["known_features"]] <- tibble::tribble(
+  ~Name, ~RequiresPackage, ~Package,
+  "ndarray", TRUE, "ndarray",
+  "serde", TRUE, "serde",
+  "num-complex", TRUE, "num-complex",
+  "graphics", FALSE, NA
+)
+
+
+validate_extendr_features <- function(features, quiet) {
+  features <- features %||% character(0)
+  vctrs::vec_assert(features, character())
+  features <- unique(features)
+
+  unknown_features <- setdiff(features, features_config[["known_features"]][["Name"]])
+  unknown_features <- unknown_features[nzchar(unknown_features)]
+
+  if (!isTRUE(quiet) && length(unknown_features) > 0) {
+    cli::cli_warn(c(
+      "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
+      "i" = "Are you using a development version of {.code extendr}?"
+    ))
+  }
+
+  features
+}
+
+enable_features <- function(extendr_deps, features) {
+  features <- setdiff(features, "graphics")
+  if (length(features) == 0L) {
+    return(extendr_deps)
+  }
+
+  extendr_api <- extendr_deps[["extendr-api"]]
+  if (is.null(extendr_api)) {
+    ui_throw("{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.")
+  }
+
+  if (is.character(extendr_api)) {
+    extendr_api <- list(version = extendr_api, features = array(features))
+  } else if (is.list(extendr_api)) {
+    existing_features <- extendr_api[["features"]] %||% character(0)
+    extendr_api[["features"]] <- array(unique(c(existing_features, features)))
+  } else {
+    ui_throw("{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.")
+  }
+
+  extendr_deps[["extendr-api"]] <- extendr_api
+
+  extendr_deps
+}
+
+add_features_dependencies <- function(dependencies, features) {
+
+  required_packages <- features_config[["known_features"]] %>%
+    dplyr::filter(vctrs::vec_in(needles = Name, haystack = features), RequiresPackage) %>%
+    dplyr::pull(Package)
+
+  feature_deps <- rep(list("*"), length(required_packages))
+  names(feature_deps) <- required_packages
+
+  purrr::list_modify(feature_deps, !!!dependencies)
+}
