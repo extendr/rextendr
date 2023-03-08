@@ -1,4 +1,4 @@
-test_that("TODO", {
+test_that("`extendr` code is compiled with `either` feature and `use_try_from` enabled", {
   rust_function(
     "fn type_aware_sum(input : either::Either<Integers, Doubles>) -> either::Either<Rint, Rfloat> {
       match input {
@@ -22,4 +22,24 @@ test_that("TODO", {
 
   expect_type(dbl_sum, "double")
   expect_equal(dbl_sum, 15)
+})
+
+test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
+  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
+})
+
+test_that("`rust_source()` errors if `extendr_fn_options` contains value of the wrong type", {
+  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = 42L)))
+})
+
+test_that("`rust_source()` errors if `extendr_fn_options` contains option with an invalid name", {
+  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE)))
+})
+
+test_that("`rust_source()` warns if `extendr_fn_options` contains an unkwon option", {
+  expect_warning( # Unknown option
+    expect_error( # Failed compilation because of the unknonw option
+      rust_function("fn func() {}", extendr_fn_options = list("unknown_option" = 42L))
+    )
+  )
 })
