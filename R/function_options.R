@@ -41,15 +41,17 @@ convert_function_options <- function(options, quiet) {
       purrr::map_lgl(
         .data$Value,
         ~ rlang::is_null(.x) || !vctrs::vec_is(.x, size = 1L)
-      )
+      ) |
+      !is_valid_rust_name(.data$Name)
     ) %>%
     dplyr::pull(.data$Name)
 
   if (length(invalid_options) > 0) {
     cli::cli_abort(c(
       "Found invalid {.code extendr} function option{?s}: {.val {invalid_options}}.",
-      "x" = "Option values should not be {.code NULL}.",
-      "i" = "Options are expected to have scalar values."
+      "x" = "Option value should not be {.code NULL};",
+      "i" = "Option is expected to have scalar value;",
+      "i" = "Option name should be a valid rust identifier name."
     ))
   }
 
