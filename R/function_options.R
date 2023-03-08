@@ -29,13 +29,6 @@ convert_function_options <- function(options, quiet) {
     dplyr::filter(purrr::map_lgl(.data$Ptype, rlang::is_null)) %>%
     dplyr::pull(.data$Name)
 
-  if (!isTRUE(quiet) && length(unknown_options) > 0) {
-    cli::cli_warn(c(
-      "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
-      inf_dev_extendr_used()
-    ))
-  }
-
   invalid_options <- options_table %>%
     dplyr::filter(
       purrr::map_lgl(
@@ -52,6 +45,11 @@ convert_function_options <- function(options, quiet) {
       "x" = "Option value should not be {.code NULL};",
       "i" = "Option is expected to have scalar value;",
       "i" = "Option name should be a valid rust identifier name."
+    ))
+  } else if (!isTRUE(quiet) && length(unknown_options) > 0) {
+    cli::cli_warn(c(
+      "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
+      inf_dev_extendr_used()
     ))
   }
 
