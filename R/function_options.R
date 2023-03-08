@@ -7,7 +7,7 @@ extendr_function_config <- rlang::env(
   )
 )
 
-convert_function_options <- function(options) {
+convert_function_options <- function(options, quiet) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
     return(tibble::tibble(Name = character(), RustValue = character()))
   }
@@ -29,7 +29,7 @@ convert_function_options <- function(options) {
     dplyr::filter(purrr::map_lgl(.data$Ptype, rlang::is_null)) %>%
     dplyr::pull(.data$Name)
 
-  if (length(unknown_options) > 0) {
+  if (!isTRUE(quiet) && length(unknown_options) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
       inf_dev_extendr_used()

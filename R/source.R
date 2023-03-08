@@ -223,8 +223,8 @@ rust_source <- function(file, code = NULL,
 #'   `#[extendr(...)]` attribute
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
-rust_function <- function(code, extendr_fn_options = NULL, env = parent.frame(), ...) {
-  options <- convert_function_options(extendr_fn_options)
+rust_function <- function(code, extendr_fn_options = NULL, env = parent.frame(), quiet = FALSE, ...) {
+  options <- convert_function_options(extendr_fn_options, quiet)
   if (vctrs::vec_is_empty(options)) {
     attr_arg <- ""
   } else {
@@ -239,7 +239,7 @@ rust_function <- function(code, extendr_fn_options = NULL, env = parent.frame(),
     stringi::stri_trim(code)
   )
 
-  rust_source(code = code, env = env, ...)
+  rust_source(code = code, env = env, quiet = quiet, ...)
 }
 
 #' Generates valid rust library path given file_name.

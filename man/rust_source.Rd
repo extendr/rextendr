@@ -24,7 +24,13 @@ rust_source(
   use_dev_extendr = FALSE
 )
 
-rust_function(code, extendr_fn_options = NULL, env = parent.frame(), ...)
+rust_function(
+  code,
+  extendr_fn_options = NULL,
+  env = parent.frame(),
+  quiet = FALSE,
+  ...
+)
 }
 \arguments{
 \item{file}{Input rust file to source.}
