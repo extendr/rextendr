@@ -32,7 +32,7 @@ convert_extendr_function_options <- function(options) {
   if (length(unknown_options) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
-      "i" = "Are you using a development version of {.code extendr}?"
+      ui_messages$inf_dev_extendr_used()
     ))
   }
 
