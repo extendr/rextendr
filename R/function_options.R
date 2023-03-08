@@ -55,7 +55,7 @@ convert_function_options <- function(options) {
 
   options_table %>%
     dplyr::mutate(RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)) %>%
-    dplyr::select(.data$Name, .data$RustValue)
+    dplyr::select("Name", "RustValue")
 }
 
 convert_option_to_rust <- function(option_value) {
