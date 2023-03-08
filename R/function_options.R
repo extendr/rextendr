@@ -7,9 +7,9 @@ extendr_function_config <- rlang::env(
   )
 )
 
-convert_extendr_function_options <- function(options) {
+convert_function_options <- function(options) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
-    return ("")
+    return(tibble::tibble(Name = character(), RustValue = character()))
   }
 
   if (!rlang::is_list(options) || !rlang::is_named(options)) {
@@ -21,7 +21,7 @@ convert_extendr_function_options <- function(options) {
     dplyr::mutate(
       Value = purrr::pmap(
         list(.data$Value, .data$Ptype, .data$Name),
-        ~ if(rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
+        ~ if (rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
       ),
     )
 
@@ -32,7 +32,7 @@ convert_extendr_function_options <- function(options) {
   if (length(unknown_options) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
-      ui_messages$inf_dev_extendr_used()
+      inf_dev_extendr_used()
     ))
   }
 
@@ -55,9 +55,7 @@ convert_extendr_function_options <- function(options) {
 
   options_table %>%
     dplyr::mutate(RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)) %>%
-    glue::glue_data("{Name} = {RustValue}") %>%
-    glue::glue_collapse(sep = ", ") %>%
-    as.character()
+    dplyr::select(.data$Name, .data$RustValue)
 }
 
 convert_option_to_rust <- function(option_value) {

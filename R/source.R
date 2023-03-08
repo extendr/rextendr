@@ -224,7 +224,7 @@ rust_source <- function(file, code = NULL,
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
 rust_function <- function(code, extendr_fn_options = NULL, env = parent.frame(), ...) {
-  options <- convert_extendr_function_options(extendr_fn_options)
+  options <- convert_function_options(extendr_fn_options)
   if (vctrs::vec_is_empty(options)) {
     attr_arg <- ""
   } else {

@@ -24,7 +24,7 @@ rust_source(
   use_dev_extendr = FALSE
 )
 
-rust_function(code, env = parent.frame(), ...)
+rust_function(code, extendr_fn_options = NULL, env = parent.frame(), ...)
 }
 \arguments{
 \item{file}{Input rust file to source.}
@@ -83,6 +83,9 @@ architecture. Does nothing on other platforms.}
 
 \item{use_dev_extendr}{Logical indicating whether to use development version of
 \code{extendr}. Has no effect if \code{extendr_deps} are set.}
+
+\item{extendr_fn_options}{A list of extendr function options that are inserted into
+\verb{#[extendr(...)]} attribute}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }
