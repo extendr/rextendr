@@ -35,7 +35,7 @@ convert_function_options <- function(options, quiet) {
         .data$Value,
         ~ rlang::is_null(.x) || !vctrs::vec_is(.x, size = 1L)
       ) |
-      !is_valid_rust_name(.data$Name)
+        !is_valid_rust_name(.data$Name)
     ) %>%
     dplyr::pull(.data$Name)
 
