@@ -24,6 +24,15 @@ test_that("`extendr` code is compiled with `either` feature and `use_try_from` e
   expect_equal(dbl_sum, 15)
 })
 
+test_that("`r_name` option renames R function", {
+  rust_function(
+    "fn func() -> &'static str {\"Modified Name\"}",
+    extendr_fn_options = list("r_name" = "not_original_name")
+  )
+
+  expect_equal(not_original_name(), "Modified Name")
+})
+
 test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
   expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
 })
