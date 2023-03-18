@@ -6,7 +6,8 @@
 #' @param file Input rust file to source.
 #' @param code Input rust code, to be used instead of `file`.
 #' @param module_name Name of the module defined in the Rust source via
-#'   `extendr_module!`. Default is `"rextendr"`.
+#'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
+#'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
 #' @param dependencies Character vector of dependencies lines to be added to the
 #'   `Cargo.toml` file.
 #' @param patch.crates_io Character vector of patch statements for crates.io to
@@ -16,10 +17,13 @@
 #' @param toolchain Rust toolchain. The default, `NULL`, compiles with the
 #'  system default toolchain. Accepts valid Rust toolchain qualifiers,
 #'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
-#' @param extendr_deps Versions of `extendr-*` crates. Defaults to
-#'   \code{list(`extendr-api` = "*")}.
-#' @param features List of features that control conditional compilation and
-#'   optional dependencies.
+#' @param extendr_deps Versions of `extendr-*` crates. Defaults to `rextendr.extendr_deps` option
+#'   (\code{list(`extendr-api` = "*")}) if `use_dev_extendr` is not `TRUE`,
+#'   otherwise, uses `rextendr.extendr_dev_deps` option
+#'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
+#' @param features A vector of `extendr-api` features that should be enabled.
+#'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
+#'  Unknown features will produce a warning if `quiet` is not `TRUE`.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
 #'   `use extendr_api::prelude::*;` should be added at the top of the Rust source
@@ -38,6 +42,8 @@
 #'   to the `PATH` variable on Windows using the `RTOOLS40_HOME` environment
 #'   variable (if it is set). The appended path depends on the process
 #'   architecture. Does nothing on other platforms.
+#' @param use_dev_extendr Logical indicating whether to use development version of
+#'   `extendr`. Has no effect if `extendr_deps` are set.
 #' @return The result from [dyn.load()], which is an object of class `DLLInfo`.
 #'  See [getLoadedDLLs()] for more details.
 #'
@@ -98,20 +104,24 @@ rust_source <- function(file, code = NULL,
                         patch.crates_io = getOption("rextendr.patch.crates_io"),
                         profile = c("dev", "release", "perf"),
                         toolchain = getOption("rextendr.toolchain"),
-                        extendr_deps = getOption("rextendr.extendr_deps"),
+                        extendr_deps = NULL,
                         features = NULL,
                         env = parent.frame(),
                         use_extendr_api = TRUE,
                         generate_module_macro = TRUE,
                         cache_build = TRUE,
                         quiet = FALSE,
-                        use_rtools = TRUE) {
-  profile <- match.arg(profile, several.ok = FALSE)
+                        use_rtools = TRUE,
+                        use_dev_extendr = FALSE) {
+  profile <- rlang::arg_match(profile, multiple = FALSE)
+  features <- validate_extendr_features(features, quiet)
+
   if (is.null(extendr_deps)) {
-    ui_throw(
-      "Invalid argument.",
-      bullet_x("`extendr_deps` cannot be `NULL`.")
-    )
+    if (isTRUE(use_dev_extendr)) {
+      extendr_deps <- getOption("rextendr.extendr_dev_deps")
+    } else {
+      extendr_deps <- getOption("rextendr.extendr_deps")
+    }
   }
 
   dir <- get_build_dir(cache_build)
@@ -133,11 +143,14 @@ rust_source <- function(file, code = NULL,
 
     # generate lib name
     libname <- paste0("rextendr", the$count)
-    the$count <- the$count + 1L
   } else {
+    file <- normalizePath(file, winslash = "/")
     file.copy(file, rust_file, overwrite = TRUE)
-    libname <- tools::file_path_sans_ext(basename(file))
+
+    path_hash <- rlang::hash(file)
+    libname <- as_valid_rust_name(paste0(tools::file_path_sans_ext(basename(file)), path_hash, the$count))
   }
+  the$count <- the$count + 1L
 
   if (!isTRUE(cache_build)) {
     withr::defer(clean_build_dir())
@@ -170,7 +183,7 @@ rust_source <- function(file, code = NULL,
   )
 
   # load shared library
-  libfilename <- paste0(get_dynlib_name(libname), get_dynlib_ext())
+  libfilename <- as_rust_lib_file_name(paste0(get_dynlib_name(libname), get_dynlib_ext()))
 
   target_folder <- ifelse(
     is.null(specific_target),
@@ -217,6 +230,22 @@ rust_function <- function(code, env = parent.frame(), ...) {
   rust_source(code = code, env = env, ...)
 }
 
+#' Generates valid rust library path given file_name.
+#'
+#' Internally calls [as_valid_rust_name()], but also replaces `-` with `_`, as Rust does.
+#'
+#' @param file_name_no_parent \[string\] File name, no parent.
+#' @returns Sanitized and corrected name.
+#' @noRd
+as_rust_lib_file_name <- function(file_name_no_parent) {
+  ext <- tools::file_ext(file_name_no_parent)
+
+  file_name_no_parent <- tools::file_path_sans_ext(file_name_no_parent)
+  file_name_no_parent <- as_valid_rust_name(file_name_no_parent)
+
+  paste(stringi::stri_replace_all_fixed(file_name_no_parent, "-", "_"), ext, sep = ".")
+}
+
 #' Sets up environment and invokes Rust's cargo.
 #'
 #' Configures the environment and makes a call to [system2()],
@@ -260,9 +289,9 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
       }
 
       if (package_version(R.version$minor) >= "3.0") {
-        rtools_version <- "43"  # nolint: object_usage_linter
+        rtools_version <- "43" # nolint: object_usage_linter
       } else {
-        rtools_version <- "42"  # nolint: object_usage_linter
+        rtools_version <- "42" # nolint: object_usage_linter
       }
 
       rtools_home <- normalizePath(
@@ -408,46 +437,6 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
       glue_close = "}>}"
     )
   }
-}
-
-generate_cargo.toml <- function(libname = "rextendr",
-                                dependencies = NULL,
-                                patch.crates_io = NULL,
-                                extendr_deps = NULL,
-                                features = NULL) {
-  to_toml(
-    package = list(
-      name = libname,
-      version = "0.0.1",
-      edition = "2021",
-      resolver = "2"
-    ),
-    lib = list(
-      `crate-type` = array("cdylib", 1)
-    ),
-    dependencies = append(
-      extendr_deps,
-      dependencies
-    ),
-    `patch.crates-io` = patch.crates_io,
-    features = features,
-    `profile.perf` = list(
-      inherits = "release",
-      lto = "thin",
-      `opt-level` = 3,
-      panic = "abort",
-      `codegen-units` = 1
-    )
-  )
-}
-
-generate_cargo_config.toml <- function() {
-  to_toml(
-    build = list(
-      rustflags = c("-C", "target-cpu=native"),
-      `target-dir` = "target"
-    )
-  )
 }
 
 get_dynlib_ext <- function() {

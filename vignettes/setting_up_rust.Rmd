@@ -19,7 +19,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 No further action should be needed.
 
-On Windows, things are a little more involved. First download `rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it, following the on-screen instructions. Rust may require installation of [VC++ build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (more instructions can be found [here](https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup)).
+On Windows, things are a little more involved. First download `rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it, following the on-screen instructions. Rust may require installation of [VC++ build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (more instructions can be found [here](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup)).
 Once installed, execute the following rustup commands:
 
 ```

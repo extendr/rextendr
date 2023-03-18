@@ -13,14 +13,15 @@ rust_source(
   patch.crates_io = getOption("rextendr.patch.crates_io"),
   profile = c("dev", "release", "perf"),
   toolchain = getOption("rextendr.toolchain"),
-  extendr_deps = getOption("rextendr.extendr_deps"),
+  extendr_deps = NULL,
   features = NULL,
   env = parent.frame(),
   use_extendr_api = TRUE,
   generate_module_macro = TRUE,
   cache_build = TRUE,
   quiet = FALSE,
-  use_rtools = TRUE
+  use_rtools = TRUE,
+  use_dev_extendr = FALSE
 )
 
 rust_function(code, env = parent.frame(), ...)
@@ -31,7 +32,8 @@ rust_function(code, env = parent.frame(), ...)
 \item{code}{Input rust code, to be used instead of \code{file}.}
 
 \item{module_name}{Name of the module defined in the Rust source via
-\verb{extendr_module!}. Default is \code{"rextendr"}.}
+\verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
+or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
 
 \item{dependencies}{Character vector of dependencies lines to be added to the
 \code{Cargo.toml} file.}
@@ -46,11 +48,14 @@ The default, \code{"dev"}, compiles faster but produces slower code.}
 system default toolchain. Accepts valid Rust toolchain qualifiers,
 such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
-\item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to
-\code{list(`extendr-api` = "*")}.}
+\item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to \code{rextendr.extendr_deps} option
+(\code{list(`extendr-api` = "*")}) if \code{use_dev_extendr} is not \code{TRUE},
+otherwise, uses \code{rextendr.extendr_dev_deps} option
+(\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).}
 
-\item{features}{List of features that control conditional compilation and
-optional dependencies.}
+\item{features}{A vector of \code{extendr-api} features that should be enabled.
+Supported values are \code{"ndarray"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.
+Unknown features will produce a warning if \code{quiet} is not \code{TRUE}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
 
@@ -75,6 +80,9 @@ calls to \code{\link[=rust_source]{rust_source()}}.}
 to the \code{PATH} variable on Windows using the \code{RTOOLS40_HOME} environment
 variable (if it is set). The appended path depends on the process
 architecture. Does nothing on other platforms.}
+
+\item{use_dev_extendr}{Logical indicating whether to use development version of
+\code{extendr}. Has no effect if \code{extendr_deps} are set.}
 
 \item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
 }

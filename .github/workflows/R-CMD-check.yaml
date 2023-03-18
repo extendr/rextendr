@@ -10,7 +10,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.rust-version }})
 
     strategy:
       fail-fast: false
@@ -31,23 +31,23 @@ jobs:
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'     }
 
-          - {os: ubuntu-20.04,   r: 'release', rust-version: 'stable'     }
-          - {os: ubuntu-20.04,   r: 'devel',   rust-version: 'stable'     }
+          - {os: ubuntu-latest,  r: 'release', rust-version: 'stable'     }
+          - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable'     }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      REXTENDR_PATCH_CRATES_IO: 'libR-sys = { git = "https://github.com/extendr/libR-sys" }'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.config.rust-version }}
-          default: true
 
       - uses: r-lib/actions/setup-r@v2
         with:
