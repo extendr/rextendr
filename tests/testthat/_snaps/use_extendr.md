@@ -60,10 +60,12 @@
       	if [ "$(NOT_CRAN)" != "true" ] && [ "$(NOT_CRAN)" != "TRUE" ]; then \
       		export CARGO_HOME=$(CARGOTMP); \
       	fi && \
-      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      	rm -Rf $(CARGOTMP)
-      	rm -Rf $(LIBDIR)/build
+      	if [ "$(NOT_CRAN)" != "true" ] && [ "$(NOT_CRAN)" != "TRUE" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
@@ -103,11 +105,13 @@
       	if [ "$(NOT_CRAN)" != "true" ] && [ "$(NOT_CRAN)" != "TRUE" ]; then \
       		export CARGO_HOME=$(CARGOTMP); \
       	fi && \
-      	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+      		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
       		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
       		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      	rm -Rf $(CARGOTMP)
-      	rm -Rf $(LIBDIR)/build
+      	if [ "$(NOT_CRAN)" != "true" ] && [ "$(NOT_CRAN)" != "TRUE" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
