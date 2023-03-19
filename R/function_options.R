@@ -7,7 +7,7 @@ extendr_function_config <- rlang::env(
   )
 )
 
-convert_function_options <- function(options, quiet) {
+convert_function_options <- function(options, quiet, use_dev_extendr) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
     return(tibble::tibble(Name = character(), RustValue = character()))
   }
@@ -32,30 +32,25 @@ convert_function_options <- function(options, quiet) {
       by = "Name"
     )
 
-  unknown_options <- options_table %>%
+  unknown_option_names <- options_table %>%
     dplyr::filter(purrr::map_lgl(.data$Ptype, rlang::is_null)) %>%
     dplyr::pull(.data$Name)
 
   invalid_options <- options_table %>%
-    dplyr::filter(
-      purrr::map_lgl(
-        .data$Value,
-        ~ rlang::is_null(.x) || !vctrs::vec_is(.x, size = 1L)
-      ) |
-        !is_valid_rust_name(.data$Name)
+    dplyr::mutate(
+      IsNameInvalid = !is_valid_rust_name(.data$Name),
+      IsValueNull = purrr::map_lgl(.data$Value, rlang::is_null),
+      IsNotScalar = !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
     ) %>%
-    dplyr::pull(.data$Name)
+    dplyr::filter(
+      .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
+    )
 
-  if (length(invalid_options) > 0) {
-    cli::cli_abort(c(
-      "Found invalid {.code extendr} function option{?s}: {.val {invalid_options}}.",
-      "x" = "Option value should not be {.code NULL};",
-      "i" = "Option is expected to have scalar value;",
-      "i" = "Option name should be a valid rust identifier name."
-    ))
-  } else if (!isTRUE(quiet) && length(unknown_options) > 0) {
+  if (vctrs::vec_size(invalid_options) > 0) {
+    cli_abort_invalid_options(invalid_options)
+  } else if (!isTRUE(quiet) && !isTRUE(use_dev_extendr) && length(unknown_option_names) > 0) {
     cli::cli_warn(c(
-      "Found unknown {.code extendr} function option{?s}: {.val {unknown_options}}.",
+      "Found unknown {.code extendr} function option{?s}: {.val {unknown_option_names}}.",
       inf_dev_extendr_used()
     ))
   }
@@ -63,6 +58,42 @@ convert_function_options <- function(options, quiet) {
   options_table %>%
     dplyr::mutate(RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)) %>%
     dplyr::select("Name", "RustValue")
+}
+
+cli_abort_invalid_options <- function(invalid_options) {
+  n_invalid_opts <- vctrs::vec_size(invalid_options)  # nolint: object_usage_linter
+
+  message <- "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:"
+  info <- character(0)
+
+  invalid_names <- invalid_options %>%
+    dplyr::filter(.data$IsNameInvalid) %>%
+    dplyr::pull(.data$Name)
+
+  if(vctrs::vec_size(invalid_names) > 0) {
+    message <- c(message, x = "Unsupported name{?s}: {.val {invalid_names}}.")
+    info <- c(info, i = "Option names should be valid rust names.")
+  }
+
+  null_values <- invalid_options %>%
+    dplyr::filter(.data$IsValueNull) %>%
+    dplyr::pull(.data$Name)
+
+  if(vctrs::vec_size(null_values) > 0) {
+    message <- c(message, x = "Null value{?s}: {.val {null_values}}.")
+    info <- c(info, i = "{.code NULL} values are disallowed.")
+  }
+
+  vector_values <- invalid_options %>%
+    dplyr::filter(.data$IsNotScalar) %>%
+    dplyr::pull(.data$Name)
+
+   if(vctrs::vec_size(vector_values) > 0) {
+    message <- c(message, x = "Vector value{?s}: {.val {vector_values}}.")
+    info <- c(info, i = "Only scalars are allowed as option values.")
+  }
+
+  cli::cli_abort(c(message, info))
 }
 
 convert_option_to_rust <- function(option_value) {
