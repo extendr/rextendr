@@ -31,7 +31,7 @@ convert_function_options <- function(options, suppress_warnings) {
         dplyr::mutate(
           Value = purrr::pmap(
             list(.data$Value, .data$Ptype, .data$Name),
-            ~vctrs::vec_cast(..1, ..2, x_arg = ..3)
+            ~ vctrs::vec_cast(..1, ..2, x_arg = ..3)
           )
         ),
       by = "Name"
@@ -56,7 +56,7 @@ convert_function_options <- function(options, suppress_warnings) {
   } else if (!isTRUE(suppress_warnings) && length(unknown_option_names) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_option_names}}.",
-      inf_dev_extendr_used()
+      inf_dev_extendr_used() # nolint: object_usage_linter
     ))
   }
 
@@ -68,7 +68,7 @@ convert_function_options <- function(options, suppress_warnings) {
 }
 
 cli_abort_invalid_options <- function(invalid_options) {
-  n_invalid_opts <- vctrs::vec_size(invalid_options)  # nolint: object_usage_linter
+  n_invalid_opts <- vctrs::vec_size(invalid_options) # nolint: object_usage_linter
 
   message <- "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:"
   info <- character(0)
@@ -77,7 +77,7 @@ cli_abort_invalid_options <- function(invalid_options) {
     dplyr::filter(.data$IsNameInvalid) %>%
     dplyr::pull(.data$Name)
 
-  if(vctrs::vec_size(invalid_names) > 0) {
+  if (vctrs::vec_size(invalid_names) > 0) {
     message <- c(message, x = "Unsupported name{?s}: {.val {invalid_names}}.")
     info <- c(info, i = "Option names should be valid rust names.")
   }
@@ -86,7 +86,7 @@ cli_abort_invalid_options <- function(invalid_options) {
     dplyr::filter(.data$IsValueNull) %>%
     dplyr::pull(.data$Name)
 
-  if(vctrs::vec_size(null_values) > 0) {
+  if (vctrs::vec_size(null_values) > 0) {
     message <- c(message, x = "Null value{?s}: {.val {null_values}}.")
     info <- c(info, i = "{.code NULL} values are disallowed.")
   }
@@ -95,7 +95,7 @@ cli_abort_invalid_options <- function(invalid_options) {
     dplyr::filter(.data$IsNotScalar) %>%
     dplyr::pull(.data$Name)
 
-   if(vctrs::vec_size(vector_values) > 0) {
+  if (vctrs::vec_size(vector_values) > 0) {
     message <- c(message, x = "Vector value{?s}: {.val {vector_values}}.")
     info <- c(info, i = "Only scalars are allowed as option values.")
   }

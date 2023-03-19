@@ -58,7 +58,9 @@ test_that("`rust_source()` warns if `extendr_fn_options` contains an unkwon opti
   )
 })
 
-test_that("`rust_source()` does not warn if `extendr_fn_options` contains an unkwon option and `use_dev_extendr` is `TRUE`", {
+test_that(
+  "`rust_source()` does not warn if `extendr_fn_options` contains an unkwon option and `use_dev_extendr` is `TRUE`",
+  {
     expect_error( # Failed compilation because of the unknonw option
       rust_function(
         code = "fn func() {}",
@@ -66,4 +68,5 @@ test_that("`rust_source()` does not warn if `extendr_fn_options` contains an unk
         use_dev_extendr = TRUE
       )
     )
-})
+  }
+)

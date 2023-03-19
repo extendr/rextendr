@@ -223,8 +223,13 @@ rust_source <- function(file, code = NULL,
 #'   `#[extendr(...)]` attribute
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
-rust_function <- function(code, extendr_fn_options = NULL, env = parent.frame(), quiet = FALSE, use_dev_extendr = FALSE, ...) {
-  options <- convert_function_options(
+rust_function <- function(code,
+                          extendr_fn_options = NULL,
+                          env = parent.frame(),
+                          quiet = FALSE,
+                          use_dev_extendr = FALSE,
+                          ...) {
+  options <- convert_function_options( # nolint: object_usage_linter
     options = extendr_fn_options,
     suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr)
   )

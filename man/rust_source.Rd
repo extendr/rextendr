@@ -29,6 +29,7 @@ rust_function(
   extendr_fn_options = NULL,
   env = parent.frame(),
   quiet = FALSE,
+  use_dev_extendr = FALSE,
   ...
 )
 }
