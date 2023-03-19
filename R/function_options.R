@@ -7,7 +7,12 @@ extendr_function_config <- rlang::env(
   )
 )
 
-convert_function_options <- function(options, quiet, use_dev_extendr) {
+#' Converts a list of user-specified options into a data frame containing `Name` and `RustValue`
+#'
+#' @param options A list of user-specified options.
+#' @param suppress_warnings Logical, suppresses warnigns if `TRUE`.
+#' @noRd
+convert_function_options <- function(options, suppress_warnings) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
     return(tibble::tibble(Name = character(), RustValue = character()))
   }
@@ -48,7 +53,7 @@ convert_function_options <- function(options, quiet, use_dev_extendr) {
 
   if (vctrs::vec_size(invalid_options) > 0) {
     cli_abort_invalid_options(invalid_options)
-  } else if (!isTRUE(quiet) && !isTRUE(use_dev_extendr) && length(unknown_option_names) > 0) {
+  } else if (!isTRUE(suppress_warnings) && length(unknown_option_names) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_option_names}}.",
       inf_dev_extendr_used()
@@ -56,8 +61,10 @@ convert_function_options <- function(options, quiet, use_dev_extendr) {
   }
 
   options_table %>%
-    dplyr::mutate(RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)) %>%
-    dplyr::select("Name", "RustValue")
+    dplyr::transmute(
+      .data$Name,
+      RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)
+    )
 }
 
 cli_abort_invalid_options <- function(invalid_options) {
