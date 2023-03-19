@@ -17,12 +17,19 @@ convert_function_options <- function(options, quiet) {
   }
 
   options_table <- tibble::tibble(Name = rlang::names2(options), Value = unname(options)) %>%
-    dplyr::left_join(extendr_function_config$known_options, by = "Name") %>%
-    dplyr::mutate(
-      Value = purrr::pmap(
-        list(.data$Value, .data$Ptype, .data$Name),
-        ~ if (rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
-      ),
+    dplyr::left_join(extendr_function_config$known_options, by = "Name")
+
+  options_table <- options_table %>%
+    dplyr::rows_update(
+      options_table %>%
+        dplyr::filter(!purrr::map_lgl(.data$Ptype, rlang::is_null)) %>%
+        dplyr::mutate(
+          Value = purrr::pmap(
+            list(.data$Value, .data$Ptype, .data$Name),
+            ~vctrs::vec_cast(..1, ..2, x_arg = ..3)
+          )
+        ),
+      by = "Name"
     )
 
   unknown_options <- options_table %>%
