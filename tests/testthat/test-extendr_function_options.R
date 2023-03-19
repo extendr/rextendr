@@ -44,6 +44,12 @@ test_that("`rust_source()` errors if `extendr_fn_options` contains option with a
   expect_error(rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE)))
 })
 
+test_that("`rust_source()` errors if `extendr_fn_options` contains two invalid options", {
+  expect_error(
+    rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE, "r_name" = NULL))
+  )
+})
+
 test_that("`rust_source()` warns if `extendr_fn_options` contains an unkwon option", {
   expect_warning( # Unknown option
     expect_error( # Failed compilation because of the unknonw option
