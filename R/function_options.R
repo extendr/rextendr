@@ -10,7 +10,7 @@ extendr_function_config <- rlang::env(
 #' Converts a list of user-specified options into a data frame containing `Name` and `RustValue`
 #'
 #' @param options A list of user-specified options.
-#' @param suppress_warnings Logical, suppresses warnigns if `TRUE`.
+#' @param suppress_warnings Logical, suppresses warnings if `TRUE`.
 #' @noRd
 convert_function_options <- function(options, suppress_warnings) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
