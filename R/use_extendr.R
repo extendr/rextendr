@@ -101,6 +101,8 @@ use_extendr <- function(path = ".",
     quiet = quiet
   )
 
+  usethis::use_build_ignore("src/.cargo")
+
   edition <- match.arg(edition, several.ok = FALSE)
   cargo_toml_content <- to_toml(
     package = list(name = crate_name, version = "0.1.0", edition = edition),

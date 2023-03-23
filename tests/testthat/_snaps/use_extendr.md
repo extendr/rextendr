@@ -11,6 +11,7 @@
       v Writing 'src/Makevars.win'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
+      v Adding '^src/\\.cargo$' to '.Rbuildignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
@@ -51,12 +52,21 @@
       
       $(SHLIB): $(STATLIB)
       
+      CARGOTMP = $(CURDIR)/.cargo
+      
       $(STATLIB):
       	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
       	# to set it here to ensure cargo can be invoked. It is appended to PATH and
       	# therefore is only used if cargo is absent from the user's PATH.
-      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		export CARGO_HOME=$(CARGOTMP); \
+      	fi && \
+      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
@@ -80,6 +90,8 @@
       
       $(SHLIB): $(STATLIB)
       
+      CARGOTMP = $(CURDIR)/.cargo
+      
       $(STATLIB):
       	mkdir -p $(TARGET_DIR)/libgcc_mock
       	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
@@ -91,9 +103,16 @@
       	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
       	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
-      	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		export CARGO_HOME=$(CARGOTMP); \
+      	fi && \
+      		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
       		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
       		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
