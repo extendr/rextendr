@@ -67,6 +67,10 @@ convert_function_options <- function(options, suppress_warnings) {
     )
 }
 
+#' Throws an error given a data frame of invalid options
+#'
+#' @param invalid_options A data frame of invalid options.
+#' @noRd
 cli_abort_invalid_options <- function(invalid_options) {
   n_invalid_opts <- vctrs::vec_size(invalid_options) # nolint: object_usage_linter
 
@@ -103,6 +107,11 @@ cli_abort_invalid_options <- function(invalid_options) {
   cli::cli_abort(c(message, info))
 }
 
+#' Converts an R option value to a Rust option value
+#'
+#' @param option_value An R scalar option value.
+#' @return A Rust option value as a string.
+#' @noRd
 convert_option_to_rust <- function(option_value) {
   if (vctrs::vec_is(option_value, character())) {
     paste0("\"", option_value, "\"")
