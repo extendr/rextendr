@@ -50,7 +50,7 @@ test_that("`rust_source()` errors if `extendr_fn_options` contains two invalid o
   )
 })
 
-test_that("`rust_source()` warns if `extendr_fn_options` contains an unkwon option", {
+test_that("`rust_source()` warns if `extendr_fn_options` contains an unknown option", {
   expect_warning( # Unknown option
     expect_error( # Failed compilation because of the unknonw option
       rust_function("fn func() {}", extendr_fn_options = list("unknown_option" = 42L))
