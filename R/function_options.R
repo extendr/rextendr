@@ -45,7 +45,7 @@ convert_function_options <- function(options, suppress_warnings) {
     dplyr::mutate(
       IsNameInvalid = !is_valid_rust_name(.data$Name),
       IsValueNull = purrr::map_lgl(.data$Value, rlang::is_null),
-      IsNotScalar = !IsValueNull & !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
+      IsNotScalar = !.data$IsValueNull & !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
     ) %>%
     dplyr::filter(
       .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
@@ -97,9 +97,9 @@ cli_abort_invalid_options <- function(invalid_options) {
 #' @return A character vector of option names.
 #' @noRd
 get_option_names <- function(invalid_options, filter_column) {
-    invalid_options %>%
-        dplyr::filter({{ filter_column }}) %>%
-        dplyr::pull(.data$Name)
+  invalid_options %>%
+    dplyr::filter({{ filter_column }}) %>%
+    dplyr::pull(.data$Name)
 }
 
 #' Returns the given text if the options are not empty
