@@ -45,7 +45,7 @@ convert_function_options <- function(options, suppress_warnings) {
     dplyr::mutate(
       IsNameInvalid = !is_valid_rust_name(.data$Name),
       IsValueNull = purrr::map_lgl(.data$Value, rlang::is_null),
-      IsNotScalar = !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
+      IsNotScalar = !IsValueNull & !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
     ) %>%
     dplyr::filter(
       .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
@@ -74,37 +74,45 @@ convert_function_options <- function(options, suppress_warnings) {
 cli_abort_invalid_options <- function(invalid_options) {
   n_invalid_opts <- vctrs::vec_size(invalid_options) # nolint: object_usage_linter
 
-  message <- "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:"
-  info <- character(0)
+  invalid_names <- invalid_options %>% get_option_names(.data$IsNameInvalid)
+  null_values <- invalid_options %>% get_option_names(.data$IsValueNull)
+  vector_values <- invalid_options %>% get_option_names(.data$IsNotScalar)
 
-  invalid_names <- invalid_options %>%
-    dplyr::filter(.data$IsNameInvalid) %>%
-    dplyr::pull(.data$Name)
+  message <- c(
+    "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:",
+    x = "Unsupported name{?s}: {.val {invalid_names}}." %>% if_any_opts(invalid_names),
+    x = "Null value{?s}: {.val {null_values}}." %>% if_any_opts(null_values),
+    x = "Vector value{?s}: {.val {vector_values}}." %>% if_any_opts(vector_values),
+    i = "Option names should be valid rust names." %>% if_any_opts(invalid_names),
+    i = "{.code NULL} values are disallowed." %>% if_any_opts(null_values),
+    i = "Only scalars are allowed as option values." %>% if_any_opts(vector_values)
+  )
 
-  if (vctrs::vec_size(invalid_names) > 0) {
-    message <- c(message, x = "Unsupported name{?s}: {.val {invalid_names}}.")
-    info <- c(info, i = "Option names should be valid rust names.")
+  cli::cli_abort(message)
+}
+
+#' Returns the names of options that satisfy the given filter
+#' @param invalid_options A data frame of invalid options.
+#' @param filter_column A column expression/name in the data frame.
+#' @return A character vector of option names.
+#' @noRd
+get_option_names <- function(invalid_options, filter_column) {
+    invalid_options %>%
+        dplyr::filter({{ filter_column }}) %>%
+        dplyr::pull(.data$Name)
+}
+
+#' Returns the given text if the options are not empty
+#' @param text A string.
+#' @param options A character vector which length is tested.
+#' @return The given string if the options are not empty, otherwise an empty character vector
+#' @noRd
+if_any_opts <- function(text, options) {
+  if (vctrs::vec_size(options) > 0) {
+    text
+  } else {
+    character(0)
   }
-
-  null_values <- invalid_options %>%
-    dplyr::filter(.data$IsValueNull) %>%
-    dplyr::pull(.data$Name)
-
-  if (vctrs::vec_size(null_values) > 0) {
-    message <- c(message, x = "Null value{?s}: {.val {null_values}}.")
-    info <- c(info, i = "{.code NULL} values are disallowed.")
-  }
-
-  vector_values <- invalid_options %>%
-    dplyr::filter(.data$IsNotScalar) %>%
-    dplyr::pull(.data$Name)
-
-  if (vctrs::vec_size(vector_values) > 0) {
-    message <- c(message, x = "Vector value{?s}: {.val {vector_values}}.")
-    info <- c(info, i = "Only scalars are allowed as option values.")
-  }
-
-  cli::cli_abort(c(message, info))
 }
 
 #' Converts an R option value to a Rust option value
