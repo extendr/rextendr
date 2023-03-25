@@ -81,7 +81,14 @@ compiles and loads a single Rust function for use in R.</p>
 <span>  use_dev_extendr <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rust_function</span><span class="op">(</span><span class="va">code</span>, env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">rust_function</span><span class="op">(</span></span>
+<span>  <span class="va">code</span>,</span>
+<span>  extendr_fn_options <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  use_dev_extendr <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -173,6 +180,11 @@ architecture. Does nothing on other platforms.</p></dd>
 <dt>use_dev_extendr</dt>
 <dd><p>Logical indicating whether to use development version of
 <code>extendr</code>. Has no effect if <code>extendr_deps</code> are set.</p></dd>
+
+
+<dt>extendr_fn_options</dt>
+<dd><p>A list of extendr function options that are inserted into
+<code>#[extendr(...)]</code> attribute</p></dd>
 
 
 <dt>...</dt>
