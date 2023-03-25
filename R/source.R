@@ -219,15 +219,36 @@ rust_source <- function(file, code = NULL,
 }
 
 #' @rdname rust_source
+#' @param extendr_fn_options A list of extendr function options that are inserted into
+#'   `#[extendr(...)]` attribute
 #' @param ... Other parameters handed off to [rust_source()].
 #' @export
-rust_function <- function(code, env = parent.frame(), ...) {
+rust_function <- function(code,
+                          extendr_fn_options = NULL,
+                          env = parent.frame(),
+                          quiet = FALSE,
+                          use_dev_extendr = FALSE,
+                          ...) {
+  options <- convert_function_options( # nolint: object_usage_linter
+    options = extendr_fn_options,
+    suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr)
+  )
+
+  if (vctrs::vec_is_empty(options)) {
+    attr_arg <- ""
+  } else {
+    attr_arg <- options %>%
+      glue::glue_data("{Name} = {RustValue}") %>%
+      glue::glue_collapse(sep = ", ")
+    attr_arg <- glue::glue("({attr_arg})")
+  }
+
   code <- c(
-    "#[extendr]",
+    glue::glue("#[extendr{attr_arg}]"),
     stringi::stri_trim(code)
   )
 
-  rust_source(code = code, env = env, ...)
+  rust_source(code = code, env = env, quiet = quiet, use_dev_extendr = use_dev_extendr, ...)
 }
 
 #' Generates valid rust library path given file_name.

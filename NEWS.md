@@ -6,6 +6,8 @@
 
 ## New features
 
+* `extendr_fn_options` parameter of `rust_source()` controls what type of options are emitted to `#[extendr()]` attribute ([#252](https://github.com/extendr/rextendr/pull/252)).
+
 * `use_dev_extendr` flag makes `rust_source()` family of functions compile code using development version of `extendr`.
 Development configuration is stored as an option named `rextendr.extendr_dev_deps` ([#251](https://github.com/extendr/rextendr/pull/251)).
 

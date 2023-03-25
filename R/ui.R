@@ -1,3 +1,5 @@
+inf_dev_extendr_used <- function() c("i" = "Are you using a development version of {.code extendr}?")
+
 bullet <- function(text = "", cli_f = cli::cli_alert_success, env = parent.frame()) {
   glue_collapse(cli::cli_format_method(cli_f(text, .envir = env)), sep = "\n")
 }

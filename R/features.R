@@ -27,7 +27,7 @@ validate_extendr_features <- function(features, quiet) {
   if (!isTRUE(quiet) && length(unknown_features) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
-      "i" = "Are you using a development version of {.code extendr}?"
+      inf_dev_extendr_used() # nolint: object_usage_linter
     ))
   }
 
