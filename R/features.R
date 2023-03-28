@@ -2,7 +2,7 @@ features_config <- rlang::env(
   known_features = c("ndarray", "serde", "num-complex", "num-complex", "graphics")
 )
 
-validate_extendr_features <- function(features, quiet) {
+validate_extendr_features <- function(features, suppress_warnings) {
   features <- features %||% character(0)
   vctrs::vec_assert(features, character())
   features <- unique(features)
@@ -11,8 +11,7 @@ validate_extendr_features <- function(features, quiet) {
     setdiff(features_config$known_features) %>%
     discard_empty()
 
-  # TODO: Fox this
-  if (!isTRUE(quiet) && length(unknown_features) > 0) {
+  if (!isTRUE(suppress_warnings) && length(unknown_features) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
       inf_dev_extendr_used() # nolint: object_usage_linter

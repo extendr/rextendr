@@ -114,7 +114,7 @@ rust_source <- function(file, code = NULL,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
   profile <- rlang::arg_match(profile, multiple = FALSE)
-  features <- validate_extendr_features(features, quiet)
+  features <- validate_extendr_features(features, suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr))
 
   if (is.null(extendr_deps)) {
     if (isTRUE(use_dev_extendr)) {
