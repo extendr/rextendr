@@ -14,7 +14,7 @@ generate_cargo.toml <- function(libname = "rextendr",
       `crate-type` = array("cdylib", 1)
     ),
     dependencies = purrr::list_modify(
-      add_features_dependencies(dependencies, features),
+      dependencies %||% list(),
       !!!enable_features(extendr_deps, features)
     ),
     `patch.crates-io` = patch.crates_io,
