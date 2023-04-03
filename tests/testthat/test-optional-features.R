@@ -12,51 +12,6 @@ test_that("Feature 'ndarray' is enabled when no extra dependencies are specified
   expect_equal(actual_sum, expected_sum)
 })
 
-test_that("Feature 'ndarray' is enabled when dependency is explicitly set", {
-  input <- file.path("../data/ndarray_example.rs")
-  rust_source(
-    file = input,
-    features = "ndarray",
-    dependencies = list(ndarray = "*")
-  )
-
-  data <- matrix(runif(100L), 25)
-  expected_sum <- sum(data)
-  actual_sum <- matrix_sum(data)
-
-  expect_equal(actual_sum, expected_sum)
-})
-
-test_that("Feature 'ndarray' is enabled when dependency is explicitly set to a complex value", {
-  input <- file.path("../data/ndarray_example.rs")
-  rust_source(
-    file = input,
-    features = "ndarray",
-    dependencies = list(ndarray = list(version = "*"))
-  )
-
-  data <- matrix(runif(100L), 25)
-  expected_sum <- sum(data)
-  actual_sum <- matrix_sum(data)
-
-  expect_equal(actual_sum, expected_sum)
-})
-
-test_that("Feature 'ndarray' is enabled when other dependencies are specified", {
-  input <- file.path("../data/ndarray_example.rs")
-  rust_source(
-    file = input,
-    features = "ndarray",
-    dependencies = list(either = list(version = "*"))
-  )
-
-  data <- matrix(runif(100L), 25)
-  expected_sum <- sum(data)
-  actual_sum <- matrix_sum(data)
-
-  expect_equal(actual_sum, expected_sum)
-})
-
 test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled", {
   input <- file.path("../data/ndarray_example.rs")
   rust_source(
@@ -83,4 +38,29 @@ test_that("Passing integers to `features` results in error", {
 
 test_that("Passing list to `features` results in error", {
   expect_error(rust_function("fn test() {}", features = list()))
+})
+
+test_that("Enabling experimental feature raises warning", {
+  expect_warning(
+    rust_function(
+      "fn test_either(_x : Either<Integers, Doubles>) {}",
+      features = "either",
+      # either works only with `use_try_from = TRUE`
+      extendr_fn_options = list(use_try_from = TRUE),
+      # manually override dependency to avoid setting `use_dev_extendr = TRUE`
+      patch.crates_io = list("extendr-api" = list(git = "https://github.com/extendr/extendr"))
+    )
+  )
+})
+
+test_that("Enabling experimental feature does not raise warning if `use_dev_extendr` is `TRUE`", {
+  expect_no_warning(
+    rust_function(
+      "fn test_either(_x : Either<Integers, Doubles>) {}",
+      features = "either",
+      # either works only with `use_try_from = TRUE`
+      extendr_fn_options = list(use_try_from = TRUE),
+      use_dev_extendr = TRUE
+    )
+  )
 })
