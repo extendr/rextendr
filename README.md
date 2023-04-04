@@ -11,6 +11,7 @@ status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](ht
 status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![codecov](https://codecov.io/gh/extendr/rextendr/branch/main/graph/badge.svg?token=5H6ID0LAO7)](https://codecov.io/gh/extendr/rextendr)
 <!-- badges: end -->
 
 ## Installation
@@ -74,10 +75,9 @@ z
 
 ## See also
 
--   The [cargo-framework](https://github.com/dbdahl/cargo-framework) and
-    associated R package
-    [cargo](https://cran.r-project.org/package=cargo)
--   The [r-rust](https://github.com/r-rust) organization
+- The [cargo-framework](https://github.com/dbdahl/cargo-framework) and
+  associated R package [cargo](https://cran.r-project.org/package=cargo)
+- The [r-rust](https://github.com/r-rust) organization
 
 ------------------------------------------------------------------------
 
