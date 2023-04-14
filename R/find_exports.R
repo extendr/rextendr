@@ -42,13 +42,19 @@ extract_meta <- function(lns) {
       glue_collapse(lns, sep = "\n  "),
       1, 80
     )
-    ui_throw(
-      "Rust code contains invalid attribute macros.",
-      c(
-        bullet_x("No valid {.code fn} or {.code impl} block found in the \\
-          following sample:"),
-        code_sample
-      )
+
+
+    cli::cli_abort(
+      cli::cli_fmt({
+        cli::cli_text(
+          "Rust code contains invalid attribute macros."
+        )
+        cli::cli_alert_danger(
+          "No valid {.code fn} or {.code impl} block found in the \\
+          following sample:"
+        )
+          cli::cli_code(code_sample)
+        })
     )
   }
   result
