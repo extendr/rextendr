@@ -4,6 +4,10 @@
 
 * Support Rtools43 (#231).
 
+* `rextendr` migrates to the use of `cli` for raising errors and warnings.
+  - **Note** that errors no longer have a class of `rextendr_error`. Based on a search of GitHub, there is no code that checks for this class in errors and should not affect any users of rextendr.
+  - Developers: testthat no longer uses `expect_rextendr_error()`. Use `expect_error()` instead.
+  
 ## New features
 
 * `extendr_fn_options` parameter of `rust_source()` controls what type of options are emitted to `#[extendr()]` attribute ([#252](https://github.com/extendr/rextendr/pull/252)).
@@ -23,6 +27,7 @@ Development configuration is stored as an option named `rextendr.extendr_dev_dep
 
 * `rextendr::document()` now sets the envvars that `devtools::document()` sets,
   e.g. `NOT_CRAN` (#135).
+
 
 # rextendr 0.2.0
 
