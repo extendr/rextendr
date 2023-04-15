@@ -36,15 +36,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 
   pkg_name <- pkg_name(path)
 
-  ui_i("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
+  cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
-    ui_throw(
+    cli::cli_abort(c(
       "Unable to register the extendr module.",
-      c(
-        bullet_x("Could not find file {.file src/entrypoint.c }."),
-        bullet_o("Are you sure this package is using extendr Rust code?")
+      "x" = "Could not find file {.file src/entrypoint.c}.",
+      "*" = "Are you sure this package is using extendr Rust code?"
       )
     )
   }
@@ -64,12 +63,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     msg <- "{library_path} doesn't exist"
     if (isTRUE(compile)) {
       # If it doesn't exist even after compile, we have no idea what happened
-      ui_throw(msg)
+      cli::cli_abort(msg)
     } else {
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
-      ui_throw(
-        msg,
-        bullet_i("You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
+      cli::cli_abort(
+        c(
+          msg,
+          "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}."
+        )
       )
     }
   }
@@ -80,7 +81,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
   if (!isTRUE(force) && file.info(outfile)[["mtime"]] > file.info(library_path)[["mtime"]]) {
     rel_path <- pretty_rel_path(outfile, path) # nolint: object_usage_linter
-    ui_i("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
+    cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
 
     return(invisible(character(0L)))
   }
@@ -97,9 +98,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       quiet = quiet
     ),
     error = function(e) {
-      ui_throw(
-        "Failed to generate wrapper functions.",
-        bullet_x(e[["message"]])
+      rlang::abort(
+        c("Failed to generate wrapper functions.", x = e[["message"]])
       )
     }
   )
