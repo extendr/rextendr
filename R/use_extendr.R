@@ -23,11 +23,17 @@
 use_extendr <- function(path = ".",
                         crate_name = NULL,
                         lib_name = NULL,
-                        quiet = getOption("usethis.quiet", FALSE),
+                        quiet = FALSE,
                         edition = c("2021", "2018")) {
-  usethis_quiet <- getOption("usethis.quiet")
-  on.exit(options(usethis.quiet = usethis_quiet))
-  options(usethis.quiet = quiet)
+
+  # https://github.com/r-lib/cli/issues/434
+
+  if (quiet) {
+    old_cli_handler <- options("cli.default_handler")
+    options("cli.default_handler" = function(...) { })
+    on.exit(options("cli.default_handler" = old_cli_handler))
+  }
+
 
   rextendr_setup(path = path)
 
