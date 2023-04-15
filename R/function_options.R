@@ -49,7 +49,7 @@ convert_function_options <- function(options, suppress_warnings) {
   } else if (!isTRUE(suppress_warnings) && length(unknown_option_names) > 0) {
     cli::cli_warn(c(
       "Found unknown {.code extendr} function option{?s}: {.val {unknown_option_names}}.",
-      inf_dev_extendr_used() # nolint: object_usage_linter
+      "i" = "Are you using a development version of {.code extendr}?"
     ))
   }
 
