@@ -440,7 +440,9 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     )
   }
 
-  if (!isTRUE(compilation_result$status == 0)) {
+  if (
+      !isTRUE(compilation_result$status == 0)
+  ) {
     error_messages <- purrr::map_chr(
       gather_cargo_output(
         cargo_output,
@@ -451,8 +453,11 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     )
 
     cli::cli_abort(
-      c("Rust code could not be compiled successfully. Aborting.",
-      error_messages)
+      cli::cli_fmt({
+      cli::cli_text("Rust code could not be compiled successfully. Aborting.")
+      cli::cat_line(error_messages)
+      }),
+      call = call
     )
   }
 }
