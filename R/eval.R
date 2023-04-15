@@ -85,12 +85,12 @@ fn {fn_name}() -> Result<Robj> {{
       rlang::is_null(fn_handle) ||
         rlang::is_null(dll_handle)
     ) {
-      ui_throw(
-        "The Rust code fragment is no longer available for execution.",
-        details = c(
-          bullet_i("Code fragment can only be executed once."),
-          bullet_w("Make sure you are not re-using an outdated fragment.")
-        )
+      cli::cli_abort(
+        c(
+          "The Rust code fragment is no longer available for execution.",
+            "i" = "Code fragment can only be executed once.",
+            "!" = "Make sure you are not re-using an outdated fragment."
+          )
       )
     }
 

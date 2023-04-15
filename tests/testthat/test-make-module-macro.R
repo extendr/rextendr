@@ -60,31 +60,32 @@ impl Counter {
 })
 
 test_that("Macro generation fails on invalid rust code", {
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("#[extendr]\nlet invalid_var = ();"),
     "Rust code contains invalid attribute macros."
   )
 })
 
+
 test_that("Macro generation fails on invalid comments in code", {
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("/*/*/**/"),
     "Malformed comments."
   )
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("/*/*/**/"),
     "delimiters are not equal"
   )
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("/*/*/**/"),
     "Found 3 occurences"
   )
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("/*/*/**/"),
     "Found 1 occurence"
   )
 
-  expect_rextendr_error(
+  expect_error(
     make_module_macro("*/  /*"),
     "This error may be caused by a code fragment like",
   )

@@ -127,7 +127,7 @@ rust_source <- function(file, code = NULL,
   dir <- get_build_dir(cache_build)
 
   if (!isTRUE(quiet)) {
-    ui_i("build directory: {.file {dir}}")
+    cli::cli_alert_info("build directory: {.file {dir}}")
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -297,16 +297,16 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         )
       )
     ) {
-      ui_throw(
+      cli::cli_abort(c(
         "Unable to find Rtools that are needed for compilation.",
-        details = bullet_i("Required version is {.emph {pkgbuild::rtools_needed()}}.")
-      )
+        "i" = "Required version is {.emph {pkgbuild::rtools_needed()}}."
+      ))
     }
 
     if (identical(R.version$crt, "ucrt")) {
       # TODO: update this when R 5.0 is released.
       if (!identical(R.version$major, "4")) {
-        ui_throw("rextendr currently supports R 4.x")
+        cli::cli_abort("rextendr currently supports R 4.x")
       }
 
       if (package_version(R.version$minor) >= "3.0") {
@@ -390,7 +390,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 #' @param tty_has_colors \[ logical(1) \] Indicates if output
 #' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
 #' @return \[ character(n) \] Vector of strings
-#' that can be passed to `ui_*`, `cli` or `glue` functions.
+#' that can be passed to `cli` or `glue` functions.
 #' @noRd
 gather_cargo_output <- function(json_output, level, tty_has_colors) {
   rendered_output <-
@@ -436,7 +436,7 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
         "warning",
         tty_has_colors
       ),
-      ui_w
+      cli::cli_alert_warning
     )
   }
 
@@ -450,12 +450,9 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
       bullet_x
     )
 
-    ui_throw(
-      "Rust code could not be compiled successfully. Aborting.",
-      error_messages,
-      call = call,
-      glue_open = "{<{",
-      glue_close = "}>}"
+    cli::cli_abort(
+      c("Rust code could not be compiled successfully. Aborting.",
+      error_messages)
     )
   }
 }
@@ -492,7 +489,7 @@ get_specific_target_name <- function() {
       return("i686-pc-windows-gnu")
     }
 
-    ui_throw("Unknown Windows architecture")
+    cli::cli_abort("Unknown Windows architecture")
   }
 
   return(NULL)
