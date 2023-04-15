@@ -50,22 +50,26 @@ use_extendr <- function(path = ".",
   r_dir <- rprojroot::find_package_root_file("R", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
   if (!dir.exists(r_dir)) {
-    ui_v("Writing {.file R/}")
+    cli::cli_alert_success("Writing {.file R/}")
     dir.create(r_dir)
   }
 
   if (dir.exists(src_dir)) {
-    ui_x("Directory {.file src} already present in package source. No action taken.")
+    cli::cli_alert_danger(
+      "Directory {.file src} already present in package source. No action taken."
+      )
     return(invisible(FALSE))
   }
   if (file.exists(wrappers_file)) {
-    ui_x("File {.file R/extendr-wrappers.R} already present in package source. No action taken.")
+    cli::cli_alert_danger(
+      "File {.file R/extendr-wrappers.R} already present in package source. No action taken."
+      )
     return(invisible(FALSE))
   }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")
   dir.create(rust_src_dir, recursive = TRUE)
-  ui_v("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
+  cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
 
   use_rextendr_template(
     "entrypoint.c",
@@ -139,9 +143,13 @@ use_extendr <- function(path = ".",
   )
 
   if (!isTRUE(quiet)) {
-    ui_v("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
-    ui_o("Please update the system requirement in {.file DESCRIPTION} file.")
-    ui_o("Please run {.fun rextendr::document} for changes to take effect.")
+    cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
+    cli::cli_ul(
+      c(
+        "Please update the system requirement in {.file DESCRIPTION} file.",
+        "Please run {.fun rextendr::document} for changes to take effect."
+      )
+    )
   }
 
   return(invisible(TRUE))
@@ -176,14 +184,15 @@ as_valid_rust_name <- function(name) {
 #' Verifies if a function argument is a valid Rust name.
 #'
 #' @param name \[ string \] Tested caller function argument.
-#' @param call \[ env \] Environment of the caller, passed to `ui_throw()`.
+#' @param call \[ env \] Environment of the caller, passed to `cli::cli_abort()`.
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
   quo <- enquo(name) # nolint: object_usage_linter
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
-    ui_throw(
+    cli::cli_abort(c(
       "Argument {.arg {as_name(quo)}} is invalid.",
-      bullet_w("{.code {as_label(name)}} cannot be used as Rust package or library name."),
+      "!" = "{.code {as_label(name)}} cannot be used as Rust package or library name."
+      ),
       call = call
     )
   }

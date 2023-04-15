@@ -449,7 +449,7 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
         "error",
         tty_has_colors
       ),
-      bullet_x
+      cli::cli_alert_danger
     )
 
     cli::cli_abort(

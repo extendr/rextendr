@@ -67,10 +67,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     } else {
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       cli::cli_abort(
-        c(
-          msg,
-          "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}."
-        )
+        c(msg, "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
       )
     }
   }

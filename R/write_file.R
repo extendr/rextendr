@@ -17,16 +17,7 @@ write_file <- function(text, path, search_root_from = ".", quiet = getOption("us
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from) # nolint: object_usage_linter
-    ui_v("Writing {ui_value(rel_path)}")
+    cli::cli_alert_success("Writing {.path {rel_path}}")
   }
   invisible(output)
-}
-
-#' Provides functional similar to `usethis::ui_value()` for strings.
-#' @param value Value to style.
-#' @return Styled value, matching that of `usethis::ui_value()`.
-#' @noRd
-ui_value <- function(value) {
-  value <- if (is.character(value)) encodeString(value, quote = "'") else value
-  cli_format_text("{.blue {value}}")
 }
