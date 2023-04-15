@@ -70,3 +70,10 @@ test_that(
     )
   }
 )
+
+
+test_that(
+  "`rust_function()` does not emit any messages when `quiet = TRUE`", {
+    expect_no_message(rust_function(code = "fn func() {}", quiet = TRUE))
+  }
+)
