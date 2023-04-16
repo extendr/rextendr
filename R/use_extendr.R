@@ -15,7 +15,7 @@
 #' @param lib_name String that is used as the name of the Rust library.
 #' If `NULL`, sanitized R package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
-#'   generated or not. Also checks the `usethis.quiet` option.
+#'   generated or not.
 #' @param edition String indicating which Rust edition is used; Default `"2021"`.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
@@ -29,9 +29,7 @@ use_extendr <- function(path = ".",
   # https://github.com/r-lib/cli/issues/434
 
   if (quiet) {
-    old_cli_handler <- options("cli.default_handler")
-    options("cli.default_handler" = function(...) { })
-    on.exit(options("cli.default_handler" = old_cli_handler))
+    withr::local_options(list("cli.default_handler" = function(...) { }))
   }
 
 
@@ -215,9 +213,11 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
-                                  quiet = getOption("usethis.quiet", FALSE)) {
+                                  quiet = FALSE) {
+
+  if (quiet) withr::local_options(list("cli.default_handler" = function(...) { }))
+
   if (is_installed("usethis")) {
-    withr::local_options(usethis.quiet = quiet)
     created <- usethis::use_template(
       template,
       save_as = save_as,

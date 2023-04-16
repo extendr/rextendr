@@ -115,9 +115,7 @@ rust_source <- function(file, code = NULL,
                         use_dev_extendr = FALSE) {
 
   if (quiet) {
-    old_cli_handler <- options("cli.default_handler")
-    options("cli.default_handler" = function(...) { })
-    on.exit(options("cli.default_handler" = old_cli_handler))
+    withr::local_options(list("cli.default_handler" = function(...) { }))
   }
 
   profile <- rlang::arg_match(profile, multiple = FALSE)
@@ -442,9 +440,7 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     tty_has_colors
   )
 
-  if (
-      !isTRUE(compilation_result$status == 0)
-  ) {
+  if (!isTRUE(compilation_result$status == 0)) {
 
 
     cli::cli_abort(

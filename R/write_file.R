@@ -10,10 +10,10 @@
 #' It gets passed to [`pretty_rel_path()`] if `quiet = FALSE`.
 #' It is unused otherwise.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`). `quiet` also checks if `usethis.quiet` is set in options.
+#'   or verbose (`FALSE`).
 #' @return The output of [`brio::write_lines()`] (invisibly).
 #' @noRd
-write_file <- function(text, path, search_root_from = ".", quiet = getOption("usethis.quiet", FALSE)) {
+write_file <- function(text, path, search_root_from = ".", quiet = FALSE) {
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from) # nolint: object_usage_linter
