@@ -436,30 +436,23 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     jsonlite::parse_json
   )
 
-  if (!isTRUE(quiet)) {
-    purrr::walk(
-      gather_cargo_output(
-        cargo_output,
-        "warning",
-        tty_has_colors
-      ),
-      cli::cli_alert_warning
-    )
-  }
+  error_messages <- gather_cargo_output(
+    cargo_output,
+    "error",
+    tty_has_colors
+  )
 
   if (
       !isTRUE(compilation_result$status == 0)
   ) {
-    error_messages <- gather_cargo_output(
-        cargo_output,
-        "error",
-        tty_has_colors
-      )
+
 
     cli::cli_abort(
       cli::cli_fmt({
       cli::cli_text("Rust code could not be compiled successfully. Aborting.")
-      cli::cat_line(error_messages)
+
+      if (!quiet) cli::cat_line(error_messages)
+
       }),
       call = call
     )
