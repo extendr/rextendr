@@ -113,6 +113,13 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
+
+  if (quiet) {
+    old_cli_handler <- options("cli.default_handler")
+    options("cli.default_handler" = function(...) { })
+    on.exit(options("cli.default_handler" = old_cli_handler))
+  }
+
   profile <- rlang::arg_match(profile, multiple = FALSE)
   features <- validate_extendr_features(features, suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr))
 
@@ -443,14 +450,11 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
   if (
       !isTRUE(compilation_result$status == 0)
   ) {
-    error_messages <- purrr::map_chr(
-      gather_cargo_output(
+    error_messages <- gather_cargo_output(
         cargo_output,
         "error",
         tty_has_colors
-      ),
-      cli::cli_alert_danger
-    )
+      )
 
     cli::cli_abort(
       cli::cli_fmt({
