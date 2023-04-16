@@ -97,3 +97,9 @@ test_that("`toml` is generated correctly", {
 
   expect_equal(toml, reference)
 })
+
+
+test_that("`toml` does not accept unnamed top-level atomic arguments", {
+  err <- expect_error(to_toml("Invalid String", 1:10))
+  expect_equal(unname(err[["message"]]), "Object cannot be serialized.")
+})

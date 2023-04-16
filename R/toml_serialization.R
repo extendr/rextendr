@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(!nzchar(names) & vapply(args, is.atomic, logical(1)))
+  invalid <- purrr::map2_lgl(names, args, ~!nzchar(.x) && is.atomic(.y))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -92,7 +92,7 @@ make_idx_msg <- function(invalid, args_limit = 5L) {
 
   glue::glue("Unnamed arguments found at position(s): {idx}.")
 }
-get_toml_err_msg <- function() "Object cannot be serialzied."
+get_toml_err_msg <- function() "Object cannot be serialized."
 get_toml_missing_msg <- function() {
   "Missing arument and `NULL` are only allowed at the top level."
 }
