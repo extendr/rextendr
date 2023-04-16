@@ -96,7 +96,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       quiet = quiet
     ),
     error = function(e) {
-      rlang::abort(
+      cli::cli_abort(
         c("Failed to generate wrapper functions.", x = e[["message"]])
       )
     }
