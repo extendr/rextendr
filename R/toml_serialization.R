@@ -115,7 +115,7 @@ format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 format_toml.default <- function(x, ..., .top_level = FALSE) {
   cli::cli_abort(c(
     get_toml_err_msg(),
-    "x" = "`{class(x)}` cannot be converted to toml."
+    "x" = "{.code {class(x)}} cannot be converted to toml."
   ))
 }
 
