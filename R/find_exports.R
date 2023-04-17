@@ -3,20 +3,10 @@ find_exports <- function(clean_lns) {
   start <- ids
   end <- dplyr::lead(ids, default = length(clean_lns) + 1L) - 1L
 
-  # instantiate list to fill
-  res <- rlang::new_list(length(start))
+  purrr::map2_dfr(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
+    dplyr::mutate(type = dplyr::coalesce(impl, fn)) %>%
+    dplyr::select(name, type, lifetime)
 
-  for (i in seq_along(start)) {
-    res[[i]] <- extract_meta(clean_lns[start[i]:end[i]])
-  }
-
-  # bind results together into tibble
-  res <- do.call(dplyr::bind_rows, res)
-
-  # Keeps only name, type (fn|impl) and lifetime of impl if present.
-  res[["type"]] <- dplyr::coalesce(res[["impl"]], res[["fn"]])
-
-  res[c("name", "type", "lifetime")]
 }
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
