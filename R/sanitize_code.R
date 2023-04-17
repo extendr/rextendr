@@ -82,12 +82,11 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   if (n_open != n_close) {
     cli::cli_abort(c(
       "Malformed comments.",
-       "x" = "Number of start {.code /*} and end {.code */} \\
+      "x" = "Number of start {.code /*} and end {.code */} \\
                delimiters are not equal.",
       "i" = "Found {n_open} occurence{?s} of {.code /*}.",
       "i" = "Found {n_close} occurence{?s} of {.code */}."
-      )
-    )
+    ))
   }
 
   # This handles 'nested' comments by calculating nesting depth.
@@ -118,8 +117,7 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
       "x" = "{.code /*} and {.code */} are not paired correctly.",
       "i" = "This error may be caused by a code fragment like \\
                {.code */ ... /*}."
-      )
-    )
+    ))
   }
   # Manual `pivot_wider`.
   to_replace <- tibble::tibble(

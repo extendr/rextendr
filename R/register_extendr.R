@@ -28,7 +28,6 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-
   if (quiet) {
     withr::local_options(list("cli.default_handler" = function(...) { }))
   }
@@ -45,8 +44,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
       "Unable to register the extendr module.",
       "x" = "Could not find file {.file src/entrypoint.c}.",
       "*" = "Are you sure this package is using extendr Rust code?"
-      )
-    )
+    ))
   }
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)

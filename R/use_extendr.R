@@ -25,7 +25,6 @@ use_extendr <- function(path = ".",
                         lib_name = NULL,
                         quiet = FALSE,
                         edition = c("2021", "2018")) {
-
   # https://github.com/r-lib/cli/issues/434
 
   if (quiet) {
@@ -61,13 +60,13 @@ use_extendr <- function(path = ".",
   if (dir.exists(src_dir)) {
     cli::cli_alert_danger(
       "Directory {.file src} already present in package source. No action taken."
-      )
+    )
     return(invisible(FALSE))
   }
   if (file.exists(wrappers_file)) {
     cli::cli_alert_danger(
       "File {.file R/extendr-wrappers.R} already present in package source. No action taken."
-      )
+    )
     return(invisible(FALSE))
   }
 
@@ -193,9 +192,10 @@ as_valid_rust_name <- function(name) {
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
   quo <- enquo(name) # nolint: object_usage_linter
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
-    cli::cli_abort(c(
-      "Argument {.arg {as_name(quo)}} is invalid.",
-      "!" = "{.code {as_label(name)}} cannot be used as Rust package or library name."
+    cli::cli_abort(
+      c(
+        "Argument {.arg {as_name(quo)}} is invalid.",
+        "!" = "{.code {as_label(name)}} cannot be used as Rust package or library name."
       ),
       call = call
     )
@@ -214,7 +214,6 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE) {
-
   if (quiet) withr::local_options(list("cli.default_handler" = function(...) { }))
 
   if (is_installed("usethis")) {

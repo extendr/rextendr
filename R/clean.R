@@ -33,7 +33,6 @@ clean <- function(path = ".") {
       "Unable to clean binaries.",
       "!" = "{.file Cargo.toml} not found in {.path {rust_folder}}."
     ))
-
   }
 
   cargo_envvars <- get_cargo_envvars()

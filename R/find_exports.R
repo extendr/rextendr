@@ -17,7 +17,6 @@ find_exports <- function(clean_lns) {
   res[["type"]] <- dplyr::coalesce(res[["impl"]], res[["fn"]])
 
   res[c("name", "type", "lifetime")]
-
 }
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
@@ -28,7 +27,6 @@ find_extendr_attrs_ids <- function(lns) {
 # Gets function/module metadata from a subset of lines.
 # Finds first occurence of `fn` or `impl`.
 extract_meta <- function(lns) {
-
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
     glue_collapse(lns, sep = "\n"),
@@ -57,10 +55,9 @@ extract_meta <- function(lns) {
           "No valid {.code fn} or {.code impl} block found in the \\
           following sample:"
         )
-          cli::cli_code(code_sample)
-        })
+        cli::cli_code(code_sample)
+      })
     )
-
   }
   result
 }

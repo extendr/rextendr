@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(purrr::map2_lgl(names, args, ~!nzchar(.x) && is.atomic(.y)))
+  invalid <- which(purrr::map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -116,8 +116,7 @@ format_toml.default <- function(x, ..., .top_level = FALSE) {
   cli::cli_abort(c(
     get_toml_err_msg(),
     "x" = "`{class(x)}` cannot be converted to toml."
-    )
-  )
+  ))
 }
 
 format_toml.data.frame <- function(x,

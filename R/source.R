@@ -113,7 +113,6 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
-
   if (quiet) {
     withr::local_options(list("cli.default_handler" = function(...) { }))
   }
@@ -435,7 +434,6 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
   )
 
   if (!isTRUE(compilation_result$status == 0)) {
-
     error_messages <- gather_cargo_output(
       cargo_output,
       "error",
@@ -444,10 +442,9 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
 
     cli::cli_abort(
       cli::cli_fmt({
-      cli::cli_text("Rust code could not be compiled successfully. Aborting.")
+        cli::cli_text("Rust code could not be compiled successfully. Aborting.")
 
-      if (!quiet) purrr::walk(error_messages, cli::cli_alert_danger)
-
+        if (!quiet) purrr::walk(error_messages, cli::cli_alert_danger)
       }),
       call = call
     )

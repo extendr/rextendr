@@ -20,8 +20,6 @@ validate_extendr_features <- function(features, suppress_warnings) {
         "i" = inf_dev_extendr_used()
       )
     ) # nolint: object_usage_linter
-
-
   }
 
   features
