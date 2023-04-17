@@ -4,7 +4,7 @@
 
 * Support Rtools43 (#231).
 
-* `rextendr` migrates to the use of `cli` for raising errors and warnings.
+* `rextendr` has migrated to the use of `cli` for raising errors and warnings.
   - **Note** that errors no longer have a class of `rextendr_error`. Based on a search of GitHub, there is no code that checks for this class in errors and should not affect any users of rextendr.
   - Developers: testthat no longer uses `expect_rextendr_error()`. Use `expect_error()` instead.
   
