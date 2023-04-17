@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- purrr::map2_lgl(names, args, ~!nzchar(.x) && is.atomic(.y))
+  invalid <- which(purrr::map2_lgl(names, args, ~!nzchar(.x) && is.atomic(.y)))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
