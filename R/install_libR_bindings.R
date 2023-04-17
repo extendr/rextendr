@@ -24,7 +24,7 @@ install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, p
 
   bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
   if (!isTRUE(force) && isTRUE(file.exists(bindings_file))) {
-    cli::cli_alert_info("libR bindings are already installed. Rerun with `force = TRUE` to force re-install.")
+    cli::cli_alert_info("libR bindings are already installed. Rerun with {.code force = TRUE} to force re-install.")
     return(invisible())
   }
 
