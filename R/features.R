@@ -37,7 +37,10 @@ enable_features <- function(extendr_deps, features) {
 
   extendr_api <- extendr_deps[["extendr-api"]]
   if (is.null(extendr_api)) {
-    cli::cli_abort("{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.")
+    cli::cli_abort(
+      "{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.",
+      class = "rextendr_error"
+    )
   }
 
   if (is.character(extendr_api)) {
@@ -46,7 +49,10 @@ enable_features <- function(extendr_deps, features) {
     existing_features <- extendr_api[["features"]] %||% character(0)
     extendr_api[["features"]] <- array(unique(c(existing_features, features)))
   } else {
-    cli::cli_abort("{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.")
+    cli::cli_abort(
+      "{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.",
+      class = "rextendr_error"
+    )
   }
 
   extendr_deps[["extendr-api"]] <- extendr_api

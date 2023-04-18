@@ -113,7 +113,6 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
-
   with_quiet(quiet)
 
   profile <- rlang::arg_match(profile, multiple = FALSE)
@@ -300,16 +299,19 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         )
       )
     ) {
-      cli::cli_abort(c(
-        "Unable to find Rtools that are needed for compilation.",
-        "i" = "Required version is {.emph {pkgbuild::rtools_needed()}}."
-      ))
+      cli::cli_abort(
+        c(
+          "Unable to find Rtools that are needed for compilation.",
+          "i" = "Required version is {.emph {pkgbuild::rtools_needed()}}."
+        ),
+        class = "rextendr_error"
+      )
     }
 
     if (identical(R.version$crt, "ucrt")) {
       # TODO: update this when R 5.0 is released.
       if (!identical(R.version$major, "4")) {
-        cli::cli_abort("rextendr currently supports R 4.x")
+        cli::cli_abort("rextendr currently supports R 4.x", class = "rextendr_error")
       }
 
       if (package_version(R.version$minor) >= "3.0") {
@@ -492,7 +494,10 @@ get_specific_target_name <- function() {
       return("i686-pc-windows-gnu")
     }
 
-    cli::cli_abort("Unknown Windows architecture")
+    cli::cli_abort(
+      "Unknown Windows architecture",
+      class = "rextendr_error"
+    )
   }
 
   return(NULL)

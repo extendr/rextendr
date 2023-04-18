@@ -18,7 +18,10 @@ convert_function_options <- function(options, suppress_warnings) {
   }
 
   if (!rlang::is_list(options) || !rlang::is_named(options)) {
-    cli::cli_abort("Extendr function options should be either a named {.code list()} or {.code NULL}.")
+    cli::cli_abort(
+      "Extendr function options should be either a named {.code list()} or {.code NULL}.",
+      class = "rextendr_error"
+    )
   }
 
   options_table <- tibble::tibble(Name = rlang::names2(options), Value = unname(options)) %>%
@@ -81,7 +84,7 @@ cli_abort_invalid_options <- function(invalid_options) {
     i = "Only scalars are allowed as option values." %>% if_any_opts(vector_values)
   )
 
-  cli::cli_abort(message)
+  cli::cli_abort(message, class = "rextendr_error")
 }
 
 #' Returns the names of options that satisfy the given filter

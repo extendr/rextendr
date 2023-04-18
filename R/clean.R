@@ -31,7 +31,8 @@ clean <- function(path = ".") {
   if (!file.exists(toml_path)) {
     cli::cli_abort(c(
       "Unable to clean binaries.",
-      "!" = "{.file Cargo.toml} not found in {.path {rust_folder}}."
+      "!" = "{.file Cargo.toml} not found in {.path {rust_folder}}.",
+      class = "rextendr_error"
     ))
   }
 
@@ -70,7 +71,8 @@ clean <- function(path = ".") {
         "Unable to execute {.code cargo clean}.",
         "x" = paste(err_msg, collapse = "\n")
       ),
-      call = caller_env()
+      call = caller_env(),
+      class = "rextendr_error"
     )
   }
   pkgbuild::clean_dll(path = root)

@@ -28,7 +28,6 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-
   with_quiet(quiet)
 
   rextendr_setup(path = path)
@@ -39,11 +38,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 
   entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
   if (!file.exists(entrypoint_c_file)) {
-    cli::cli_abort(c(
-      "Unable to register the extendr module.",
-      "x" = "Could not find file {.file src/entrypoint.c}.",
-      "*" = "Are you sure this package is using extendr Rust code?"
-    ))
+    cli::cli_abort(
+      c(
+        "Unable to register the extendr module.",
+        "x" = "Could not find file {.file src/entrypoint.c}.",
+        "*" = "Are you sure this package is using extendr Rust code?"
+      ),
+      class = "rextendr_error"
+    )
   }
 
   outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
@@ -61,11 +63,15 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     msg <- "{library_path} doesn't exist"
     if (isTRUE(compile)) {
       # If it doesn't exist even after compile, we have no idea what happened
-      cli::cli_abort(msg)
+      cli::cli_abort(msg, class = "rextendr_error")
     } else {
       # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
       cli::cli_abort(
-        c(msg, "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}.")
+        c(
+          msg,
+          "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}."
+        ),
+        class = "rextendr_error"
       )
     }
   }
@@ -94,7 +100,8 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     ),
     error = function(e) {
       cli::cli_abort(
-        c("Failed to generate wrapper functions.", x = e[["message"]])
+        c("Failed to generate wrapper functions.", x = e[["message"]]),
+        class = "rextendr_error"
       )
     }
   )

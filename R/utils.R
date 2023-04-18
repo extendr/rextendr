@@ -20,8 +20,10 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 #' hello_rust(quiet = TRUE)
 #' @keywords internal
 with_quiet <- function(quiet) {
-  if (quiet) withr::local_options(
-    list("cli.default_handler" = function(...) {}),
-    .local_envir = parent.frame(n = 1)
+  if (quiet) {
+    withr::local_options(
+      list("cli.default_handler" = function(...) {}),
+      .local_envir = parent.frame(n = 1)
     )
+  }
 }

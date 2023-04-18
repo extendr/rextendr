@@ -80,13 +80,16 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   n_close <- sum(valid_syms[["type"]] == "close")
   # Fails if number of `/*` and `*/` are different.
   if (n_open != n_close) {
-    cli::cli_abort(c(
-      "Malformed comments.",
-      "x" = "Number of start {.code /*} and end {.code */} \\
+    cli::cli_abort(
+      c(
+        "Malformed comments.",
+        "x" = "Number of start {.code /*} and end {.code */} \\
                delimiters are not equal.",
-      "i" = "Found {n_open} occurence{?s} of {.code /*}.",
-      "i" = "Found {n_close} occurence{?s} of {.code */}."
-    ))
+        "i" = "Found {n_open} occurence{?s} of {.code /*}.",
+        "i" = "Found {n_close} occurence{?s} of {.code */}."
+      ),
+      class = "rextendr_error"
+    )
   }
 
   # This handles 'nested' comments by calculating nesting depth.
@@ -112,12 +115,15 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
     any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") ||
       any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
-    cli::cli_abort(c(
-      "Malformed comments.",
-      "x" = "{.code /*} and {.code */} are not paired correctly.",
-      "i" = "This error may be caused by a code fragment like \\
+    cli::cli_abort(
+      c(
+        "Malformed comments.",
+        "x" = "{.code /*} and {.code */} are not paired correctly.",
+        "i" = "This error may be caused by a code fragment like \\
                {.code */ ... /*}."
-    ))
+      ),
+      class = "rextendr_error"
+    )
   }
   # Manual `pivot_wider`.
   to_replace <- tibble::tibble(

@@ -6,7 +6,6 @@ find_exports <- function(clean_lns) {
   purrr::map2_dfr(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
     dplyr::mutate(type = dplyr::coalesce(impl, fn)) %>%
     dplyr::select(name, type, lifetime)
-
 }
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
@@ -46,7 +45,8 @@ extract_meta <- function(lns) {
           following sample:"
         )
         cli::cli_code(code_sample)
-      })
+      }),
+      class = "rextendr_error"
     )
   }
   result

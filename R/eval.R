@@ -90,7 +90,8 @@ fn {fn_name}() -> Result<Robj> {{
           "The Rust code fragment is no longer available for execution.",
           "i" = "Code fragment can only be executed once.",
           "!" = "Make sure you are not re-using an outdated fragment."
-        )
+        ),
+        class = "rextendr_error"
       )
     }
 

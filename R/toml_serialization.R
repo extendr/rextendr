@@ -45,11 +45,14 @@ to_toml <- function(...,
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
-    cli::cli_abort(c(
-      get_toml_err_msg(),
-      "x" = make_idx_msg(invalid),
-      "i" = "All top-level values should be named."
-    ))
+    cli::cli_abort(
+      c(
+        get_toml_err_msg(),
+        "x" = make_idx_msg(invalid),
+        "i" = "All top-level values should be named."
+      ),
+      class = "rextendr_error"
+    )
   }
 
   tables <- map2_chr(names, args, function(nm, a) {
@@ -116,7 +119,7 @@ format_toml.default <- function(x, ..., .top_level = FALSE) {
   cli::cli_abort(c(
     get_toml_err_msg(),
     "x" = "{.code {class(x)}} cannot be converted to toml."
-  ))
+  ), class = "rextendr_error")
 }
 
 format_toml.data.frame <- function(x,
@@ -165,7 +168,10 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
     }
   } else {
     if (is_missing(x)) {
-      cli::cli_abort(c(get_toml_err_msg(), "x" = get_toml_missing_msg()))
+      cli::cli_abort(
+        c(get_toml_err_msg(), "x" = get_toml_missing_msg()),
+        class = "rextendr_error"
+      )
     } else {
       # This function errors and does not return
       format_toml.default(x, ..., .top_level = .top_level)
@@ -178,7 +184,10 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     return(character(0))
   } else {
-    cli::cli_abort(c(get_toml_err_msg(), "x" = get_toml_missing_msg()))
+    cli::cli_abort(
+      c(get_toml_err_msg(), "x" = get_toml_missing_msg()),
+      class = "rextendr_error"
+    )
   }
 }
 
@@ -268,11 +277,14 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
   if (length(invalid) > 0) {
-    cli::cli_abort(c(
-      get_toml_err_msg(),
-      "x" = make_idx_msg(invalid),
-      "i" = "List values should have names."
-    ))
+    cli::cli_abort(
+      c(
+        get_toml_err_msg(),
+        "x" = make_idx_msg(invalid),
+        "i" = "List values should have names."
+      ),
+      class = "rextendr_error"
+    )
   }
   result <- map2(names, x, function(nm, val) {
     glue("{nm} = {format_toml(val, ..., .top_level = FALSE)}")

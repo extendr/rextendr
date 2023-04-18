@@ -1,7 +1,8 @@
 rextendr_setup <- function(path = ".", cur_version = NULL) {
   if (!file.exists(file.path(path, "DESCRIPTION"))) {
     cli::cli_abort(
-      "{.arg path} ({.path {path}}) does not contain a DESCRIPTION"
+      "{.arg path} ({.path {path}}) does not contain a DESCRIPTION",
+      class = "rextendr_error"
     )
   }
 

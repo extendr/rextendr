@@ -194,7 +194,8 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
         "Argument {.arg {as_name(quo)}} is invalid.",
         "!" = "{.code {as_label(name)}} cannot be used as Rust package or library name."
       ),
-      call = call
+      call = call,
+      class = "rextendr_error"
     )
   }
 }
@@ -211,7 +212,6 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE) {
-
   with_quiet(quiet)
 
   if (is_installed("usethis")) {
