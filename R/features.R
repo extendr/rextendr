@@ -5,9 +5,7 @@ features_config <- rlang::env(
 validate_extendr_features <- function(features, suppress_warnings) {
   features <- features %||% character(0)
 
-  is_char <- try(vctrs::vec_assert(features, character()), silent = TRUE)
-
-  if (inherits(is_char, "try-error")) {
+  if (!vctrs::vec_is(features, character())) {
     cli::cli_abort(c(
       "!"= "{.arg features} must be a vector with type {.cls character}",
       "Instead, it has type {.cls {class(features)}}."
