@@ -41,7 +41,7 @@ test_that("`toml` is generated correctly", {
       y = c("1", NA_character_, "2")
     ),
     single_row_array = data.frame(x = 1),
-    features = list(ndarray = NA),  # `NA` gets converted to empty array `[ ]`
+    features = list(ndarray = NA), # `NA` gets converted to empty array `[ ]`
     .str_as_literal = FALSE
   )
 

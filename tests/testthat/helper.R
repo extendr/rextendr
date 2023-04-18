@@ -1,3 +1,13 @@
+#' Does code throw an rextendr_error?
+#'
+#' `expect_rextendr_error()` expects an error of class `rextendr_error`, as
+#' thrown by `ui_throw()`.
+#'
+#' @param ... arguments passed to [testthat::expect_error()]
+expect_rextendr_error <- function(...) {
+  testthat::expect_error(..., class = "rextendr_error")
+}
+
 #' Create a local package
 #'
 #' `local_package()` creates a self-cleaning test package via usethis and withr.

@@ -24,10 +24,9 @@ test_that("use_extendr() sets up extendr files correctly", {
 })
 
 test_that("use_extendr() quiet if quiet=TRUE", {
-    path <- local_package("quiet")
-    expect_snapshot(use_extendr(quiet = TRUE))
-  }
-)
+  path <- local_package("quiet")
+  expect_snapshot(use_extendr(quiet = TRUE))
+})
 
 test_that("use_extendr() does not set up packages with pre-existing src", {
   path <- local_package("testpkg.src")
@@ -59,7 +58,9 @@ test_that("use_rextendr_template() works when usethis not available", {
   mockr::with_mock(
     # mock that usethis installed
     is_installed = function(...) TRUE,
-    { use_extendr() },
+    {
+      use_extendr()
+    },
     .env = "rextendr"
   )
 
@@ -80,7 +81,9 @@ test_that("use_rextendr_template() works when usethis not available", {
   mockr::with_mock(
     # mock that usethis not installed
     is_installed = function(...) FALSE,
-    { use_extendr() },
+    {
+      use_extendr()
+    },
     .env = "rextendr"
   )
 
