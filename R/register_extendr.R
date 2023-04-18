@@ -28,9 +28,8 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-  if (quiet) {
-    withr::local_options(list("cli.default_handler" = function(...) { }))
-  }
+
+  with_quiet(quiet)
 
   rextendr_setup(path = path)
 

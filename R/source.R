@@ -113,9 +113,8 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
-  if (quiet) {
-    withr::local_options(list("cli.default_handler" = function(...) { }))
-  }
+
+  with_quiet(quiet)
 
   profile <- rlang::arg_match(profile, multiple = FALSE)
   features <- validate_extendr_features(features, suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr))

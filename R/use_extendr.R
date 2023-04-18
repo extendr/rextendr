@@ -27,10 +27,7 @@ use_extendr <- function(path = ".",
                         edition = c("2021", "2018")) {
   # https://github.com/r-lib/cli/issues/434
 
-  if (quiet) {
-    withr::local_options(list("cli.default_handler" = function(...) { }))
-  }
-
+  with_quiet(quiet)
 
   rextendr_setup(path = path)
 
@@ -214,7 +211,8 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE) {
-  if (quiet) withr::local_options(list("cli.default_handler" = function(...) { }))
+
+  with_quiet(quiet)
 
   if (is_installed("usethis")) {
     created <- usethis::use_template(
