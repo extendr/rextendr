@@ -33,7 +33,7 @@ test_that("`r_name` option renames R function", {
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
-  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
+  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains value of the wrong type", {

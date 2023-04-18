@@ -43,18 +43,18 @@ test_that("`rust_source()` works", {
 
 test_that("`options` override `toolchain` value in `rust_source`", {
   withr::local_options(rextendr.toolchain = "Non-existent-toolchain")
-  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+  expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 test_that("`options` override `patch.crates_io` value in `rust_source`", {
   withr::local_options(rextendr.patch.crates_io = list(`extendr-api` = "-1"))
-  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+  expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 
 test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
   withr::local_options(rextendr.extendr_deps = list(`extendr-api` = "-1"))
-  expect_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
+  expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 test_that("`rust_source` works even when the PATH is not set correctly, which mainly happens on macOS", {

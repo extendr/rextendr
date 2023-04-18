@@ -115,8 +115,8 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
 test_that("use_extendr() does not allow invalid rust names", {
   path <- local_package("testPackage")
-  expect_error(use_extendr(crate_name = "22unsupported"))
-  expect_error(use_extendr(lib_name = "@unsupported"))
+  expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
+  expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
 
 test_that("R/ folder is created when not present", {
@@ -127,5 +127,5 @@ test_that("R/ folder is created when not present", {
   expect_false(dir.exists("R/"))
 
   # expect no error
-  expect_error(use_extendr(), regexp = NA)
+  expect_rextendr_error(use_extendr(), regexp = NA)
 })
