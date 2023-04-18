@@ -32,7 +32,7 @@ manifests at runtime.
 }
 \examples{
 # Produces [workspace] with no children
-to_toml(workspace = )
+to_toml(workspace = NULL)
 
 to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
 

@@ -4,7 +4,7 @@
 \alias{document}
 \title{Compile Rust code and generate package documentation.}
 \usage{
-document(pkg = ".", quiet = getOption("usethis.quiet", FALSE), roclets = NULL)
+document(pkg = ".", quiet = FALSE, roclets = NULL)
 }
 \arguments{
 \item{pkg}{The package to use, can be a file path to the package or a
