@@ -23,7 +23,7 @@ with_quiet <- function(quiet) {
   if (quiet) {
     withr::local_options(
       list("cli.default_handler" = function(...) {}),
-      .local_envir = parent.frame(n = 1)
+      .local_envir = rlang::caller_env()
     )
   }
 }
