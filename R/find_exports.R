@@ -5,7 +5,7 @@ find_exports <- function(clean_lns) {
 
   purrr::map2_dfr(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
     dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) %>%
-    dplyr::select(.data$name, .data$type, .data$lifetime)
+    dplyr::select(name, type, lifetime)
 }
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
