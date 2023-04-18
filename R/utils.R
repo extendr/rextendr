@@ -26,7 +26,8 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 with_quiet <- function(quiet) {
   if (quiet) {
     withr::local_options(
-      list("cli.default_handler" = function(...) {}),
+      list("cli.default_handler" = function(...) {
+      }),
       .local_envir = rlang::caller_env()
     )
   }
