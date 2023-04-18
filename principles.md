@@ -20,12 +20,21 @@ rextendr uses the cli package to format messages to the user, which are generall
 
 ## Throwing and testing errors
 
-Pass all errors via `cli::cli_abort()`. You can also add additional details by providing a named vector. See `?cli::cli_abort()` and `?cli::cli_bulelts()` for the `message` argument. 
+Pass all errors via `cli::cli_abort()`. Ensure that the class `rextendr_error` is provided. You can also add additional details by providing a named vector. See `?cli::cli_abort()` and `?cli::cli_bulelts()` for the `message` argument. 
 
 ```r
-cli::cli_abort(c(
-  "Unable to register the extendr module.",
-  "x" = "Could not find file {.file src/entrypoint.c}.",
-  "*" = "Are you sure this package is using extendr Rust code?"
-))
+cli::cli_abort(
+  c(
+    "Unable to register the extendr module.",
+    "x" = "Could not find file {.file src/entrypoint.c}.",
+    "*" = "Are you sure this package is using extendr Rust code?"
+  ),
+  class = "rextendr_error"
+)
 ```
+
+## Silencing messages 
+
+cli is used to verbosely inform the user. Functions that have particularly verbose output should be able to be optionally silenced with a `quiet` argument—see `?rust_source` for example. 
+
+Silencing `cli` output should be done with the helper `with_quiet(quiet)`. When `quiet = TRUE` all `cli` output will be suppressed.
