@@ -23,12 +23,12 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 #' hello_rust(quiet = TRUE)
 #' }
 #' @keywords internal
-with_quiet <- function(quiet) {
+with_quiet <- function(quiet, env = rlang::caller_env()) {
   if (quiet) {
     withr::local_options(
       list("cli.default_handler" = function(...) {
       }),
-      .local_envir = rlang::caller_env()
+      .local_envir = env
     )
   }
 }
