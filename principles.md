@@ -35,6 +35,6 @@ cli::cli_abort(
 
 ## Silencing messages 
 
-cli is used to verbosely inform the user. Functions that have particularly verbose output should be able to be optionally silenced with a `quiet` argument—see `?rust_source` for example. 
+`{cli}` is used to verbosely inform the user. The user should be able to optionally silence functions that have particularly verbose output by setting `quiet` argument to `TRUE`—see `?rust_source` for example. 
 
 Silencing `cli` output should be done with the helper `with_quiet(quiet)`. When `quiet = TRUE` all `cli` output will be suppressed.
