@@ -20,7 +20,7 @@ rextendr uses the cli package to format messages to the user, which are generall
 
 ## Throwing and testing errors
 
-Pass all errors via `cli::cli_abort()`. Ensure that the class `rextendr_error` is provided. You can also add additional details by providing a named vector. See `?cli::cli_abort()` and `?cli::cli_bulelts()` for the `message` argument. 
+Pass all errors via `cli::cli_abort()`. Ensure that the class `rextendr_error` is specified. You can also add details by providing a named vector. See `?cli::cli_abort()` and `?cli::cli_bulelts()` for the `message` argument. 
 
 ```r
 cli::cli_abort(
