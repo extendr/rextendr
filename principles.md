@@ -8,7 +8,7 @@ rextendr uses the cli package to format messages to the user, which are generall
 
 | function | purpose                                                                                                       |
 |----------|---------------------------------------------------------------------------------------------------------------|
-| `cli::cli_alert_success()` | communicate that rextendr has done something successfully, such as write a file                               |
+| `cli::cli_alert_success()` | communicate that rextendr has done something successfully, such as wrote a file                               |
 | `cli::cli_alert_info()` | provide extra information to the user                                                                         |
 | `cli::cli_alert_warning()` | warn the user about something (note: this is still condition of class `message`, not `warning`)               |
 | `cli::cli_ul()` | indicate that the user has something to do                                                                    |
