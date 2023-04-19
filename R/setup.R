@@ -23,7 +23,7 @@ update_rextendr_version <- function(path, cur_version = NULL) {
 
   if (!is.na(cur) && !is.na(prev) && package_version(cur) < package_version(prev)) {
     cli::cli_alert_warning(c(
-      "Installed rextendr is older than the version used with this package\n",
+      "Installed rextendr is older than the version used with this package",
       "You have {.str {cur}} but you need {.str {prev}}"
     ))
   } else if (!identical(cur, prev)) {
