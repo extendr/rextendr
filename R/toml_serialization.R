@@ -48,7 +48,7 @@ to_toml <- function(...,
     cli::cli_abort(
       c(
         get_toml_err_msg(),
-        "x" = "Unnamed arguments found at position{?s}: {invalid}.",
+        "x" = "Unnamed arguments found at {cli::qty(length(invalid))} position{?s}: {invalid}.",
         "i" = "All top-level values should be named."
       ),
       class = "rextendr_error"
