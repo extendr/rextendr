@@ -48,7 +48,7 @@ to_toml <- function(...,
     cli::cli_abort(
       c(
         get_toml_err_msg(),
-        "x" = make_idx_msg(invalid),
+        "x" = "Unnamed arguments found at position{?s}: {invalid}.",
         "i" = "All top-level values should be named."
       ),
       class = "rextendr_error"
@@ -84,17 +84,6 @@ make_header <- function(nm, arg) {
   }
 }
 
-make_idx_msg <- function(invalid, args_limit = 5L) {
-  idx <- paste0( # nolint: object_usage_linter
-    glue::glue("`{utils::head(invalid, args_limit)}`"),
-    collapse = ", "
-  )
-  if (length(invalid) > args_limit) {
-    idx <- glue::glue("{idx}, ... ")
-  }
-
-  glue::glue("Unnamed arguments found at position(s): {idx}.")
-}
 get_toml_err_msg <- function() "Object cannot be serialized."
 get_toml_missing_msg <- function() {
   "Missing arument and `NULL` are only allowed at the top level."
@@ -280,7 +269,7 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
     cli::cli_abort(
       c(
         get_toml_err_msg(),
-        "x" = make_idx_msg(invalid),
+        "x" = "Unnamed arguments found at position{?s}: {invalid}.",
         "i" = "List values should have names."
       ),
       class = "rextendr_error"
