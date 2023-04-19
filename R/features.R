@@ -7,8 +7,7 @@ validate_extendr_features <- function(features, suppress_warnings) {
 
   if (!vctrs::vec_is(features, character())) {
     cli::cli_abort(c(
-      "!" = "{.arg features} must be a vector with type {.cls character}",
-      "Instead, it has type {.cls {class(features)}}."
+      "!" = "{.arg features} expected to be a vector of type {.cls character}, but got {.cls {class(features)}}."
     ),
     class = "rextendr_error")
   }
