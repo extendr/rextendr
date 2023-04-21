@@ -28,7 +28,7 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-  local_quiet(quiet)
+  local_quiet_cli(quiet)
 
   rextendr_setup(path = path)
 

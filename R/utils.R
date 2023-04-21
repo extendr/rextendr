@@ -15,7 +15,7 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 #'
 #' if (interactive()) {
 #' hello_rust <- function(..., quiet = FALSE) {
-#'   local_quiet(quiet)
+#'   local_quiet_cli(quiet)
 #'   cli::cli_alert_info("This should be silenced when {.code quiet = TRUE}")
 #' }
 #'
@@ -23,7 +23,7 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 #' hello_rust(quiet = TRUE)
 #' }
 #' @keywords internal
-local_quiet <- function(quiet, env = rlang::caller_env()) {
+local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   if (quiet) {
     withr::local_options(
       list("cli.default_handler" = function(...) {
