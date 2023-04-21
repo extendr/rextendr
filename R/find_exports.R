@@ -35,7 +35,7 @@ extract_meta <- function(lns) {
     )
 
 
-    cli::cli_abort(
+    rlang::abort(
       cli::cli_fmt({
         cli::cli_text(
           "Rust code contains invalid attribute macros."
