@@ -435,29 +435,25 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
   )
 
   if (!isTRUE(compilation_result$status == 0)) {
-    error_messages <- gather_cargo_output(
+    # error_messages <-
+    gather_cargo_output(
       cargo_output,
       "error",
       tty_has_colors
-    )
-
-    errors_formatted <- purrr::map_chr(
-      error_messages,
-      cli::format_inline,
-      keep_whitespace = TRUE
     ) %>%
+      purrr::map_chr(
+        cli::format_inline,
+        keep_whitespace = TRUE
+      ) %>%
       # removing double new lines with single new line
       stringi::stri_replace_all_fixed("\n\n", "\n") %>%
       # ensures that the leading cli style `x` is there
-      rlang::set_names("x")
-
-    rlang::abort(
-      c(
-        "Rust code could not be compiled successfully. Aborting.",
-        unlist(errors_formatted)
-      ),
-      call = call,
-      class = "rextendr_error"
+      rlang::set_names("x") %>%
+      # prepend the actual error message
+      append("Rust code could not be compiled successfully. Aborting.", after = 0) %>%
+      rlang::abort(
+        call = call,
+        class = "rextendr_error"
     )
   }
 }
