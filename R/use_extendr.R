@@ -27,7 +27,7 @@ use_extendr <- function(path = ".",
                         edition = c("2021", "2018")) {
   # https://github.com/r-lib/cli/issues/434
 
-  with_quiet(quiet)
+  local_quiet(quiet)
 
   rextendr_setup(path = path)
 
@@ -212,7 +212,7 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE) {
-  with_quiet(quiet)
+  local_quiet(quiet)
 
   if (is_installed("usethis")) {
     created <- usethis::use_template(

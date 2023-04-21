@@ -5,7 +5,7 @@
 * Support Rtools43 (#231).
 
 * `rextendr` has migrated to the use of `cli` for raising errors and warnings.
-* Developer note: new helper function `with_quiet()` introduced in `R/utils.R` to simplify silencing cli output.
+* Developer note: new helper function `local_quiet()` introduced in `R/utils.R` to simplify silencing cli output.
   
 ## New features
 
