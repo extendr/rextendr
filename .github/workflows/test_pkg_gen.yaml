@@ -22,7 +22,7 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu'}
-          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
+          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu'}
           - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu'}
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'}
@@ -42,7 +42,7 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.config.rust-version }}
-          targets: ${{ join(',', matrix.config.rust-target) }}
+          targets: ${{ matrix.config.rust-target }}
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
