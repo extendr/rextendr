@@ -24,7 +24,7 @@ jobs:
 
           - {os: ubuntu-latest,  r: 'release', rust-version: 'stable' }
           - {os: ubuntu-latest,  r: 'devel',   rust-version: 'stable' }
-          - {os: ubuntu-latest,  r: 'oldrel',   rust-version: 'stable' }
+          - {os: ubuntu-latest,  r: 'oldrel',  rust-version: 'stable' }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
