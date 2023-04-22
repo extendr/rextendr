@@ -3,6 +3,7 @@ on:
     branches:
       - main
       - master
+      - fix/R-4-3-release
   pull_request:
     branches:
       - main
