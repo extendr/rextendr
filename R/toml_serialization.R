@@ -19,7 +19,7 @@
 #'     one line of the resulting output.
 #' @examples
 #' # Produces [workspace] with no children
-#' to_toml(workspace = )
+#' to_toml(workspace = NULL)
 #'
 #' to_toml(patch.crates_io = list(`extendr-api` = list(git = "git-ref")))
 #'
@@ -41,15 +41,17 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(map_lgl(args, ~ is_atomic(.x) && !is.null(.x)))
+  invalid <- which(purrr::map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
+
   # If such args found, display an error message
   if (length(invalid) > 0) {
-    ui_throw(
-      get_toml_err_msg(),
+    cli::cli_abort(
       c(
-        make_idx_msg(invalid),
-        bullet_i("All top-level values should be named.")
-      )
+        get_toml_err_msg(),
+        "x" = "Unnamed arguments found at {cli::qty(length(invalid))} position{?s}: {invalid}.",
+        "i" = "All top-level values should be named."
+      ),
+      class = "rextendr_error"
     )
   }
 
@@ -82,20 +84,9 @@ make_header <- function(nm, arg) {
   }
 }
 
-make_idx_msg <- function(invalid, args_limit = 5L) {
-  idx <- paste0( # nolint: object_usage_linter
-    glue("`{utils::head(invalid, args_limit)}`"),
-    collapse = ", "
-  )
-  if (length(invalid) > args_limit) {
-    idx <- glue("{idx}, ... ")
-  }
-
-  bullet_x("Unnamed arguments found at position(s): {idx}.")
-}
-get_toml_err_msg <- function() "Object cannot be serialzied."
+get_toml_err_msg <- function() "Object cannot be serialized."
 get_toml_missing_msg <- function() {
-  "x Missing arument and `NULL` are only allowed at the top level."
+  "Missing arument and `NULL` are only allowed at the top level."
 }
 
 simplify_row <- function(row) {
@@ -114,10 +105,10 @@ simplify_row <- function(row) {
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 format_toml.default <- function(x, ..., .top_level = FALSE) {
-  ui_throw(
+  cli::cli_abort(c(
     get_toml_err_msg(),
-    bullet_x("`{typeof(x)}` cannot be converted to toml.")
-  )
+    "x" = "{.code {class(x)}} cannot be converted to toml."
+  ), class = "rextendr_error")
 }
 
 format_toml.data.frame <- function(x,
@@ -166,7 +157,10 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
     }
   } else {
     if (is_missing(x)) {
-      ui_throw(get_toml_err_msg(), get_toml_missing_msg())
+      cli::cli_abort(
+        c(get_toml_err_msg(), "x" = get_toml_missing_msg()),
+        class = "rextendr_error"
+      )
     } else {
       # This function errors and does not return
       format_toml.default(x, ..., .top_level = .top_level)
@@ -179,7 +173,10 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     return(character(0))
   } else {
-    ui_throw(get_toml_err_msg(), get_toml_missing_msg())
+    cli::cli_abort(
+      c(get_toml_err_msg(), "x" = get_toml_missing_msg()),
+      class = "rextendr_error"
+    )
   }
 }
 
@@ -269,12 +266,13 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
   if (length(invalid) > 0) {
-    ui_throw(
-      get_toml_err_msg(),
+    cli::cli_abort(
       c(
-        make_idx_msg(invalid),
-        bullet_i("List values should have names.")
-      )
+        get_toml_err_msg(),
+        "x" = "Unnamed arguments found at position{?s}: {invalid}.",
+        "i" = "List values should have names."
+      ),
+      class = "rextendr_error"
     )
   }
   result <- map2(names, x, function(nm, val) {

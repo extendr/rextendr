@@ -113,6 +113,8 @@ rust_source <- function(file, code = NULL,
                         quiet = FALSE,
                         use_rtools = TRUE,
                         use_dev_extendr = FALSE) {
+  local_quiet_cli(quiet)
+
   profile <- rlang::arg_match(profile, multiple = FALSE)
   features <- validate_extendr_features(features, suppress_warnings = isTRUE(quiet) || isTRUE(use_dev_extendr))
 
@@ -127,7 +129,7 @@ rust_source <- function(file, code = NULL,
   dir <- get_build_dir(cache_build)
 
   if (!isTRUE(quiet)) {
-    ui_i("build directory: {.file {dir}}")
+    cli::cli_alert_info("build directory: {.file {dir}}")
   }
 
   # copy rust code into src/lib.rs and determine library name
@@ -297,16 +299,19 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         )
       )
     ) {
-      ui_throw(
-        "Unable to find Rtools that are needed for compilation.",
-        details = bullet_i("Required version is {.emph {pkgbuild::rtools_needed()}}.")
+      cli::cli_abort(
+        c(
+          "Unable to find Rtools that are needed for compilation.",
+          "i" = "Required version is {.emph {pkgbuild::rtools_needed()}}."
+        ),
+        class = "rextendr_error"
       )
     }
 
     if (identical(R.version$crt, "ucrt")) {
       # TODO: update this when R 5.0 is released.
       if (!identical(R.version$major, "4")) {
-        ui_throw("rextendr currently supports R 4.x")
+        cli::cli_abort("rextendr currently supports R 4.x", class = "rextendr_error")
       }
 
       if (package_version(R.version$minor) >= "3.0") {
@@ -390,7 +395,7 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 #' @param tty_has_colors \[ logical(1) \] Indicates if output
 #' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
 #' @return \[ character(n) \] Vector of strings
-#' that can be passed to `ui_*`, `cli` or `glue` functions.
+#' that can be passed to `cli` or `glue` functions.
 #' @noRd
 gather_cargo_output <- function(json_output, level, tty_has_colors) {
   rendered_output <-
@@ -429,33 +434,29 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
     jsonlite::parse_json
   )
 
-  if (!isTRUE(quiet)) {
-    purrr::walk(
-      gather_cargo_output(
-        cargo_output,
-        "warning",
-        tty_has_colors
-      ),
-      ui_w
-    )
-  }
-
   if (!isTRUE(compilation_result$status == 0)) {
-    error_messages <- purrr::map_chr(
+    error_messages <-
       gather_cargo_output(
         cargo_output,
         "error",
         tty_has_colors
-      ),
-      bullet_x
-    )
+      ) %>%
+        purrr::map_chr(
+          cli::format_inline,
+          keep_whitespace = TRUE
+        ) %>%
+        # removing double new lines with single new line
+        stringi::stri_replace_all_fixed("\n\n", "\n") %>%
+        # ensures that the leading cli style `x` is there
+        rlang::set_names("x")
 
-    ui_throw(
-      "Rust code could not be compiled successfully. Aborting.",
-      error_messages,
-      call = call,
-      glue_open = "{<{",
-      glue_close = "}>}"
+      rlang::abort(
+        c(
+          "Rust code could not be compiled successfully. Aborting.",
+          error_messages
+        ),
+        call = call,
+        class = "rextendr_error"
     )
   }
 }
@@ -492,7 +493,10 @@ get_specific_target_name <- function() {
       return("i686-pc-windows-gnu")
     }
 
-    ui_throw("Unknown Windows architecture")
+    cli::cli_abort(
+      "Unknown Windows architecture",
+      class = "rextendr_error"
+    )
   }
 
   return(NULL)

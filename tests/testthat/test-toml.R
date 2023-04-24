@@ -41,7 +41,7 @@ test_that("`toml` is generated correctly", {
       y = c("1", NA_character_, "2")
     ),
     single_row_array = data.frame(x = 1),
-    features = list(ndarray = NA),  # `NA` gets converted to empty array `[ ]`
+    features = list(ndarray = NA), # `NA` gets converted to empty array `[ ]`
     .str_as_literal = FALSE
   )
 
@@ -96,4 +96,10 @@ test_that("`toml` is generated correctly", {
   reference <- glue_collapse(reference, "\n")
 
   expect_equal(toml, reference)
+})
+
+
+test_that("`toml` does not accept unnamed top-level atomic arguments", {
+  err <- expect_rextendr_error(to_toml("Invalid String", 1:10))
+  expect_equal(unname(err[["message"]]), "Object cannot be serialized.")
 })

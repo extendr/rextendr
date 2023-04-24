@@ -80,14 +80,15 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   n_close <- sum(valid_syms[["type"]] == "close")
   # Fails if number of `/*` and `*/` are different.
   if (n_open != n_close) {
-    ui_throw(
-      "Malformed comments.",
+    cli::cli_abort(
       c(
-        bullet_x("Number of start {.code /*} and end {.code */} \\
-               delimiters are not equal."),
-        bullet_i("Found {n_open} occurence{?s} of {.code /*}."),
-        bullet_i("Found {n_close} occurence{?s} of {.code */}.")
-      )
+        "Malformed comments.",
+        "x" = "Number of start {.code /*} and end {.code */} \\
+               delimiters are not equal.",
+        "i" = "Found {n_open} occurence{?s} of {.code /*}.",
+        "i" = "Found {n_close} occurence{?s} of {.code */}."
+      ),
+      class = "rextendr_error"
     )
   }
 
@@ -114,13 +115,14 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
     any(to_replace[["type"]][2L * seq_len(n_valid / 2L) - 1L] != "open") ||
       any(to_replace[["type"]][2L * seq_len(n_valid / 2L)] != "close")
   ) {
-    ui_throw(
-      "Malformed comments.",
+    cli::cli_abort(
       c(
-        bullet_x("{.code /*} and {.code */} are not paired correctly."),
-        bullet_i("This error may be caused by a code fragment like \\
-               {.code */ ... /*}.")
-      )
+        "Malformed comments.",
+        "x" = "{.code /*} and {.code */} are not paired correctly.",
+        "i" = "This error may be caused by a code fragment like \\
+               {.code */ ... /*}."
+      ),
+      class = "rextendr_error"
     )
   }
   # Manual `pivot_wider`.

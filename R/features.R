@@ -4,7 +4,14 @@ features_config <- rlang::env(
 
 validate_extendr_features <- function(features, suppress_warnings) {
   features <- features %||% character(0)
-  vctrs::vec_assert(features, character())
+
+  if (!vctrs::vec_is(features, character())) {
+    cli::cli_abort(c(
+      "!" = "{.arg features} expected to be a vector of type {.cls character}, but got {.cls {class(features)}}."
+    ),
+    class = "rextendr_error")
+  }
+
   features <- unique(features)
 
   unknown_features <- features %>%
@@ -12,10 +19,14 @@ validate_extendr_features <- function(features, suppress_warnings) {
     discard_empty()
 
   if (!isTRUE(suppress_warnings) && length(unknown_features) > 0) {
-    cli::cli_warn(c(
-      "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
-      inf_dev_extendr_used() # nolint: object_usage_linter
-    ))
+    # alerts are to be short 1 liners
+    # these are called separately
+    cli::cli_warn(
+      c(
+        "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
+        "i" = inf_dev_extendr_used()
+      )
+    ) # nolint: object_usage_linter
   }
 
   features
@@ -33,7 +44,10 @@ enable_features <- function(extendr_deps, features) {
 
   extendr_api <- extendr_deps[["extendr-api"]]
   if (is.null(extendr_api)) {
-    cli::cli_abort("{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.")
+    cli::cli_abort(
+      "{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.",
+      class = "rextendr_error"
+    )
   }
 
   if (is.character(extendr_api)) {
@@ -42,7 +56,10 @@ enable_features <- function(extendr_deps, features) {
     existing_features <- extendr_api[["features"]] %||% character(0)
     extendr_api[["features"]] <- array(unique(c(existing_features, features)))
   } else {
-    cli::cli_abort("{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.")
+    cli::cli_abort(
+      "{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.",
+      class = "rextendr_error"
+    )
   }
 
   extendr_deps[["extendr-api"]] <- extendr_api

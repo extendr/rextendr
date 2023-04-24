@@ -19,12 +19,15 @@
 install_libR_bindings <- function(version = "*", force = FALSE, quiet = FALSE, patch.crates_io = NULL) {
   package_dir <- find.package("rextendr")
   if (file.access(package_dir, 2) != 0L) {
-    ui_throw("Cannot write to package location: {package_dir}")
+    cli::cli_abort(
+      "Cannot write to package location: {.path package_dir}",
+      class = "rextendr_error"
+    )
   }
 
   bindings_file <- file.path(package_dir, "rust", "libR-sys", "src", "bindings.rs")
   if (!isTRUE(force) && isTRUE(file.exists(bindings_file))) {
-    ui_i("libR bindings are already installed. Rerun with `force = TRUE` to force re-install.")
+    cli::cli_alert_info("libR bindings are already installed. Rerun with {.code force = TRUE} to force re-install.")
     return(invisible())
   }
 

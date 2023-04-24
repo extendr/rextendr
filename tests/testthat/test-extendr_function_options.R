@@ -33,26 +33,28 @@ test_that("`r_name` option renames R function", {
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
-  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
+  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains value of the wrong type", {
+  # due to the use of purrr here, the error that is emitted is on of class `mutate_error`
+  # we cannot expect `rextendr_error` from this function.
   expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = 42L)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains option with an invalid name", {
-  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE)))
+  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains two invalid options", {
-  expect_error(
+  expect_rextendr_error(
     rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE, "r_name" = NULL))
   )
 })
 
 test_that("`rust_source()` warns if `extendr_fn_options` contains an unknown option", {
   expect_warning( # Unknown option
-    expect_error( # Failed compilation because of the unknonw option
+    expect_rextendr_error( # Failed compilation because of the unknonw option
       rust_function("fn func() {}", extendr_fn_options = list("unknown_option" = 42L))
     )
   )
@@ -61,12 +63,20 @@ test_that("`rust_source()` warns if `extendr_fn_options` contains an unknown opt
 test_that(
   "`rust_source()` does not warn if `extendr_fn_options` contains an unknown option and `use_dev_extendr` is `TRUE`",
   {
-    expect_error( # Failed compilation because of the unknonw option
+    expect_rextendr_error( # Failed compilation because of the unknonw option
       rust_function(
         code = "fn func() {}",
         extendr_fn_options = list("unknown_option" = 42L),
         use_dev_extendr = TRUE
       )
     )
+  }
+)
+
+
+test_that(
+  "`rust_function()` does not emit any messages when `quiet = TRUE`",
+  {
+    expect_no_message(rust_function(code = "fn func() {}", quiet = TRUE))
   }
 )

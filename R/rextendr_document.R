@@ -9,7 +9,7 @@
 #' @inheritParams devtools::document
 #' @return No return value, called for side effects.
 #' @export
-document <- function(pkg = ".", quiet = getOption("usethis.quiet", FALSE), roclets = NULL) {
+document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
   try_save_all(quiet = quiet)
 
   withr::local_envvar(devtools::r_env_vars())
@@ -17,5 +17,5 @@ document <- function(pkg = ".", quiet = getOption("usethis.quiet", FALSE), rocle
   register_extendr(path = pkg, quiet = quiet)
 
   rlang::check_installed("devtools")
-  devtools::document(pkg = pkg, roclets = roclets, quiet = FALSE)
+  devtools::document(pkg = pkg, roclets = roclets, quiet = quiet)
 }

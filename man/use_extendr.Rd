@@ -8,7 +8,7 @@ use_extendr(
   path = ".",
   crate_name = NULL,
   lib_name = NULL,
-  quiet = getOption("usethis.quiet", FALSE),
+  quiet = FALSE,
   edition = c("2021", "2018")
 )
 }
@@ -22,7 +22,7 @@ If \code{NULL}, sanitized R package name is used instead.}
 If \code{NULL}, sanitized R package name is used instead.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
-generated or not. Also checks the \code{usethis.quiet} option.}
+generated or not.}
 
 \item{edition}{String indicating which Rust edition is used; Default \code{"2021"}.}
 }

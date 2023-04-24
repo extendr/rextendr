@@ -10,23 +10,14 @@
 #' It gets passed to [`pretty_rel_path()`] if `quiet = FALSE`.
 #' It is unused otherwise.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`). `quiet` also checks if `usethis.quiet` is set in options.
+#'   or verbose (`FALSE`).
 #' @return The output of [`brio::write_lines()`] (invisibly).
 #' @noRd
-write_file <- function(text, path, search_root_from = ".", quiet = getOption("usethis.quiet", FALSE)) {
+write_file <- function(text, path, search_root_from = ".", quiet = FALSE) {
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from) # nolint: object_usage_linter
-    ui_v("Writing {ui_value(rel_path)}")
+    cli::cli_alert_success("Writing {.path {rel_path}}")
   }
   invisible(output)
-}
-
-#' Provides functional similar to `usethis::ui_value()` for strings.
-#' @param value Value to style.
-#' @return Styled value, matching that of `usethis::ui_value()`.
-#' @noRd
-ui_value <- function(value) {
-  value <- if (is.character(value)) encodeString(value, quote = "'") else value
-  cli_format_text("{.blue {value}}")
 }

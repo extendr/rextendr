@@ -9,7 +9,7 @@ try_save_all <- function(quiet = FALSE) {
   if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::hasFun("documentSaveAll")) {
     rstudioapi::documentSaveAll()
     if (!isTRUE(quiet)) {
-      ui_v("Saving changes in the open files.")
+      cli::cli_alert_success("Saving changes in the open files.")
     }
   }
 }

@@ -33,11 +33,11 @@ test_that("Enable multiple features simultaneously", {
 })
 
 test_that("Passing integers to `features` results in error", {
-  expect_error(rust_function("fn test() {}", features = 1:10))
+  expect_rextendr_error(rust_function("fn test() {}", features = 1:10))
 })
 
 test_that("Passing list to `features` results in error", {
-  expect_error(rust_function("fn test() {}", features = list()))
+  expect_rextendr_error(rust_function("fn test() {}", features = list()))
 })
 
 test_that("Enabling experimental feature raises warning", {

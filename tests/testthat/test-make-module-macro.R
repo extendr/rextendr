@@ -66,6 +66,7 @@ test_that("Macro generation fails on invalid rust code", {
   )
 })
 
+
 test_that("Macro generation fails on invalid comments in code", {
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
