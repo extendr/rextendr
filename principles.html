@@ -60,32 +60,35 @@
 <p>rextendr uses the cli package to format messages to the user, which are generally then routed through <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">rlang::inform()</a></code>. Most UI will happen through <code>ui_*()</code> functions:</p>
 <table class="table"><colgroup><col width="8%"><col width="91%"></colgroup><thead><tr class="header"><th>function</th>
 <th>purpose</th>
-</tr></thead><tbody><tr class="odd"><td><code>ui_v()</code></td>
-<td>communicate that rextendr has done something successfully, such as write a file</td>
-</tr><tr class="even"><td><code>ui_i()</code></td>
+</tr></thead><tbody><tr class="odd"><td><code><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli::cli_alert_success()</a></code></td>
+<td>communicate that rextendr has done something successfully, such as wrote a file</td>
+</tr><tr class="even"><td><code><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli::cli_alert_info()</a></code></td>
 <td>provide extra information to the user</td>
-</tr><tr class="odd"><td><code>ui_w()</code></td>
+</tr><tr class="odd"><td><code><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli::cli_alert_warning()</a></code></td>
 <td>warn the user about something (note: this is still condition of class <code>message</code>, not <code>warning</code>)</td>
-</tr><tr class="even"><td><code>ui_o()</code></td>
+</tr><tr class="even"><td><code><a href="https://cli.r-lib.org/reference/cli_ul.html" class="external-link">cli::cli_ul()</a></code></td>
 <td>indicate that the user has something to do</td>
-</tr><tr class="odd"><td><code>ui_x()</code></td>
+</tr><tr class="odd"><td><code><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli::cli_alert_danger()</a></code></td>
 <td>tell the user that something has gone wrong (note: this still is a condition of class <code>message</code>, not <code>error</code>)</td>
-</tr></tbody></table><p>Each <code>ui_*()</code> function has a corresponding <code>bullet_*()</code> function that formats text to use in the message.</p>
-<p>Because each <code>ui_*()</code> and <code>bullet_*()</code> function is processed through cli, they support <a href="https://cli.r-lib.org/articles/semantic-cli.html#interpolation" class="external-link">glue-based interpolation</a> and <a href="https://cli.r-lib.org/articles/semantic-cli.html#inline-text-formatting" class="external-link">inline text formatting</a>.</p>
+</tr></tbody></table><p><a href="https://cli.r-lib.org/" class="external-link"><code>{cli}</code></a> supports <a href="https://cli.r-lib.org/articles/semantic-cli.html#interpolation" class="external-link">glue-based interpolation</a> and <a href="https://cli.r-lib.org/articles/semantic-cli.html#inline-text-formatting" class="external-link">inline text formatting</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="throwing-and-testing-errors">Throwing and testing errors<a class="anchor" aria-label="anchor" href="#throwing-and-testing-errors"></a></h2>
-<p>Pass all errors via <code>ui_throw()</code>. You can also add additional details via the <code>details</code> argument. This can be a good place to provide more information with <code>bullet_*()</code> functions, e.g.</p>
+<p>Pass all errors via <code><a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli::cli_abort()</a></code>. Ensure that the class <code>rextendr_error</code> is specified. You can also add details by providing a named vector. See <code>?cli::cli_abort()</code> and <code>?cli::cli_bulelts()</code> for the <code>message</code> argument.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ui_throw</span><span class="op">(</span></span>
-<span>  <span class="st">"Unable to register the extendr module."</span>,</span>
-<span>  details <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu">bullet_x</span><span class="op">(</span><span class="st">"Could not find file {.file src/entrypoint.c }."</span><span class="op">)</span>,</span>
-<span>    <span class="fu">bullet_o</span><span class="op">(</span><span class="st">"Are you sure this package is using extendr Rust code?"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli_abort</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Unable to register the extendr module."</span>,</span>
+<span>    <span class="st">"x"</span> <span class="op">=</span> <span class="st">"Could not find file {.file src/entrypoint.c}."</span>,</span>
+<span>    <span class="st">"*"</span> <span class="op">=</span> <span class="st">"Are you sure this package is using extendr Rust code?"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  class <span class="op">=</span> <span class="st">"rextendr_error"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><code>ui_throw()</code> emits an error of class <code>rextendr_error</code>. This makes it easier to know that an error is coming from rextendr. It also allows downstream users to catch and handle rextendr errors more easily with <code>tryCatch(..., rextender_error = function(re) ...)</code></p>
-<p>To test for errors from rextendr, use <code>expect_rextendr_error()</code></p>
+</div>
+<div class="section level2">
+<h2 id="silencing-messages">Silencing messages<a class="anchor" aria-label="anchor" href="#silencing-messages"></a></h2>
+<p><a href="https://cli.r-lib.org" class="external-link">cli</a> is used to verbosely inform the user. The user should be able to optionally silence functions that have particularly verbose output by setting <code>quiet</code> argument to <code>TRUE</code>—see <code><a href="reference/rust_source.html">?rust_source</a></code> for example.</p>
+<p>Silencing <code>cli</code> output should be done with the helper <code>local_quiet_cli(quiet)</code>. When <code>quiet = TRUE</code> all, <code>cli</code> output is suppressed.</p>
 </div>
 </div>
 
