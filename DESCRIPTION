@@ -29,7 +29,11 @@ Authors@R:
              family = "Barrett",
              role = "aut",
              email = "malcolmbarrett@gmail.com",
-             comment = c(ORCID = "0000-0003-0299-5825")))
+             comment = c(ORCID = "0000-0003-0299-5825")),
+      person(given = "Josiah",
+             family = "Parry",
+             role = "ctb",
+             comment = c(ORCID = "0000-0001-9910-865X")))
 Description: Provides functions to compile and load Rust code from R, similar
     to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Also provides
     helper functions to create R packages that use Rust code. Under the hood,
