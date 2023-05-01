@@ -52,8 +52,8 @@ write_license_note <- function(path = ".", force = TRUE) {
 
   .prep_authors <- function(authors, package) {
     ifelse(!is.null(authors), authors, paste0(package, " authors")) %>%
-      gsub(r"(\ <.+?>)", "", x = .) %>%
-      gsub(r"(\|)", ", ", x = .)
+      stringi::stri_replace_all("", regex = r"(\ <.+?>)") %>%
+      stringi::stri_replace_all(", ", regex = r"(\|)")
   }
 
   license_note <- list_license %>%
