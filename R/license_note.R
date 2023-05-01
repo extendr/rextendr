@@ -18,7 +18,7 @@ write_license_note <- function(path = ".", force = TRUE) {
   manifest_file <- rprojroot::find_package_root_file("src", "rust", "Cargo.toml", path = path)
   out_file <- rprojroot::find_package_root_file("LICENSE.note", path = path)
 
-  if (!isTRUE(force) && fs::file_exists(out_file)) {
+  if (!isTRUE(force) && file.exists(out_file)) {
     cli::cli_abort(
       c(
         "LICENSE.note already exists.",
