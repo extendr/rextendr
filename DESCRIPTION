@@ -67,6 +67,7 @@ Suggests:
     mockr,
     rmarkdown,
     rstudioapi,
+    RcppTOML,
     testthat (>= 3.0.2),
     usethis
 VignetteBuilder: 
