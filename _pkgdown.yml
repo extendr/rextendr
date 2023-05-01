@@ -16,6 +16,7 @@ reference:
   - use_extendr
   - document
   - register_extendr
+  - write_license_note
   - clean
 
 - title: Various utility functions
