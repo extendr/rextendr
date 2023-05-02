@@ -1,7 +1,7 @@
 test_that("LICENSE.note is generated properly", {
   skip_on_cran()
   skip_if_not_installed("RcppTOML")
-  skip_if_cargo_bin(c("license", "--help"))
+  skip_if_cargo_bin(c("metadata", "--help"))
 
   local_package("testPackage")
   rextendr::use_extendr()
