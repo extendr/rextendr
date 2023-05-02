@@ -1,4 +1,4 @@
-# LICENSE.note is generated properly
+# LICENSE.note
 
     Code
       cat_file("LICENSE.note")
@@ -32,7 +32,7 @@
       Name:        lazy_static
       Repository:  https://github.com/rust-lang-nursery/lazy-static.rs
       Authors:     Marvin Löbel
-      License:     MIT/Apache-2.0
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
@@ -46,28 +46,28 @@
       Name:        paste
       Repository:  https://github.com/dtolnay/paste
       Authors:     David Tolnay
-      License:     MIT OR Apache-2.0
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
       Name:        proc-macro2
       Repository:  https://github.com/dtolnay/proc-macro2
       Authors:     David Tolnay, Alex Crichton
-      License:     MIT OR Apache-2.0
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
       Name:        quote
       Repository:  https://github.com/dtolnay/quote
       Authors:     David Tolnay
-      License:     MIT OR Apache-2.0
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
       Name:        syn
       Repository:  https://github.com/dtolnay/syn
       Authors:     David Tolnay
-      License:     MIT OR Apache-2.0
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
