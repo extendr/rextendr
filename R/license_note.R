@@ -50,6 +50,19 @@ write_license_note <- function(path = ".", force = TRUE) {
   )$stdout %>%
     jsonlite::parse_json()
 
+  package_names <- processx::run(
+    "cargo",
+    c(
+      "metadata",
+      "--no-deps",
+      "--format-version", "1",
+      "--manifest-path", manifest_file
+    )
+  )$stdout %>%
+    jsonlite::parse_json() %>%
+    purrr::pluck("packages") %>%
+    purrr::map_chr("name")
+
   .prep_authors <- function(authors, package) {
     ifelse(!is.null(authors), authors, paste0(package, " authors")) %>%
       stringi::stri_replace_all("", regex = r"(\ <.+?>)") %>%
@@ -66,7 +79,7 @@ write_license_note <- function(path = ".", force = TRUE) {
   )
 
   note_body <- list_license %>%
-    purrr::keep(function(x) x$name != package_name) %>%
+    purrr::keep(function(x) !(x$name %in% package_names)) %>%
     purrr::map_chr(
       function(x) {
         paste0(
