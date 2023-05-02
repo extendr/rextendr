@@ -58,7 +58,7 @@ write_license_note <- function(path = ".", force = TRUE) {
     purrr::pluck("packages")
 
   .prep_authors <- function(authors, package) {
-    ifelse((!rlang::is_empty(authors) && authors != ""), authors, paste0(package, " authors")) %>%
+    ifelse(!rlang::is_empty(authors), authors, paste0(package, " authors")) %>%
       stringi::stri_replace_all("", regex = r"(\ <.+?>)")
   }
 
