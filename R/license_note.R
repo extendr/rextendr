@@ -24,7 +24,7 @@ write_license_note <- function(path = ".", force = TRUE) {
         "LICENSE.note already exists.",
         "If you want to re-generate LICENSE.note, set `force = TRUE` to {.fun write_license_note}."
       ),
-      class = "rextendr_warning"
+      class = "rextendr_error"
     )
   }
 

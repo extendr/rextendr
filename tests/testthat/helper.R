@@ -80,3 +80,12 @@ local_proj_set <- function(envir = parent.frame()) {
 cat_file <- function(...) {
   cat(brio::read_file(file.path(...)))
 }
+
+#' Helper function for skip testing.
+#' @param args Character vector, arguments to the `cargo` command. Pass to [processx::run()]'s args param.
+skip_if_cargo_bin <- function(args = "--help") {
+  if (processx::run("cargo", args, error_on_status = FALSE)$status != 0) {
+    message <- paste0("`cargo ", paste0(args, collapse = " "), "` is not available.")
+    testthat::skip(message)
+  }
+}
