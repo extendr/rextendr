@@ -28,13 +28,6 @@ write_license_note <- function(path = ".", force = TRUE) {
     )
   }
 
-  note_header <- paste0(
-    "The binary compiled from the source code of this package contains the following Rust packages.\n",
-    "\n",
-    "\n",
-    "-------------------------------------------------------------"
-  )
-
   package_name <- RcppTOML::parseTOML(manifest_file)$package$name
 
   list_license <- processx::run(
@@ -56,7 +49,16 @@ write_license_note <- function(path = ".", force = TRUE) {
       stringi::stri_replace_all(", ", regex = r"(\|)")
   }
 
-  license_note <- list_license %>%
+  separator <- "-------------------------------------------------------------"
+
+  note_header <- paste0(
+    "The binary compiled from the source code of this package contains the following Rust packages.\n",
+    "\n",
+    "\n",
+    separator
+  )
+
+  note_body <- list_license %>%
     purrr::keep(function(x) x$name != package_name) %>%
     purrr::map_chr(
       function(x) {
@@ -67,11 +69,11 @@ write_license_note <- function(path = ".", force = TRUE) {
           "Authors:     ", .prep_authors(x$authors, x$name), "\n",
           "License:     ", x$license, "\n",
           "\n",
-          "-------------------------------------------------------------"
+          separator
         )
       }
     )
 
-  c(note_header, license_note) %>%
+  c(note_header, note_body) %>%
     writeLines(out_file)
 }
