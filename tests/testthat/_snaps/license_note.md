@@ -1,4 +1,4 @@
-# LICENSE.note
+# LICENSE.note is generated properly
 
     Code
       cat_file("LICENSE.note")
