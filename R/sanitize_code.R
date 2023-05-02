@@ -36,12 +36,13 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   comment_syms <-
     locations %>%
     purrr::map(tibble::as_tibble) %>%
-    purrr::imap_dfr(
+    purrr::imap(
       ~ dplyr::mutate(
         .x,
         type = dplyr::if_else(.y == 1L, "open", "close")
       )
     ) %>%
+    dplyr::bind_rows() %>%
     dplyr::filter(!is.na(.data$start)) %>%
     dplyr::arrange(.data$start)
 
