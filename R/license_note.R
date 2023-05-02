@@ -7,13 +7,6 @@
 #' @return No return value, called for side effects.
 #' @export
 write_license_note <- function(path = ".", force = TRUE) {
-  if (!requireNamespace("RcppTOML", quietly = TRUE)) {
-    cli::cli_abort(
-      "The {.pkg RcppTOML} package is required to run the {.fun write_license_note} function.",
-      class = "rextendr_error"
-    )
-  }
-
   if (!cargo_command_available(c("license", "--help"))) {
     cli::cli_abort(
       c(
