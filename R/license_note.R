@@ -15,6 +15,16 @@ write_license_note <- function(path = ".", force = TRUE) {
     )
   }
 
+  if (!cargo_command_available(c("license", "--help"))) {
+    cli::cli_abort(
+      c(
+        "The {.code cargo license} command is required to run the {.fun write_license_note} function.",
+        "Please install cargo-license {.url https://crates.io/crates/cargo-license} first."
+      ),
+      class = "rextendr_error"
+    )
+  }
+
   manifest_file <- rprojroot::find_package_root_file("src", "rust", "Cargo.toml", path = path)
   out_file <- rprojroot::find_package_root_file("LICENSE.note", path = path)
 
@@ -27,8 +37,6 @@ write_license_note <- function(path = ".", force = TRUE) {
       class = "rextendr_error"
     )
   }
-
-  package_name <- RcppTOML::parseTOML(manifest_file)$package$name
 
   list_license <- processx::run(
     "cargo",
@@ -57,6 +65,8 @@ write_license_note <- function(path = ".", force = TRUE) {
     "\n",
     separator
   )
+
+  package_name <- RcppTOML::parseTOML(manifest_file)$package$name
 
   note_body <- list_license %>%
     purrr::keep(function(x) x$name != package_name) %>%
