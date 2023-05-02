@@ -71,8 +71,6 @@ write_license_note <- function(path = ".", force = TRUE) {
     separator
   )
 
-  package_name <- RcppTOML::parseTOML(manifest_file)$package$name
-
   note_body <- list_license %>%
     purrr::keep(function(x) !(x$name %in% package_names)) %>%
     purrr::map_chr(
