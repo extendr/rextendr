@@ -9,6 +9,8 @@
   
 ## New features
 
+* A new function `write_license_note()` to generate `LICENSE.note` file from `Cargo.toml` (#271).
+
 * `extendr_fn_options` parameter of `rust_source()` controls what type of options are emitted to `#[extendr()]` attribute ([#252](https://github.com/extendr/rextendr/pull/252)).
 
 * `use_dev_extendr` flag makes `rust_source()` family of functions compile code using development version of `extendr`.
@@ -26,7 +28,6 @@ Development configuration is stored as an option named `rextendr.extendr_dev_dep
 
 * `rextendr::document()` now sets the envvars that `devtools::document()` sets,
   e.g. `NOT_CRAN` (#135).
-
 
 # rextendr 0.2.0
 
