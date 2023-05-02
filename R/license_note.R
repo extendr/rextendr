@@ -6,7 +6,6 @@
 #' @inheritParams register_extendr
 #' @return No return value, called for side effects.
 #' @export
-#' @importFrom dplyr %>%
 write_license_note <- function(path = ".", force = TRUE) {
   if (!requireNamespace("RcppTOML", quietly = TRUE)) {
     cli::cli_abort(
