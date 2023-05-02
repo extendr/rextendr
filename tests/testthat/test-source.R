@@ -108,3 +108,8 @@ test_that("`rust_code()` can compile code from rust files with identical names",
   expect_equal(test_method_1(), 1L)
   expect_equal(test_method_2(), 2L)
 })
+
+# https://github.com/extendr/rextendr/issues/264
+test_that("`rust_source()` should not raise internal error for code without extendr attrs", {
+  expect_no_error(rust_source(code = "fn test() {}"))
+})

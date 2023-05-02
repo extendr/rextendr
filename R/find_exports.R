@@ -3,6 +3,11 @@ find_exports <- function(clean_lns) {
   start <- ids
   end <- dplyr::lead(ids, default = length(clean_lns) + 1L) - 1L
 
+  # start and end may empty
+  if (rlang::is_empty(start) || rlang::is_empty(end)) {
+    return(tibble::tibble(name = character(0), type = character(0), lifetime = character(0)))
+  }
+
   purrr::map2_dfr(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
     dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) %>%
     dplyr::select(dplyr::all_of(c("name", "type", "lifetime")))
