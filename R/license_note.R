@@ -58,8 +58,8 @@ write_license_note <- function(path = ".", force = TRUE) {
 
   .prep_authors <- function(authors, package) {
     ifelse(!is.null(authors), authors, paste0(package, " authors")) %>%
-      stringi::stri_replace_all("", regex = r"(\ <.+?>)") %>%
-      stringi::stri_replace_all(", ", regex = r"(\|)")
+      stringi::stri_replace_all_regex(r"(\ <.+?>)", "") %>%
+      stringi::stri_replace_all_regex(r"(\|)", ", ")
   }
 
   separator <- "-------------------------------------------------------------"
