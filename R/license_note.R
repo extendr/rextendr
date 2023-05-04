@@ -72,7 +72,7 @@ write_license_note <- function(path = ".", force = TRUE) {
   )
 
   note_body <- list_license %>%
-    purrr::keep(function(x) !(x$name %in% package_names)) %>%
+    purrr::discard(function(x) x$name %in% package_names) %>%
     purrr::map_chr(
       function(x) {
         paste0(
