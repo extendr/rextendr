@@ -4,10 +4,13 @@
 \alias{write_license_note}
 \title{Generate LICENSE.note file.}
 \usage{
-write_license_note(path = ".", force = TRUE)
+write_license_note(path = ".", quiet = FALSE, force = TRUE)
 }
 \arguments{
 \item{path}{Path from which package root is looked up.}
+
+\item{quiet}{Logical indicating whether any progress messages should be
+generated or not.}
 
 \item{force}{Logical indicating whether to re-generating LICENSE.note if LICENSE.note is already exists.}
 }

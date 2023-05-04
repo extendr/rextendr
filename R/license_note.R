@@ -6,7 +6,7 @@
 #' @inheritParams register_extendr
 #' @return No return value, called for side effects.
 #' @export
-write_license_note <- function(path = ".", force = TRUE) {
+write_license_note <- function(path = ".", quiet = FALSE, force = TRUE) {
   if (!cargo_command_available(c("license", "--help"))) {
     cli::cli_abort(
       c(
@@ -18,9 +18,9 @@ write_license_note <- function(path = ".", force = TRUE) {
   }
 
   manifest_file <- rprojroot::find_package_root_file("src", "rust", "Cargo.toml", path = path)
-  out_file <- rprojroot::find_package_root_file("LICENSE.note", path = path)
+  outfile <- rprojroot::find_package_root_file("LICENSE.note", path = path)
 
-  if (!isTRUE(force) && file.exists(out_file)) {
+  if (!isTRUE(force) && file.exists(outfile)) {
     cli::cli_abort(
       c(
         "LICENSE.note already exists.",
@@ -87,6 +87,10 @@ write_license_note <- function(path = ".", force = TRUE) {
       }
     )
 
-  c(note_header, note_body) %>%
-    writeLines(out_file)
+  write_file(
+    text = c(note_header, note_body),
+    path = outfile,
+    search_root_from = path,
+    quiet = quiet
+  )
 }
