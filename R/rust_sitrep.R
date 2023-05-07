@@ -24,9 +24,9 @@ rust_sitrep <- function() {
     rustup_status <- rustup_toolchain_target() # nolint: object_usage
     msgs <- c(
       msgs,
-      "i" = "{.val host}: {.emph {rustup_status$host}}",
-      "i" = "{.val toolchain}: {.emph {rustup_status$toolchain}}",
-      "i" = "{.val target{?s}}: {.emph {rustup_status$targets}}"
+      "i" = "host: {.emph {rustup_status$host}}",
+      "i" = "toolchain: {.emph {rustup_status$toolchain}}",
+      "i" = "target{?s}: {.emph {rustup_status$targets}}"
     )
   } else {
     msgs <- c(
@@ -46,7 +46,7 @@ rust_sitrep <- function() {
     msgs <- c(
       msgs,
       "i" = "It is recommended to use {.val rustup} to manage {.val cargo} and {.val rustc}",
-      "i" = "See {.link https://rustup.rs/} for installation instructions"
+      "i" = "See {.url https://rustup.rs/} for installation instructions"
     )
   }
 
