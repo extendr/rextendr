@@ -1,6 +1,4 @@
 rust_sitrep <- function() {
-  # Windows-specific code
-
 
   cargo_v <- get_version("cargo")
   cargo_msg <- if(is.na(cargo_v)) {
@@ -23,7 +21,7 @@ rust_sitrep <- function() {
   )
 
   if(!is.na(rustup_v)) {
-    rustup_status <- rustup_toolchain_target()
+    rustup_status <- rustup_toolchain_target() # nolint: object_usage
     msgs <- c(
       msgs,
       "i" = "{.val host}: {.emph {rustup_status$host}}",
@@ -58,7 +56,7 @@ rust_sitrep <- function() {
 try_exec_cmd <- function(cmd, args = character()) {
   result <- tryCatch(
     processx::run(cmd, args, error_on_status = FALSE),
-    error = \(e) list(status = -1)
+    error = \(...) list(status = -1)
   )
   if(result[["status"]] != 0) {
     NA_character_
@@ -74,15 +72,6 @@ get_version <- function(cmd) {
     } else {
         stringi::stri_trim_both(stringi::stri_sub(output, nchar(cmd) + 1L))
     }
-}
-
-get_cli_notification <- function(cmd, version) {
-  if(is.na(version))
-  {
-    c("x" = glue::glue("{{.val {cmd}}}: {{.strong not found}}"))
-  } else {
-    c("v" = glue::glue("{{.val {cmd}}}: {{.emph {version}}}"))
-  }
 }
 
 rustup_toolchain_target <- function(){
@@ -101,5 +90,3 @@ rustup_toolchain_target <- function(){
 
   list(host = host, toolchain = toolchain, targets = targets)
 }
-
-rust_sitrep()
