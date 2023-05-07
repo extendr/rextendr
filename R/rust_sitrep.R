@@ -16,30 +16,43 @@ rust_sitrep <- function() {
     c("v" = "{.val rustup}: {.emph {rustup_v}}")
   }
 
+  msgs <- c(
+    "Rust infrastructure sitrep:",
+    rustup_msg,
+    cargo_msg
+  )
+
   if(!is.na(rustup_v)) {
     rustup_status <- rustup_toolchain_target()
-    additions <- c(
+    msgs <- c(
+      msgs,
       "i" = "{.val host}: {.emph {rustup_status$host}}",
       "i" = "{.val toolchain}: {.emph {rustup_status$toolchain}}",
-      "i" = "{.val targets}: {.emph {rustup_status$targets}}"
+      "i" = "{.val target{?s}}: {.emph {rustup_status$targets}}"
     )
   } else {
-    additions <- c(
-      "x" = "Cannot determine host, toolchain, and targets without {.val rustup}",
-      "i" = "It is recommended to install {.val rustup} to manage {.val cargo} and {.val rustc}",
-      "i" = "See {.link https://rustup.rs} for more information"
+    msgs <- c(
+      msgs,
+      "x" = "Cannot determine host, toolchain, and targets without {.val rustup}"
     )
   }
 
-  msgs <- c(
-    cargo_msg,
-    rustup_msg,
-    additions
-  )
+  if(is.na(cargo_v)) {
+    msgs <- c(
+      msgs,
+      "x" = "{.val cargo} is required to build {.pkg rextendr}-powered packages"
+    )
+  }
 
+  if(is.na(cargo_v) || is.na(rustup_v)) {
+    msgs <- c(
+      msgs,
+      "i" = "It is recommended to use {.val rustup} to manage {.val cargo} and {.val rustc}",
+      "i" = "See {.link https://rustup.rs/} for installation instructions"
+    )
+  }
 
   cli::cli_inform(msgs)
-
 }
 
 try_exec_cmd <- function(cmd, args = character()) {
