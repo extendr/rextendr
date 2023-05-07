@@ -29,5 +29,10 @@ Authors:
   \item Malcolm Barrett \email{malcolmbarrett@gmail.com} (\href{https://orcid.org/0000-0003-0299-5825}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Josiah Parry (\href{https://orcid.org/0000-0001-9910-865X}{ORCID}) [contributor]
+}
+
 }
 \keyword{internal}
