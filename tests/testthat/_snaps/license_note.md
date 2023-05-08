@@ -3,7 +3,7 @@
     Code
       cat_file("LICENSE.note")
     Output
-      The binary compiled from the source code of this package contains the following Rust packages.
+      The binary compiled from the source code of this package contains the following Rust crates:
       
       
       -------------------------------------------------------------
