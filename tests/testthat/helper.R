@@ -81,7 +81,7 @@ cat_file <- function(...) {
   cat(brio::read_file(file.path(...)))
 }
 
-#' Helper function for skip testing.
+#' Helper function for skipping tests when cargo subcommand is unavailable
 #' @param args Character vector, arguments to the `cargo` command. Pass to [processx::run()]'s args param.
 skip_if_cargo_bin <- function(args = "--help") {
   if (processx::run("cargo", args, error_on_status = FALSE)$status != 0) {
