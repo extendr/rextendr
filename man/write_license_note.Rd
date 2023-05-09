@@ -12,7 +12,7 @@ write_license_note(path = ".", quiet = FALSE, force = TRUE)
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
 
-\item{force}{Logical indicating whether to re-generate LICENSE.note if LICENSE.note already exists.}
+\item{force}{Logical indicating whether to regenerate LICENSE.note if LICENSE.note already exists.}
 }
 \value{
 No return value, called for side effects.

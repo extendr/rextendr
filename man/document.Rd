@@ -25,5 +25,5 @@ R package that uses \code{extendr} code, taking into account any changes that we
 made in the Rust code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}, and it
 executes \code{extendr}-specific routines before calling \code{\link[devtools:document]{devtools::document()}}.
 Specifically, it ensures that Rust code is recompiled (when necessary) and that
-up-to-date R wrappers are generated before re-generating the package documentation.
+up-to-date R wrappers are generated before regenerating the package documentation.
 }
