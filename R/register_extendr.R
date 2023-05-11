@@ -15,7 +15,7 @@
 #' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param force Logical indicating whether to force re-generating
+#' @param force Logical indicating whether to force regenerating
 #'   `R/extendr-wrappers.R` even when it doesn't seem to need updated. (By
 #'   default, generation is skipped when it's newer than the DLL).
 #' @param compile Logical indicating whether to recompile DLLs:
@@ -77,7 +77,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
   }
 
   # If the wrapper file is newer than the DLL file, assume it's been generated
-  # by the latest DLL, which should mean it doesn't need to be re-generated.
+  # by the latest DLL, which should mean it doesn't need to be regenerated.
   # This isn't always the case (e.g. when the user accidentally edited the
   # wrapper file by hand) so the user might need to run with `force = TRUE`.
   if (!isTRUE(force) && isTRUE(file.info(outfile)[["mtime"]] > file.info(library_path)[["mtime"]])) {

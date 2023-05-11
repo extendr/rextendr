@@ -5,7 +5,7 @@
 #' made in the Rust code. It is a wrapper for [devtools::document()], and it
 #' executes `extendr`-specific routines before calling [devtools::document()].
 #' Specifically, it ensures that Rust code is recompiled (when necessary) and that
-#' up-to-date R wrappers are generated before re-generating the package documentation.
+#' up-to-date R wrappers are generated before regenerating the package documentation.
 #' @inheritParams devtools::document
 #' @return No return value, called for side effects.
 #' @export

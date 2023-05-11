@@ -113,12 +113,12 @@ jobs:
           wrappers_path <- file.path("R", "extendr-wrappers.R")
           wrappers_mtime_before <- file.info(wrappers_path)$mtime
 
-          # check if rextendr::document() don't re-generate wrappers when unnecessary
+          # check if rextendr::document() don't regenerate wrappers when unnecessary
           rextendr::document()
           stopifnot(library_mtime_before == file.info(library_path)$mtime)
           stopifnot(wrappers_mtime_before == file.info(wrappers_path)$mtime)
 
-          # check if force = TRUE forces re-generating wrappers, but not compile
+          # check if force = TRUE forces regenerating wrappers, but not compile
           rextendr::register_extendr(force = TRUE)
           stopifnot(library_mtime_before == file.info(library_path)$mtime)
           stopifnot(wrappers_mtime_before < file.info(wrappers_path)$mtime)
