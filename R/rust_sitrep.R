@@ -8,14 +8,14 @@ rust_sitrep <- function() {
   cargo_msg <- if (is.na(cargo_v)) {
     c("x" = "{.val cargo}: {.strong not found}")
   } else {
-    c("v" = "{.val cargo}: {.emph {cargo_v}}")
+    c("v" = "{.val cargo}: {cargo_v}")
   }
 
   rustup_v <- get_version("rustup")
   rustup_msg <- if (is.na(rustup_v)) {
     c("x" = "{.val rustup}: {.strong not found}")
   } else {
-    c("v" = "{.val rustup}: {.emph {rustup_v}}")
+    c("v" = "{.val rustup}: {rustup_v}")
   }
 
   msgs <- c(
@@ -28,9 +28,9 @@ rust_sitrep <- function() {
     rustup_status <- rustup_toolchain_target() # nolint: object_usage
     msgs <- c(
       msgs,
-      "i" = "host: {.emph {rustup_status$host}}",
-      "i" = "toolchain: {.emph {rustup_status$toolchain}}",
-      "i" = "target{?s}: {.emph {rustup_status$targets}}"
+      "i" = "host: {rustup_status$host}",
+      "i" = "toolchain: {rustup_status$toolchain}",
+      "i" = "target{?s}: {rustup_status$targets}"
     )
   } else {
     msgs <- c(
