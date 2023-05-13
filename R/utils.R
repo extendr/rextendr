@@ -33,16 +33,27 @@ local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   }
 }
 
-#' Helper function for check cargo commands.
+#' Helper function for checking cargo sub-commands.
 #' @param args Character vector, arguments to the `cargo` command. Passed to [processx::run()]'s args param.
 #' @return Logical scalar indicating if the command was available.
 #' @noRd
 cargo_command_available <- function(args = "--help") {
-  if (processx::run("cargo", args, error_on_status = FALSE)$status == 0L) {
-    is_available <- TRUE
-  } else {
-    is_available <- FALSE
-  }
+  !any(is.na(try_exec_cmd("cargo", args)))
+}
 
-  is_available
+#' Helper function for executing commands.
+#' @param cmd Character scalar, command to execute.
+#' @param args Character vector, arguments passed to the command.
+#' @return Character vector containing the stdout of the command or `NA_character_` if the command failed.
+#' @noRd
+try_exec_cmd <- function(cmd, args = character()) {
+  result <- tryCatch(
+    processx::run(cmd, args, error_on_status = FALSE),
+    error = \(...) list(status = -1)
+  )
+  if (result[["status"]] != 0) {
+    NA_character_
+  } else {
+    stringi::stri_split_lines1(result$stdout)
+  }
 }

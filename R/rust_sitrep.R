@@ -59,18 +59,6 @@ rust_sitrep <- function() {
   invisible(NULL)
 }
 
-try_exec_cmd <- function(cmd, args = character()) {
-  result <- tryCatch(
-    processx::run(cmd, args, error_on_status = FALSE),
-    error = \(...) list(status = -1)
-  )
-  if (result[["status"]] != 0) {
-    NA_character_
-  } else {
-    result$stdout
-  }
-}
-
 get_version <- function(cmd) {
   # cargo --version
   # cargo x.yy.z (ninehashs YYYY-MM-DD)
@@ -99,7 +87,6 @@ rustup_toolchain_target <- function() {
   #
   # stable-x86_64-pc-windows-msvc (default)
   host <- try_exec_cmd("rustup", "show") %>%
-    stringi::stri_split_lines1() %>%
     stringi::stri_sub(from = 15L) %>%
     vctrs::vec_slice(1L)
 
@@ -114,7 +101,6 @@ rustup_toolchain_target <- function() {
   # x86_64-pc-windows-gnu
   # x86_64-pc-windows-msvc
   targets <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
-    stringi::stri_split_lines1() %>%
     stringi::stri_trim_both()
 
   list(host = host, toolchain = toolchain, targets = targets)
