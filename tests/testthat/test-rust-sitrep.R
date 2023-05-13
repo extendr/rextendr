@@ -7,19 +7,20 @@ test_that("`cargo` or `rustup` are not found", {
 
 test_that("`cargo` is found, `rustup` is missing", {
   mockr::local_mock(try_exec_cmd = function(cmd, ...) {
-    if (cmd == "cargo")
+    if (cmd == "cargo") {
       "cargo 1.0.0 (0000000 0000-00-00)"
-    else
+    } else {
       NA_character_
+    }
   })
   expect_snapshot(rust_sitrep())
 })
 
 test_that("`rustup` is found, `cargo` is missing", {
   mockr::local_mock(try_exec_cmd = function(cmd, args) {
-    if (cmd == "cargo")
+    if (cmd == "cargo") {
       NA_character_
-    else if (all(args %in% "--version")) {
+    } else if (all(args %in% "--version")) {
       "rustup 1.0.0 (0000000 0000-00-00)"
     } else if (all(args %in% "show")) {
       "Default host: arch-pc-os-tool"
@@ -36,9 +37,9 @@ test_that("`rustup` is found, `cargo` is missing", {
 
 test_that("`cargo` and`rustup` are found", {
   mockr::local_mock(try_exec_cmd = function(cmd, args) {
-    if (cmd == "cargo")
+    if (cmd == "cargo") {
       "cargo 1.0.0 (0000000 0000-00-00)"
-    else if (all(args %in% "--version")) {
+    } else if (all(args %in% "--version")) {
       "rustup 1.0.0 (0000000 0000-00-00)"
     } else if (all(args %in% "show")) {
       "Default host: arch-pc-os-tool"
