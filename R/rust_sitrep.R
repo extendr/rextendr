@@ -71,6 +71,8 @@ try_exec_cmd <- function(cmd, args = character()) {
 }
 
 get_version <- function(cmd) {
+  # cargo --version
+  # cargo x.yy.z (ninehashs YYYY-MM-DD)
   output <- try_exec_cmd(cmd, "--version")
   if (is.na(output)) {
     NA_character_
@@ -80,15 +82,36 @@ get_version <- function(cmd) {
 }
 
 rustup_toolchain_target <- function() {
+  # > rustup show
+  # Default host: x86_64-pc-windows-msvc
+  # rustup home:  some\path\.rustup
+  #
+  # installed targets for active toolchain
+  # --------------------------------------
+  #
+  # i686-pc-windows-gnu
+  # x86_64-pc-windows-gnu
+  # x86_64-pc-windows-msvc
+  #
+  # active toolchain
+  # ----------------
+  #
+  # stable-x86_64-pc-windows-msvc (default)
   host <- try_exec_cmd("rustup", "show") %>%
     stringi::stri_split_lines1() %>%
     stringi::stri_sub(from = 15L) %>%
     vctrs::vec_slice(1L)
 
+  # > rustup show active-toolchain
+  # stable-x86_64-pc-windows-msvc (default)
   toolchain <- try_exec_cmd("rustup", c("show", "active-toolchain")) %>%
     stringi::stri_replace_last_fixed("(default)", "") %>%
     stringi::stri_trim_both()
 
+  # > rustup target list --installed
+  # i686-pc-windows-gnu
+  # x86_64-pc-windows-gnu
+  # x86_64-pc-windows-msvc
   targets <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
     stringi::stri_split_lines1() %>%
     stringi::stri_trim_both()
