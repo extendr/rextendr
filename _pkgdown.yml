@@ -22,3 +22,4 @@ reference:
   contents:
   - to_toml
   - make_module_macro
+  - rust_sitrep
