@@ -12,7 +12,7 @@ register_extendr(path = ".", quiet = FALSE, force = FALSE, compile = NA)
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
 
-\item{force}{Logical indicating whether to force re-generating
+\item{force}{Logical indicating whether to force regenerating
 \code{R/extendr-wrappers.R} even when it doesn't seem to need updated. (By
 default, generation is skipped when it's newer than the DLL).}
 
