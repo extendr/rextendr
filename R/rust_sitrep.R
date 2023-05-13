@@ -1,6 +1,7 @@
 #' Report on Rust infrastructure
 #'
 #' Prints out a detailed report on the state of Rust infrastructure on the host machine.
+#' @export
 #' @return Nothing
 rust_sitrep <- function() {
   cargo_v <- get_version("cargo")
