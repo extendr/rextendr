@@ -118,7 +118,7 @@
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
 ---
 
