@@ -11,10 +11,10 @@ This url is valid, but it returns 404 if no Accept header is specified, which is
 See https://github.com/rust-lang/crates.io/issues/788 for details.
 
 *  New maintainer:
-      Ilia Kosenkov <ilia.kosenkov@outlook.com>
-    Old maintainer(s):
-      Claus O. Wilke <wilke@austin.utexas.edu>
-  
+    Ilia Kosenkov <ilia.kosenkov@outlook.com>
+  Old maintainer(s):
+    Claus O. Wilke <wilke@austin.utexas.edu>
+
 The maintainer of the package has changed.
 
 ## revdepcheck results
