@@ -13,3 +13,6 @@
 ^CRAN-RELEASE$
 ^\.lintr$
 ^codecov\.yml$
+^\.vscode$
+^\.idea$
+^inst/libgcc_mock/libgcc_eh.a$

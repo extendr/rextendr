@@ -29,7 +29,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      REXTENDR_PATCH_CRATES_IO: 'libR-sys = { git = "https://github.com/extendr/libR-sys" }'
 
     steps:
       - uses: actions/checkout@v3
