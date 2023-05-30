@@ -16,3 +16,4 @@
 ^\.vscode$
 ^\.idea$
 ^inst/libgcc_mock/libgcc_eh.a$
+^CRAN-SUBMISSION$
