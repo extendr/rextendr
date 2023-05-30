@@ -44,3 +44,5 @@ vignettes/*.pdf
 /inst/libgcc_mock
 
 **/.idea/*
+
+CRAN-SUBMISSION
