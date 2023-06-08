@@ -56,7 +56,7 @@ jobs:
           extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v2
-        if: !(startsWith(runner.os, 'Windows') && matrix.config.r == 'oldrel')
+        if: ${{ !(startsWith(runner.os, 'Windows') && matrix.config.r == 'oldrel') }}
 
       # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
       - uses: r-lib/actions/check-r-package@v2
