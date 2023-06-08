@@ -100,7 +100,7 @@ jobs:
           Sys.chmod("configure", "0755")
 
           # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
-          if (identical('${{ startsWith(runner.os, 'Windows') && matrix.config.r == 'oldrel' }}', 'true')) {
+          if (.Platform$OS.type == "windows" && getRversion() < "4.3.0") {
             error_on <- "error"
           } else {
             error_on <- "warning"
