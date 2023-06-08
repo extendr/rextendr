@@ -50,6 +50,10 @@ jobs:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
 
+      - name: Install Rtools43
+        if: startsWith(runner.os, 'Windows') && matrix.config.r != 'oldrel'
+        run: choco upgrade rtools
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 2
