@@ -5,26 +5,46 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
+[![rextendr status
+badge](https://extendr.r-universe.dev/badges/rextendr)](https://extendr.r-universe.dev/rextendr)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![R build
+status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![codecov](https://codecov.io/gh/extendr/rextendr/branch/main/graph/badge.svg?token=5H6ID0LAO7)](https://app.codecov.io/gh/extendr/rextendr)
 <!-- badges: end -->
 
 ## Installation
 
-To install the package, run:
+To install release version from CRAN, run:
+
+``` r
+install.packages("rextendr")
+```
+
+or use `{remotes}`
+
+``` r
+remotes::install_cran("rextendr")
+```
+
+You can also install `{rextendr}` from
+[r-universe](https://extendr.r-universe.dev/rextendr):
+
+``` r
+install.packages('rextendr', repos = c('https://extendr.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+Latest development version can be installed from GitHub:
 
 ``` r
 remotes::install_github("extendr/rextendr")
 ```
 
-Note that this will install the package but does not guarantee that the
-package can do anything useful. You will also need to set up a working
-Rust toolchain. See the [installation instructions for
+To execute Rust code, you will also need to set up a working Rust
+toolchain. See the [installation instructions for
 libR-sys](https://github.com/extendr/libR-sys) for help. If you can
 successfully build libR-sys you’re good.
 
@@ -41,6 +61,43 @@ rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 # call it from R
 add(2.5, 4.7)
 #> [1] 7.2
+```
+
+Something more sophisticated:
+
+``` r
+library(rextendr)
+
+# Rust function that computes a sum of integer or double vectors, preserving the type
+
+rust_function(
+  "fn get_sum(x : Either<Integers, Doubles>) -> Either<Rint, Rfloat> {
+      match x {
+          Either::Left(x) => Either::Left(x.iter().sum()),
+          Either::Right(x) => Either::Right(x.iter().sum()),
+      }
+  }",
+  use_dev_extendr = TRUE,                        # Use development version of extendr from GitHub
+  features = "either",                           # Enable support for Either crate
+  extendr_fn_options = list(use_try_from = TRUE) # Enable advanced type conversion
+)
+
+x <- 1:5
+y <- c(1, 2, 3, 4, 5)
+
+tibble::tibble(
+  Name = c("x", "y"),
+  Data = list(x, y),
+  Types = purrr::map_chr(Data, typeof),
+  Sum = purrr::map(Data, get_sum),
+  SumRaw = purrr::flatten_dbl(Sum),
+  ResultType = purrr::map_chr(Sum, typeof)
+)
+#> # A tibble: 2 × 6
+#>   Name  Data      Types   Sum       SumRaw ResultType
+#>   <chr> <list>    <chr>   <list>     <dbl> <chr>     
+#> 1 x     <int [5]> integer <int [1]>     15 integer   
+#> 2 y     <dbl [5]> double  <dbl [1]>     15 double
 ```
 
 The package also enables a new chunk type for knitr, `extendr`, which
