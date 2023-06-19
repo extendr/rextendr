@@ -7,15 +7,11 @@
       Status: 404
       Message: Not Found
 
-This url is valid, but it returns 404 if no Accept header is specified, which is what happens when it is automatically scanned. 
+This url is valid, but it returns 404 if no Accept header is specified, which is what happens when it is automatically scanned.
 See https://github.com/rust-lang/crates.io/issues/788 for details.
 
-*  New maintainer:
-    Ilia Kosenkov <ilia.kosenkov@outlook.com>
-  Old maintainer(s):
-    Claus O. Wilke <wilke@austin.utexas.edu>
-
-The maintainer of the package has changed.
+* Patch release is needed to synchronize templates with the new Rust 1.70 version.
+  See https://releases.rs/docs/1.70.0/ for Rust release notes and https://github.com/extendr/rextendr/pull/285 for updated templates & relevant discussion.
 
 ## revdepcheck results
 
