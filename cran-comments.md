@@ -10,8 +10,8 @@
 This url is valid, but it returns 404 if no Accept header is specified, which is what happens when it is automatically scanned.
 See https://github.com/rust-lang/crates.io/issues/788 for details.
 
-* Patch release is needed to synchronize templates with the new Rust 1.70 version.
-  See https://releases.rs/docs/1.70.0/ for Rust release notes and https://github.com/extendr/rextendr/pull/285 for updated templates & relevant discussion.
+* Patch release is needed to fix the bundled template incompatible with the new Rust 1.70 version, which was released on June 1st, 2023.
+  See https://github.com/extendr/extendr/issues/559 for relevant discussion.
 
 ## revdepcheck results
 
