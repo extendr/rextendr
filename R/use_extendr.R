@@ -50,8 +50,8 @@ use_extendr <- function(path = ".",
   r_dir <- rprojroot::find_package_root_file("R", path = path)
   wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
   if (!dir.exists(r_dir)) {
-    cli::cli_alert_success("Writing {.file R/}")
     dir.create(r_dir)
+    cli::cli_alert_success("Creating {.file {pretty_rel_path(r_dir, path)}}.")
   }
 
   if (dir.exists(src_dir)) {
@@ -68,8 +68,10 @@ use_extendr <- function(path = ".",
   }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")
-  dir.create(rust_src_dir, recursive = TRUE)
-  cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
+  if (!dir.exists(rust_src_dir)) {
+    dir.create(rust_src_dir, recursive = TRUE)
+    cli::cli_alert_success("Creating {.file {pretty_rel_path(rust_src_dir, path)}}.")
+  }
 
   use_rextendr_template(
     "entrypoint.c",
