@@ -5,7 +5,7 @@
 #' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
 #' R with `hello_world()`.
 #'
-#' This function can be called on an existing project;
+#' This function can be called on an existing package including rextendr templates;
 #' you will be asked if either the `src` directory or the `R/extendr-wrappers.R` file
 #' are existing. And, even if you select to overwrite them, `Cargo.toml`, `lib.rs`
 #' and `extendr-wrappers.R` will not be overwritten.

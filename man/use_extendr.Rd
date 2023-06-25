@@ -37,7 +37,7 @@ adds a small Rust library with a single Rust function that returns the string
 R with \code{hello_world()}.
 }
 \details{
-This function can be called on an existing project;
+This function can be called on an existing package including rextendr templates;
 you will be asked if either the \code{src} directory or the \code{R/extendr-wrappers.R} file
 are existing. And, even if you select to overwrite them, \code{Cargo.toml}, \code{lib.rs}
 and \code{extendr-wrappers.R} will not be overwritten.
