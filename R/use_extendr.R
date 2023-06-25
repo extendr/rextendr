@@ -29,6 +29,13 @@ use_extendr <- function(path = ".",
 
   local_quiet_cli(quiet)
 
+  if (!requireNamespace("usethis", quietly = TRUE)) {
+    cli::cli_abort(
+      "The {.pkg usethis} package is required to use {.fun use_extendr}.",
+      class = "rextendr_error"
+    )
+  }
+
   rextendr_setup(path = path)
 
   pkg_name <- pkg_name(path)
