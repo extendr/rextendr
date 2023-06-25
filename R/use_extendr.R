@@ -123,23 +123,21 @@ use_extendr <- function(path = ".",
     dependencies = list(`extendr-api` = "*")
   )
 
-  if (!file.exists(file.path("src", "rust", "Cargo.toml"))) {
-    write_file(
-      text = cargo_toml_content,
-      path = file.path("src", "rust", "Cargo.toml"),
-      search_root_from = path,
-      quiet = quiet
-    )
-  }
+  write_file(
+    text = cargo_toml_content,
+    path = file.path("src", "rust", "Cargo.toml"),
+    search_root_from = path,
+    quiet = quiet,
+    overwrite = FALSE
+  )
 
-  if (!file.exists(file.path("src", "rust", "src", "lib.rs"))) {
-    use_rextendr_template(
-      "lib.rs",
-      save_as = file.path("src", "rust", "src", "lib.rs"),
-      quiet = quiet,
-      data = list(mod_name = mod_name)
-    )
-  }
+  use_rextendr_template(
+    "lib.rs",
+    save_as = file.path("src", "rust", "src", "lib.rs"),
+    quiet = quiet,
+    overwrite = FALSE,
+    data = list(mod_name = mod_name)
+  )
 
   use_rextendr_template(
     "win.def",
@@ -148,14 +146,13 @@ use_extendr <- function(path = ".",
     data = list(mod_name = mod_name)
   )
 
-  if (!file.exists(file.path("R", "extendr-wrappers.R"))) {
-    use_rextendr_template(
-      "extendr-wrappers.R",
-      save_as = file.path("R", "extendr-wrappers.R"),
-      quiet = quiet,
-      data = list(pkg_name = pkg_name)
-    )
-  }
+  use_rextendr_template(
+    "extendr-wrappers.R",
+    save_as = file.path("R", "extendr-wrappers.R"),
+    quiet = quiet,
+    overwrite = FALSE,
+    data = list(pkg_name = pkg_name)
+  )
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
@@ -221,13 +218,20 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #'
 #' @inheritParams usethis::use_template
 #' @inheritParams use_extendr
+#' @inheritParams write_file
 #'
 #' @noRd
 use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
-                                  quiet = FALSE) {
+                                  quiet = FALSE,
+                                  overwrite = TRUE) {
   local_quiet_cli(quiet)
+
+  if (!isTRUE(overwrite) && file.exists(save_as)) {
+    cli::cli_alert("File {.path {pretty_rel_path(save_as, search_root_from)}} already exists. Skip writing the file.")
+    return(invisible(NULL))
+  }
 
   if (is_installed("usethis")) {
     created <- usethis::use_template(
