@@ -1,4 +1,6 @@
 test_that("use_extendr() sets up extendr files correctly", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testpkg")
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
@@ -24,36 +26,34 @@ test_that("use_extendr() sets up extendr files correctly", {
 })
 
 test_that("use_extendr() quiet if quiet=TRUE", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("quiet")
   expect_snapshot(use_extendr(quiet = TRUE))
 })
 
-test_that("use_extendr() does not set up packages with pre-existing src", {
+test_that("use_extendr() does not set up packages with pre-existing src by default", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testpkg.src")
   dir.create("src")
   withr::local_options(usethis.quiet = FALSE)
-  expect_message(
-    created <- use_extendr(),
-    "already present in package source. No action taken."
-  )
-
-  expect_false(created)
+  expect_error(use_extendr(), "overwrite")
 })
 
 
-test_that("use_extendr() does not set up packages with pre-existing wrappers", {
+test_that("use_extendr() does not set up packages with pre-existing by default", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testpkg.wrap")
   usethis::use_r("extendr-wrappers", open = FALSE)
   withr::local_options(usethis.quiet = FALSE)
-  expect_message(
-    created <- use_extendr(),
-    "already present in package source. No action taken."
-  )
-
-  expect_false(created)
+  expect_error(use_extendr(), "overwrite")
 })
 
 test_that("use_rextendr_template() works when usethis not available", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testpkg.wrap")
   mockr::with_mock(
     # mock that usethis installed
@@ -96,6 +96,8 @@ test_that("use_rextendr_template() works when usethis not available", {
 # The check is performed by compiling the sample package and checking that
 # `hello_world()` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("a.b.c")
   use_extendr()
   document()
@@ -105,6 +107,8 @@ test_that("use_extendr() handles R packages with dots in the name", {
 
 # Specify crate name and library names explicitly
 test_that("use_extendr() handles R package name, crate name and library name separately", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testPackage")
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
   document()
@@ -114,12 +118,16 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
 test_that("use_extendr() does not allow invalid rust names", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_package("testPackage")
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
   expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
 
 test_that("R/ folder is created when not present", {
+  skip_if(!requireNamespace("usethis", quietly = TRUE))
+
   path <- local_temp_dir("my.pkg")
   usethis::proj_set(path, force = TRUE)
   usethis::use_description()
