@@ -54,17 +54,13 @@ use_extendr <- function(path = ".",
     cli::cli_alert_success("Creating {.file {pretty_rel_path(r_dir, path)}}.")
   }
 
-  if (dir.exists(src_dir)) {
-    cli::cli_alert_danger(
-      "Directory {.file src} already present in package source. No action taken."
+  if (dir.exists(src_dir) || file.exists(wrappers_file)) {
+    cli::cli_alert(
+      "Directory {.file src} or file {.file R/extendr-wrappers.R} already present in package source."
     )
-    return(invisible(FALSE))
-  }
-  if (file.exists(wrappers_file)) {
-    cli::cli_alert_danger(
-      "File {.file R/extendr-wrappers.R} already present in package source. No action taken."
-    )
-    return(invisible(FALSE))
+    if (usethis::ui_nope("Do you want to overwrite them?")) {
+      usethis::ui_stop("Cancelling file creation.")
+    }
   }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")
