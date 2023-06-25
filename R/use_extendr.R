@@ -225,10 +225,10 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE,
-                                  overwrite = TRUE) {
+                                  overwrite = NULL) {
   local_quiet_cli(quiet)
 
-  if (!isTRUE(overwrite) && file.exists(save_as)) {
+  if (isFALSE(overwrite) && file.exists(save_as)) {
     cli::cli_alert("File {.path {pretty_rel_path(save_as, search_root_from)}} already exists. Skip writing the file.")
     return(invisible(NULL))
   }
