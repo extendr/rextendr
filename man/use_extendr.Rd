@@ -37,7 +37,8 @@ adds a small Rust library with a single Rust function that returns the string
 R with \code{hello_world()}.
 }
 \details{
-To avoid possibly messing up your R package, \code{use_extendr()} will not do anything if
-either a directory \code{src} or a file \code{R/extendr-wrappers.R} is already present in your
-package source.
+This function can be called on an existing project;
+you will be asked if either the \code{src} directory or the \code{R/extendr-wrappers.R} file
+are existing. And, even if you select to overwrite them, \code{Cargo.toml}, \code{lib.rs}
+and \code{extendr-wrappers.R} will not be overwritten.
 }

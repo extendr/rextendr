@@ -5,9 +5,10 @@
 #' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
 #' R with `hello_world()`.
 #'
-#' To avoid possibly messing up your R package, `use_extendr()` will not do anything if
-#' either a directory `src` or a file `R/extendr-wrappers.R` is already present in your
-#' package source.
+#' This function can be called on an existing project;
+#' you will be asked if either the `src` directory or the `R/extendr-wrappers.R` file
+#' are existing. And, even if you select to overwrite them, `Cargo.toml`, `lib.rs`
+#' and `extendr-wrappers.R` will not be overwritten.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
@@ -119,19 +120,23 @@ use_extendr <- function(path = ".",
     dependencies = list(`extendr-api` = "*")
   )
 
-  write_file(
-    text = cargo_toml_content,
-    path = file.path("src", "rust", "Cargo.toml"),
-    search_root_from = path,
-    quiet = quiet
-  )
+  if (!file.exists(file.path("src", "rust", "Cargo.toml"))) {
+    write_file(
+      text = cargo_toml_content,
+      path = file.path("src", "rust", "Cargo.toml"),
+      search_root_from = path,
+      quiet = quiet
+    )
+  }
 
-  use_rextendr_template(
-    "lib.rs",
-    save_as = file.path("src", "rust", "src", "lib.rs"),
-    quiet = quiet,
-    data = list(mod_name = mod_name)
-  )
+  if (!file.exists(file.path("src", "rust", "src", "lib.rs"))) {
+    use_rextendr_template(
+      "lib.rs",
+      save_as = file.path("src", "rust", "src", "lib.rs"),
+      quiet = quiet,
+      data = list(mod_name = mod_name)
+    )
+  }
 
   use_rextendr_template(
     "win.def",
@@ -140,12 +145,14 @@ use_extendr <- function(path = ".",
     data = list(mod_name = mod_name)
   )
 
-  use_rextendr_template(
-    "extendr-wrappers.R",
-    save_as = file.path("R", "extendr-wrappers.R"),
-    quiet = quiet,
-    data = list(pkg_name = pkg_name)
-  )
+  if (!file.exists(file.path("R", "extendr-wrappers.R"))) {
+    use_rextendr_template(
+      "extendr-wrappers.R",
+      save_as = file.path("R", "extendr-wrappers.R"),
+      quiet = quiet,
+      data = list(pkg_name = pkg_name)
+    )
+  }
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
