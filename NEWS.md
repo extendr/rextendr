@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+* `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
+
 # rextend 0.3.1
 
 * Update package templates to work with Rust >= 1.70 (#285)
