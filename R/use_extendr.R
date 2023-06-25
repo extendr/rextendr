@@ -67,7 +67,10 @@ use_extendr <- function(path = ".",
       "Directory {.file src} or file {.file R/extendr-wrappers.R} already present in package source."
     )
     if (usethis::ui_nope("Do you want to overwrite them?")) {
-      usethis::ui_stop("Cancelling file creation.")
+      cli::cli_abort(c(
+        "Cancelling file creation.",
+        class = "rextendr_error"
+      ))
     }
   }
 
