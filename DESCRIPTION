@@ -64,7 +64,6 @@ Suggests:
     devtools,
     knitr,
     lintr,
-    mockr,
     rmarkdown,
     rstudioapi,
     testthat (>= 3.0.2),
