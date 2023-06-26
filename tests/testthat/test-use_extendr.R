@@ -45,41 +45,32 @@ test_that("use_rextendr_template() works when usethis not available", {
   skip_if(!requireNamespace("usethis", quietly = TRUE))
 
   path <- local_package("testpkg.wrap")
+
   mockr::with_mock(
     # mock that usethis installed
     is_installed = function(...) TRUE,
     {
-      use_extendr()
+      use_rextendr_template(
+        "_gitignore",
+        save_as = file.path("installed")
+      )
     },
     .env = "rextendr"
   )
-
-  files <- c(
-    file.path("R", "extendr-wrappers.R"),
-    file.path("src", "Makevars"),
-    file.path("src", "Makevars.win"),
-    file.path("src", "entrypoint.c"),
-    file.path("src", "rust", "Cargo.toml"),
-    file.path("src", "rust", "src", "lib.rs")
-  )
-
-  usethis_generated_templates <- purrr::map(files, brio::read_lines)
-
-  unlink("src", recursive = TRUE)
-  unlink(file.path("R", "extendr-wrappers.R"))
 
   mockr::with_mock(
     # mock that usethis not installed
     is_installed = function(...) FALSE,
     {
-      use_extendr()
+      use_rextendr_template(
+        "_gitignore",
+        save_as = file.path("not_installed")
+      )
     },
     .env = "rextendr"
   )
 
-  rextendr_generated_templates <- purrr::map(files, brio::read_lines)
-
-  expect_identical(usethis_generated_templates, rextendr_generated_templates)
+  expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
 })
 
 # Check that {rextendr} works in packages containing dots in their names.
