@@ -75,6 +75,9 @@ test_that("use_rextendr_template() works when usethis not available", {
 # `hello_world()` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
   skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_bin()
 
   path <- local_package("a.b.c")
   use_extendr()
@@ -86,6 +89,9 @@ test_that("use_extendr() handles R packages with dots in the name", {
 # Specify crate name and library names explicitly
 test_that("use_extendr() handles R package name, crate name and library name separately", {
   skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_bin()
 
   path <- local_package("testPackage")
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
