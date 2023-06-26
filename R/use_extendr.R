@@ -54,6 +54,19 @@ use_extendr <- function(path = ".",
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   r_dir <- rprojroot::find_package_root_file("R", path = path)
+  wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
+
+  if (dir.exists(src_dir) || file.exists(wrappers_file)) {
+    cli::cli_alert(
+      "Directory {.file src} or file {.file R/extendr-wrappers.R} already present in package source."
+    )
+    if (usethis::ui_nope("Do you want to overwrite them?")) {
+      cli::cli_abort(c(
+        "Cancelling file creation.",
+        class = "rextendr_error"
+      ))
+    }
+  }
 
   if (!dir.exists(r_dir)) {
     dir.create(r_dir)
