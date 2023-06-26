@@ -55,13 +55,12 @@ test_that("use_extendr() does not set up packages with pre-existing wrappers", {
 
 test_that("use_rextendr_template() works when usethis not available", {
   path <- local_package("testpkg.wrap")
-  mockr::with_mock(
-    # mock that usethis installed
-    is_installed = function(...) TRUE,
+  # mock that usethis installed
+  with_mocked_bindings(
     {
       use_extendr()
     },
-    .env = "rextendr"
+    is_installed = function(...) TRUE
   )
 
   files <- c(
@@ -78,13 +77,12 @@ test_that("use_rextendr_template() works when usethis not available", {
   unlink("src", recursive = TRUE)
   unlink(file.path("R", "extendr-wrappers.R"))
 
-  mockr::with_mock(
-    # mock that usethis not installed
-    is_installed = function(...) FALSE,
+  # mock that usethis not installed
+  with_mocked_bindings(
     {
       use_extendr()
     },
-    .env = "rextendr"
+    is_installed = function(...) FALSE
   )
 
   rextendr_generated_templates <- purrr::map(files, brio::read_lines)

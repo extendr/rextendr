@@ -64,10 +64,9 @@ Suggests:
     devtools,
     knitr,
     lintr,
-    mockr,
     rmarkdown,
     rstudioapi,
-    testthat (>= 3.0.2),
+    testthat (>= 3.1.7),
     usethis
 VignetteBuilder: 
     knitr

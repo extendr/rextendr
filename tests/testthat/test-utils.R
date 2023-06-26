@@ -1,12 +1,12 @@
 test_that("`cargo_command_available()` returns TRUE when `try_exec_cmd()` returns not `NA`", {
-  mockr::local_mock(try_exec_cmd = function(...) {
+  local_mocked_bindings(try_exec_cmd = function(...) {
     "output"
   })
   expect_true(cargo_command_available())
 })
 
 test_that("`cargo_command_available()` returns FALSE when `try_exec_cmd()` returns `NA`", {
-  mockr::local_mock(try_exec_cmd = function(...) {
+  local_mocked_bindings(try_exec_cmd = function(...) {
     NA_character_
   })
   expect_false(cargo_command_available())
