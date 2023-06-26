@@ -6,9 +6,8 @@
 #' R with `hello_world()`.
 #'
 #' This function can be called on an existing package including rextendr templates;
-#' you will be asked if either the `src` directory or the `R/extendr-wrappers.R` file
-#' are existing. And, even if you select to overwrite them, `Cargo.toml`, `lib.rs`
-#' and `extendr-wrappers.R` will not be overwritten.
+#' you will be asked if overwrite each file except for `Cargo.toml`, `lib.rs` and
+#' `extendr-wrappers.R`.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
@@ -56,22 +55,10 @@ use_extendr <- function(path = ".",
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   r_dir <- rprojroot::find_package_root_file("R", path = path)
-  wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
+
   if (!dir.exists(r_dir)) {
     dir.create(r_dir)
     cli::cli_alert_success("Creating {.file {pretty_rel_path(r_dir, path)}}.")
-  }
-
-  if (dir.exists(src_dir) || file.exists(wrappers_file)) {
-    cli::cli_alert(
-      "Directory {.file src} or file {.file R/extendr-wrappers.R} already present in package source."
-    )
-    if (usethis::ui_nope("Do you want to overwrite them?")) {
-      cli::cli_abort(c(
-        "Cancelling file creation.",
-        class = "rextendr_error"
-      ))
-    }
   }
 
   rust_src_dir <- file.path(src_dir, "rust", "src")

@@ -38,7 +38,7 @@ test_that("use_extendr() does not set up packages with pre-existing src by defau
   path <- local_package("testpkg.src")
   dir.create("src")
   withr::local_options(usethis.quiet = FALSE)
-  expect_error(use_extendr(), "overwrite")
+  expect_error(use_extendr(), "Overwrite")
 })
 
 
@@ -48,7 +48,7 @@ test_that("use_extendr() does not set up packages with pre-existing by default",
   path <- local_package("testpkg.wrap")
   usethis::use_r("extendr-wrappers", open = FALSE)
   withr::local_options(usethis.quiet = FALSE)
-  expect_error(use_extendr(), "overwrite")
+  expect_error(use_extendr(), "Overwrite")
 })
 
 test_that("use_rextendr_template() works when usethis not available", {
