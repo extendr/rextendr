@@ -1,4 +1,6 @@
 test_that("Feature 'ndarray' is enabled when no extra dependencies are specified", {
+  skip_if_cargo_bin()
+
   input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
@@ -13,6 +15,8 @@ test_that("Feature 'ndarray' is enabled when no extra dependencies are specified
 })
 
 test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled", {
+  skip_if_cargo_bin()
+
   input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
@@ -28,19 +32,27 @@ test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled"
 })
 
 test_that("Enable multiple features simultaneously", {
+  skip_if_cargo_bin()
+
   rust_function("fn test_multiple_features() {}", features = c("ndarray", "serde", "graphics"))
   expect_no_error(test_multiple_features())
 })
 
 test_that("Passing integers to `features` results in error", {
+  skip_if_cargo_bin()
+
   expect_rextendr_error(rust_function("fn test() {}", features = 1:10))
 })
 
 test_that("Passing list to `features` results in error", {
+  skip_if_cargo_bin()
+
   expect_rextendr_error(rust_function("fn test() {}", features = list()))
 })
 
 test_that("Enabling experimental feature raises warning", {
+  skip_if_cargo_bin()
+
   expect_warning(
     rust_function(
       "fn test_either(_x : Either<Integers, Doubles>) {}",
@@ -54,6 +66,8 @@ test_that("Enabling experimental feature raises warning", {
 })
 
 test_that("Enabling experimental feature does not raise warning if `use_dev_extendr` is `TRUE`", {
+  skip_if_cargo_bin()
+
   expect_no_warning(
     rust_function(
       "fn test_either(_x : Either<Integers, Doubles>) {}",
