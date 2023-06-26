@@ -1,8 +1,11 @@
 test_that("Running `document` after adding multiple files", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
   skip_on_cran()
+  skip_if_cargo_bin()
 
   path <- local_package("testPackage")
-  rextendr::use_extendr()
+  use_extendr()
   expect_rextendr_error(rextendr::document(), NA)
 
   file.create(file.path(path, "src/rust/src/a.rs"))
@@ -12,6 +15,11 @@ test_that("Running `document` after adding multiple files", {
 })
 
 test_that("Warn if using older rextendr", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_bin()
+
   path <- local_package("futurepkg")
   use_extendr()
   desc::desc_set(`Config/rextendr/version` = "999.999")
@@ -20,6 +28,11 @@ test_that("Warn if using older rextendr", {
 })
 
 test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_bin()
+
   path <- local_package("oldpkg")
   use_extendr()
   desc::desc_set(`Config/rextendr/version` = "0.1")

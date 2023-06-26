@@ -84,8 +84,13 @@ cat_file <- function(...) {
 #' Helper function for skipping tests when cargo subcommand is unavailable
 #' @param args Character vector, arguments to the `cargo` command. Pass to [processx::run()]'s args param.
 skip_if_cargo_bin <- function(args = "--help") {
-  if (processx::run("cargo", args, error_on_status = FALSE)$status != 0) {
-    message <- paste0("`cargo ", paste0(args, collapse = " "), "` is not available.")
-    testthat::skip(message)
-  }
+  tryCatch(
+    {
+      processx::run("cargo", args, error_on_status = TRUE)
+    },
+    error = function(e) {
+      message <- paste0("`cargo ", paste0(args, collapse = " "), "` is not available.")
+      testthat::skip(message)
+    }
+  )
 }
