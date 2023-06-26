@@ -38,6 +38,5 @@ R with \code{hello_world()}.
 }
 \details{
 This function can be called on an existing package including rextendr templates;
-you will be asked if overwrite each file except for \code{Cargo.toml}, \code{lib.rs} and
-\code{extendr-wrappers.R}.
+you will be asked if overwrite each file.
 }

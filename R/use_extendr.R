@@ -6,8 +6,7 @@
 #' R with `hello_world()`.
 #'
 #' This function can be called on an existing package including rextendr templates;
-#' you will be asked if overwrite each file except for `Cargo.toml`, `lib.rs` and
-#' `extendr-wrappers.R`.
+#' you will be asked if overwrite each file.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
@@ -110,19 +109,17 @@ use_extendr <- function(path = ".",
     dependencies = list(`extendr-api` = "*")
   )
 
-  write_file(
-    text = cargo_toml_content,
-    path = file.path("src", "rust", "Cargo.toml"),
-    search_root_from = path,
+  use_rextendr_template(
+    "Cargo.toml",
+    save_as = file.path("src", "rust", "Cargo.toml"),
     quiet = quiet,
-    overwrite = FALSE
+    data = list(cargo_toml_content = cargo_toml_content)
   )
 
   use_rextendr_template(
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
     quiet = quiet,
-    overwrite = FALSE,
     data = list(mod_name = mod_name)
   )
 
@@ -137,7 +134,6 @@ use_extendr <- function(path = ".",
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
-    overwrite = FALSE,
     data = list(pkg_name = pkg_name)
   )
 
@@ -252,7 +248,8 @@ use_rextendr_template <- function(template,
     stringi::stri_trim(template_content),
     path = save_as,
     search_root_from = rprojroot::find_package_root_file(),
-    quiet = quiet
+    quiet = quiet,
+    overwrite = overwrite
   )
 
   invisible(TRUE)
