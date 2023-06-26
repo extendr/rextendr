@@ -197,3 +197,21 @@
     Code
       use_extendr(quiet = TRUE)
 
+# use_extendr() skip pre-existing files in non-interactive sessions
+
+    Code
+      use_extendr()
+    Message
+      > File 'src/entrypoint.c' already exists. Skip writing the file.
+      > File 'src/Makevars' already exists. Skip writing the file.
+      > File 'src/Makevars.win' already exists. Skip writing the file.
+      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
+      > File 'src/.gitignore' already exists. Skip writing the file.
+      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
+      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
+      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
+      > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Finished configuring extendr for package testpkg.wrap.
+      * Please update the system requirement in 'DESCRIPTION' file.
+      * Please run `rextendr::document()` for changes to take effect.
+

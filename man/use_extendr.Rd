@@ -38,5 +38,6 @@ R with \code{hello_world()}.
 }
 \details{
 This function can be called on an existing package including rextendr templates;
-you will be asked if overwrite each file.
+you will be asked if overwrite each file. If you are not in an interactive session,
+the files will not be overwritten.
 }

@@ -6,7 +6,8 @@
 #' R with `hello_world()`.
 #'
 #' This function can be called on an existing package including rextendr templates;
-#' you will be asked if overwrite each file.
+#' you will be asked if overwrite each file. If you are not in an interactive session,
+#' the files will not be overwritten.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
@@ -27,6 +28,13 @@ use_extendr <- function(path = ".",
   # https://github.com/r-lib/cli/issues/434
 
   local_quiet_cli(quiet)
+
+  # If interactive, ask for overwrite. Else, skip writing files if they exist.
+  if (interactive()) {
+    overwrite <- NULL
+  } else {
+    overwrite <- FALSE
+  }
 
   if (!requireNamespace("usethis", quietly = TRUE)) {
     cli::cli_abort(
@@ -54,19 +62,6 @@ use_extendr <- function(path = ".",
 
   src_dir <- rprojroot::find_package_root_file("src", path = path)
   r_dir <- rprojroot::find_package_root_file("R", path = path)
-  wrappers_file <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
-
-  if (dir.exists(src_dir) || file.exists(wrappers_file)) {
-    cli::cli_alert(
-      "Directory {.file src} or file {.file R/extendr-wrappers.R} already present in package source."
-    )
-    if (usethis::ui_nope("Do you want to overwrite them?")) {
-      cli::cli_abort(c(
-        "Cancelling file creation.",
-        class = "rextendr_error"
-      ))
-    }
-  }
 
   if (!dir.exists(r_dir)) {
     dir.create(r_dir)
@@ -83,6 +78,7 @@ use_extendr <- function(path = ".",
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
 
@@ -90,6 +86,7 @@ use_extendr <- function(path = ".",
     "Makevars",
     save_as = file.path("src", "Makevars"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
 
@@ -97,6 +94,7 @@ use_extendr <- function(path = ".",
     "Makevars.win",
     save_as = file.path("src", "Makevars.win"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
 
@@ -104,13 +102,15 @@ use_extendr <- function(path = ".",
     "Makevars.ucrt",
     save_as = file.path("src", "Makevars.ucrt"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
-    quiet = quiet
+    quiet = quiet,
+    overwrite = overwrite
   )
 
   usethis::use_build_ignore("src/.cargo")
@@ -126,6 +126,7 @@ use_extendr <- function(path = ".",
     "Cargo.toml",
     save_as = file.path("src", "rust", "Cargo.toml"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(cargo_toml_content = cargo_toml_content)
   )
 
@@ -133,6 +134,7 @@ use_extendr <- function(path = ".",
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
 
@@ -140,6 +142,7 @@ use_extendr <- function(path = ".",
     "win.def",
     save_as = file.path("src", paste0(pkg_name, "-win.def")),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
 
@@ -147,6 +150,7 @@ use_extendr <- function(path = ".",
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
+    overwrite = overwrite,
     data = list(pkg_name = pkg_name)
   )
 
@@ -225,7 +229,7 @@ use_rextendr_template <- function(template,
   local_quiet_cli(quiet)
 
   if (isFALSE(overwrite) && file.exists(save_as)) {
-    cli::cli_alert("File {.path {pretty_rel_path(save_as, search_root_from)}} already exists. Skip writing the file.")
+    cli::cli_alert("File {.path {save_as}} already exists. Skip writing the file.")
     return(invisible(NULL))
   }
 

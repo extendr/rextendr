@@ -32,23 +32,13 @@ test_that("use_extendr() quiet if quiet=TRUE", {
   expect_snapshot(use_extendr(quiet = TRUE))
 })
 
-test_that("use_extendr() does not set up packages with pre-existing src by default", {
-  skip_if(!requireNamespace("usethis", quietly = TRUE))
-
-  path <- local_package("testpkg.src")
-  dir.create("src")
-  withr::local_options(usethis.quiet = FALSE)
-  expect_error(use_extendr(), "overwrite")
-})
-
-
-test_that("use_extendr() does not set up packages with pre-existing by default", {
+test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
   skip_if(!requireNamespace("usethis", quietly = TRUE))
 
   path <- local_package("testpkg.wrap")
-  usethis::use_r("extendr-wrappers", open = FALSE)
+  use_extendr(quiet = FALSE)
   withr::local_options(usethis.quiet = FALSE)
-  expect_error(use_extendr(), "overwrite")
+  expect_snapshot(use_extendr())
 })
 
 test_that("use_rextendr_template() works when usethis not available", {

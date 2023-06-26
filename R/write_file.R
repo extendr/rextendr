@@ -17,7 +17,7 @@
 #' @noRd
 write_file <- function(text, path, search_root_from = ".", quiet = FALSE, overwrite = TRUE) {
   if (isFALSE(overwrite) && file.exists(path)) {
-    cli::cli_alert("File {.path {pretty_rel_path(path, search_root_from)}} already exists. Skip writing the file.")
+    cli::cli_alert("File {.path {save_as}} already exists. Skip writing the file.")
     return(invisible(NULL))
   }
 
