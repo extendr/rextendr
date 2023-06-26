@@ -1,4 +1,6 @@
 test_that("`rust_source()` works", {
+  skip_if_cargo_bin()
+
   rust_src <- "
     #[extendr]
     fn hello() -> &'static str {
@@ -42,17 +44,23 @@ test_that("`rust_source()` works", {
 
 
 test_that("`options` override `toolchain` value in `rust_source`", {
+  skip_if_cargo_bin()
+
   withr::local_options(rextendr.toolchain = "Non-existent-toolchain")
   expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 test_that("`options` override `patch.crates_io` value in `rust_source`", {
+  skip_if_cargo_bin()
+
   withr::local_options(rextendr.patch.crates_io = list(`extendr-api` = "-1"))
   expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
 
 
 test_that("`options` override `rextendr.extendr_deps` value in `rust_source`", {
+  skip_if_cargo_bin()
+
   withr::local_options(rextendr.extendr_deps = list(`extendr-api` = "-1"))
   expect_rextendr_error(rust_function("fn rust_test() {}"), "Rust code could not be compiled successfully. Aborting.")
 })
@@ -61,6 +69,7 @@ test_that("`rust_source` works even when the PATH is not set correctly, which ma
   skip_on_os("windows") # On Windows, we have no concern as the only installation method is the official installer
   skip_on_os("linux") # On Linux, `cargo` might be on somewhere like `/usr/bin`, which is hard to eliminate
   skip_on_cran()
+  skip_if_cargo_bin()
 
   # Construct PATH without ~/.cargo/bin
   local_path <- Sys.getenv("PATH")
@@ -83,6 +92,8 @@ test_that("`rust_source` works even when the PATH is not set correctly, which ma
 
 # https://github.com/extendr/rextendr/issues/234
 test_that("`rust_code()` can compile code from rust file", {
+  skip_if_cargo_bin()
+
   input <- file.path("../data/rust_source.rs")
   expect_no_error(rust_source(input, module_name = "test_module"))
   expect_equal(test_method(), 42L)
@@ -90,6 +101,8 @@ test_that("`rust_code()` can compile code from rust file", {
 
 # https://github.com/extendr/rextendr/issues/234
 test_that("`rust_code()` can compile code from rust file multiple times", {
+  skip_if_cargo_bin()
+
   input <- file.path("../data/rust_source.rs")
   expect_no_error(rust_source(input, module_name = "test_module"))
   expect_no_error(rust_source(input, module_name = "test_module"))
@@ -99,6 +112,8 @@ test_that("`rust_code()` can compile code from rust file multiple times", {
 
 # https://github.com/extendr/rextendr/issues/234
 test_that("`rust_code()` can compile code from rust files with identical names", {
+  skip_if_cargo_bin()
+
   input_1 <- file.path("../data/inner_1/rust_source.rs")
   input_2 <- file.path("../data/inner_2/rust_source.rs")
 
@@ -111,5 +126,7 @@ test_that("`rust_code()` can compile code from rust files with identical names",
 
 # https://github.com/extendr/rextendr/issues/264
 test_that("`rust_source()` should not raise internal error for code without extendr attrs", {
+  skip_if_cargo_bin()
+
   expect_no_error(rust_source(code = "fn test() {}"))
 })

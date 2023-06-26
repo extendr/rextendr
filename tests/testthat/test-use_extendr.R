@@ -79,7 +79,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   path <- local_package("a.b.c")
   use_extendr()
   document()
-  document()
+  devtools::load_all()
   expect_equal(hello_world(), "Hello world!")
 })
 
@@ -90,7 +90,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   path <- local_package("testPackage")
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
   document()
-  document()
+  devtools::load_all()
   expect_equal(hello_world(), "Hello world!")
 })
 

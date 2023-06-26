@@ -1,4 +1,6 @@
 test_that("Module macro generation", {
+  skip_if_cargo_bin()
+
   rust_src <- r"(
 #[extendr]
 /* multiline
@@ -60,6 +62,8 @@ impl Counter {
 })
 
 test_that("Macro generation fails on invalid rust code", {
+  skip_if_cargo_bin()
+
   expect_rextendr_error(
     make_module_macro("#[extendr]\nlet invalid_var = ();"),
     "Rust code contains invalid attribute macros."
@@ -68,6 +72,8 @@ test_that("Macro generation fails on invalid rust code", {
 
 
 test_that("Macro generation fails on invalid comments in code", {
+  skip_if_cargo_bin()
+
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
     "Malformed comments."
@@ -93,6 +99,8 @@ test_that("Macro generation fails on invalid comments in code", {
 
 
 test_that("Rust code cleaning", {
+  skip_if_cargo_bin()
+
   expect_equal(
     fill_block_comments(c(
       "Nested /*/* this is */ /*commented*/ out */",
@@ -121,6 +129,8 @@ test_that("Rust code cleaning", {
 })
 
 test_that("Rust metadata capturing", {
+  skip_if_cargo_bin()
+
   expect_equal(
     find_extendr_attrs_ids(c(
       "#1",

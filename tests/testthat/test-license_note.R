@@ -1,9 +1,9 @@
 test_that("LICENSE.note is generated properly", {
-  skip_on_cran()
+  skip_if_not_installed("usethis")
   skip_if_cargo_bin(c("license", "--help"))
 
   local_package("testPackage")
-  rextendr::use_extendr()
+  use_extendr()
   write_license_note()
 
   expect_snapshot(cat_file("LICENSE.note"))
