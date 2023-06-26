@@ -45,29 +45,26 @@ test_that("use_rextendr_template() works when usethis not available", {
   skip_if_not_installed("usethis")
 
   path <- local_package("testpkg.wrap")
-
-  mockr::with_mock(
-    # mock that usethis installed
-    is_installed = function(...) TRUE,
+  # mock that usethis installed
+  with_mocked_bindings(
     {
       use_rextendr_template(
         "_gitignore",
         save_as = file.path("installed")
       )
     },
-    .env = "rextendr"
+    is_installed = function(...) TRUE
   )
 
-  mockr::with_mock(
-    # mock that usethis not installed
-    is_installed = function(...) FALSE,
+  # mock that usethis not installed
+  with_mocked_bindings(
     {
       use_rextendr_template(
         "_gitignore",
         save_as = file.path("not_installed")
       )
     },
-    .env = "rextendr"
+    is_installed = function(...) FALSE
   )
 
   expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
