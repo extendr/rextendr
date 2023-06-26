@@ -36,7 +36,7 @@ use_extendr <- function(path = ".",
     overwrite <- FALSE
   }
 
-  if (!requireNamespace("usethis", quietly = TRUE)) {
+  if (!is_installed("usethis")) {
     cli::cli_abort(
       "The {.pkg usethis} package is required to use {.fun use_extendr}.",
       class = "rextendr_error"
