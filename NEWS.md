@@ -1,5 +1,8 @@
 # rextendr (development version)
 
+* `use_extendr()` and `document()` now set the `SystemRequirements` field of the `DESCRIPTION` file to
+  `Cargo (rustc package manager)` if the field is empty (#298).
+
 # rextend 0.3.1
 
 * Update package templates to work with Rust >= 1.70 (#285)
