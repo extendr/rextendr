@@ -37,7 +37,6 @@ adds a small Rust library with a single Rust function that returns the string
 R with \code{hello_world()}.
 }
 \details{
-This function can be called on an existing package including rextendr templates;
-you will be asked if overwrite each file. If you are not in an interactive session,
-the files will not be overwritten.
+This function can be called on an existing package using rextendr templates.
+In this case, you will be asked to overwrite each file.
 }

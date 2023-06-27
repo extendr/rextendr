@@ -5,9 +5,8 @@
 #' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
 #' R with `hello_world()`.
 #'
-#' This function can be called on an existing package including rextendr templates;
-#' you will be asked if overwrite each file. If you are not in an interactive session,
-#' the files will not be overwritten.
+#' This function can be called on an existing package using rextendr templates.
+#' In this case, you will be asked to overwrite each file.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
