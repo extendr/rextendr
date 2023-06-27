@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+* `use_extendr()` sets `publish = false` in the `[package]` section of the `Cargo.toml` (#297).
+
 # rextend 0.3.1
 
 * Update package templates to work with Rust >= 1.70 (#285)
