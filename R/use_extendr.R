@@ -145,7 +145,7 @@ use_extendr <- function(path = ".",
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
-    overwrite = overwrite,
+    overwrite = FALSE,
     data = list(pkg_name = pkg_name)
   )
 
