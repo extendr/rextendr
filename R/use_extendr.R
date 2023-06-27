@@ -146,7 +146,6 @@ use_extendr <- function(path = ".",
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
     cli::cli_ul(
       c(
-        "Please update the system requirement in {.file DESCRIPTION} file.",
         "Please run {.fun rextendr::document} for changes to take effect."
       )
     )
