@@ -215,3 +215,39 @@
       * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
+# use_rextendr_template() can overwrite existing files
+
+    Code
+      cat_file("src", "Makevars")
+    Output
+      TARGET_DIR = ./rust/target
+      LIBDIR = $(TARGET_DIR)/release
+      STATLIB = $(LIBDIR)/libbar.a
+      PKG_LIBS = -L$(LIBDIR) -lbar
+      
+      all: C_clean
+      
+      $(SHLIB): $(STATLIB)
+      
+      CARGOTMP = $(CURDIR)/.cargo
+      
+      $(STATLIB):
+      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
+      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
+      	# therefore is only used if cargo is absent from the user's PATH.
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		export CARGO_HOME=$(CARGOTMP); \
+      	fi && \
+      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
+      
+      C_clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      
+      clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+

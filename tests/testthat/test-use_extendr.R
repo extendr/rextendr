@@ -70,6 +70,30 @@ test_that("use_rextendr_template() works when usethis not available", {
   expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
 })
 
+test_that("use_rextendr_template() can overwrite existing files", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg.wrap")
+  dir.create("src")
+  file_path <- file.path("src", "Makevars")
+
+  use_rextendr_template(
+    "Makevars",
+    save_as = file_path,
+    quiet = TRUE,
+    data = list(lib_name = "foo")
+  )
+  use_rextendr_template(
+    "Makevars",
+    save_as = file_path,
+    quiet = TRUE,
+    overwrite = TRUE,
+    data = list(lib_name = "bar")
+  )
+
+  expect_snapshot(cat_file("src", "Makevars"))
+})
+
 # Check that {rextendr} works in packages containing dots in their names.
 # The check is performed by compiling the sample package and checking that
 # `hello_world()` template function is available and works.

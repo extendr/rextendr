@@ -213,8 +213,11 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #'
 #' @inheritParams usethis::use_template
 #' @inheritParams use_extendr
-#' @inheritParams write_file
-#'
+#' @param overwrite Logical scalar or `NULL` indicating whether the file in the `path` should be overwritten.
+#' If `FALSE` and the file already exists, the function will do nothing.
+#' If `NULL` and the `usethis` package is installed, the function will ask the user whether the file should
+#' be overwritten in an interactive session or do nothing in a non-interactive session.
+#' Otherwise, the file will be overwritten.
 #' @noRd
 use_rextendr_template <- function(template,
                                   save_as = template,
@@ -228,7 +231,7 @@ use_rextendr_template <- function(template,
     return(invisible(NULL))
   }
 
-  if (is_installed("usethis")) {
+  if (is_installed("usethis") && is.null(overwrite)) {
     created <- usethis::use_template(
       template,
       save_as = save_as,
