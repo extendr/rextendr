@@ -11,9 +11,16 @@
 #' It is unused otherwise.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
+#' @param overwrite Logical scalar indicating whether the file in the `path` should be overwritten.
+#' If `FALSE` and the file already exists, the function will do nothing.
 #' @return The output of [`brio::write_lines()`] (invisibly).
 #' @noRd
-write_file <- function(text, path, search_root_from = ".", quiet = FALSE) {
+write_file <- function(text, path, search_root_from = ".", quiet = FALSE, overwrite = TRUE) {
+  if (isFALSE(overwrite) && file.exists(path)) {
+    cli::cli_alert("File {.path {save_as}} already exists. Skip writing the file.")
+    return(invisible(NULL))
+  }
+
   output <- brio::write_lines(text = text, path = path)
   if (!isTRUE(quiet)) {
     rel_path <- pretty_rel_path(path, search_from = search_root_from) # nolint: object_usage_linter
