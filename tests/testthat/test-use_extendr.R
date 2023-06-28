@@ -41,6 +41,16 @@ test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
   expect_snapshot(use_extendr())
 })
 
+test_that("use_extendr() can overwrite files in non-interactive sessions", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  use_extendr()
+  withr::local_options(usethis.quiet = FALSE)
+  expect_snapshot(use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE))
+  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
+})
+
 test_that("use_rextendr_template() works when usethis not available", {
   skip_if_not_installed("usethis")
 

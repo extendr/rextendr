@@ -5,9 +5,6 @@
 #' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
 #' R with `hello_world()`.
 #'
-#' This function can be called on an existing package using rextendr templates.
-#' In this case, you will be asked to overwrite each file.
-#'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate.
 #' If `NULL`, sanitized R package name is used instead.
@@ -15,6 +12,11 @@
 #' If `NULL`, sanitized R package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
+#' @param overwrite Logical scalar or `NULL` indicating whether the files in the `path` should be overwritten.
+#' If `NULL` (default), the function will ask the user whether each file should
+#' be overwritten in an interactive session or do nothing in a non-interactive session.
+#' If `FALSE` and each file already exists, the function will do nothing.
+#' If `TRUE`, all files will be overwritten.
 #' @param edition String indicating which Rust edition is used; Default `"2021"`.
 #' @return A logical value (invisible) indicating whether any package files were
 #' generated or not.
@@ -23,16 +25,14 @@ use_extendr <- function(path = ".",
                         crate_name = NULL,
                         lib_name = NULL,
                         quiet = FALSE,
+                        overwrite = NULL,
                         edition = c("2021", "2018")) {
   # https://github.com/r-lib/cli/issues/434
 
   local_quiet_cli(quiet)
 
-  # If interactive, ask for overwrite. Else, skip writing files if they exist.
-  if (interactive()) {
-    overwrite <- NULL
-  } else {
-    overwrite <- FALSE
+  if (!interactive()) {
+    overwrite <- overwrite %||% FALSE
   }
 
   rlang::check_installed("usethis")

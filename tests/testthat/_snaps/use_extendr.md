@@ -216,6 +216,42 @@
       * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
+# use_extendr() can overwrite files in non-interactive sessions
+
+    Code
+      use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE)
+    Message
+      v Writing 'src/entrypoint.c'
+      v Writing 'src/Makevars'
+      v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.ucrt'
+      v Writing 'src/.gitignore'
+      v Writing 'src/rust/Cargo.toml'
+      v Writing 'src/rust/src/lib.rs'
+      v Writing 'src/testpkg-win.def'
+      > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Finished configuring extendr for package testpkg.
+      * Please update the system requirement in 'DESCRIPTION' file.
+      * Please run `rextendr::document()` for changes to take effect.
+
+---
+
+    Code
+      cat_file("src", "rust", "Cargo.toml")
+    Output
+      [package]
+      name = 'foo'
+      publish = false
+      version = '0.1.0'
+      edition = '2021'
+      
+      [lib]
+      crate-type = [ 'staticlib' ]
+      name = 'bar'
+      
+      [dependencies]
+      extendr-api = '*'
+
 # use_rextendr_template() can overwrite existing files
 
     Code
