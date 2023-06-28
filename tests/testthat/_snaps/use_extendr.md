@@ -213,7 +213,6 @@
       > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
-      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 # use_extendr() can overwrite files in non-interactive sessions
@@ -231,7 +230,6 @@
       v Writing 'src/testpkg-win.def'
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.
-      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 ---
