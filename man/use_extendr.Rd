@@ -9,6 +9,7 @@ use_extendr(
   crate_name = NULL,
   lib_name = NULL,
   quiet = FALSE,
+  overwrite = NULL,
   edition = c("2021", "2018")
 )
 }
@@ -24,6 +25,12 @@ If \code{NULL}, sanitized R package name is used instead.}
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
 
+\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the \code{path} should be overwritten.
+If \code{NULL} (default), the function will ask the user whether each file should
+be overwritten in an interactive session or do nothing in a non-interactive session.
+If \code{FALSE} and each file already exists, the function will do nothing.
+If \code{TRUE}, all files will be overwritten.}
+
 \item{edition}{String indicating which Rust edition is used; Default \code{"2021"}.}
 }
 \value{
@@ -35,9 +42,4 @@ Create the scaffolding needed to add Rust extendr code to an R package. \code{us
 adds a small Rust library with a single Rust function that returns the string
 \code{"Hello world!"}. It also adds wrapper code so this Rust function can be called from
 R with \code{hello_world()}.
-}
-\details{
-To avoid possibly messing up your R package, \code{use_extendr()} will not do anything if
-either a directory \code{src} or a file \code{R/extendr-wrappers.R} is already present in your
-package source.
 }

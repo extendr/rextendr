@@ -32,33 +32,23 @@ test_that("use_extendr() quiet if quiet=TRUE", {
   expect_snapshot(use_extendr(quiet = TRUE))
 })
 
-test_that("use_extendr() does not set up packages with pre-existing src", {
-  skip_if_not_installed("usethis")
-
-  path <- local_package("testpkg.src")
-  dir.create("src")
-  withr::local_options(usethis.quiet = FALSE)
-  expect_message(
-    created <- use_extendr(),
-    "already present in package source. No action taken."
-  )
-
-  expect_false(created)
-})
-
-
-test_that("use_extendr() does not set up packages with pre-existing wrappers", {
+test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
   skip_if_not_installed("usethis")
 
   path <- local_package("testpkg.wrap")
-  usethis::use_r("extendr-wrappers", open = FALSE)
+  use_extendr(quiet = FALSE)
   withr::local_options(usethis.quiet = FALSE)
-  expect_message(
-    created <- use_extendr(),
-    "already present in package source. No action taken."
-  )
+  expect_snapshot(use_extendr())
+})
 
-  expect_false(created)
+test_that("use_extendr() can overwrite files in non-interactive sessions", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  use_extendr()
+  withr::local_options(usethis.quiet = FALSE)
+  expect_snapshot(use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE))
+  expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
 })
 
 test_that("use_rextendr_template() works when usethis not available", {
@@ -68,36 +58,50 @@ test_that("use_rextendr_template() works when usethis not available", {
   # mock that usethis installed
   with_mocked_bindings(
     {
-      use_extendr()
+      use_rextendr_template(
+        "_gitignore",
+        save_as = file.path("installed")
+      )
     },
     is_installed = function(...) TRUE
   )
 
-  files <- c(
-    file.path("R", "extendr-wrappers.R"),
-    file.path("src", "Makevars"),
-    file.path("src", "Makevars.win"),
-    file.path("src", "entrypoint.c"),
-    file.path("src", "rust", "Cargo.toml"),
-    file.path("src", "rust", "src", "lib.rs")
-  )
-
-  usethis_generated_templates <- purrr::map(files, brio::read_lines)
-
-  unlink("src", recursive = TRUE)
-  unlink(file.path("R", "extendr-wrappers.R"))
-
   # mock that usethis not installed
   with_mocked_bindings(
     {
-      use_extendr()
+      use_rextendr_template(
+        "_gitignore",
+        save_as = file.path("not_installed")
+      )
     },
     is_installed = function(...) FALSE
   )
 
-  rextendr_generated_templates <- purrr::map(files, brio::read_lines)
+  expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
+})
 
-  expect_identical(usethis_generated_templates, rextendr_generated_templates)
+test_that("use_rextendr_template() can overwrite existing files", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg.wrap")
+  dir.create("src")
+  file_path <- file.path("src", "Makevars")
+
+  use_rextendr_template(
+    "Makevars",
+    save_as = file_path,
+    quiet = TRUE,
+    data = list(lib_name = "foo")
+  )
+  use_rextendr_template(
+    "Makevars",
+    save_as = file_path,
+    quiet = TRUE,
+    overwrite = TRUE,
+    data = list(lib_name = "bar")
+  )
+
+  expect_snapshot(cat_file("src", "Makevars"))
 })
 
 # Check that {rextendr} works in packages containing dots in their names.

@@ -198,3 +198,93 @@
     Code
       use_extendr(quiet = TRUE)
 
+# use_extendr() skip pre-existing files in non-interactive sessions
+
+    Code
+      use_extendr()
+    Message
+      > File 'src/entrypoint.c' already exists. Skip writing the file.
+      > File 'src/Makevars' already exists. Skip writing the file.
+      > File 'src/Makevars.win' already exists. Skip writing the file.
+      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
+      > File 'src/.gitignore' already exists. Skip writing the file.
+      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
+      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
+      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
+      > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Finished configuring extendr for package testpkg.wrap.
+      * Please update the system requirement in 'DESCRIPTION' file.
+      * Please run `rextendr::document()` for changes to take effect.
+
+# use_extendr() can overwrite files in non-interactive sessions
+
+    Code
+      use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE)
+    Message
+      v Writing 'src/entrypoint.c'
+      v Writing 'src/Makevars'
+      v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.ucrt'
+      v Writing 'src/.gitignore'
+      v Writing 'src/rust/Cargo.toml'
+      v Writing 'src/rust/src/lib.rs'
+      v Writing 'src/testpkg-win.def'
+      > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Finished configuring extendr for package testpkg.
+      * Please update the system requirement in 'DESCRIPTION' file.
+      * Please run `rextendr::document()` for changes to take effect.
+
+---
+
+    Code
+      cat_file("src", "rust", "Cargo.toml")
+    Output
+      [package]
+      name = 'foo'
+      publish = false
+      version = '0.1.0'
+      edition = '2021'
+      
+      [lib]
+      crate-type = [ 'staticlib' ]
+      name = 'bar'
+      
+      [dependencies]
+      extendr-api = '*'
+
+# use_rextendr_template() can overwrite existing files
+
+    Code
+      cat_file("src", "Makevars")
+    Output
+      TARGET_DIR = ./rust/target
+      LIBDIR = $(TARGET_DIR)/release
+      STATLIB = $(LIBDIR)/libbar.a
+      PKG_LIBS = -L$(LIBDIR) -lbar
+      
+      all: C_clean
+      
+      $(SHLIB): $(STATLIB)
+      
+      CARGOTMP = $(CURDIR)/.cargo
+      
+      $(STATLIB):
+      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
+      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
+      	# therefore is only used if cargo is absent from the user's PATH.
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		export CARGO_HOME=$(CARGOTMP); \
+      	fi && \
+      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
+      		rm -Rf $(CARGOTMP) && \
+      		rm -Rf $(LIBDIR)/build; \
+      	fi
+      
+      C_clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      
+      clean:
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+
