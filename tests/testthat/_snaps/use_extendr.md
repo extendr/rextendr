@@ -4,7 +4,8 @@
       use_extendr()
     Message
       i First time using rextendr. Upgrading automatically...
-      i Setting `Config/rextendr/version` to "0.3.1.9000"
+      i Setting `Config/rextendr/version` to "0.3.1.9000" in the 'DESCRIPTION' file.
+      i Setting `SystemRequirements` to "Cargo (rustc package manager)" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
@@ -17,7 +18,6 @@
       v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
       v Finished configuring extendr for package testpkg.
-      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 ---
@@ -213,7 +213,6 @@
       > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
-      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 # use_extendr() can overwrite files in non-interactive sessions
@@ -231,7 +230,6 @@
       v Writing 'src/testpkg-win.def'
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.
-      * Please update the system requirement in 'DESCRIPTION' file.
       * Please run `rextendr::document()` for changes to take effect.
 
 ---

@@ -13,8 +13,9 @@ rextendr_setup <- function(path = ".", cur_version = NULL) {
   }
 
   update_rextendr_version(path, cur_version = cur_version)
+  update_sys_reqs(path)
 
-  invisible(is_first)
+  invisible(TRUE)
 }
 
 update_rextendr_version <- function(path, cur_version = NULL) {
@@ -27,9 +28,29 @@ update_rextendr_version <- function(path, cur_version = NULL) {
       "You have {.str {cur}} but you need {.str {prev}}"
     ))
   } else if (!identical(cur, prev)) {
-    cli::cli_alert_info("Setting {.var Config/rextendr/version} to {.str {cur}}")
-    desc::desc_set(`Config/rextendr/version` = cur, file = path)
+    update_description("Config/rextendr/version", cur)
   }
+}
+
+update_sys_reqs <- function(path) {
+  cur <- "Cargo (rustc package manager)"
+  prev <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
+
+  if (is.na(prev)) {
+    update_description("SystemRequirements", cur)
+  } else if (!identical(cur, prev)) {
+    cli::cli_ul(
+      c(
+        "The SystemRequirements field in the {.file DESCRIPTION} file is already set.",
+        "Please update it manually if needed."
+      )
+    )
+  }
+}
+
+update_description <- function(field, value) {
+  cli::cli_alert_info("Setting {.var {field}} to {.str {value}} in the {.file DESCRIPTION} file.")
+  desc::desc_set(field, value)
 }
 
 rextendr_version <- function(path = ".") {

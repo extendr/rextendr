@@ -8,7 +8,9 @@ test_that("use_extendr() sets up extendr files correctly", {
 
   # DESCRITION file
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
+  sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
   expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
+  expect_equal(sysreq_in_desc, "Cargo (rustc package manager)")
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -154,4 +156,22 @@ test_that("R/ folder is created when not present", {
 
   # expect no error
   expect_rextendr_error(use_extendr(), regexp = NA)
+})
+
+test_that("Message if the SystemRequirements field is already set.", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  sys_req <- "testreq"
+
+  desc::desc_set("SystemRequirements", sys_req)
+
+  withr::local_options(usethis.quiet = FALSE)
+  expect_message(
+    created <- use_extendr(),
+    "Please update it manually if needed"
+  )
+
+  expect_true(created)
+  expect_equal(desc::desc_get("SystemRequirements")[[1]], sys_req)
 })
