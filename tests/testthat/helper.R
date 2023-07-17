@@ -94,3 +94,11 @@ skip_if_cargo_bin <- function(args = "--help") {
     }
   )
 }
+
+#' Helper function for skipping tests when the test possibly fails because of
+#' the path length limit. This only happens on R (<= 4.2) on Windows.
+skip_on_R42_win <- function() {
+  if (.Platform$OS.type == "windows" && getRversion() < "4.3") {
+    testthat::skip("Long path is not supported by this version of Rtools.")
+  }
+}

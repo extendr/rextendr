@@ -3,6 +3,7 @@ test_that("rextendr::clean() removes cargo target directory & binaries", {
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_bin()
+  skip_on_R42_win()
 
   path <- local_package("testpkg")
   use_extendr()
