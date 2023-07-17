@@ -1,6 +1,10 @@
 test_that("Feature 'ndarray' is enabled when no extra dependencies are specified", {
   skip_if_cargo_bin()
 
+  if (.Platform$OS.type == "windows" && getRversion() < '4.3') {
+    skip("Long path is not supported by this version of Rtools.")
+  }
+
   input <- file.path("../data/ndarray_example.rs")
   rust_source(
     file = input,
@@ -16,6 +20,10 @@ test_that("Feature 'ndarray' is enabled when no extra dependencies are specified
 
 test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled", {
   skip_if_cargo_bin()
+
+  if (.Platform$OS.type == "windows" && getRversion() < '4.3') {
+    skip("Long path is not supported by this version of Rtools.")
+  }
 
   input <- file.path("../data/ndarray_example.rs")
   rust_source(
