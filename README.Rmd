@@ -40,7 +40,7 @@ remotes::install_cran("rextendr")
 
 You can also install `{rextendr}` from [r-universe](https://extendr.r-universe.dev/rextendr):
 
-```{r, results = "hide"}
+```{r, results = "hide", eval = FALSE}
 install.packages('rextendr', repos = c('https://extendr.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
@@ -50,7 +50,9 @@ Latest development version can be installed from GitHub:
 remotes::install_github("extendr/rextendr")
 ```
 
-To execute Rust code, you will also need to set up a working Rust toolchain. See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
+To execute Rust code, you will also need to set up a working Rust toolchain. Verify your rust installation using `rust_sitrep()`. Note that Windows users will need to include the following target `rustup target add x86_64-pc-windows-gnu`.
+
+For more details, see the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
 
 ## Usage
 

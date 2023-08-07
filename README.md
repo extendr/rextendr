@@ -44,7 +44,11 @@ remotes::install_github("extendr/rextendr")
 ```
 
 To execute Rust code, you will also need to set up a working Rust
-toolchain. See the [installation instructions for
+toolchain. Verify your rust installation using `rust_sitrep()`. Note
+that Windows users will need to include the following target
+`rustup target add x86_64-pc-windows-gnu`.
+
+For more details, see the [installation instructions for
 libR-sys](https://github.com/extendr/libR-sys) for help. If you can
 successfully build libR-sys you’re good.
 
@@ -54,6 +58,7 @@ Basic use example:
 
 ``` r
 library(rextendr)
+#> Warning: package 'rextendr' was built under R version 4.3.1
 
 # create a Rust function
 rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
