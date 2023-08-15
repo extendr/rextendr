@@ -89,24 +89,26 @@ test_that("Find relative path providing NA as input for the package directory, r
   )
 })
 
-test_that("Find relative path providing empty character vector as
-  input for the package directory, return absolute path", {
-  skip_if_not_installed("usethis")
+test_that(
+  "Find relative path providing empty character vector as input for the package directory, return absolute path",
+  {
+    skip_if_not_installed("usethis")
 
-  pkg_root <- local_package("testpkg")
-  use_extendr()
+    pkg_root <- local_package("testpkg")
+    use_extendr()
 
-  expect_equal(
-    pretty_rel_path(
-      file.path(pkg_root, "R", "extendr-wrappers.R"),
-      character(0)
-    ),
-    normalizePath(
-      file.path(pkg_root, "R", "extendr-wrappers.R"),
-      winslash = "/"
+    expect_equal(
+      pretty_rel_path(
+        file.path(pkg_root, "R", "extendr-wrappers.R"),
+        character(0)
+      ),
+      normalizePath(
+        file.path(pkg_root, "R", "extendr-wrappers.R"),
+        winslash = "/"
+      )
     )
-  )
-})
+  }
+)
 
 test_that("Test path to non-existent file", {
   skip_if_not_installed("usethis")
