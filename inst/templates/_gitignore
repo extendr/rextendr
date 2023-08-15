@@ -3,3 +3,5 @@
 *.dll
 target
 .cargo
+src/rust/vendor
+src/rust/vendor.tar.xz
