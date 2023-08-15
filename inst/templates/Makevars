@@ -15,6 +15,7 @@ $(STATLIB):
 	# therefore is only used if cargo is absent from the user's PATH.
 	if [ "$(NOT_CRAN)" != "true" ]; then \
 		export CARGO_HOME=$(CARGOTMP); \
+		export CARGO_BUILD_JOBS=2; \
 	fi && \
 		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
 		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)

@@ -60,6 +60,7 @@
       	# therefore is only used if cargo is absent from the user's PATH.
       	if [ "$(NOT_CRAN)" != "true" ]; then \
       		export CARGO_HOME=$(CARGOTMP); \
+      		export CARGO_BUILD_JOBS=2; \
       	fi && \
       		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
@@ -105,6 +106,7 @@
       	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
       	if [ "$(NOT_CRAN)" != "true" ]; then \
       		export CARGO_HOME=$(CARGOTMP); \
+      		export CARGO_BUILD_JOBS=2; \
       	fi && \
       		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
       		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
@@ -272,6 +274,7 @@
       	# therefore is only used if cargo is absent from the user's PATH.
       	if [ "$(NOT_CRAN)" != "true" ]; then \
       		export CARGO_HOME=$(CARGOTMP); \
+      		export CARGO_BUILD_JOBS=2; \
       	fi && \
       		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
