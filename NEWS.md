@@ -1,7 +1,7 @@
 # rextendr (development version)
 
 * `use_extendr()` and `document()` now set the `SystemRequirements` field of the `DESCRIPTION` file to
-  `Cargo (rustc package manager)` if the field is empty (#298).
+  `Cargo (Rust's package manager), rustc` if the field is empty (#298, #310).
 * `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
 * `use_extendr()` sets `publish = false` in the `[package]` section of the `Cargo.toml` (#297).
 
