@@ -7,6 +7,8 @@
       i Setting `Config/rextendr/version` to "0.3.1.9000" in the 'DESCRIPTION' file.
       i Setting `SystemRequirements` to "Cargo (rustc package manager)" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
@@ -203,6 +205,8 @@
     Code
       use_extendr()
     Message
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       > File 'src/entrypoint.c' already exists. Skip writing the file.
       > File 'src/Makevars' already exists. Skip writing the file.
       > File 'src/Makevars.win' already exists. Skip writing the file.
@@ -220,6 +224,8 @@
     Code
       use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE)
     Message
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'

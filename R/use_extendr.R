@@ -69,6 +69,22 @@ use_extendr <- function(path = ".",
   }
 
   use_rextendr_template(
+    "configure",
+    save_as = file.path("configure"),
+    quiet = quiet,
+    as_executable = TRUE,
+    overwrite = overwrite
+  )
+
+  use_rextendr_template(
+    "configure.win",
+    save_as = file.path("configure.win"),
+    quiet = quiet,
+    as_executable = TRUE,
+    overwrite = overwrite
+  )
+
+  use_rextendr_template(
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
     quiet = quiet,
@@ -211,6 +227,7 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #'
 #' @inheritParams usethis::use_template
 #' @inheritParams use_extendr
+#' @param as_executable Logical scalar indicating whether the file should be executable.
 #' @param overwrite Logical scalar or `NULL` indicating whether the file in the `path` should be overwritten.
 #' If `FALSE` and the file already exists, the function will do nothing.
 #' If `NULL` and the `usethis` package is installed, the function will ask the user whether the file should
@@ -221,6 +238,7 @@ use_rextendr_template <- function(template,
                                   save_as = template,
                                   data = list(),
                                   quiet = FALSE,
+                                  as_executable = FALSE,
                                   overwrite = NULL) {
   local_quiet_cli(quiet)
 
@@ -264,6 +282,10 @@ use_rextendr_template <- function(template,
     quiet = quiet,
     overwrite = overwrite
   )
+
+  if (isTRUE(as_executable)) {
+    Sys.chmod(save_as, mode = "755")
+  }
 
   invisible(TRUE)
 }

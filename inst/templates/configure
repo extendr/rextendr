@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+export PATH="$PATH:$HOME/.cargo/bin"
+
+if [ ! "$(command -v cargo)" ]; then
+    echo "----------------------- [RUST NOT FOUND]---------------------------"
+    echo "The 'cargo' command was not found on the PATH. Please install rustc"
+    echo "from: https://www.rust-lang.org/tools/install"
+    echo ""
+    echo "Alternatively, you may install cargo from your OS package manager:"
+    echo " - Debian/Ubuntu: apt-get install cargo"
+    echo " - Fedora/CentOS: dnf install cargo"
+    echo " - macOS: brew install rustc"
+    echo "-------------------------------------------------------------------"
+    echo ""
+    exit 1
+fi
+
+exit 0
