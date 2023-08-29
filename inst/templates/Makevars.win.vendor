@@ -12,6 +12,9 @@ $(SHLIB): $(STATLIB)
 CRAN_FLAGS=-j 2 --offline
 CARGOTMP = $(CURDIR)/.cargo
 
+CARGO_VERSION = $(shell cargo --version)
+RUSTC_VERSION = $(shell rustc --version)
+
 $(STATLIB):
 	mkdir -p $(TARGET_DIR)/libgcc_mock
 	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
@@ -26,6 +29,7 @@ $(STATLIB):
 	if [ "$(NOT_CRAN)" != "true" ]; then \
 		export CARGO_HOME=$(CARGOTMP); \
 	fi && \
+	  echo `cargo --version` && echo `rustc --version`
 		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
 		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
 		cargo build $(CRAN_FLAGS) --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
