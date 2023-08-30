@@ -1,25 +1,77 @@
 #' @export
 #' @rdname use_cargo_vendor
-vendor_pkgs <- function(path = ".", quiet = FALSE) {
+vendor_pkgs <- function(path = ".",
+                        quiet = FALSE) {
   local_quiet_cli(quiet)
   # get path to rust folder
   src_dir <- rprojroot::find_package_root_file(path, "src/rust")
+  vendor_path <- file.path(src_dir, "vendor")
 
-  # run the script
-  res <- withr::with_dir(
-    src_dir,
-    processx::run(
-      "./vendor-update.sh",
-      echo = FALSE,
+  # vendor crates
+  withr::with_dir(src_dir, {
+    vendor_res <- processx::run(
+      "cargo",
+      c(
+        "vendor",
+        "--locked",
+        "--manifest-path",
+        file.path(src_dir, "Cargo.toml")
+      ),
       stderr_line_callback = function(x, proc) {
         if (!grepl("To use vendored sources", x) && x != "") {
           cli::cat_bullet(stringi::stri_trim_left(x))
         }
       }
     )
+  })
+
+  # check to see if the config.toml is different than the template
+  # if so update it
+  config_toml <- stringi::stri_split(vendor_res$stdout, coll = "\n")[[1]]
+  # remove trailing empty string char
+  config_toml <- config_toml[1:(length(config_toml) - 1)]
+
+  # get the text of the current vendor-config.toml
+  cur_config <- readLines(file.path(src_dir, "vendor-config.toml"))
+
+  # check if they are identical
+  configs_match <- identical(
+    config_toml,
+    cur_config
   )
 
-  invisible(NULL)
+  # update vendor-config.toml if necessary
+  if (!configs_match) {
+    brio::write_lines(config_toml, file.path(src_dir, "vendor-config.toml"))
+    cli::cli_alert_info("Updating {.file src/rust/vendor-config.toml}")
+  }
+
+  # compress the vendor.tar.xz
+  compress_res <- withr::with_dir(src_dir, {
+    processx::run(
+      "tar", c(
+        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor")
+      )
+  })
+
+  if (compress_res[["status"]] != 0 || vendor_res[["status"]] != 0) {
+    cli::cli_abort(
+      "{.code cargo vendor} failed.",
+      class = "rextendr_error"
+    )
+  }
+
+  # create a dataframe of vendored crates
+  vendored <- stringi::stri_split(vendor_res[["stderr"]], coll = "\n")[[1]]
+  trimmed <- stringi::stri_trim_left(vendored)
+  to_remove <- grepl("To use vendored sources", trimmed) | trimmed == ""
+  rows <- stringi::stri_split_fixed(trimmed[!to_remove], pattern = " ")
+
+  res <- purrr::map_dfr(rows, function(x) {
+    data.frame(crate = x[2], version = x[3])
+  })
+
+  invisible(res)
 }
 
 
@@ -42,7 +94,11 @@ vendor_pkgs <- function(path = ".", quiet = FALSE) {
 #'
 #' @inheritParams use_extendr
 #' @export
-#' @returns `NULL`. Used purely for side effects.
+#' @returns
+#'
+#' - `vendor_pkgs()` returns a data.frame with two columns `crate` and `version`
+#' - `use_cargo_vendor()` returns `NULL` and used solely for its side effects
+#'
 #' @examples
 #'
 #' if (interactive()) {
@@ -85,18 +141,6 @@ use_cargo_vendor <- function(
     overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
-
-  vendor_update <- file.path("src", "rust", "vendor-update.sh")
-
-  use_rextendr_template(
-    "vendor-update.sh",
-    save_as = vendor_update,
-    quiet = quiet,
-    overwrite = overwrite
-  )
-
-  # make the script executable
-  Sys.chmod(vendor_update, mode = "0755")
 
   use_rextendr_template(
     "vendor-config.toml",
