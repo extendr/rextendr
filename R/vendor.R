@@ -37,7 +37,6 @@ use_cargo_vendor <- function(
     quiet = FALSE,
     overwrite = NULL,
     lib_name = NULL) {
-
   if (!interactive()) {
     overwrite <- overwrite %||% FALSE
   }
@@ -45,7 +44,11 @@ use_cargo_vendor <- function(
   # silence output
   local_quiet_cli(quiet)
 
+  # find package root
   pkg_root <- rprojroot::find_package_root_file(path)
+
+  # set the path for the duration of the function
+  withr::local_dir(pkg_root)
 
   if (is.null(lib_name)) {
     lib_name <- as_valid_rust_name(pkg_name(path))
@@ -79,7 +82,7 @@ use_cargo_vendor <- function(
     overwrite = overwrite
   )
 
-  # handle if uusethis is not installed
+  # handle if usethis is not installed
   if (!rlang::is_installed("usethis")) {
     cli::cli_inform(
       c(
@@ -108,9 +111,9 @@ use_cargo_vendor <- function(
 vendor_pkgs <- function(path = ".",
                         quiet = FALSE) {
   local_quiet_cli(quiet)
+
   # get path to rust folder
   src_dir <- rprojroot::find_package_root_file(path, "src/rust")
-  vendor_path <- file.path(src_dir, "vendor")
 
   # vendor crates
   withr::with_dir(src_dir, {

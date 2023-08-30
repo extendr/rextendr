@@ -34,7 +34,7 @@ You can also install `{rextendr}` from
 [r-universe](https://extendr.r-universe.dev/rextendr):
 
 ``` r
-install.packages('rextendr', repos = c('https://extendr.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages("rextendr", repos = c("https://extendr.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Latest development version can be installed from GitHub:
@@ -54,6 +54,7 @@ Basic use example:
 
 ``` r
 library(rextendr)
+#> Warning: package 'rextendr' was built under R version 4.3.1
 
 # create a Rust function
 rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
@@ -77,8 +78,8 @@ rust_function(
           Either::Right(x) => Either::Right(x.iter().sum()),
       }
   }",
-  use_dev_extendr = TRUE,                        # Use development version of extendr from GitHub
-  features = "either",                           # Enable support for Either crate
+  use_dev_extendr = TRUE, # Use development version of extendr from GitHub
+  features = "either", # Enable support for Either crate
   extendr_fn_options = list(use_try_from = TRUE) # Enable advanced type conversion
 )
 
@@ -129,6 +130,35 @@ z
 #> Hello from Rust!
 #> [1] 35
 ```
+
+## Being CRAN Compliant
+
+Incorporating R and Rust together in a single package is a new and
+developing process. In July, 2023, CRAN published their policy on [Using
+Rust in CRAN
+Packages](https://cran.r-project.org/web/packages/using_rust.html).
+`rextendr` provides functionality to adhere to these requirements. The
+requirements are that:
+
+- R packages ship their Rust dependencies (known as vendoring),
+- should always print the version of the Rust compiler and package
+  manager (`rustc` and `cargo` respectively),
+- Rust crates should be compiled using no more than 2 threads,
+- and installed without downloading anything whatsoever.
+
+To this end, `rextendr` provides the functions `use_cargo_vendor()` and
+`vendor_pkgs()` to adhere to the guidance. In addition to using
+`use_extendr()` to instantiate an extendr package, `use_cargo_vendor()`
+will create the required scaffolding to ensure that Rust dependencies
+are appropriately vendored.
+
+Once the package has been configured to vendor its libraries, use
+`vendor_pkgs()` to create compressed file called `vendor.tar.xz` that
+will be used to extract and build your package’s dependencies.
+
+Each time you update your package’s dependencies or are planning on
+publishing to R-universe or CRAN, you should update your packages using
+`vendor_pkgs()`.
 
 ## See also
 

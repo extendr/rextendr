@@ -41,7 +41,7 @@ remotes::install_cran("rextendr")
 You can also install `{rextendr}` from [r-universe](https://extendr.r-universe.dev/rextendr):
 
 ```{r, results = "hide"}
-install.packages('rextendr', repos = c('https://extendr.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages("rextendr", repos = c("https://extendr.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Latest development version can be installed from GitHub:
@@ -80,8 +80,8 @@ rust_function(
           Either::Right(x) => Either::Right(x.iter().sum()),
       }
   }",
-  use_dev_extendr = TRUE,                        # Use development version of extendr from GitHub
-  features = "either",                           # Enable support for Either crate
+  use_dev_extendr = TRUE, # Use development version of extendr from GitHub
+  features = "either", # Enable support for Either crate
   extendr_fn_options = list(use_try_from = TRUE) # Enable advanced type conversion
 )
 
@@ -96,11 +96,11 @@ tibble::tibble(
   SumRaw = purrr::flatten_dbl(Sum),
   ResultType = purrr::map_chr(Sum, typeof)
 )
-
 ```
 
 The package also enables a new chunk type for knitr, `extendr`, which compiles and evaluates Rust code. For example, a code chunk such as this one:
-````markdown
+
+```` markdown
 `r ''````{extendr}
 rprintln!("Hello from Rust!");
 
@@ -111,7 +111,9 @@ let z = x*y;
 z
 ```
 ````
+
 would create the following output in the knitted document:
+
 ```{extendr}
 rprintln!("Hello from Rust!");
 
@@ -121,6 +123,29 @@ let z = x*y;
 
 z
 ```
+
+## Being CRAN Compliant 
+
+Incorporating R and Rust together in a single package is a new and developing process. 
+In July, 2023, CRAN published their policy on [Using Rust in CRAN Packages](https://cran.r-project.org/web/packages/using_rust.html). `rextendr` provides
+functionality to adhere to these requirements. The requirements are that: 
+
+- R packages ship their Rust dependencies (known as vendoring),
+- should always print the version of the Rust compiler and package manager (`rustc` and `cargo` respectively),
+- Rust crates should be compiled using no more than 2 threads, 
+- and installed without downloading anything whatsoever. 
+
+To this end, `rextendr` provides the functions `use_cargo_vendor()` and `vendor_pkgs()`
+to adhere to the guidance. In addition to using `use_extendr()` to instantiate 
+an extendr package, `use_cargo_vendor()` will create the required scaffolding to
+ensure that Rust dependencies are appropriately vendored.
+
+Once the package has been configured to vendor its libraries, use `vendor_pkgs()`
+to create compressed file called `vendor.tar.xz` that will be used to extract 
+and build your package's dependencies. 
+
+Each time you update your package's dependencies or are planning on publishing to
+R-universe or CRAN, you should update your packages using `vendor_pkgs()`.
 
 ## See also
 
