@@ -51,7 +51,7 @@ If you have modified your dependencies, you will need need to repackage
 \examples{
 
 if (interactive()) {
- use_cargo_vendor()
- vendor_pkgs()
+  use_cargo_vendor()
+  vendor_pkgs()
 }
 }
