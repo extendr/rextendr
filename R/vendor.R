@@ -29,15 +29,18 @@
 #' @examples
 #'
 #' if (interactive()) {
-#'  use_cargo_vendor()
-#'  vendor_pkgs()
+#'   use_cargo_vendor()
+#'   vendor_pkgs()
 #' }
 use_cargo_vendor <- function(
     path = ".",
     quiet = FALSE,
-    overwrite = FALSE,
-    lib_name = NULL
-) {
+    overwrite = NULL,
+    lib_name = NULL) {
+
+  if (!interactive()) {
+    overwrite <- overwrite %||% FALSE
+  }
 
   # silence output
   local_quiet_cli(quiet)
@@ -47,10 +50,10 @@ use_cargo_vendor <- function(
   if (is.null(lib_name)) {
     lib_name <- as_valid_rust_name(pkg_name(path))
   } else if (length(lib_name) > 1) {
-    cli::ci_abort(
+    cli::cli_abort(
       "{.arg lib_name} must be a character scalar",
       class = "rextendr_error"
-      )
+    )
   }
 
   use_rextendr_template(
@@ -83,7 +86,7 @@ use_cargo_vendor <- function(
         "!" = "Add {.code ^src/rust/vendor$} to your {.file .Rbuildignore}",
         "!" = "Add {.code ^src/rust/vendor$} to your {.file .gitignore}",
         "i" = "Install {.pkg usethis} to have this done automatically."
-        )
+      )
     )
   } else {
     # vendor will be big when expanded and should be ignored
@@ -152,7 +155,8 @@ vendor_pkgs <- function(path = ".",
   compress_res <- withr::with_dir(src_dir, {
     processx::run(
       "tar", c(
-        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor")
+        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor"
+      )
     )
   })
 
