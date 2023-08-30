@@ -5,7 +5,7 @@
 \alias{vendor_pkgs}
 \title{Vendor Cargo Dependencies}
 \usage{
-use_cargo_vendor(path = ".", quiet = FALSE, overwrite = FALSE, lib_name = NULL)
+use_cargo_vendor(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL)
 
 vendor_pkgs(path = ".", quiet = FALSE)
 }
