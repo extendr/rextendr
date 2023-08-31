@@ -155,8 +155,12 @@ vendor_pkgs <- function(path = ".",
   }
 
   # compress the vendor.tar.xz
-  compress_res <- withr::with_dir(file.path(src_dir, "vendor"), {
-    tar("../vendor.tar.xz", compression = "xz", compression_level = 9)
+  compress_res <- withr::with_dir(src_dir, {
+    processx::run(
+      "tar", c(
+        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor"
+      )
+    )
   })
 
   if (compress_res[["status"]] != 0 || vendor_res[["status"]] != 0) {
