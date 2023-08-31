@@ -20,6 +20,7 @@ reference:
   - register_extendr
   - write_license_note
   - clean
+  - use_cargo_vendor
 
 - title: Various utility functions
   contents:
