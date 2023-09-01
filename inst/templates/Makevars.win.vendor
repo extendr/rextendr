@@ -13,31 +13,39 @@ CRAN_FLAGS=-j 2 --offline
 CARGOTMP = $(CURDIR)/.cargo
 
 $(STATLIB):
+	# uncompress vendored deps
+	if [ -f ./rust/vendor.tar.xz ]; then \
+		tar xf rust/vendor.tar.xz && \
+		mkdir -p $(CARGOTMP) && \
+		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+	fi
+
+	# print cargo and rust versions
+	echo `cargo --version` && echo `rustc --version`
+
 	mkdir -p $(TARGET_DIR)/libgcc_mock
 	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
 	# `libgcc_eh` due to the compilation settings. So, in order to please the
 	# compiler, we need to add empty `libgcc_eh` to the library search paths.
-	#
 	# For more details, please refer to
 	# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
 	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
+
 	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
 	if [ "$(NOT_CRAN)" != "true" ]; then \
 		export CARGO_HOME=$(CARGOTMP); \
+		export CARGO_BUILD_JOBS=2; \
 	fi && \
-	  echo `cargo --version` && echo `rustc --version`
-	  tar xf rust/vendor.tar.xz && mkdir -p $(CARGOTMP) && cp rust/vendor-config.toml $(CARGOTMP)/config.toml
 		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
 		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-		cargo build $(CRAN_FLAGS) --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 	if [ "$(NOT_CRAN)" != "true" ]; then \
-		rm -Rf $(CARGOTMP) && \
-		rm -Rf $(LIBDIR)/build; \
+		rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(LIBDIR)/build; \
 	fi
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) ./rust/vendor $(CARGO_HOME)
