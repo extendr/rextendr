@@ -50,6 +50,19 @@ successfully build libR-sys you’re good.
 
 ## Usage
 
+The status of Rust toolchain and available targets can be checked with
+`rust_sitrep()`:
+
+``` r
+rust_sitrep()
+# Rust infrastructure sitrep:
+# ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)
+# ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)
+# ℹ host: x86_64-pc-windows-msvc
+# ℹ toolchain: stable-x86_64-pc-windows-msvc (default)
+# ℹ target: x86_64-pc-windows-gnu
+```
+
 Basic use example:
 
 ``` r
