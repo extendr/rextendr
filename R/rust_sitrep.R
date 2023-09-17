@@ -100,8 +100,22 @@ rustup_toolchain_target <- function() {
   # i686-pc-windows-gnu
   # x86_64-pc-windows-gnu
   # x86_64-pc-windows-msvc
-  targets <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
-    stringi::stri_trim_both()
+  targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
+    stringi::stri_trim_both() %>%
+    highlight_target(host)
 
-  list(host = host, toolchain = toolchain, targets = targets)
+  list(host = host, toolchain = toolchain) %>% append(targets_info)
+}
+
+highlight_target <- function(targets, host) {
+  if (.Platform$OS.type == "windows") {
+    expected_target <- stringi::stri_replace_first_regex(host, pattern = "-[a-z]+$", replacement = "-gnu")
+  } else {
+    expected_target <- host
+  }
+
+  target_index <- stringi::stri_cmp_eq(targets, expected_target)
+  targets[target_index] <- cli::col_green(targets[target_index])
+
+  list(targets = targets, has_target = any(target_index))
 }
