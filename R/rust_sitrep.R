@@ -32,6 +32,14 @@ rust_sitrep <- function() {
       "i" = "toolchain: {rustup_status$toolchain}",
       "i" = "target{?s}: {rustup_status$targets}"
     )
+
+    if (!is.null(rustup_status$missing_target)) {
+      msgs <- c(
+        msgs,
+        "!" = "Target {.strong {rustup_status$missing_target}} is required on this host machine",
+        "i" = "Run {.code rustup target add {rustup_status$missing_target}} to install it"
+      )
+    }
   } else {
     msgs <- c(
       msgs,
@@ -102,20 +110,30 @@ rustup_toolchain_target <- function() {
   # x86_64-pc-windows-msvc
   targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
     stringi::stri_trim_both() %>%
-    highlight_target(host)
+    verify_targets(host)
 
   list(host = host, toolchain = toolchain) %>% append(targets_info)
 }
 
-highlight_target <- function(targets, host) {
-  if (.Platform$OS.type == "windows") {
-    expected_target <- stringi::stri_replace_first_regex(host, pattern = "-[a-z]+$", replacement = "-gnu")
-  } else {
-    expected_target <- host
-  }
+verify_targets <- function(targets, host) {
+  expected_target <- get_required_target(host)
 
   target_index <- stringi::stri_cmp_eq(targets, expected_target)
   targets[target_index] <- cli::col_green(targets[target_index])
 
-  list(targets = targets, has_target = any(target_index))
+  if (any(target_index)) {
+    missing_target <- NULL
+  } else {
+    missing_target <- expected_target
+  }
+
+  list(targets = targets, missing_target = missing_target)
+}
+
+get_required_target <- function(host) {
+  if (.Platform$OS.type == "windows") {
+    stringi::stri_replace_first_regex(host, pattern = "-[a-z]+$", replacement = "-gnu")
+  } else {
+    host
+  }
 }
