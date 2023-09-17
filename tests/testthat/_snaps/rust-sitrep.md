@@ -32,7 +32,7 @@
       v "rustup": 1.0.0 (0000000 0000-00-00)
       x "cargo": not found
       i host: arch-pc-os-tool
-      i toolchain: stable-arch-pc-os-tool
+      i toolchain: stable-arch-pc-os-tool (default)
       i target: arch-pc-os-tool
       x "cargo" is required to build rextendr-powered packages
       i It is recommended to use "rustup" to manage "cargo" and "rustc"
@@ -47,6 +47,6 @@
       v "rustup": 1.0.0 (0000000 0000-00-00)
       v "cargo": 1.0.0 (0000000 0000-00-00)
       i host: arch-pc-os-tool
-      i toolchain: stable-arch-pc-os-tool
+      i toolchain: stable-arch-pc-os-tool (default)
       i target: arch-pc-os-tool
 

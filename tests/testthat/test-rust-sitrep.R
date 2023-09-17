@@ -17,6 +17,8 @@ test_that("`cargo` is found, `rustup` is missing", {
 })
 
 test_that("`rustup` is found, `cargo` is missing", {
+  local_mocked_bindings(get_required_target = function(host) "arch-pc-os-tool")
+
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
     if (cmd == "cargo") {
       NA_character_
@@ -24,7 +26,7 @@ test_that("`rustup` is found, `cargo` is missing", {
       "rustup 1.0.0 (0000000 0000-00-00)"
     } else if (all(args %in% "show")) {
       "Default host: arch-pc-os-tool"
-    } else if (all(args %in% c("show", "active-toolchain"))) {
+    } else if (all(args %in% c("toolchain", "list"))) {
       "stable-arch-pc-os-tool (default)"
     } else if (all(args %in% c("target", "list", "--installed"))) {
       "arch-pc-os-tool"
@@ -36,6 +38,8 @@ test_that("`rustup` is found, `cargo` is missing", {
 })
 
 test_that("`cargo` and`rustup` are found", {
+  local_mocked_bindings(get_required_target = function(host) "arch-pc-os-tool")
+
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
     if (cmd == "cargo") {
       "cargo 1.0.0 (0000000 0000-00-00)"
@@ -43,7 +47,7 @@ test_that("`cargo` and`rustup` are found", {
       "rustup 1.0.0 (0000000 0000-00-00)"
     } else if (all(args %in% "show")) {
       "Default host: arch-pc-os-tool"
-    } else if (all(args %in% c("show", "active-toolchain"))) {
+    } else if (all(args %in% c("toolchain", "list"))) {
       "stable-arch-pc-os-tool (default)"
     } else if (all(args %in% c("target", "list", "--installed"))) {
       "arch-pc-os-tool"
