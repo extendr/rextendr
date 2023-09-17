@@ -50,3 +50,58 @@
       i toolchain: stable-arch-pc-os-tool (default)
       i target: arch-pc-os-tool
 
+# No toolchains found
+
+    Code
+      rust_sitrep()
+    Message
+      Rust infrastructure sitrep:
+      v "rustup": 1.0.0 (0000000 0000-00-00)
+      v "cargo": 1.0.0 (0000000 0000-00-00)
+      i host: arch-pc-os-tool
+      i toolchains:
+      ! Toolchain stable-arch-pc-os-tool is required to be installed and set as default
+      i Run `rustup toolchain install stable-arch-pc-os-tool` to install it
+      i Run `rustup default stable-arch-pc-os-tool` to make it default
+
+# Wrong toolchain found
+
+    Code
+      rust_sitrep()
+    Message
+      Rust infrastructure sitrep:
+      v "rustup": 1.0.0 (0000000 0000-00-00)
+      v "cargo": 1.0.0 (0000000 0000-00-00)
+      i host: arch-pc-os-tool
+      i toolchain: not-a-valid-toolchain
+      ! Toolchain stable-arch-pc-os-tool is required to be installed and set as default
+      i Run `rustup toolchain install stable-arch-pc-os-tool` to install it
+      i Run `rustup default stable-arch-pc-os-tool` to make it default
+
+# Wrong toolchain is set as default
+
+    Code
+      rust_sitrep()
+    Message
+      Rust infrastructure sitrep:
+      v "rustup": 1.0.0 (0000000 0000-00-00)
+      v "cargo": 1.0.0 (0000000 0000-00-00)
+      i host: arch-pc-os-tool
+      i toolchains: not-a-valid-toolchain (default) and stable-arch-pc-os-tool
+      ! This toolchain should be default: stable-arch-pc-os-tool
+      i Run e.g. `rustup default stable-arch-pc-os-tool`
+
+# Required target is not available
+
+    Code
+      rust_sitrep()
+    Message
+      Rust infrastructure sitrep:
+      v "rustup": 1.0.0 (0000000 0000-00-00)
+      v "cargo": 1.0.0 (0000000 0000-00-00)
+      i host: arch-pc-os-tool
+      i toolchains: not-a-valid-toolchain and stable-arch-pc-os-tool (default)
+      i targets: wrong-target-1 and wrong-target-2
+      ! Target required-target is required on this host machine
+      i Run `rustup target add required-target` to install it
+
