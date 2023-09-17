@@ -139,6 +139,27 @@ rustup_toolchain_target <- function() {
     append(toolchain_info)
 }
 
+#' Verify that the required toolchain is available.
+#'
+#' If a toolchain with architecture matching host's is default, color it green.
+#' If a default toolchain does not match host's architecture, color it red.
+#' Color yellow all toolchains that match hots's architecutre and return then as \code{$candidate_toolchains}.
+#' If not matching toolchain is found, determine the best candidate using host's architecture
+#' and return it as \code{$missing_toolchain}.#'
+#' @param toolchains A character vector of toolchains
+#' @param host Host architecture identifier
+#' @return A list with the following elements:
+#' \itemize{
+#'  \item \code{toolchains}: A character vector of toolchains, colored
+#'    \itemize{
+#'      \item green if matching and default,
+#'      \item yellow if candidate,
+#'      \item red if matching and not default,
+#'    }
+#'  \item \code{missing_toolchain}: An identifier of the toolchain that should be available on the system,
+#'  \item \code{candidate_toolchains}: A character vector of toolchains that are candidates to be default.
+#' }
+#' @noRd
 verify_toolchains <- function(toolchains, host) {
   if (rlang::is_empty(toolchains)) {
     return(list(toolchains = toolchains, missing_toolchain = glue("stable-{host}")))
@@ -162,6 +183,19 @@ verify_toolchains <- function(toolchains, host) {
   list(toolchains = toolchains, missing_toolchain = missing_toolchain, candidate_toolchains = candidate_toolchains)
 }
 
+#' Search for targets that are matching the host.
+#'
+#' On machines other than Windows, the target should match the host exactly.
+#' On Windows, the target is GNU.
+#' If a matching target is found, color it green.
+#' @param targets A character vector of targets
+#' @param host Host architecture identifier
+#' @return A list with the following elements:
+#' \itemize{
+#'  \item \code{targets}: A character vector of targets with matching target colored green,
+#'  \item \code{missing_target}: An identifier of the target that should be available on the system.
+#' }
+#' @noRd
 verify_targets <- function(targets, host) {
   expected_target <- get_required_target(host)
 
@@ -174,9 +208,13 @@ verify_targets <- function(targets, host) {
     missing_target <- expected_target
   }
 
-  list(targets = targets, missing_target = missing_target, expected_target)
+  list(targets = targets, missing_target = missing_target)
 }
 
+#' Return the expected target identifier given host identifier.
+#' @param host Host architecture identifier
+#' @return Required target identifier
+#' @noRd
 get_required_target <- function(host) {
   if (.Platform[["OS.type"]] == "windows") {
     stringi::stri_replace_first_regex(host, pattern = "-[a-z]+$", replacement = "-gnu")
