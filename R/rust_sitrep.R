@@ -29,16 +29,33 @@ rust_sitrep <- function() {
     msgs <- c(
       msgs,
       "i" = "host: {rustup_status$host}",
-      "i" = "toolchain: {rustup_status$toolchain}",
-      "i" = "target{?s}: {rustup_status$targets}"
+      "i" = "toolchain{?s}: {rustup_status$toolchains}"
     )
 
-    if (!is.null(rustup_status$missing_target)) {
+    if (!is.null(rustup_status$candidate_toolchains)) {
       msgs <- c(
         msgs,
-        "!" = "Target {.strong {rustup_status$missing_target}} is required on this host machine",
-        "i" = "Run {.code rustup target add {rustup_status$missing_target}} to install it"
+        "!" = "One of these toolchain{?s} should be default: {.strong {rustup_status$candidate_toolchains}}",
+        "i" = "Run e.g. {.code rustup default {rustup_status$candidate_toolchains[1]}}"
       )
+    } else if (!is.null(rustup_status$missing_toolchain)) {
+      msgs <- c(
+        msgs,
+        "!" = "Toolchain {.strong {rustup_status$missing_toolchain}} is required to be default",
+        "i" = "Run {.code rustup toolchain install {rustup_status$missing_toolchain}} to install it",
+        "i" = "Run {.code rustup default  {rustup_status$missing_toolchain}} to make it default"
+      )
+    } else {
+      msgs <- c(msgs,
+        "i" = "target{?s}: {rustup_status$targets}"
+      )
+      if (!is.null(rustup_status$missing_target)) {
+        msgs <- c(
+          msgs,
+          "!" = "Target {.strong {rustup_status$missing_target}} is required on this host machine",
+          "i" = "Run {.code rustup target add {rustup_status$missing_target}} to install it"
+        )
+      }
     }
   } else {
     msgs <- c(
@@ -98,11 +115,12 @@ rustup_toolchain_target <- function() {
     stringi::stri_sub(from = 15L) %>%
     vctrs::vec_slice(1L)
 
-  # > rustup show active-toolchain
-  # stable-x86_64-pc-windows-msvc (default)
-  toolchain <- try_exec_cmd("rustup", c("show", "active-toolchain")) %>%
-    stringi::stri_replace_last_fixed("(default)", "") %>%
-    stringi::stri_trim_both()
+  # > rustup toolchain list
+  # stable-x86_64-pc-windows-msvc
+  # nightly-x86_64-pc-windows-msvc (default)
+  toolchain_info <- try_exec_cmd("rustup", c("toolchain", "list")) %>%
+    stringi::stri_trim_both() %>%
+    verify_toolchains(host)
 
   # > rustup target list --installed
   # i686-pc-windows-gnu
@@ -112,7 +130,28 @@ rustup_toolchain_target <- function() {
     stringi::stri_trim_both() %>%
     verify_targets(host)
 
-  list(host = host, toolchain = toolchain) %>% append(targets_info)
+  list(host = host) %>%
+    append(targets_info) %>%
+    append(toolchain_info)
+}
+
+verify_toolchains <- function(toolchains, host) {
+  default_toolchain_index <- stringi::stri_detect_fixed(toolchains, "(default)")
+  missing_toolchain <- NULL
+  candidate_toolchains <- NULL
+  if (stringi::stri_detect_fixed(toolchains[default_toolchain_index], host)) {
+    toolchains[default_toolchain_index] <- cli::col_green(toolchains[default_toolchain_index])
+  } else {
+    toolchains[default_toolchain_index] <- cli::col_red(toolchains[default_toolchain_index])
+    candidates <- stringi::stri_detect_fixed(toolchains, host)
+    if (any(candidates)) {
+      candidate_toolchains <- toolchains[candidates]
+      toolchains[candidates] <- cli::col_yellow(toolchains[candidates])
+    }
+    missing_toolchain <- glue("stable-{host}")
+  }
+
+  list(toolchains = toolchains, missing_toolchain = missing_toolchain, candidate_toolchains = candidate_toolchains)
 }
 
 verify_targets <- function(targets, host) {
@@ -127,7 +166,7 @@ verify_targets <- function(targets, host) {
     missing_target <- expected_target
   }
 
-  list(targets = targets, missing_target = missing_target)
+  list(targets = targets, missing_target = missing_target, expected_target)
 }
 
 get_required_target <- function(host) {
