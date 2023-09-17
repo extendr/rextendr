@@ -35,13 +35,13 @@ rust_sitrep <- function() {
     if (!is.null(rustup_status$candidate_toolchains)) {
       msgs <- c(
         msgs,
-        "!" = "One of these toolchain{?s} should be default: {.strong {rustup_status$candidate_toolchains}}",
+        "!" = "{?This/One of these} toolchain{?s} should be default: {.strong {rustup_status$candidate_toolchains}}",
         "i" = "Run e.g. {.code rustup default {rustup_status$candidate_toolchains[1]}}"
       )
     } else if (!is.null(rustup_status$missing_toolchain)) {
       msgs <- c(
         msgs,
-        "!" = "Toolchain {.strong {rustup_status$missing_toolchain}} is required to be default",
+        "!" = "Toolchain {.strong {rustup_status$missing_toolchain}} is required to be installed and set as default",
         "i" = "Run {.code rustup toolchain install {rustup_status$missing_toolchain}} to install it",
         "i" = "Run {.code rustup default  {rustup_status$missing_toolchain}} to make it default"
       )
@@ -122,13 +122,17 @@ rustup_toolchain_target <- function() {
     stringi::stri_trim_both() %>%
     verify_toolchains(host)
 
-  # > rustup target list --installed
-  # i686-pc-windows-gnu
-  # x86_64-pc-windows-gnu
-  # x86_64-pc-windows-msvc
-  targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
-    stringi::stri_trim_both() %>%
-    verify_targets(host)
+  if (is.null(toolchain_info$missing_toolchain) && is.null(toolchain_info$candidate_toolchains)) {
+    # > rustup target list --installed
+    # i686-pc-windows-gnu
+    # x86_64-pc-windows-gnu
+    # x86_64-pc-windows-msvc
+    targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
+      stringi::stri_trim_both() %>%
+      verify_targets(host)
+  } else {
+    targets_info <- list()
+  }
 
   list(host = host) %>%
     append(targets_info) %>%
@@ -147,8 +151,9 @@ verify_toolchains <- function(toolchains, host) {
     if (any(candidates)) {
       candidate_toolchains <- toolchains[candidates]
       toolchains[candidates] <- cli::col_yellow(toolchains[candidates])
+    } else {
+      missing_toolchain <- glue("stable-{host}")
     }
-    missing_toolchain <- glue("stable-{host}")
   }
 
   list(toolchains = toolchains, missing_toolchain = missing_toolchain, candidate_toolchains = candidate_toolchains)
