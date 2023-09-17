@@ -1,3 +1,5 @@
+comment:
+  layout: "header, reach, files"
 coverage:
   status:
     project:
