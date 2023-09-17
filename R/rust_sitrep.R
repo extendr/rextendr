@@ -32,13 +32,13 @@ rust_sitrep <- function() {
       "i" = "toolchain{?s}: {rustup_status$toolchains}"
     )
 
-    if (!is.null(rustup_status$candidate_toolchains)) {
+    if (!is.null(rustup_status[["candidate_toolchains"]])) {
       msgs <- c(
         msgs,
         "!" = "{?This/One of these} toolchain{?s} should be default: {.strong {rustup_status$candidate_toolchains}}",
         "i" = "Run e.g. {.code rustup default {rustup_status$candidate_toolchains[1]}}"
       )
-    } else if (!is.null(rustup_status$missing_toolchain)) {
+    } else if (!is.null(rustup_status[["missing_toolchain"]])) {
       msgs <- c(
         msgs,
         "!" = "Toolchain {.strong {rustup_status$missing_toolchain}} is required to be installed and set as default",
@@ -49,7 +49,7 @@ rust_sitrep <- function() {
       msgs <- c(msgs,
         "i" = "target{?s}: {rustup_status$targets}"
       )
-      if (!is.null(rustup_status$missing_target)) {
+      if (!is.null(rustup_status[["missing_target"]])) {
         msgs <- c(
           msgs,
           "!" = "Target {.strong {rustup_status$missing_target}} is required on this host machine",
@@ -122,7 +122,7 @@ rustup_toolchain_target <- function() {
     stringi::stri_trim_both() %>%
     verify_toolchains(host)
 
-  if (is.null(toolchain_info$missing_toolchain) && is.null(toolchain_info$candidate_toolchains)) {
+  if (is.null(toolchain_info[["missing_toolchain"]]) && is.null(toolchain_info[["candidate_toolchains"]])) {
     # > rustup target list --installed
     # i686-pc-windows-gnu
     # x86_64-pc-windows-gnu
@@ -140,10 +140,14 @@ rustup_toolchain_target <- function() {
 }
 
 verify_toolchains <- function(toolchains, host) {
+  if (rlang::is_empty(toolchains)) {
+    return(list(toolchains = toolchains, missing_toolchain = glue("stable-{host}")))
+  }
+
   default_toolchain_index <- stringi::stri_detect_fixed(toolchains, "(default)")
   missing_toolchain <- NULL
   candidate_toolchains <- NULL
-  if (stringi::stri_detect_fixed(toolchains[default_toolchain_index], host)) {
+  if (isTRUE(stringi::stri_detect_fixed(toolchains[default_toolchain_index], host))) {
     toolchains[default_toolchain_index] <- cli::col_green(toolchains[default_toolchain_index])
   } else {
     toolchains[default_toolchain_index] <- cli::col_red(toolchains[default_toolchain_index])
@@ -155,7 +159,6 @@ verify_toolchains <- function(toolchains, host) {
       missing_toolchain <- glue("stable-{host}")
     }
   }
-
   list(toolchains = toolchains, missing_toolchain = missing_toolchain, candidate_toolchains = candidate_toolchains)
 }
 
@@ -175,7 +178,7 @@ verify_targets <- function(targets, host) {
 }
 
 get_required_target <- function(host) {
-  if (.Platform$OS.type == "windows") {
+  if (.Platform[["OS.type"]] == "windows") {
     stringi::stri_replace_first_regex(host, pattern = "-[a-z]+$", replacement = "-gnu")
   } else {
     host
