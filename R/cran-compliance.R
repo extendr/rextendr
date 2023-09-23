@@ -155,6 +155,13 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     })
   }
 
+  if (update_res[["status"]] != 0) {
+    cli::cli_abort(
+      "{.file Cargo.lock} could not be creates with {.code cargo generate-lockfile}",
+      class = "rextendr_error"
+    )
+  }
+
   # vendor crates
   withr::with_dir(src_dir, {
     vendor_res <- processx::run(
@@ -217,5 +224,3 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   # return packages and versions invisibly
   invisible(res)
 }
-
-
