@@ -31,9 +31,10 @@ test_that("vendor_pkgs() vendors dependencies", {
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
   use_extendr(path, quiet = TRUE)
-  use_cran_defaults(path, quiet = TRUE)
+  use_cran_defaults(path, quiet = TRUE, overwrite = TRUE)
 
-  expect_snapshot(vendor_pkgs(path))
+  x <- vendor_pkgs(path, quiet = TRUE)
+  expect_snapshot(x)
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
 
 })

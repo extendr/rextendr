@@ -170,21 +170,19 @@
 # vendor_pkgs() vendors dependencies
 
     Code
-      vendor_pkgs(path)
+      x
     Output
-      * Updating crates.io index
-      * Vendoring extendr-api v0.4.0 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/extendr-api-0.4.0) to vendor/extendr-api
-      * Vendoring extendr-engine v0.4.0 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/extendr-engine-0.4.0) to vendor/extendr-engine
-      * Vendoring extendr-macros v0.4.0 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/extendr-macros-0.4.0) to vendor/extendr-macros
-      * Vendoring lazy_static v1.4.0 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lazy_static-1.4.0) to vendor/lazy_static
-      * Vendoring libR-sys v0.4.0 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/libR-sys-0.4.0) to vendor/libR-sys
-      * Vendoring paste v1.0.14 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/paste-1.0.14) to vendor/paste
-      * Vendoring proc-macro2 v1.0.67 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/proc-macro2-1.0.67) to vendor/proc-macro2
-      * Vendoring quote v1.0.33 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/quote-1.0.33) to vendor/quote
-      * Vendoring syn v1.0.109 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/syn-1.0.109) to vendor/syn
-      * Vendoring unicode-ident v1.0.12 (/Users/josiahparry/.cargo/registry/src/index.crates.io-6f17d22bba15001f/unicode-ident-1.0.12) to vendor/unicode-ident
-    Message
-      i Writing 'src/rust/vendor-config.toml'
+                  crate  version
+      1     extendr-api   v0.4.0
+      2  extendr-engine   v0.4.0
+      3  extendr-macros   v0.4.0
+      4     lazy_static   v1.4.0
+      5        libR-sys   v0.4.0
+      6           paste  v1.0.14
+      7     proc-macro2  v1.0.67
+      8           quote  v1.0.33
+      9             syn v1.0.109
+      10  unicode-ident  v1.0.12
 
 ---
 
