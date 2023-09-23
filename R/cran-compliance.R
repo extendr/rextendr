@@ -28,12 +28,7 @@
 #' }
 #' @name cran
 #' @export
-use_cran_defaults <- function(
-    path = ".",
-    quiet = FALSE,
-    overwrite = NULL,
-    lib_name = NULL
-) {
+use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL) {
 
   # if not in an interactive session and overwrite is null, set it to false
   if (!rlang::is_interactive()) {
