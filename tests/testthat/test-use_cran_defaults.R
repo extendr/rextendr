@@ -36,5 +36,4 @@ test_that("vendor_pkgs() vendors dependencies", {
   x <- vendor_pkgs(path, quiet = TRUE)
   expect_snapshot(print(x))
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
-
 })

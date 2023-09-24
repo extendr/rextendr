@@ -29,7 +29,6 @@
 #' @name cran
 #' @export
 use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL) {
-
   # if not in an interactive session and overwrite is null, set it to false
   if (!rlang::is_interactive()) {
     overwrite <- overwrite %||% FALSE
@@ -208,14 +207,12 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   }
 
   # create a dataframe of vendored crates
-  vendored <- stringi::stri_split(vendor_res[["stderr"]], coll = "\n")[[1]]
-  trimmed <- stringi::stri_trim_left(vendored)
-  to_remove <- grepl("To use vendored sources", trimmed) | trimmed == ""
-  rows <- stringi::stri_split_fixed(trimmed[!to_remove], pattern = " ")
-
-  res <- purrr::map_dfr(rows, function(x) {
-    data.frame(crate = x[2], version = x[3])
-  })
+  vendored <- stringi::stri_split_lines1(vendor_res[["stderr"]])
+  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") %>%
+    tibble::as_tibble(.name_repair = "minimal") %>%
+    rlang::set_names(c("source", "crate", "version")) %>%
+    dplyr::filter(!is.na(source)) %>%
+    dplyr::select(-source)
 
   # return packages and versions invisibly
   invisible(res)

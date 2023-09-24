@@ -6,10 +6,12 @@ validate_extendr_features <- function(features, suppress_warnings) {
   features <- features %||% character(0)
 
   if (!vctrs::vec_is(features, character())) {
-    cli::cli_abort(c(
-      "!" = "{.arg features} expected to be a vector of type {.cls character}, but got {.cls {class(features)}}."
-    ),
-    class = "rextendr_error")
+    cli::cli_abort(
+      c(
+        "!" = "{.arg features} expected to be a vector of type {.cls character}, but got {.cls {class(features)}}."
+      ),
+      class = "rextendr_error"
+    )
   }
 
   features <- unique(features)
