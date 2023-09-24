@@ -177,7 +177,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
 
   if (vendor_res[["status"]] != 0) {
     cli::cli_abort(
-      "{.code cargo vendor} was not executed successfully",
+      "{.code cargo vendor} failed",
       class = "rextendr_error"
     )
   }
