@@ -124,7 +124,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   # if `src/rust` does not exist error
   if (!dir.exists(src_dir)) {
     cli::cli_abort(
-      c("{.path src/rust} cannot be found", "i" = "Have you used {.fn use_extendr}?"),
+      c("{.path src/rust} cannot be found", "i" = "Did you run {.fn use_extendr}?"),
       class = "rextendr_error"
     )
   }
