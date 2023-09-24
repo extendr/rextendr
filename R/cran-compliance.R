@@ -90,7 +90,7 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
     data = list(lib_name = lib_name)
   )
 
-  # vendor directory will need to be ignored by git and R CMD build
+  # vendor directory should be ignored by git and R CMD build
   if (!rlang::is_installed("usethis")) {
     cli::cli_inform(
       c(
