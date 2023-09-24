@@ -46,7 +46,7 @@ During the build time, the dependencies are extracted, compiled, and then discar
 
 ## Package compilation
 
-All of this comes together during package compilation time. During package compilation certain behaviors must be achieved: 
+All of this comes together during package compilation time, providing all of the following requirements are met: 
 
 - cargo must be able to be called from a user's home directory
 - the user's home directory must not be modified or written to 
