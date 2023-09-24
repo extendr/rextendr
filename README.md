@@ -50,8 +50,11 @@ successfully build libR-sys you’re good.
 
 ## Usage
 
-The status of Rust toolchain and available targets can be checked with
-`rust_sitrep()`:
+### Sitrep
+
+A good first step is to check the status of Rust toolchain and available
+targets using `rust_sitrep()`. If everything is OK, you should see
+something like this:
 
 ``` r
 rust_sitrep()
@@ -62,6 +65,38 @@ rust_sitrep()
 # ℹ toolchain: stable-x86_64-pc-windows-msvc (default)
 # ℹ target: x86_64-pc-windows-gnu
 ```
+
+If, for instance, no toolchain is found, you will see something like
+this:
+
+``` r
+rust_sitrep()
+# Rust infrastructure sitrep:
+# ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)
+# ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)
+# ℹ host: x86_64-pc-windows-msvc
+# ! Toolchain stable-x86_64-pc-windows-msvc is required to be installed and set as default
+# ℹ Run `rustup toolchain install stable-x86_64-pc-windows-msvc` to install it
+# ℹ Run `rustup default stable-x86_64-pc-windows-msvc` to make it default
+```
+
+Finally, if you are missing the required target (on all platforms but
+Windows `{rextendr}` uses default target), the report will resemble the
+following:
+
+``` r
+rust_sitrep()
+# Rust infrastructure sitrep:
+# ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)
+# ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)
+# ℹ host: x86_64-pc-windows-msvc
+# i toolchains: nightly-x86_64-pc-windows-msvc and stable-x86_64-pc-windows-msvc (default)
+# i targets: x86_64-pc-windows-msvc and i686-pc-windows-msvc
+# ! Target x86_64-pc-windows-gnu is required on this host machine
+# i Run `rustup target add x86_64-pc-windows-gnu` to install it
+```
+
+### Code examples
 
 Basic use example:
 
