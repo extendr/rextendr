@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 ```
 
 In order for Rust-based packages to exist on CRAN, there are a number of
-fairly stringent requirements that must be adhered to. CRAN published [Using Rust in CRAN packages](https://cran.r-project.org/web/packages/using_rust.html) in mid-2023 outlining their requirement for building and hosting Rust based packages. 
+fairly stringent requirements that must be adhered to. CRAN published [Using Rust in CRAN packages](https://cran.r-project.org/web/packages/using_rust.html) in mid-2023, outlining their requirements for building and hosting Rust-based packages. 
 
 This article describes CRAN requirements as of the day of writing and illustrates how `{rextendr}` can be used to adhere to them. 
 
@@ -22,23 +22,23 @@ Building Rust-backed packages from source requires the system dependencies `carg
 ```
 SystemRequirements: Cargo (Rust's package manager), rustc
 ```
-Even though this is a free form field, having consistency can help the whole ecosystem keep track of Rust based R packages. 
+Even though this is a free-form field, having consistency can help the whole ecosystem keep track of Rust-based R packages. 
 
 ## `cargo` and `rustc` availability
 
-In order for an R package to be built from source, `cargo` and `rustc` need to be available to the machine compiling the package. The expectation for R packages using external dependencies is to have a `configure` and `configure.win` file to check if the dependencies are available before attempting to compile the package. If the checks fail, the build process will be stopped early. 
+In order for an R package to be built from source, `cargo` and `rustc` need to be available to the machine compiling the package. The expectation for R packages using external dependencies is to have a `configure` and `configure.win` files that check if the dependencies are available before attempting to compile the package. If the checks fail, the build process will be stopped prematurely. 
 
-CRAN expects that if cargo is not on the `PATH`, the user's home directory is checked at `~/.cargo/bin`. The configuration files must perform these checks. 
+CRAN expects that if `cargo` is not on the `PATH`, the user's home directory is checked at `~/.cargo/bin`. The configuration files must perform these checks. 
 
 ## `cargo build` settings 
 
-CRAN also places restrictions on the way that cargo builds. CRAN has requested that no more than two logical CPUs be used in the build process. By default, cargo uses multiple threads to speed up the compilation process. CRAN policy allows for a maximum of two. This is set using the `-j 2` option in cargo build. 
+CRAN also imposes restrictions on how `cargo` builds crates. CRAN has requested that no more than two logical CPUs be used in the build process. By default, `cargo` uses multiple threads to speed up the compilation process. CRAN policy allows for a maximum of two. This is set using the `-j 2` option, which is passed to `cargo build`. 
 
 Additionally, to minimize security risks and ensure package stability, CRAN requires that packages be built completely offline. This prevents external dependencies from being downloaded at compile time. Because of this requirement, vendored dependencies must be used.
 
 ## Vendored dependencies 
 
-Vendoring dependencies is the act of including the dependency itself into a packages source code. In the case of Rust, dependencies are fetched only at compile time. To enable compilation in an offline environment, dependencies must be vendored which is accomplished using the `cargo vendor` command. 
+Vendoring dependencies is the act of including the dependency itself in a package source code. In the case of Rust, dependencies are fetched only at compile time. To enable compilation in an offline environment, dependencies must be vendored, which is accomplished using the `cargo vendor` command. 
 
 `cargo vendor` creates a local directory with the default name `vendor`, which contains the source code for each of the recursive dependencies of the crate that is being built. For CRAN compatibility, the `vendor` directory must be compressed using tar xz compression and included in the source of the package. 
 
