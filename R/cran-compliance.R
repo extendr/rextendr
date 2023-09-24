@@ -140,7 +140,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
           "generate-lockfile",
           "--manifest-path",
           file.path(src_dir, "Cargo.toml")
-          ),
+        ),
         stderr_line_callback = function(x, proc) {
           if (!grepl("To use vendored sources", x) && x != "") {
             cli::cat_bullet(stringi::stri_trim_left(x))
