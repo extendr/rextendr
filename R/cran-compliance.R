@@ -152,7 +152,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
 
   if (update_res[["status"]] != 0) {
     cli::cli_abort(
-      "{.file Cargo.lock} could not be creates with {.code cargo generate-lockfile}",
+      "{.file Cargo.lock} could not be created using {.code cargo generate-lockfile}",
       class = "rextendr_error"
     )
   }
