@@ -42,7 +42,7 @@ Vendoring dependencies is the act of including the dependency itself into a pack
 
 `cargo vendor` creates a local directory with the default name `vendor`, which contains the source code for each of the recursive dependencies of the crate that is being built. For CRAN compatibility, the `vendor` directory must be compressed using tar xz compression and included in the source of the package. 
 
-During build time, the dependencies are uncompressed, compiled in the offline build, and discarded. This process is controlled by the `Makevars` and `Makevars.win` files. 
+During the build time, the dependencies are extracted, compiled, and then discarded. This process is controlled by the `Makevars` and `Makevars.win` files. 
 
 ## Package compilation
 
