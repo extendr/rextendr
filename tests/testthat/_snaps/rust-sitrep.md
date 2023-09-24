@@ -59,7 +59,6 @@
       v "rustup": 1.0.0 (0000000 0000-00-00)
       v "cargo": 1.0.0 (0000000 0000-00-00)
       i host: arch-pc-os-tool
-      i toolchains:
       ! Toolchain stable-arch-pc-os-tool is required to be installed and set as default
       i Run `rustup toolchain install stable-arch-pc-os-tool` to install it
       i Run `rustup default stable-arch-pc-os-tool` to make it default

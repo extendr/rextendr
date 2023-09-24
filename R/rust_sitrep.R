@@ -29,7 +29,11 @@ rust_sitrep <- function() {
     msgs <- c(
       msgs,
       "i" = "host: {rustup_status$host}",
-      "i" = "toolchain{?s}: {rustup_status$toolchains}"
+      "i" = if (length(rustup_status[["toolchains"]]) > 0) {
+        "toolchain{?s}: {rustup_status$toolchains}"
+      } else {
+        NULL
+      }
     )
 
     if (!is.null(rustup_status[["candidate_toolchains"]])) {
