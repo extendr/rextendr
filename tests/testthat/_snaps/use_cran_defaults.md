@@ -170,7 +170,7 @@
 # vendor_pkgs() vendors dependencies
 
     Code
-      print(x)
+      x
     Output
       # A tibble: 10 x 2
          crate          version
