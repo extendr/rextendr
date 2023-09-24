@@ -170,19 +170,21 @@
 # vendor_pkgs() vendors dependencies
 
     Code
-      x
+      print(x)
     Output
-                  crate  version
-      1     extendr-api   v0.4.0
-      2  extendr-engine   v0.4.0
-      3  extendr-macros   v0.4.0
-      4     lazy_static   v1.4.0
-      5        libR-sys   v0.4.0
-      6           paste  v1.0.14
-      7     proc-macro2  v1.0.67
-      8           quote  v1.0.33
-      9             syn v1.0.109
-      10  unicode-ident  v1.0.12
+      # A tibble: 10 x 2
+         crate          version
+         <chr>          <chr>  
+       1 extendr-api    0.4.0  
+       2 extendr-engine 0.4.0  
+       3 extendr-macros 0.4.0  
+       4 lazy_static    1.4.0  
+       5 libR-sys       0.4.0  
+       6 paste          1.0.14 
+       7 proc-macro2    1.0.67 
+       8 quote          1.0.33 
+       9 syn            1.0.109
+      10 unicode-ident  1.0.12 
 
 ---
 
