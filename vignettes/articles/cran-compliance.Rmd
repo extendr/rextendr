@@ -61,7 +61,7 @@ rextendr provides default CRAN compliant scaffolding via the `use_cran_defaults(
 
 ### Making a package CRAN compliant
 
-To create a CRAN compliant R package begin by creating a new R package. Do so by using `usethis::create_package()`. In the new R project, run `rextendr::use_extendr()` to create the minimal scaffolding necessary for a Rust powered R package. Once you have done this, you can now run `rextendr::use_cran_defaults()`. 
+To create a CRAN compliant R package begin by creating a new R package. Do so by calling `usethis::create_package()`. In the new R project, run `rextendr::use_extendr()` to create the minimal scaffolding necessary for a Rust-powered R package. Once you have done this, you can now run `rextendr::use_cran_defaults()`. 
 
 `use_cran_defaults()` will create the files `configure` and `configure.win` files. Additionally, it will create new `Makevars` and `Makevars.win` that print the versions of cargo and rustc as well as uses the `cargo build` argument `-j 2 --offline`.
 
