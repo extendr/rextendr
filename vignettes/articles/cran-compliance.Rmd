@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-In order Rust based packages to exist on CRAN, there are a number of
+In order for Rust-based packages to exist on CRAN, there are a number of
 fairly stringent requirements that must be adhered to. CRAN published [Using Rust in CRAN packages](https://cran.r-project.org/web/packages/using_rust.html) in mid-2023 outlining their requirement for building and hosting Rust based packages. 
 
 This article describes CRAN requirements as of the day of writing and illustrates how `{rextendr}` can be used to adhere to them. 
