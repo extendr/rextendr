@@ -170,7 +170,19 @@
 # vendor_pkgs() vendors dependencies
 
     Code
-      x
+      cat_file("src", "rust", "vendor-config.toml")
+    Output
+      [source.crates-io]
+      replace-with = "vendored-sources"
+      
+      [source.vendored-sources]
+      directory = "vendor"
+      
+
+---
+
+    Code
+      package_versions
     Output
       # A tibble: 10 x 2
          crate          version
@@ -185,16 +197,4 @@
        8 quote          1.0.33 
        9 syn            1.0.109
       10 unicode-ident  1.0.12 
-
----
-
-    Code
-      cat_file("src", "rust", "vendor-config.toml")
-    Output
-      [source.crates-io]
-      replace-with = "vendored-sources"
-      
-      [source.vendored-sources]
-      directory = "vendor"
-      
 
