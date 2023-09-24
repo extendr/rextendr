@@ -100,7 +100,7 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
       )
     )
   } else {
-    # vendor will be big when expanded and should be ignored
+    # vendor folder will be large when expanded and should be ignored
     usethis::use_build_ignore(
       file.path("src", "rust", "vendor")
     )
