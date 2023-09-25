@@ -115,6 +115,11 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
 #' @export
 #' @name cran
 vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
+  stderr_line_callback <- function(x, proc) {
+    if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
+      cli::cat_bullet(stringi::stri_trim_left(x))
+    }
+  }
   local_quiet_cli(quiet)
 
   # get path to rust folder
@@ -140,11 +145,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
           "--manifest-path",
           file.path(src_dir, "Cargo.toml")
         ),
-        stderr_line_callback = function(x, proc) {
-          if (!grepl("To use vendored sources", x) && x != "") {
-            cli::cat_bullet(stringi::stri_trim_left(x))
-          }
-        }
+        stderr_line_callback = stderr_line_callback
       )
     })
 
@@ -166,11 +167,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
         "--manifest-path",
         file.path(src_dir, "Cargo.toml")
       ),
-      stderr_line_callback = function(x, proc) {
-        if (!grepl("To use vendored sources", x) && x != "") {
-          cli::cat_bullet(stringi::stri_trim_left(x))
-        }
-      }
+      stderr_line_callback = stderr_line_callback
     )
   })
 
