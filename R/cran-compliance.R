@@ -190,7 +190,8 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     tibble::as_tibble(.name_repair = "minimal") %>%
     rlang::set_names(c("source", "crate", "version")) %>%
     dplyr::filter(!is.na(source)) %>%
-    dplyr::select(-source)
+    dplyr::select(-source) %>%
+    dplyr::arrange(crate)
 
   # capture vendor-config.toml content
   config_toml <- vendor_res[["stdout"]] %>%
