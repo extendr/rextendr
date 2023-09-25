@@ -177,7 +177,6 @@
       
       [source.vendored-sources]
       directory = "vendor"
-      
 
 ---
 
