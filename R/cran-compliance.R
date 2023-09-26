@@ -115,6 +115,11 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
 #' @export
 #' @name cran
 vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
+  stderr_line_callback <- function(x, proc) {
+    if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
+      cli::cat_bullet(stringi::stri_trim_left(x))
+    }
+  }
   local_quiet_cli(quiet)
 
   # get path to rust folder
@@ -140,13 +145,10 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
           "--manifest-path",
           file.path(src_dir, "Cargo.toml")
         ),
-        stderr_line_callback = function(x, proc) {
-          if (!grepl("To use vendored sources", x) && x != "") {
-            cli::cat_bullet(stringi::stri_trim_left(x))
-          }
-        }
+        stderr_line_callback = stderr_line_callback
       )
     })
+
     if (update_res[["status"]] != 0) {
       cli::cli_abort(
         "{.file Cargo.lock} could not be created using {.code cargo generate-lockfile}",
@@ -154,8 +156,6 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
       )
     }
   }
-
-
 
   # vendor crates
   withr::with_dir(src_dir, {
@@ -167,11 +167,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
         "--manifest-path",
         file.path(src_dir, "Cargo.toml")
       ),
-      stderr_line_callback = function(x, proc) {
-        if (!grepl("To use vendored sources", x) && x != "") {
-          cli::cat_bullet(stringi::stri_trim_left(x))
-        }
-      }
+      stderr_line_callback = stderr_line_callback
     )
   })
 
@@ -182,8 +178,22 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     )
   }
 
+  # create a dataframe of vendored crates
+  vendored <- vendor_res[["stderr"]] %>%
+    cli::ansi_strip() %>%
+    stringi::stri_split_lines1()
+
+  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") %>%
+    tibble::as_tibble(.name_repair = "minimal") %>%
+    rlang::set_names(c("source", "crate", "version")) %>%
+    dplyr::filter(!is.na(source)) %>%
+    dplyr::select(-source) %>%
+    dplyr::arrange(crate) # nolint: object_usage_linter
+
   # capture vendor-config.toml content
-  config_toml <- stringi::stri_split(vendor_res$stdout, coll = "\n")[[1]]
+  config_toml <- vendor_res[["stdout"]] %>%
+    cli::ansi_strip() %>%
+    stringi::stri_split_lines1()
 
   # always write to file as cargo vendor catches things like patch.crates-io
   # and provides the appropriate configuration.
@@ -205,14 +215,6 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
       class = "rextendr_error"
     )
   }
-
-  # create a dataframe of vendored crates
-  vendored <- stringi::stri_split_lines1(vendor_res[["stderr"]])
-  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") %>%
-    tibble::as_tibble(.name_repair = "minimal") %>%
-    rlang::set_names(c("source", "crate", "version")) %>%
-    dplyr::filter(!is.na(source)) %>%
-    dplyr::select(-source)
 
   # return packages and versions invisibly
   invisible(res)

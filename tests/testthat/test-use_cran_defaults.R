@@ -33,7 +33,7 @@ test_that("vendor_pkgs() vendors dependencies", {
   use_extendr(path, quiet = TRUE)
   use_cran_defaults(path, quiet = TRUE, overwrite = TRUE)
 
-  x <- vendor_pkgs(path, quiet = TRUE)
-  expect_snapshot(print(x))
+  package_versions <- vendor_pkgs(path, quiet = TRUE)
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
+  expect_snapshot(package_versions)
 })
