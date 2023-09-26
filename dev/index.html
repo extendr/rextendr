@@ -100,8 +100,45 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Basic use example:</p>
+<div class="section level3">
+<h3 id="sitrep">Sitrep<a class="anchor" aria-label="anchor" href="#sitrep"></a>
+</h3>
+<p>A good first step is to check the status of Rust toolchain and available targets using <code><a href="reference/rust_sitrep.html">rust_sitrep()</a></code>. If everything is OK, you should see something like this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Rust infrastructure sitrep:</span></span>
+<span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
+<span><span class="co"># ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)</span></span>
+<span><span class="co"># ℹ host: x86_64-pc-windows-msvc</span></span>
+<span><span class="co"># ℹ toolchain: stable-x86_64-pc-windows-msvc (default)</span></span>
+<span><span class="co"># ℹ target: x86_64-pc-windows-gnu</span></span></code></pre></div>
+<p>If, for instance, no toolchain is found, you will see something like this:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Rust infrastructure sitrep:</span></span>
+<span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
+<span><span class="co"># ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)</span></span>
+<span><span class="co"># ℹ host: x86_64-pc-windows-msvc</span></span>
+<span><span class="co"># ! Toolchain stable-x86_64-pc-windows-msvc is required to be installed and set as default</span></span>
+<span><span class="co"># ℹ Run `rustup toolchain install stable-x86_64-pc-windows-msvc` to install it</span></span>
+<span><span class="co"># ℹ Run `rustup default stable-x86_64-pc-windows-msvc` to make it default</span></span></code></pre></div>
+<p>Finally, if you are missing the required target (on all platforms but Windows <a href="https://extendr.github.io/rextendr/" class="external-link">rextendr</a> uses default target), the report will resemble the following:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Rust infrastructure sitrep:</span></span>
+<span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
+<span><span class="co"># ✔ "cargo": 1.72.0 (103a7ff2e 2023-08-15)</span></span>
+<span><span class="co"># ℹ host: x86_64-pc-windows-msvc</span></span>
+<span><span class="co"># i toolchains: nightly-x86_64-pc-windows-msvc and stable-x86_64-pc-windows-msvc (default)</span></span>
+<span><span class="co"># i targets: x86_64-pc-windows-msvc and i686-pc-windows-msvc</span></span>
+<span><span class="co"># ! Target x86_64-pc-windows-gnu is required on this host machine</span></span>
+<span><span class="co"># i Run `rustup target add x86_64-pc-windows-gnu` to install it</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="code-examples">Code examples<a class="anchor" aria-label="anchor" href="#code-examples"></a>
+</h3>
+<p>Basic use example:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a Rust function</span></span>
@@ -111,7 +148,7 @@
 <span><span class="fu">add</span><span class="op">(</span><span class="fl">2.5</span>, <span class="fl">4.7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7.2</span></span></code></pre></div>
 <p>Something more sophisticated:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Rust function that computes a sum of integer or double vectors, preserving the type</span></span>
@@ -145,25 +182,26 @@
 <span><span class="co">#&gt; 1 x     &lt;int [5]&gt; integer &lt;int [1]&gt;     15 integer   </span></span>
 <span><span class="co">#&gt; 2 y     &lt;dbl [5]&gt; double  &lt;dbl [1]&gt;     15 double</span></span></code></pre></div>
 <p>The package also enables a new chunk type for knitr, <code>extendr</code>, which compiles and evaluates Rust code. For example, a code chunk such as this one:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr}</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 5;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 7;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="in">z</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr}</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 5;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 7;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">z</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>would create the following output in the knitted document:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>z</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
