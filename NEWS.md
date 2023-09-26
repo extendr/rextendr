@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* Introduces new functions `use_cran_defaults()` and `vendor_pkgs()` to ease the publication of extendr-powered packages on CRAN. See the new article _CRAN compliant extendr packages_ on how to use these.
 * `use_extendr()` and `document()` now set the `SystemRequirements` field of the `DESCRIPTION` file to
   `Cargo (rustc package manager)` if the field is empty (#298).
 * `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
