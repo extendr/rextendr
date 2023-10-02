@@ -36,4 +36,5 @@ test_that("vendor_pkgs() vendors dependencies", {
   package_versions <- vendor_pkgs(path, quiet = TRUE)
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
   expect_snapshot(package_versions)
+  expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
 })

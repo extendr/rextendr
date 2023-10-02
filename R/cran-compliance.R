@@ -62,7 +62,10 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
   )
 
   # configure needs to be made executable
-  Sys.chmod("configure", "0755")
+  # ignore for Windows
+  if (.Platform[["OS.type"]] == "unix") {
+    Sys.chmod("configure", "0755")
+  }
 
   use_rextendr_template(
     "cran/configure.win",
