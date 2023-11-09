@@ -11,6 +11,7 @@ $(SHLIB): $(STATLIB)
 
 CRAN_FLAGS=-j 2 --offline
 CARGOTMP = $(CURDIR)/.cargo
+VENDOR_DIR = $(CURDIR)/vendor
 
 all: C_clean
 
@@ -48,7 +49,7 @@ $(STATLIB):
 	fi
 
 C_clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(CARGOTMP) $(VENDOR_DIR)
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) ./rust/vendor $(CARGO_HOME)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)

@@ -9,7 +9,7 @@ $(SHLIB): $(STATLIB)
 
 CRAN_FLAGS=-j 2 --offline
 CARGOTMP = $(CURDIR)/.cargo
-
+VENDOR_DIR = $(CURDIR)/vendor
 
 $(STATLIB):
 	if [ -f ./rust/vendor.tar.xz ]; then \
@@ -27,16 +27,11 @@ $(STATLIB):
 		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
 			cargo build $(CRAN_FLAGS) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) && \
 			echo `cargo --version` && echo `rustc --version`;
-	if [ "$(NOT_CRAN)" != "true" ]; then \
 		rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(LIBDIR)/build; \
-	fi
+
 
 C_clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(CARGOTMP) $(VENDOR_DIR)
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) ./rust/target
-
-
-
-
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
