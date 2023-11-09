@@ -29,7 +29,6 @@ $(STATLIB):
 			echo `cargo --version` && echo `rustc --version`;
 		rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(LIBDIR)/build; \
 
-
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(CARGOTMP) $(VENDOR_DIR)
 
