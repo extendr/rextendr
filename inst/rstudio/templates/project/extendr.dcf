@@ -1,0 +1,40 @@
+Binding: create_extendr_package
+Title: R package with extendr
+Subtitle: Create an R package with Rust extensions.
+Caption: Create an R package with Rust extensions.
+OpenFiles: INDEX
+
+Parameter: usethis
+Widget: CheckboxInput
+Label: Use usethis to build project directory
+Default: On
+Position: left
+
+Parameter: roxygen
+Widget: CheckboxInput
+Label: Use roxygen2 to document package
+Default: On
+Position: left
+
+Parameter: check_name
+Widget: CheckboxInput
+Label: Check if package name is valid
+Default: On
+Position: left
+
+Parameter: crate_name
+Widget: TextInput
+Label: Rust crate name
+Position: right
+
+Parameter: lib_name
+Widget: TextInput
+Label: Rust library name
+Position: right
+
+Parameter: edition
+Widget: SelectInput
+Label: Rust edition
+Fields: 2021, 2018
+Default: 2021
+Position: right
