@@ -6,19 +6,19 @@ OpenFiles: INDEX
 
 Parameter: usethis
 Widget: CheckboxInput
-Label: Use usethis to build project directory
+Label: Use usethis
 Default: On
 Position: left
 
 Parameter: roxygen
 Widget: CheckboxInput
-Label: Use roxygen2 to document package
+Label: Use roxygen2
 Default: On
 Position: left
 
 Parameter: check_name
 Widget: CheckboxInput
-Label: Check if package name is valid
+Label: Validate package name
 Default: On
 Position: left
 
