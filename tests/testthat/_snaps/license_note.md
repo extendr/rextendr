@@ -15,13 +15,6 @@
       
       -------------------------------------------------------------
       
-      Name:        extendr-engine
-      Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov
-      License:     MIT
-      
-      -------------------------------------------------------------
-      
       Name:        extendr-macros
       Repository:  https://github.com/extendr/extendr
       Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov
@@ -29,17 +22,17 @@
       
       -------------------------------------------------------------
       
-      Name:        lazy_static
-      Repository:  https://github.com/rust-lang-nursery/lazy-static.rs
-      Authors:     Marvin Löbel
-      License:     Apache-2.0 OR MIT
-      
-      -------------------------------------------------------------
-      
       Name:        libR-sys
       Repository:  https://github.com/extendr/libR-sys
       Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Ilia A. Kosenkov, Hiroaki Yutani
       License:     MIT
+      
+      -------------------------------------------------------------
+      
+      Name:        once_cell
+      Repository:  https://github.com/matklad/once_cell
+      Authors:     Aleksey Kladov
+      License:     Apache-2.0 OR MIT
       
       -------------------------------------------------------------
       
