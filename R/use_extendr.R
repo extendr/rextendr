@@ -39,7 +39,10 @@ use_extendr <- function(path = ".",
 
   rextendr_setup(path = path)
 
-  if (isFALSE(path == ".")) {
+  root_path <- normalizePath(rprojroot::find_package_root_file(path = path), mustWork = FALSE, winslash = "/")
+  usethis_proj_path <- try_get_proj_path()
+
+  if (!isTRUE(root_path == usethis_proj_path)) {
     usethis::local_project(path, quiet = quiet)
   }
 
@@ -163,6 +166,10 @@ use_extendr <- function(path = ".",
   }
 
   return(invisible(TRUE))
+}
+
+try_get_proj_path <- function() {
+  tryCatch(usethis::proj_get(), error = function(e) NA)
 }
 
 #' Checks if provided name is a valid Rust name (identifier)
