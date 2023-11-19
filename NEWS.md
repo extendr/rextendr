@@ -5,6 +5,7 @@
   `Cargo (rustc package manager)` if the field is empty (#298).
 * `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
 * `use_extendr()` sets `publish = false` in the `[package]` section of the `Cargo.toml` (#297).
+* `use_extendr()` correctly handles calls with `path` not equal to  `"."` (current folder), or when there is no active `{usethis}` project (#323).
 
 # rextend 0.3.1
 
