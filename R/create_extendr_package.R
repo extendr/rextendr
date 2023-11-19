@@ -2,39 +2,36 @@
 #' Create a project for R package development with Rust
 #'
 #' @description
-#' This function creates an R project directory for package development with Rust extensions.
-#' The function can be called on an existing project; you will be asked before
-#' any existing files are changed.
+#' This function creates an R project directory for package development
+#' with Rust extensions.
 #'
-#' @inheritParams use_extendr
-#' @inheritParams usethis::create_package
-#' @param usethis logical, should usethis be used to build package directory?
-#' @param ... ignored
+#' @param path a path to new directory
+#' @param ... arguments passed on to `usethis::create_package()` and
+#' `rextendr::use_extendr()`
 #'
 #' @return Path to the newly created project or package, invisibly.
 #' @keywords internal
 #'
 #' @examples
-create_extendr_package <- function(path,
-                                   usethis = TRUE,
-                                   roxygen = TRUE,
-                                   check_name = TRUE,
-                                   crate_name = NULL,
-                                   lib_name = NULL,
-                                   edition = c("2021", "2018"),
-                                   ...){
+create_extendr_package <- function(path, ...){
 
-  # check if rust infrastructure is available
-  # rust_sitrep()
+  args <- rlang::list2(...)
+
+  # hunch is that rstudio project text input widgets return empty strings
+  # when no value is given, want to make sure it is NULL so `use_extendr()`
+  # handles it correctly
+  args <- lapply(args, \(x){ if (x == "") return(NULL) else return(x) })
+
+  # generate header for INDEX file
+  header <- paste0("Package: ", basename(path))
 
   # build package directory, but don't open yet!
-  if (!usethis) {
+  if (!args[["usethis"]]) {
 
     dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
-    # generate header for INDEX file
     header <- c(
-      paste0("Package: ", basename(path)),
+      header,
       "",
       "WARNING:",
       "The project build failed to generate the necessary R package files.",
@@ -49,33 +46,30 @@ create_extendr_package <- function(path,
       path,
       fields = list(),
       rstudio = TRUE,
-      roxygen,
-      check_name,
+      roxygen = args[["roxygen"]],
+      check_name = args[["check_name"]],
       open = FALSE
     )
 
-    # generate header for INDEX file
     header <- c(
-      paste0("Package: ", basename(path)),
+      header,
       "",
       "BUILD COMPLETE:",
       "The project build successfully generated the necessary R package files.",
-      paste0("Roxygen: ", roxygen),
+      paste0("Roxygen: ", args[["roxygen"]]),
       ""
     )
 
   }
 
   # add rust scaffolding to project dir
-  # hunch is that rstudio project text input widgets return empty strings
-  # when no value is given
   use_extendr(
     path,
-    crate_name = if (crate_name == "") NULL else crate_name,
-    lib_name = if (lib_name == "") NULL else lib_name,
+    crate_name = args[["crate_name"]],
+    lib_name = args[["lib_name"]],
     quiet = TRUE,
     overwrite = TRUE,
-    edition
+    edition = args[["edition"]]
   )
 
   text <- c(
