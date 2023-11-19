@@ -39,7 +39,11 @@ use_extendr <- function(path = ".",
 
   rextendr_setup(path = path)
 
-  pkg_name <- pkg_name(path)
+  if (isFALSE(path == ".")) {
+    usethis::local_project(path, quiet = quiet)
+  }
+
+  pkg_name <- pkg_name()
   mod_name <- as_valid_rust_name(pkg_name)
 
   if (is.null(crate_name)) {
@@ -54,8 +58,9 @@ use_extendr <- function(path = ".",
     throw_if_invalid_rust_name(lib_name)
   }
 
-  src_dir <- rprojroot::find_package_root_file("src", path = path)
-  r_dir <- rprojroot::find_package_root_file("R", path = path)
+  src_dir <- rprojroot::find_package_root_file("src")
+  r_dir <- rprojroot::find_package_root_file("R")
+
 
   if (!dir.exists(r_dir)) {
     dir.create(r_dir)
