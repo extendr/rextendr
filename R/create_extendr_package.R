@@ -35,8 +35,8 @@ create_extendr_package <- function(path, ...){
       "",
       "WARNING:",
       "The project build failed to generate the necessary R package files.",
-      "Please consider installing {usethis} with `install.packages('usethis')` and running",
-      "usethis::create_package(getwd()).",
+      "Please consider installing {usethis} with `install.packages('usethis')`",
+      "and running usethis::create_package(getwd()).",
       ""
     )
 
@@ -74,9 +74,9 @@ create_extendr_package <- function(path, ...){
 
   text <- c(
     "NOTE:",
-    "To use {rextendr} in any meaningful way, it is required that the user have",
-    "Rust and Cargo available on their local machine. To check your own machine",
-    "please run `rextendr::rust_sitrep()` in the console. This will provide a",
+    "To use {rextendr} in any meaningful way, the user must have",
+    "Rust and Cargo available on their local machine. To check that you do,",
+    "please run `rextendr::rust_sitrep()`. This will provide a",
     "detailed report of the current state of your Rust infrastructure, along",
     "with some helpful advice about how to address any issues that may arise."
   )
