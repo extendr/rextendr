@@ -4,12 +4,6 @@ Subtitle: Create an R package with Rust extensions.
 Caption: Create an R package with Rust extensions.
 OpenFiles: INDEX
 
-Parameter: usethis
-Widget: CheckboxInput
-Label: Use usethis
-Default: On
-Position: left
-
 Parameter: roxygen
 Widget: CheckboxInput
 Label: Use roxygen2

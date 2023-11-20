@@ -15,6 +15,9 @@
 #' @examples
 create_extendr_package <- function(path, ...) {
 
+  # error if usethis is not installed
+  rlang::check_installed("usethis")
+
   args <- rlang::list2(...)
 
   # hunch is that rstudio project text input widgets return empty strings
@@ -22,45 +25,15 @@ create_extendr_package <- function(path, ...) {
   # handles it correctly
   args <- lapply(args, function(x) if (x == "") return(NULL) else return(x))
 
-  # generate header for INDEX file
-  header <- paste0("Package: ", basename(path))
-
   # build package directory, but don't open yet!
-  if (!args[["usethis"]]) {
-
-    dir.create(path, recursive = TRUE, showWarnings = FALSE)
-
-    header <- c(
-      header,
-      "",
-      "WARNING:",
-      "The project build failed to generate the necessary R package files.",
-      "Please consider installing {usethis} with `install.packages('usethis')`",
-      "and running usethis::create_package(getwd()).",
-      ""
-    )
-
-  } else {
-
-    usethis::create_package(
-      path,
-      fields = list(),
-      rstudio = TRUE,
-      roxygen = args[["roxygen"]],
-      check_name = args[["check_name"]],
-      open = FALSE
-    )
-
-    header <- c(
-      header,
-      "",
-      "BUILD COMPLETE:",
-      "The project build successfully generated the necessary R package files.",
-      paste0("Roxygen: ", args[["roxygen"]]),
-      ""
-    )
-
-  }
+  usethis::create_package(
+    path,
+    fields = list(),
+    rstudio = TRUE,
+    roxygen = args[["roxygen"]],
+    check_name = args[["check_name"]],
+    open = FALSE
+  )
 
   # add rust scaffolding to project dir
   use_extendr(
@@ -70,6 +43,15 @@ create_extendr_package <- function(path, ...) {
     quiet = TRUE,
     overwrite = TRUE,
     edition = args[["edition"]]
+  )
+
+  # generate header for INDEX file
+  header <- c(
+    paste0("Package: ", basename(path)),
+    "",
+    "BUILD COMPLETE:",
+    "The project build successfully generated the necessary R package files.",
+    ""
   )
 
   text <- c(
