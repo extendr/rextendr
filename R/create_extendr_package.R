@@ -20,11 +20,7 @@ create_extendr_package <- function(path, ...) {
   # hunch is that rstudio project text input widgets return empty strings
   # when no value is given, want to make sure it is NULL so `use_extendr()`
   # handles it correctly
-  args <- lapply(args, \(x) {
-
-    if (x == "") return(NULL) else return(x)
-
-  } )
+  args <- lapply(args, function(x) if (x == "") return(NULL) else return(x))
 
   # generate header for INDEX file
   header <- paste0("Package: ", basename(path))
