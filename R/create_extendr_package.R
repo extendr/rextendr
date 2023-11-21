@@ -23,7 +23,11 @@ create_extendr_package <- function(path, ...) {
   # hunch is that rstudio project text input widgets return empty strings
   # when no value is given, want to make sure it is NULL so `use_extendr()`
   # handles it correctly
-  args <- lapply(args, function(x) if (x == "") return(NULL) else return(x))
+  nullify_empty_string <- function(x) {
+    if (rlang::is_string(x) && nzchar(x)) x else NULL
+  }
+
+  args <- purrr::map(args, nullify_empty_string)
 
   # build package directory, but don't open yet!
   usethis::create_package(
