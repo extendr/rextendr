@@ -34,8 +34,8 @@ create_extendr_package <- function(path, ...) {
     path,
     fields = list(),
     rstudio = TRUE,
-    roxygen = args[["roxygen"]],
-    check_name = args[["check_name"]],
+    roxygen = args[["roxygen"]] %||% TRUE,
+    check_name = args[["check_name"]] %||% TRUE,
     open = FALSE
   )
 
@@ -46,7 +46,7 @@ create_extendr_package <- function(path, ...) {
     lib_name = args[["lib_name"]],
     quiet = TRUE,
     overwrite = TRUE,
-    edition = args[["edition"]]
+    edition = args[["edition"]] %||% TRUE
   )
 
   # generate header for INDEX file
