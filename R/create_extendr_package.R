@@ -12,7 +12,7 @@
 #' @return Path to the newly created project or package, invisibly.
 #' @keywords internal
 #'
-#' @examples
+#' @noRd
 create_extendr_package <- function(path, ...) {
 
   # error if usethis is not installed
