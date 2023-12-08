@@ -2,7 +2,6 @@ Binding: create_extendr_package
 Title: R package with extendr
 Subtitle: Create an R package with Rust extensions.
 Caption: Create an R package with Rust extensions.
-OpenFiles: INDEX
 
 Parameter: roxygen
 Widget: CheckboxInput

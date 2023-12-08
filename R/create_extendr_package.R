@@ -50,32 +50,6 @@ create_extendr_package <- function(path, ...) {
     edition = args[["edition"]] %||% TRUE
   )
 
-  # generate header for INDEX file
-  header <- c(
-    paste0("Package: ", basename(path)),
-    "",
-    "BUILD COMPLETE:",
-    "The project build successfully generated the necessary R package files.",
-    ""
-  )
-
-  text <- c(
-    "NOTE:",
-    "To use {rextendr} in any meaningful way, the user must have",
-    "Rust and Cargo available on their local machine. To check that you do,",
-    "please run `rextendr::rust_sitrep()`. This will provide a",
-    "detailed report of the current state of your Rust infrastructure, along",
-    "with some helpful advice about how to address any issues that may arise."
-  )
-
-  content <- paste(
-    paste(header, collapse = "\n"),
-    paste(text, collapse = "\n"),
-    sep = "\n"
-  )
-
-  writeLines(content, con = file.path(path, "INDEX"))
-
   return(invisible(path))
 
 }
