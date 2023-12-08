@@ -29,7 +29,8 @@ create_extendr_package <- function(path, ...) {
 
   args <- purrr::map(args, nullify_empty_string)
 
-  # build package directory, but don't open yet!
+  # build package directory, but don't start a new R session with
+  # it as the working directory! i.e., set `open = FALSE`
   usethis::create_package(
     path,
     fields = list(),
