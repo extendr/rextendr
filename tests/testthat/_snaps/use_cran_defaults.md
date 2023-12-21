@@ -183,17 +183,16 @@
     Code
       package_versions
     Output
-      # A tibble: 10 x 2
-         crate          version
-         <chr>          <chr>  
-       1 extendr-api    0.4.0  
-       2 extendr-engine 0.4.0  
-       3 extendr-macros 0.4.0  
-       4 lazy_static    1.4.0  
-       5 libR-sys       0.4.0  
-       6 paste          1.0.14 
-       7 proc-macro2    1.0.67 
-       8 quote          1.0.33 
-       9 syn            1.0.109
-      10 unicode-ident  1.0.12 
+      # A tibble: 9 x 2
+        crate          version
+        <chr>          <chr>  
+      1 extendr-api    0.6.0  
+      2 extendr-macros 0.6.0  
+      3 libR-sys       0.6.0  
+      4 once_cell      1.19.0 
+      5 paste          1.0.14 
+      6 proc-macro2    1.0.70 
+      7 quote          1.0.33 
+      8 syn            2.0.42 
+      9 unicode-ident  1.0.12 
 
