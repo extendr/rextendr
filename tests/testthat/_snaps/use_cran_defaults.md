@@ -181,18 +181,18 @@
 ---
 
     Code
-      package_versions
+      package_versions["crate"]
     Output
-      # A tibble: 9 x 2
-        crate          version
-        <chr>          <chr>  
-      1 extendr-api    0.6.0  
-      2 extendr-macros 0.6.0  
-      3 libR-sys       0.6.0  
-      4 once_cell      1.19.0 
-      5 paste          1.0.14 
-      6 proc-macro2    1.0.70 
-      7 quote          1.0.33 
-      8 syn            2.0.42 
-      9 unicode-ident  1.0.12 
+      # A tibble: 9 x 1
+        crate         
+        <chr>         
+      1 extendr-api   
+      2 extendr-macros
+      3 libR-sys      
+      4 once_cell     
+      5 paste         
+      6 proc-macro2   
+      7 quote         
+      8 syn           
+      9 unicode-ident 
 

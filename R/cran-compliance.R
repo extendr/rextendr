@@ -191,7 +191,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     rlang::set_names(c("source", "crate", "version")) %>%
     dplyr::filter(!is.na(source)) %>%
     dplyr::select(-source) %>%
-    dplyr::arrange(crate) # nolint: object_usage_linter
+    dplyr::arrange(.data$crate) # nolint: object_usage_linter
 
   # capture vendor-config.toml content
   config_toml <- vendor_res[["stdout"]] %>%
