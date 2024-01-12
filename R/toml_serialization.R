@@ -66,6 +66,10 @@ to_toml <- function(...,
       .format_dbl = .format_dbl
     )
     body <- glue_collapse(body, "\n")
+    if (!nzchar(body)) {
+      body <- NULL
+    }
+
     # The values can be (1) header and body, (2) header only, or (3) body only.
     # In the case of (2) and (3) the other element is of length 0, so we need to
     # remove them by `c()` first, and then concatenate by "\n" if both exists
