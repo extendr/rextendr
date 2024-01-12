@@ -11,7 +11,8 @@ write_license_note <- function(path = ".", quiet = FALSE, force = TRUE) {
     cli::cli_abort(
       c(
         "The {.code cargo license} command is required to run the {.fun write_license_note} function.",
-        "Please install cargo-license ({.url https://crates.io/crates/cargo-license}) first."
+        "*" = "Please install cargo-license ({.url https://crates.io/crates/cargo-license}) first.",
+        i = "Run {.code cargo install cargo-license} from your terminal."
       ),
       class = "rextendr_error"
     )
