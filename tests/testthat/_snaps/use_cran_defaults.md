@@ -186,13 +186,13 @@
       # A tibble: 9 x 2
         crate          version
         <chr>          <chr>  
-      1 extendr-api    0.6.0  
-      2 extendr-macros 0.6.0  
-      3 libR-sys       0.6.0  
-      4 once_cell      1.19.0 
-      5 paste          1.0.14 
-      6 proc-macro2    1.0.76 
-      7 quote          1.0.35 
-      8 syn            2.0.48 
-      9 unicode-ident  1.0.12 
+      1 extendr-api    *.*.*  
+      2 extendr-macros *.*.*  
+      3 libR-sys       *.*.*  
+      4 once_cell      *.*.* 
+      5 paste          *.*.* 
+      6 proc-macro2    *.*.* 
+      7 quote          *.*.* 
+      8 syn            *.*.* 
+      9 unicode-ident  *.*.* 
 
