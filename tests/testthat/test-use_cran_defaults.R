@@ -25,6 +25,14 @@ test_that("use_cran_defaults() quiet if quiet=TRUE", {
 
 
 test_that("vendor_pkgs() vendors dependencies", {
+  mask_version_strings <- function(snapshot_lines) {
+    stringi::stri_replace_all_regex(
+      snapshot_lines,
+      "\\d+\\.\\d+\\.\\d+",
+      "*.*.*"
+    )
+  }
+
   skip_if_not_installed("usethis")
 
   path <- local_package("testpkg")
@@ -35,6 +43,6 @@ test_that("vendor_pkgs() vendors dependencies", {
 
   package_versions <- vendor_pkgs(path, quiet = TRUE)
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
-  expect_snapshot(package_versions)
+  expect_snapshot(package_versions, transform = mask_version_strings)
   expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
 })
