@@ -44,7 +44,7 @@ Imports:
     cli,
     desc,
     dplyr,
-    glue,
+    glue (>= 1.7.0),
     jsonlite,
     pkgbuild (>= 1.4.0),
     processx,
