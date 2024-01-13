@@ -49,12 +49,12 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 2
           extra-packages: rcmdcheck
-          use-public-rspm: true
 
       # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
       - name: Check R version
