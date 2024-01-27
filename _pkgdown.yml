@@ -20,6 +20,7 @@ reference:
   - register_extendr
   - write_license_note
   - clean
+  - cran
 
 - title: Various utility functions
   contents:

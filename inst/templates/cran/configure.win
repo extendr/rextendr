@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# https://github.com/eitsupi/prqlr/blob/main/configure.win
+export PATH="$PATH:$HOME/.cargo/bin"
+
+if [ ! "$(command -v cargo)" ]; then
+    echo "----------------------- [RUST NOT FOUND]---------------------------"
+    echo "The 'cargo' command was not found on the PATH. Please install rustc"
+    echo "from: https://www.rust-lang.org/tools/install"
+    echo "-------------------------------------------------------------------"
+    echo ""
+    exit 1
+fi
+
+exit 0
