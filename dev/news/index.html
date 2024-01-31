@@ -55,7 +55,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rextendr-development-version">rextendr (development version)<a class="anchor" aria-label="anchor" href="#rextendr-development-version"></a></h2>
-<ul><li>Introduces new functions <code><a href="../reference/cran.html">use_cran_defaults()</a></code> and <code><a href="../reference/cran.html">vendor_pkgs()</a></code> to ease the publication of extendr-powered packages on CRAN. See the new article <em>CRAN compliant extendr packages</em> on how to use these (<a href="https://github.com/extendr/rextendr/issues/320" class="external-link">#320</a>).</li>
+<ul><li>
+<code><a href="../reference/use_extendr.html">use_extendr()</a></code> sets the <code>DESCRIPTION</code>’s <code>SystemRequirements</code> field according to CRAN policy to <code>Cargo (Rust's package manager), rustc</code> (<a href="https://github.com/extendr/rextendr/issues/329" class="external-link">#329</a>)</li>
+<li>Introduces new functions <code><a href="../reference/cran.html">use_cran_defaults()</a></code> and <code><a href="../reference/cran.html">vendor_pkgs()</a></code> to ease the publication of extendr-powered packages on CRAN. See the new article <em>CRAN compliant extendr packages</em> on how to use these (<a href="https://github.com/extendr/rextendr/issues/320" class="external-link">#320</a>).</li>
 <li>
 <code><a href="../reference/rust_sitrep.html">rust_sitrep()</a></code> now better communicates the status of the Rust toolchain and available targets. It also guides the user through necessary installation steps to fix Rust setup (<a href="https://github.com/extendr/rextendr/issues/318" class="external-link">#318</a>).</li>
 <li>
