@@ -2,8 +2,8 @@
 % Please edit documentation in R/rextendr.R
 \docType{package}
 \name{rextendr}
-\alias{rextendr}
 \alias{rextendr-package}
+\alias{rextendr}
 \title{Call Rust code from R using the 'extendr' Crate}
 \description{
 The rextendr package implements functions to interface with Rust code from R.
