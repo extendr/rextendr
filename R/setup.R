@@ -34,7 +34,7 @@ update_rextendr_version <- function(desc_path, cur_version = NULL) {
 }
 
 update_sys_reqs <- function(desc_path) {
-  cur <- "Cargo (rustc package manager)"
+  cur <- "Cargo (Rust's package manager), rustc"
   prev <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", file = desc_path)[[1]])
 
   if (is.na(prev)) {
