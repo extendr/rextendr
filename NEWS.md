@@ -7,6 +7,7 @@
 * `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
 * `use_extendr()` sets `publish = false` in the `[package]` section of the `Cargo.toml` (#297).
 * `use_extendr()` correctly handles calls with `path` not equal to  `"."` (current folder), or when there is no active `{usethis}` project (#323).
+* Fixes an issue in pre-defined set of known features: added `either`' (#338)
 
 # rextend 0.3.1
 
