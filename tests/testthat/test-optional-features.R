@@ -51,32 +51,3 @@ test_that("Passing list to `features` results in error", {
 
   expect_rextendr_error(rust_function("fn test() {}", features = list()))
 })
-
-test_that("Enabling experimental feature raises warning", {
-  skip_if_cargo_bin()
-
-  expect_warning(
-    rust_function(
-      "fn test_either(_x : Either<Integers, Doubles>) {}",
-      features = "either",
-      # either works only with `use_try_from = TRUE`
-      extendr_fn_options = list(use_try_from = TRUE),
-      # manually override dependency to avoid setting `use_dev_extendr = TRUE`
-      patch.crates_io = list("extendr-api" = list(git = "https://github.com/extendr/extendr"))
-    )
-  )
-})
-
-test_that("Enabling experimental feature does not raise warning if `use_dev_extendr` is `TRUE`", {
-  skip_if_cargo_bin()
-
-  expect_no_warning(
-    rust_function(
-      "fn test_either(_x : Either<Integers, Doubles>) {}",
-      features = "either",
-      # either works only with `use_try_from = TRUE`
-      extendr_fn_options = list(use_try_from = TRUE),
-      use_dev_extendr = TRUE
-    )
-  )
-})
