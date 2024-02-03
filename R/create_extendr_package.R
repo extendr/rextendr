@@ -1,11 +1,11 @@
 
-#' Create a project for R package development with Rust
+#' Create package that uses Rust
 #'
 #' @description
 #' This function creates an R project directory for package development
 #' with Rust extensions.
 #'
-#' @param path a path to new directory
+#' @inheritParams usethis::create_package
 #' @param ... arguments passed on to `usethis::create_package()` and
 #' `rextendr::use_extendr()`
 #'
@@ -50,6 +50,6 @@ create_extendr_package <- function(path, ...) {
     edition = args[["edition"]] %||% TRUE
   )
 
-  return(invisible(path))
+  invisible(path)
 
 }
