@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* `use_extendr()` sets the `DESCRIPTION`'s `SystemRequirements` field according to CRAN policy to `Cargo (Rust's package manager), rustc` (#329)
 * Introduces new functions `use_cran_defaults()` and `vendor_pkgs()` to ease the publication of extendr-powered packages on CRAN. See the new article _CRAN compliant extendr packages_ on how to use these (#320).
 * `rust_sitrep()` now better communicates the status of the Rust toolchain and available targets. It also guides the user through necessary installation steps to fix Rust setup (#318).
 * `use_extendr()` and `document()` now set the `SystemRequirements` field of the `DESCRIPTION` file to
@@ -7,6 +8,7 @@
 * `use_extendr()` gets a new ability to overwrite existing rextendr templates (#292).
 * `use_extendr()` sets `publish = false` in the `[package]` section of the `Cargo.toml` (#297).
 * `use_extendr()` correctly handles calls with `path` not equal to  `"."` (current folder), or when there is no active `{usethis}` project (#323).
+* Fixes an issue in pre-defined set of known features: added `either` (#338)
 * `create_extendr_package()` allows user to create project directory using RStudio's **Project Command**. (#321)
 
 # rextend 0.3.1

@@ -10,7 +10,7 @@ test_that("use_extendr() sets up extendr files correctly", {
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
   sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
   expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_equal(sysreq_in_desc, "Cargo (rustc package manager)")
+  expect_equal(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
 
   # directory structure
   expect_true(dir.exists("src"))

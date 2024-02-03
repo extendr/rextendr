@@ -108,6 +108,7 @@ simplify_row <- function(row) {
 
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
+#' @export
 format_toml.default <- function(x, ..., .top_level = FALSE) {
   cli::cli_abort(c(
     get_toml_err_msg(),
@@ -115,6 +116,7 @@ format_toml.default <- function(x, ..., .top_level = FALSE) {
   ), class = "rextendr_error")
 }
 
+#' @export
 format_toml.data.frame <- function(x,
                                    ...,
                                    .tbl_name,
@@ -151,6 +153,7 @@ format_toml.data.frame <- function(x,
 # This handles missing args
 # `to_toml(workspace = )` results into
 # [workspace] with no children
+#' @export
 format_toml.name <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     if (is_missing(x)) {
@@ -173,6 +176,7 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
 }
 
 # `NULL` is equivalent to missing arg
+#' @export
 format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     return(character(0))
@@ -211,6 +215,7 @@ escape_dbl_quotes <- function(x) {
   stri_replace_all_regex(x, "([\"])", r"(\\$1)")
 }
 
+#' @export
 format_toml.character <- function(x,
                                   ...,
                                   .str_as_literal = TRUE,
@@ -229,6 +234,7 @@ format_toml.character <- function(x,
   )
 }
 
+#' @export
 format_toml.integer <- function(x,
                                 ...,
                                 .format_int = "%d",
@@ -242,6 +248,7 @@ format_toml.integer <- function(x,
   )
 }
 
+#' @export
 format_toml.double <- function(x,
                                ...,
                                .format_dbl = "%g",
@@ -255,6 +262,7 @@ format_toml.double <- function(x,
   )
 }
 
+#' @export
 format_toml.logical <- function(x,
                                 ...,
                                 .top_level = FALSE) {
@@ -266,6 +274,7 @@ format_toml.logical <- function(x,
   )
 }
 
+#' @export
 format_toml.list <- function(x, ..., .top_level = FALSE) {
   names <- names2(x)
   invalid <- which(!nzchar(names))
