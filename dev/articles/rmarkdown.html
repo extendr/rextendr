@@ -79,7 +79,7 @@
                         <h4 data-toc-skip class="author">Claus O.
 Wilke</h4>
             
-            <h4 data-toc-skip class="date">2024-02-04</h4>
+            <h4 data-toc-skip class="date">2024-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/HEAD/vignettes/rmarkdown.Rmd" class="external-link"><code>vignettes/rmarkdown.Rmd</code></a></small>
       <div class="d-none name"><code>rmarkdown.Rmd</code></div>
@@ -102,23 +102,23 @@ Markdown document.</p>
 <p>Chunks of type <code>extendr</code> evaluate a block of Rust
 statements. The value of the last statement can be returned to R and
 will be printed as chunk output. For example:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 5;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 7;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="in">z</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="in">```{extendr}</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="in">let x = 5;</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="in">let y = 7;</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="in">z</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>This chunk will look in the knitted document as follows:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>z</span></code></pre></div>
 <pre><code><span><span class="co">## Hello from Rust!</span></span>
 <span><span class="co">## [1] 35</span></span></code></pre>
 <p>In the background, the <code>extendr</code> knit engine casts the
@@ -127,11 +127,11 @@ returns its value to R. Notice the lack of a semicolon (<code>;</code>)
 at the end of this line, to indicate that you want to return a value.
 You can also write code that doesn’t return any result to R. In this
 case, the last line would end in a semicolon, as in this example:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"{}*{} = {}"</span><span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> z)<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"{}*{} = {}"</span><span class="op">,</span> x<span class="op">,</span> y<span class="op">,</span> z)<span class="op">;</span></span></code></pre></div>
 <pre><code><span><span class="co">## 5*7 = 35</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -153,16 +153,16 @@ value or a string. However, <code>as_real()</code> and
 <code>as_str()</code> don’t return errors, they return options, so we
 need to turn the <code>None</code> option into an error via
 <code>ok_or()</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x<span class="op">:</span><span class="dt">f64</span> <span class="op">=</span> <span class="pp">R!</span>(x)<span class="op">?</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>as_real()</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>ok_or(<span class="st">"expected a real"</span>)<span class="op">?;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y<span class="op">:</span><span class="dt">String</span> <span class="op">=</span> <span class="pp">R!</span>(y)<span class="op">?</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>as_str()</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>ok_or(<span class="st">"expected a string reference"</span>)<span class="op">?</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>to_string()<span class="op">;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"The value of x: {}</span><span class="sc">\n</span><span class="st">The value of y: {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="kw">let</span> x<span class="op">:</span><span class="dt">f64</span> <span class="op">=</span> <span class="pp">R!</span>(x)<span class="op">?</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    <span class="op">.</span>as_real()</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="op">.</span>ok_or(<span class="st">"expected a real"</span>)<span class="op">?;</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="kw">let</span> y<span class="op">:</span><span class="dt">String</span> <span class="op">=</span> <span class="pp">R!</span>(y)<span class="op">?</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="op">.</span>as_str()</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="op">.</span>ok_or(<span class="st">"expected a string reference"</span>)<span class="op">?</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="op">.</span>to_string()<span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"The value of x: {}</span><span class="sc">\n</span><span class="st">The value of y: {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
 <pre><code><span><span class="co">## The value of x: 5.3</span></span>
 <span><span class="co">## The value of y: hello</span></span></code></pre>
 </div>
@@ -176,30 +176,30 @@ specifying a <code>preamble</code> chunk option. This option takes a
 character vector of chunk names, which get included into the compile
 unit in the order provided.</p>
 <p>Consider this example Markdown code:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Define variable <span class="in">`x`</span>:</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr chunk_x, eval = FALSE}</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 1;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>Define variable <span class="in">`y`</span>:</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr chunk_y, eval = FALSE}</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 2;</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>Print:</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr out, preamble = c("chunk_x", "chunk_y")}</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("x = {}, y = {}", x, y);</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>Define variable <span class="in">`x`</span>:</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="in">```{extendr chunk_x, eval = FALSE}</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="in">let x = 1;</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>Define variable <span class="in">`y`</span>:</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="in">```{extendr chunk_y, eval = FALSE}</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="in">let y = 2;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>Print:</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="in">```{extendr out, preamble = c("chunk_x", "chunk_y")}</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="in">rprintln!("x = {}, y = {}", x, y);</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>It produces the following output.</p>
 <p>Define variable <code>x</code>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
 <p>Define variable <code>y</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span></code></pre></div>
 <p>Print:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"x = {}, y = {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"x = {}, y = {}"</span><span class="op">,</span> x<span class="op">,</span> y)<span class="op">;</span></span></code></pre></div>
 <pre><code><span><span class="co">## x = 1, y = 2</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -210,65 +210,65 @@ objects and registers them with R to be called later. For example,
 consider this code chunk. It creates R functions <code>hello()</code>
 and <code>foo()</code>, as well as a class called
 <code>Counter</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendrsrc}</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="in">#[extendr]</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="in">fn hello() -&gt; &amp;'static str {</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="in">    "Hello from Rust!"</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="in">#[extendr]</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="in">fn foo(a: &amp;str, b: i64) {</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="in">    rprintln!("Data sent to Rust: {}, {}", a, b);</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="in">struct Counter {</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="in">    n: i32,</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="in">#[extendr]</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="in">impl Counter {</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="in">    fn new() -&gt; Self {</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="in">        Self { n: 0 }</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="in">    fn increment(&amp;mut self) {</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">        self.n += 1;</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="in">    fn get(&amp;self) -&gt; i32 {</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="in">        self.n</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="in">```{extendrsrc}</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="in">#[extendr]</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="in">fn hello() -&gt; &amp;'static str {</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="in">    "Hello from Rust!"</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="in">#[extendr]</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="in">fn foo(a: &amp;str, b: i64) {</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="in">    rprintln!("Data sent to Rust: {}, {}", a, b);</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="in">struct Counter {</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="in">    n: i32,</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="in">#[extendr]</span></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="in">impl Counter {</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="in">    fn new() -&gt; Self {</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="in">        Self { n: 0 }</span></span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="in">    fn increment(&amp;mut self) {</span></span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="in">        self.n += 1;</span></span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="in">    fn get(&amp;self) -&gt; i32 {</span></span>
+<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="in">        self.n</span></span>
+<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>The only output the chunk itself creates is the Rust source code:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> hello() <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hello from Rust!"</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> foo(a<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> b<span class="op">:</span> <span class="dt">i64</span>) <span class="op">{</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="pp">rprintln!</span>(<span class="st">"Data sent to Rust: {}, {}"</span><span class="op">,</span> a<span class="op">,</span> b)<span class="op">;</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Counter <span class="op">{</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    n<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> Counter <span class="op">{</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> new() <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Self</span> <span class="op">{</span> n<span class="op">:</span> <span class="dv">0</span> <span class="op">}</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> increment(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span>) <span class="op">{</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> get(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="kw">fn</span> hello() <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>    <span class="st">"Hello from Rust!"</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="kw">fn</span> foo(a<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> b<span class="op">:</span> <span class="dt">i64</span>) <span class="op">{</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>    <span class="pp">rprintln!</span>(<span class="st">"Data sent to Rust: {}, {}"</span><span class="op">,</span> a<span class="op">,</span> b)<span class="op">;</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="kw">struct</span> Counter <span class="op">{</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>    n<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="kw">impl</span> Counter <span class="op">{</span></span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a>    <span class="kw">fn</span> new() <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a>        <span class="dt">Self</span> <span class="op">{</span> n<span class="op">:</span> <span class="dv">0</span> <span class="op">}</span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>    </span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>    <span class="kw">fn</span> increment(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span>) <span class="op">{</span></span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>    </span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>    <span class="kw">fn</span> get(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n</span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>However, now we can call the functions <code>hello()</code> and
 <code>foo()</code> from R and use the <code>Counter</code> object:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -289,31 +289,31 @@ and <code>foo()</code>, as well as a class called
 <pre><code><span><span class="co">## [1] 2</span></span></code></pre>
 <p>If your code requires external crates, you can set dependencies via
 the <code>engine.opts</code> chunk option, like so:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>``<span class="in">`{extendrsrc engine.opts = list(dependencies = list(`</span>pulldown-cmark` = "0.8"))}</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>use pulldown_cmark::{Parser, Options, html};</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>#<span class="co">[</span><span class="ot">extendr</span><span class="co">]</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>fn md_to_html(input: &amp;str) -&gt; String {</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    let mut options = Options::empty();</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    options.insert(Options::ENABLE_TABLES);</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    let parser = Parser::new_ext(input, options);</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    let mut output = String::new();</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    html::push_html(&amp;mut output, parser);</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    output</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>``<span class="in">`{extendrsrc engine.opts = list(dependencies = list(`</span>pulldown-cmark` = "0.8"))}</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>use pulldown_cmark::{Parser, Options, html};</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>#<span class="co">[</span><span class="ot">extendr</span><span class="co">]</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>fn md_to_html(input: &amp;str) -&gt; String {</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    let mut options = Options::empty();</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    options.insert(Options::ENABLE_TABLES);</span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>    let parser = Parser::new_ext(input, options);</span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>    let mut output = String::new();</span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>    html::push_html(&amp;mut output, parser);</span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a>    output</span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>}</span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>As before, the Rust code chunk just outputs the source:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">pulldown_cmark::</span><span class="op">{</span>Parser<span class="op">,</span> Options<span class="op">,</span> html<span class="op">};</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> md_to_html(input<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">String</span> <span class="op">{</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> options <span class="op">=</span> <span class="pp">Options::</span>empty()<span class="op">;</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    options<span class="op">.</span>insert(<span class="pp">Options::</span>ENABLE_TABLES)<span class="op">;</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> parser <span class="op">=</span> <span class="pp">Parser::</span>new_ext(input<span class="op">,</span> options)<span class="op">;</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>new()<span class="op">;</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">html::</span>push_html(<span class="op">&amp;</span><span class="kw">mut</span> output<span class="op">,</span> parser)<span class="op">;</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    output</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="kw">use</span> <span class="pp">pulldown_cmark::</span><span class="op">{</span>Parser<span class="op">,</span> Options<span class="op">,</span> html<span class="op">};</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="kw">fn</span> md_to_html(input<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> options <span class="op">=</span> <span class="pp">Options::</span>empty()<span class="op">;</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>    options<span class="op">.</span>insert(<span class="pp">Options::</span>ENABLE_TABLES)<span class="op">;</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="kw">let</span> parser <span class="op">=</span> <span class="pp">Parser::</span>new_ext(input<span class="op">,</span> options)<span class="op">;</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>new()<span class="op">;</span></span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>    <span class="pp">html::</span>push_html(<span class="op">&amp;</span><span class="kw">mut</span> output<span class="op">,</span> parser)<span class="op">;</span></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>    output</span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>And the generated functions can be used from R:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">md_text</span> <span class="op">&lt;-</span> <span class="st">"# The story of the fox</span></span>

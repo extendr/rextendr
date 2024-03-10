@@ -183,25 +183,25 @@
 <span><span class="co">#&gt; 1 x     &lt;int [5]&gt; integer &lt;int [1]&gt;     15 integer   </span></span>
 <span><span class="co">#&gt; 2 y     &lt;dbl [5]&gt; double  &lt;dbl [1]&gt;     15 double</span></span></code></pre></div>
 <p>The package also enables a new chunk type for knitr, <code>extendr</code>, which compiles and evaluates Rust code. For example, a code chunk such as this one:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{extendr}</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="in">let x = 5;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">let y = 7;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">z</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="in">```{extendr}</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="in">let x = 5;</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="in">let y = 7;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="in">z</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>would create the following output in the knitted document:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>z</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>z</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
