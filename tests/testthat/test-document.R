@@ -42,3 +42,18 @@ test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
   expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
 })
+
+test_that("document() warns if NAMESPACE file is malformed", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_bin()
+
+  path <- local_package("testPackage")
+  r"(exportPattern("^[[:alpha:]]+"))" |> brio::write_lines("NAMESPACE")
+  use_extendr()
+  expect_warning(
+    rextendr::document(),
+    "The 'NAMESPACE' file does not contain the expected `useDynLib` directive."
+  )
+})
