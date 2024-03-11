@@ -102,3 +102,10 @@ skip_on_R42_win <- function() {
     testthat::skip("Long path is not supported by this version of Rtools.")
   }
 }
+
+skip_if_opted_out_dev_tests <- function() {
+  env_var <- Sys.getenv("REXTENDR_SKIP_DEV_TESTS")
+  if (env_var == "true" || env_var == "1") {
+    testthat::skip("Skipping dev extendr tests.")
+  }
+}
