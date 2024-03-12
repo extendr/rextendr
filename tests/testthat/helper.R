@@ -104,7 +104,10 @@ skip_on_R42_win <- function() {
 }
 
 skip_if_opted_out_of_dev_tests <- function() {
-  env_var <- Sys.getenv("REXTENDR_SKIP_DEV_TESTS")
+  env_var <- Sys.getenv("REXTENDR_SKIP_DEV_TESTS") |>
+    stringi::stri_trim_both() |>
+    stringi::stri_trans_tolower()
+
   if (env_var == "true" || env_var == "1") {
     testthat::skip("Dev extendr tests disabled")
   }
