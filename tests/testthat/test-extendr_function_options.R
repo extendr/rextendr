@@ -1,5 +1,6 @@
 test_that("`extendr` code is compiled with `either` feature and `use_try_from` enabled", {
   skip_if_cargo_bin()
+  skip_if_opted_out_of_dev_tests()
 
   rust_function(
     "fn type_aware_sum(input : Either<Integers, Doubles>) -> Either<Rint, Rfloat> {
@@ -76,6 +77,7 @@ test_that(
   "`rust_source()` does not warn if `extendr_fn_options` contains an unknown option and `use_dev_extendr` is `TRUE`",
   {
     skip_if_cargo_bin()
+    skip_if_opted_out_of_dev_tests()
 
     expect_rextendr_error( # Failed compilation because of the unknonw option
       rust_function(
