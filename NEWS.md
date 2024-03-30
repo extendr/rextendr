@@ -10,6 +10,7 @@
 * `use_extendr()` correctly handles calls with `path` not equal to  `"."` (current folder), or when there is no active `{usethis}` project (#323).
 * Fixes an issue in pre-defined set of known features: added `either` (#338)
 * `create_extendr_package()` allows user to create project directory using RStudio's **Project Command**. (#321)
+* Support `RTOOLS44` (#347)
 
 # rextend 0.3.1
 
