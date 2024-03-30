@@ -314,7 +314,11 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         cli::cli_abort("rextendr currently supports R 4.x", class = "rextendr_error")
       }
 
-      if (package_version(R.version$minor) >= "3.0") {
+      minor_patch <- package_version(R.version$minor)
+
+      if (minor_patch >= "4.0") {
+        rtools_version <- "44" # nolint: object_usage_linter
+      } else if (minor_patch >= "3.0") {
         rtools_version <- "43" # nolint: object_usage_linter
       } else {
         rtools_version <- "42" # nolint: object_usage_linter
