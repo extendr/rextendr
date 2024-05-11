@@ -1,5 +1,5 @@
 test_that("Module macro generation", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   rust_src <- r"(
 #[extendr]
@@ -62,7 +62,7 @@ impl Counter {
 })
 
 test_that("Macro generation fails on invalid rust code", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_rextendr_error(
     make_module_macro("#[extendr]\nlet invalid_var = ();"),
@@ -72,7 +72,7 @@ test_that("Macro generation fails on invalid rust code", {
 
 
 test_that("Macro generation fails on invalid comments in code", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
@@ -99,7 +99,7 @@ test_that("Macro generation fails on invalid comments in code", {
 
 
 test_that("Rust code cleaning", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_equal(
     fill_block_comments(c(
@@ -129,7 +129,7 @@ test_that("Rust code cleaning", {
 })
 
 test_that("Rust metadata capturing", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_equal(
     find_extendr_attrs_ids(c(

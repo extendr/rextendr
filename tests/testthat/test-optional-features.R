@@ -1,5 +1,5 @@
 test_that("Feature 'ndarray' is enabled when no extra dependencies are specified", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
   skip_on_R42_win()
 
   input <- file.path("../data/ndarray_example.rs")
@@ -16,7 +16,7 @@ test_that("Feature 'ndarray' is enabled when no extra dependencies are specified
 })
 
 test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
   skip_on_R42_win()
 
   input <- file.path("../data/ndarray_example.rs")
@@ -34,20 +34,20 @@ test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled"
 })
 
 test_that("Enable multiple features simultaneously", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   rust_function("fn test_multiple_features() {}", features = c("ndarray", "serde", "graphics"))
   expect_no_error(test_multiple_features())
 })
 
 test_that("Passing integers to `features` results in error", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_rextendr_error(rust_function("fn test() {}", features = 1:10))
 })
 
 test_that("Passing list to `features` results in error", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_rextendr_error(rust_function("fn test() {}", features = list()))
 })
