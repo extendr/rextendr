@@ -1,6 +1,5 @@
 test_that("`extendr` code is compiled with `either` feature and `use_try_from` enabled", {
   skip_if_cargo_bin()
-  skip_if_opted_out_of_dev_tests()
 
   rust_function(
     "fn type_aware_sum(input : Either<Integers, Doubles>) -> Either<Rint, Rfloat> {
@@ -11,8 +10,6 @@ test_that("`extendr` code is compiled with `either` feature and `use_try_from` e
     }",
     extendr_fn_options = list("use_try_from" = TRUE),
     features = "either",
-    use_dev_extendr = TRUE,
-    quiet = TRUE # Suppresses warnings while the feature is still experimental
   )
 
   int_sum <- type_aware_sum(1:5)
