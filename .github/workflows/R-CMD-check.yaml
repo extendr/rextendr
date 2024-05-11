@@ -18,7 +18,7 @@ jobs:
         config:
           - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '42' }
+          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '43' }
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
 
@@ -29,6 +29,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      REXTENDR_SKIP_DEV_TESTS: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
       - uses: actions/checkout@v3

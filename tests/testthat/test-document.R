@@ -2,7 +2,7 @@ test_that("Running `document` after adding multiple files", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("testPackage")
   use_extendr()
@@ -18,7 +18,7 @@ test_that("Warn if using older rextendr", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("futurepkg")
   use_extendr()
@@ -31,7 +31,7 @@ test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("oldpkg")
   use_extendr()
@@ -47,7 +47,7 @@ test_that("document() warns if NAMESPACE file is malformed", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("testPackage")
   r"(exportPattern("^[[:alpha:]]+"))" |> brio::write_lines("NAMESPACE")
