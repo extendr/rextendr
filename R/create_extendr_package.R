@@ -1,4 +1,3 @@
-
 #' Create package that uses Rust
 #'
 #' @description
@@ -14,7 +13,6 @@
 #'
 #' @noRd
 create_extendr_package <- function(path, ...) {
-
   # error if usethis is not installed
   rlang::check_installed("usethis")
 
@@ -51,5 +49,4 @@ create_extendr_package <- function(path, ...) {
   )
 
   invisible(path)
-
 }
