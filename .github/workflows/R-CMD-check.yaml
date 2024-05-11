@@ -29,6 +29,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      REXTENDR_SKIP_DEV_TEST: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
       - uses: actions/checkout@v3
