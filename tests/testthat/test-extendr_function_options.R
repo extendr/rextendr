@@ -1,4 +1,4 @@
-test_that("`extendr` code is compiled with `either` feature and `use_try_from` enabled", {
+test_that("`extendr` code is compiled with `either` feature", {
   skip_if_cargo_unavailable()
 
   rust_function(
@@ -8,7 +8,6 @@ test_that("`extendr` code is compiled with `either` feature and `use_try_from` e
         Either::Right(right) => Either::Right(right.iter().sum())
       }
     }",
-    extendr_fn_options = list("use_try_from" = TRUE),
     features = "either",
   )
 
@@ -35,7 +34,7 @@ test_that("`r_name` option renames R function", {
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
-  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = NULL)))
+  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use_rng" = NULL)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains value of the wrong type", {
@@ -43,7 +42,7 @@ test_that("`rust_source()` errors if `extendr_fn_options` contains value of the 
 
   # due to the use of purrr here, the error that is emitted is on of class `mutate_error`
   # we cannot expect `rextendr_error` from this function.
-  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_try_from" = 42L)))
+  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_rng" = 42L)))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains option with an invalid name", {

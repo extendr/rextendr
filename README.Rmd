@@ -125,7 +125,6 @@ rust_function(
   }",
   use_dev_extendr = TRUE, # Use development version of extendr from GitHub
   features = "either", # Enable support for Either crate
-  extendr_fn_options = list(use_try_from = TRUE) # Enable advanced type conversion
 )
 
 x <- 1:5
