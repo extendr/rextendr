@@ -9,6 +9,7 @@ test_that("`extendr` code is compiled with `either` feature", {
       }
     }",
     features = "either",
+    use_dev_extendr = TRUE
   )
 
   int_sum <- type_aware_sum(1:5)
