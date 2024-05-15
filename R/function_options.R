@@ -1,9 +1,9 @@
 extendr_function_config <- rlang::env(
   known_options = tibble::tribble(
     ~Name, ~Ptype,
-    "use_try_from", logical(),
     "r_name", character(),
     "mod_name", character(),
+    "use_rng", logical()
   )
 )
 

@@ -11,6 +11,7 @@
 * Fixes an issue in pre-defined set of known features: added `either` (#338)
 * `create_extendr_package()` allows user to create project directory using RStudio's **Project Command**. (#321)
 * Support `RTOOLS44` (#347)
+* Removed `use_try_from` as an option in `rust_function`, and added `use_rng` (#354)
 
 # rextend 0.3.1
 

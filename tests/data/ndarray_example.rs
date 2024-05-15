@@ -1,6 +1,6 @@
 use extendr_api::prelude::*;
 
-#[extendr(use_try_from = true)]
+#[extendr]
 fn matrix_sum(input : ArrayView2<Rfloat>) -> Rfloat {
     input.iter().sum()
 }
