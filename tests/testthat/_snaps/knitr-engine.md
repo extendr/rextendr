@@ -9,7 +9,7 @@
       Basic use example:
       
       
-      ```r
+      ``` r
       library(rextendr)
       
       # create a Rust function
@@ -35,7 +35,7 @@
       
       would create the following output in the knitted document:
       
-      ```rust
+      ``` rust
       rprintln!("Hello from Rust!");
       
       let x = 5;
@@ -50,27 +50,27 @@
       Define variable `_x`:
       
       
-      ```rust
+      ``` rust
       let _x = 1;
       ```
       
       Define variable `_y`:
       
       
-      ```rust
+      ``` rust
       let _y = 2;
       ```
       
       Print:
       
       
-      ```rust
+      ``` rust
       rprintln!("x = {}, y = {}", _x, _y);
       #> x = 1, y = 2
       ```
       
       
-      ```rust
+      ``` rust
       use pulldown_cmark::{Parser, Options, html};
       
       #[extendr]
@@ -85,7 +85,7 @@
       ```
       
       
-      ```r
+      ``` r
       md_text <- "# The story of the fox
       The quick brown fox **jumps over** the lazy dog.
       The quick *brown fox* jumps over the lazy dog."
