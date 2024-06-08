@@ -135,6 +135,7 @@ use_extendr <- function(path = ".",
 
   edition <- match.arg(edition, several.ok = FALSE)
   cargo_toml_content <- to_toml(
+    workspace = list(),
     package = list(name = crate_name, publish = FALSE, version = "0.1.0", edition = edition),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
