@@ -17,7 +17,7 @@
       
       Name:        extendr-macros
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov
+      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
       License:     MIT
       
       -------------------------------------------------------------
