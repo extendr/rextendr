@@ -50,9 +50,6 @@ jobs:
           # TODO: enable RSPM when all the packages are available
           use-public-rspm: false
 
-      - name: Set up pandoc
-        uses: r-lib/actions/setup-pandoc@v2
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           # increment this version number when we need to clear the cache
