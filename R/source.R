@@ -22,7 +22,7 @@
 #'   otherwise, uses `rextendr.extendr_dev_deps` option
 #'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
 #' @param features A vector of `extendr-api` features that should be enabled.
-#'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
+#'  Supported values are `"ndarray"`, `"faer"`, `"either"`, `"num-complex"`, `"serde"`, and `"graphics"`.
 #'  Unknown features will produce a warning if `quiet` is not `TRUE`.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
