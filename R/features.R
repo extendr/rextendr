@@ -1,5 +1,5 @@
 features_config <- rlang::env(
-  known_features = c("ndarray", "serde", "either", "num-complex", "graphics")
+  known_features = c("ndarray", "faer", "serde", "either", "num-complex", "graphics")
 )
 
 validate_extendr_features <- function(features, suppress_warnings) {
