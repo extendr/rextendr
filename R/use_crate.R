@@ -147,7 +147,7 @@ use_crate <- function(
   # combine option names and values into single strings
   adtl_args <- unname(purrr::imap_chr(
     cargo_add_opts,
-    \(x, i){ paste(i, paste0(x, collapse = " ")) }
+    function(x, i){ paste(i, paste0(x, collapse = " ")) }
   ))
 
   # get rust directory in project folder
