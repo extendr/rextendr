@@ -5,7 +5,7 @@
 #' @param crate character scalar, the name of the crate to add
 #' @param features character vector, a list of features to include from the
 #' crate
-#' @param git character scalar, the URL of the Github repository
+#' @param git character scalar, the full URL of the remote Git repository
 #' @param version character scalar, the version of the crate to add
 #' @param optional boolean scalar, whether to mark the dependency as optional 
 #' (FALSE by default)
@@ -29,7 +29,7 @@
 #' use_crate("serde", features = "derive")
 #'
 #' # add to [dependencies] using github repository as source
-#' use_crate("serde", git = "serde-rs/serde")
+#' use_crate("serde", git = "https://github.com/serde-rs/serde")
 #'
 #' # add to [dependencies] with specific version
 #' use_crate("serde", version = "1.0.1")
@@ -43,8 +43,7 @@ use_crate <- function(
     git = NULL,
     version = NULL,
     optional = FALSE,
-    path = ".",
-    ...
+    path = "."
 ){
 
   # check crate
@@ -91,8 +90,6 @@ use_crate <- function(
       )
 
     }
-
-    git <- paste0("https://github.com/", git)
 
   }
 
