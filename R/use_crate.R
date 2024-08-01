@@ -2,16 +2,18 @@
 #'
 #' Analogous to `usethis::use_package()` but for crate dependencies.
 #'
-#' @param crate a character scalar, the name of the crate to add
-#' @param features a character vector, a list of features to include from the
+#' @param crate character scalar, the name of the crate to add
+#' @param features character vector, a list of features to include from the
 #' crate
-#' @param git a character scalar, the URL of the Github repository
-#' @param version a character scalar, the version of the crate to add
-#' @param path a character scalar, the package directory
-#' @param ... additional options to include
+#' @param git character scalar, the URL of the Github repository
+#' @param version character scalar, the version of the crate to add
+#' @param optional boolean scalar, whether to mark the dependency as optional 
+#' (FALSE by default)
+#' @param path character scalar, the package directory
 #'
 #' @details
-#' For a list of all available options, see \href{https://doc.rust-lang.org/cargo/commands/cargo-add.html}{Cargo docs}
+#' For more details regarding these and other options, see the 
+#' \href{https://doc.rust-lang.org/cargo/commands/cargo-add.html}{Cargo docs}
 #' for `cargo-add`.
 #'
 #' @return `NULL`, invisibly
@@ -31,12 +33,16 @@
 #'
 #' # add to [dependencies] with specific version
 #' use_crate("serde", version = "1.0.1")
+#' 
+#' # add to [dependencies] with optional compilation
+#' use_crate("serde", optional = TRUE)
 #' }
 use_crate <- function(
     crate,
     features = NULL,
     git = NULL,
     version = NULL,
+    optional = FALSE,
     path = ".",
     ...
 ){
@@ -44,9 +50,14 @@ use_crate <- function(
   # check crate
   if (!rlang::is_character(crate) && length(crate) != 1){
 
+    info <- paste(
+      "You supplied an object of class {class(crate)[1]}",
+      "with length {length(crate)}."
+    )
+
     cli::cli_abort(
       "{.var crate} should be a length one character vector.",
-      "i" = "You supplied an object of class {class(crate)} with length {length(crate)}.",
+      "i" =  info,
       class = "rextendr_error"
     )
 
@@ -57,7 +68,7 @@ use_crate <- function(
 
     cli::cli_abort(
       "{.var features} should be a character vector.",
-      "i" = "You supplied an object of class {class(features)}.",
+      "i" = "You supplied an object of class {class(features)[1]}.",
       class = "rextendr_error"
     )
 
@@ -68,9 +79,14 @@ use_crate <- function(
 
     if (!rlang::is_character(git) && length(git) != 1){
 
+      info <- paste(
+        "You supplied an object of class {class(git)[1]}",
+        "with length {length(git)}."  
+      )
+
       cli::cli_abort(
         "{.var git} should be a length one character vector.",
-        "i" = "You supplied an object of class {class(git)} with length {length(git)}.",
+        "i" = info,
         class = "rextendr_error"
       )
 
@@ -85,9 +101,14 @@ use_crate <- function(
 
     if (!rlang::is_character(version) && length(version) != 1){
 
+      info <- paste(
+        "You supplied an object of class {class(version)}",
+        "with length {length(version)}."
+      )
+
       cli::cli_abort(
         "{.var version} should be a length one character vector.",
-        "i" = "You supplied an object of class {class(version)} with length {length(version)}.",
+        "i" = info,
         class = "rextendr_error"
       )
 
@@ -97,18 +118,28 @@ use_crate <- function(
 
   }
 
+  #check optional
+  if (!rlang::is_bool(optional) && length(optional) != 1){
+
+    info <- paste(
+      "You supplied an object of class {class(optional)[1]}",
+      "with length {length(optional)}."
+    )
+
+    cli::cli_abort(
+      "{.var optional} should be a length one boolean vector.",
+      "i" = info,
+      class = "rextendr_error"
+    )
+
+  }
+
   # combine main options
   cargo_add_opts <- list(
     "--features" = features,
-    "--git" = git
+    "--git" = git,
+    "--optional" = tolower(as.character(optional))
   )
-
-  # add additional options from ...
-  lst <- rlang::dots_list(...)
-
-  if (length(lst) > 0){ names(lst) <- paste0("--", names(lst)) }
-
-  cargo_add_opts <- c(cargo_add_opts, lst)
 
   # clear empty options
   cargo_add_opts <- Filter(length, cargo_add_opts)
