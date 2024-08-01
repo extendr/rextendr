@@ -14,7 +14,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }} / ${{ matrix.config.rust-version }})
+    name: PkgGen ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.rust-version }})
 
     strategy:
       fail-fast: false
@@ -49,9 +49,6 @@ jobs:
           rtools-version: ${{ matrix.config.rtools-version }}
           # TODO: enable RSPM when all the packages are available
           use-public-rspm: false
-
-      - name: Set up pandoc
-        uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

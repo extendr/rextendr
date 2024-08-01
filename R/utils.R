@@ -38,7 +38,7 @@ local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
 #' @return Logical scalar indicating if the command was available.
 #' @noRd
 cargo_command_available <- function(args = "--help") {
-  !any(is.na(try_exec_cmd("cargo", args)))
+  !anyNA(try_exec_cmd("cargo", args))
 }
 
 #' Helper function for executing commands.
