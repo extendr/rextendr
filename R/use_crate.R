@@ -136,7 +136,7 @@ use_crate <- function(
 
   # combine main options
   cargo_add_opts <- list(
-    "--features" = features,
+    "--features" = paste0(features, collapse = " "),
     "--git" = git,
     "--optional" = tolower(as.character(optional))
   )
