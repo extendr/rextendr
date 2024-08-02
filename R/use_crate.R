@@ -46,90 +46,15 @@ use_crate <- function(
     path = "."
 ){
 
-  # check crate
-  if (!rlang::is_character(crate) && length(crate) != 1){
+  # check args
+  check_string(crate)
+  check_character(features, allow_null = TRUE)
+  check_string(git, allow_null = TRUE)
+  check_string(version, allow_null = TRUE)
+  check_bool(optional)
+  check_string(path)
 
-    info <- paste(
-      "You supplied an object of class {class(crate)[1]}",
-      "with length {length(crate)}."
-    )
-
-    cli::cli_abort(
-      "{.var crate} should be a length one character vector.",
-      "i" =  info,
-      class = "rextendr_error"
-    )
-
-  }
-
-  # check features
-  if (!is.null(features) && !rlang::is_character(features)){
-
-    cli::cli_abort(
-      "{.var features} should be a character vector.",
-      "i" = "You supplied an object of class {class(features)[1]}.",
-      class = "rextendr_error"
-    )
-
-  }
-
-  # check git
-  if (!is.null(git)){
-
-    if (!rlang::is_character(git) && length(git) != 1){
-
-      info <- paste(
-        "You supplied an object of class {class(git)[1]}",
-        "with length {length(git)}."  
-      )
-
-      cli::cli_abort(
-        "{.var git} should be a length one character vector.",
-        "i" = info,
-        class = "rextendr_error"
-      )
-
-    }
-
-  }
-
-  # check version
-  if (!is.null(version)){
-
-    if (!rlang::is_character(version) && length(version) != 1){
-
-      info <- paste(
-        "You supplied an object of class {class(version)}",
-        "with length {length(version)}."
-      )
-
-      cli::cli_abort(
-        "{.var version} should be a length one character vector.",
-        "i" = info,
-        class = "rextendr_error"
-      )
-
-    }
-
-    crate <- paste0(crate, "@", version)
-
-  }
-
-  #check optional
-  if (!rlang::is_bool(optional) && length(optional) != 1){
-
-    info <- paste(
-      "You supplied an object of class {class(optional)[1]}",
-      "with length {length(optional)}."
-    )
-
-    cli::cli_abort(
-      "{.var optional} should be a length one boolean vector.",
-      "i" = info,
-      class = "rextendr_error"
-    )
-
-  }
+  if (!is.null(version)){ crate <- paste0(crate, "@", version) }
 
   # combine main options
   cargo_add_opts <- list(
@@ -139,7 +64,7 @@ use_crate <- function(
   )
 
   # clear empty options
-  cargo_add_opts <- Filter(length, cargo_add_opts)
+  cargo_add_opts <- purrr::discard(cargo_add_opts, rlang::is_empty)
 
   # combine option names and values into single strings
   adtl_args <- unname(purrr::imap_chr(
