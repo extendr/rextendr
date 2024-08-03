@@ -58,7 +58,6 @@
 #' @param x Any R object.
 #' @param value Whether to describe the value of `x`. Special values
 #'   like `NA` or `""` are always described.
-#' @param length Whether to mention the length of vectors and lists.
 #' @return A string describing the type. Starts with an indefinite
 #'   article, e.g. "an integer vector".
 #' @noRd
@@ -83,90 +82,107 @@ obj_type_friendly <- function(x, value = TRUE) {
   n_dim <- length(dim(x))
 
   if (!n_dim) {
-    if (!rlang::is_list(x) && length(x) == 1) {
-      if (rlang::is_na(x)) {
-        return(switch(
-          typeof(x),
-          logical = "`NA`",
-          integer = "an integer `NA`",
-          double =
-            if (is.nan(x)) {
-              "`NaN`"
-            } else {
-              "a numeric `NA`"
-            },
-          complex = "a complex `NA`",
-          character = "a character `NA`",
-          .rlang_stop_unexpected_typeof(x)
-        ))
-      }
+    return(vec_or_scalar_type_friendly(x, value))
+  }
+  vec_type_friendly(x)
+}
 
-      show_infinites <- function(x) {
-        if (x > 0) {
-          "`Inf`"
-        } else {
-          "`-Inf`"
-        }
-      }
-      str_encode <- function(x, width = 30, ...) {
-        if (nchar(x) > width) {
-          x <- substr(x, 1, width - 3)
-          x <- paste0(x, "...")
-        }
-        encodeString(x, ...)
-      }
-
-      if (value) {
-        if (is.numeric(x) && is.infinite(x)) {
-          return(show_infinites(x))
-        }
-
-        if (is.numeric(x) || is.complex(x)) {
-          number <- as.character(round(x, 2))
-          what <- if (is.complex(x)) "the complex number" else "the number"
-          return(paste(what, number))
-        }
-
-        return(switch(
-          typeof(x),
-          logical = if (x) "`TRUE`" else "`FALSE`",
-          character = {
-            what <- if (nzchar(x)) "the string" else "the empty string"
-            paste(what, str_encode(x, quote = "\""))
-          },
-          raw = paste("the raw value", as.character(x)),
-          .rlang_stop_unexpected_typeof(x)
-        ))
-      }
-
-      return(switch(
-        typeof(x),
-        logical = "a logical value",
-        integer = "an integer",
-        double = if (is.infinite(x)) show_infinites(x) else "a number",
-        complex = "a complex number",
-        character = if (nzchar(x)) "a string" else "\"\"",
-        raw = "a raw value",
-        .rlang_stop_unexpected_typeof(x)
-      ))
+vec_or_scalar_type_friendly <- function(x, value) {
+  if (!rlang::is_list(x) && length(x) == 1) {
+    if (rlang::is_na(x)) {
+      return(.match_na_scalar(x))
     }
 
-    if (length(x) == 0) {
-      return(switch(
-        typeof(x),
-        logical = "an empty logical vector",
-        integer = "an empty integer vector",
-        double = "an empty numeric vector",
-        complex = "an empty complex vector",
-        character = "an empty character vector",
-        raw = "an empty raw vector",
-        list = "an empty list",
-        .rlang_stop_unexpected_typeof(x)
-      ))
+    if (value) {
+      return(.make_description(x))
     }
+
+    return(.match_default_scalar(x))
   }
 
+  if (length(x) == 0) {
+    return(.match_empty_object(x))
+  }
   vec_type_friendly(x)
+}
+
+.show_infinities <- function(x) {
+  if (x > 0) {
+    "`Inf`"
+  } else {
+    "`-Inf`"
+  }
+}
+
+.str_encode <- function(x, width = 30, ...) {
+  if (nchar(x) > width) {
+    x <- substr(x, 1, width - 3)
+    x <- paste0(x, "...")
+  }
+  encodeString(x, ...)
+}
+
+.make_description <- function(x) {
+  if (is.numeric(x) && is.infinite(x)) {
+    return(.show_infinities(x))
+  }
+
+  if (is.numeric(x) || is.complex(x)) {
+    number <- as.character(round(x, 2))
+    what <- if (is.complex(x)) "the complex number" else "the number"
+    return(paste(what, number))
+  }
+
+  switch(typeof(x),
+    logical = if (x) "`TRUE`" else "`FALSE`",
+    character = {
+      what <- if (nzchar(x)) "the string" else "the empty string"
+      paste(what, .str_encode(x, quote = "\""))
+    },
+    raw = paste("the raw value", as.character(x)),
+    .rlang_stop_unexpected_typeof(x)
+  )
+}
+
+.match_default_scalar <- function(x) {
+  switch(typeof(x),
+    logical = "a logical value",
+    integer = "an integer",
+    double = if (is.infinite(x)) .show_infinities(x) else "a number",
+    complex = "a complex number",
+    character = if (nzchar(x)) "a string" else "\"\"",
+    raw = "a raw value",
+    .rlang_stop_unexpected_typeof(x)
+  )
+}
+
+.match_na_scalar <- function(x) {
+  switch(typeof(x),
+    logical = "`NA`",
+    integer = "an integer `NA`",
+    double =
+      if (is.nan(x)) {
+        "`NaN`"
+      } else {
+        "a numeric `NA`"
+      },
+    complex = "a complex `NA`",
+    character = "a character `NA`",
+    .rlang_stop_unexpected_typeof(x)
+  )
+}
+
+.match_empty_object <- function(x) {
+  switch(typeof(x),
+    logical = "an empty logical vector",
+    integer = "an empty integer vector",
+    double = "an empty numeric vector",
+    complex = "an empty complex vector",
+    character = "an empty character vector",
+    raw = "an empty raw vector",
+    list = "an empty list",
+    .rlang_stop_unexpected_typeof(x)
+  )
 }
 
 vec_type_friendly <- function(x, length = FALSE) {
@@ -176,37 +192,11 @@ vec_type_friendly <- function(x, length = FALSE) {
   type <- typeof(x)
   n_dim <- length(dim(x))
 
-  add_length <- function(type) {
-    if (length && !n_dim) {
-      paste0(type, sprintf(" of length %s", length(x)))
-    } else {
-      type
-    }
-  }
-
   if (type == "list") {
-    if (n_dim < 2) {
-      return(add_length("a list"))
-    } else if (is.data.frame(x)) {
-      return("a data frame")
-    } else if (n_dim == 2) {
-      return("a list matrix")
-    } else {
-      return("a list array")
-    }
+    return(.list_type_friendly(x, type, length, n_dim))
   }
 
-  type <- switch(
-    type,
-    logical = "a logical %s",
-    integer = "an integer %s",
-    numeric = ,
-    double = "a double %s",
-    complex = "a complex %s",
-    character = "a character %s",
-    raw = "a raw %s",
-    type = paste0("a ", type, " %s")
-  )
+  type <- .get_message_pattern(type)
 
   if (n_dim < 2) {
     kind <- "vector"
@@ -220,39 +210,65 @@ vec_type_friendly <- function(x, length = FALSE) {
   if (n_dim >= 2) {
     out
   } else {
-    add_length(out)
+    .with_length(x, out, length, n_dim)
   }
 }
 
+.list_type_friendly <- function(x, type, length, n_dim) {
+  if (n_dim < 2) {
+    return(.with_length(x, "a list", length, n_dim))
+  } else if (is.data.frame(x)) {
+    return("a data frame")
+  } else if (n_dim == 2) {
+    return("a list matrix")
+  } else {
+    return("a list array")
+  }
+}
+
+.with_length <- function(x, type, length, n_dim) {
+  if (length && !n_dim) {
+    paste0(type, sprintf(" of length %s", length(x)))
+  } else {
+    type
+  }
+}
+
+.get_message_pattern <- function(type) {
+  switch(type,
+    logical = "a logical %s",
+    integer = "an integer %s",
+    numeric = ,
+    double = "a double %s",
+    complex = "a complex %s",
+    character = "a character %s",
+    raw = "a raw %s",
+    type = paste0("a ", type, " %s")
+  )
+}
+
 .rlang_as_friendly_type <- function(type) {
-  switch(
-    type,
-
+  switch(type,
     list = "a list",
-
     NULL = "`NULL`",
     environment = "an environment",
     externalptr = "a pointer",
     weakref = "a weak reference",
     S4 = "an S4 object",
-
     name = ,
     symbol = "a symbol",
     language = "a call",
     pairlist = "a pairlist node",
     expression = "an expression vector",
-
     char = "an internal string",
     promise = "an internal promise",
     ... = "an internal dots object",
     any = "an internal `any` object",
     bytecode = "an internal bytecode object",
-
     primitive = ,
     builtin = ,
     special = "a primitive function",
     closure = "a function",
-
     type
   )
 }
@@ -296,16 +312,14 @@ obj_type_oo <- function(x) {
 #' @param ... Arguments passed to [abort()].
 #' @inheritParams args_error_context
 #' @noRd
-stop_input_type <- function(
-    x,
-    what,
-    ...,
-    allow_na = FALSE,
-    allow_null = FALSE,
-    show_value = TRUE,
-    arg = rlang::caller_arg(x),
-    call = rlang::caller_env()
-) {
+stop_input_type <- function(x,
+                            what,
+                            ...,
+                            allow_na = FALSE,
+                            allow_null = FALSE,
+                            show_value = TRUE,
+                            arg = rlang::caller_arg(x),
+                            call = rlang::caller_env()) {
   # From standalone-cli.R
   cli <- rlang::env_get_list(
     nms = c("format_arg", "format_code"),

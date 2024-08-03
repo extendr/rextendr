@@ -7,12 +7,12 @@
 #' crate
 #' @param git character scalar, the full URL of the remote Git repository
 #' @param version character scalar, the version of the crate to add
-#' @param optional boolean scalar, whether to mark the dependency as optional 
+#' @param optional boolean scalar, whether to mark the dependency as optional
 #' (FALSE by default)
 #' @param path character scalar, the package directory
 #'
 #' @details
-#' For more details regarding these and other options, see the 
+#' For more details regarding these and other options, see the
 #' \href{https://doc.rust-lang.org/cargo/commands/cargo-add.html}{Cargo docs}
 #' for `cargo-add`.
 #'
@@ -33,7 +33,7 @@
 #'
 #' # add to [dependencies] with specific version
 #' use_crate("serde", version = "1.0.1")
-#' 
+#'
 #' # add to [dependencies] with optional compilation
 #' use_crate("serde", optional = TRUE)
 #' }
@@ -43,9 +43,7 @@ use_crate <- function(
     git = NULL,
     version = NULL,
     optional = FALSE,
-    path = "."
-){
-
+    path = ".") {
   # check args
   check_string(crate)
   check_character(features, allow_null = TRUE)
@@ -54,7 +52,9 @@ use_crate <- function(
   check_bool(optional)
   check_string(path)
 
-  if (!is.null(version)){ crate <- paste0(crate, "@", version) }
+  if (!is.null(version)) {
+    crate <- paste0(crate, "@", version)
+  }
 
   # combine main options
   cargo_add_opts <- list(
@@ -69,7 +69,9 @@ use_crate <- function(
   # combine option names and values into single strings
   adtl_args <- unname(purrr::imap_chr(
     cargo_add_opts,
-    function(x, i){ paste(i, paste0(x, collapse = " ")) }
+    function(x, i) {
+      paste(i, paste0(x, collapse = " "))
+    }
   ))
 
   # get rust directory in project folder
@@ -90,5 +92,4 @@ use_crate <- function(
   )
 
   invisible()
-
 }

@@ -1,6 +1,6 @@
 #' Try to save open files if \pkg{rextendr} is called from an IDE.
 #'
-#' Uses rstudio API (if available) to save modfied files.
+#' Uses rstudio API (if available) to save modified files.
 #' Improves package development experience within RStudio.
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).

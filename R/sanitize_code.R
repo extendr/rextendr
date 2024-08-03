@@ -14,10 +14,10 @@ remove_line_comments <- function(lns) {
   stringi::stri_replace_first_regex(lns, "//.*$", "")
 }
 
-# Because R does not allow strightforward iteration over
+# Because R does not allow straightforward iteration over
 # scalar strings, determining `/*` and `*/` positions can be challenging.
 # E.g., regex matches 3 `/*` and 3 `*/` in `/*/**/*/`.
-# 1. We find all occurence of `/*` and `*/`.
+# 1. We find all occurrence of `/*` and `*/`.
 # 2. We find non-overlapping `/*` and `*/`.
 # 3. We build pairs of open-close comment delimiters by collapsing nested
 #   comments.
@@ -66,7 +66,7 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   while (i <= n) {
     if (comment_syms[["start"]][i] == comment_syms[["end"]][i - 1L]) {
       # If current overlaps with previous, exclude current and
-      # jump over the next one, which is inclded automatically.
+      # jump over the next one, which is included automatically.
       selects[i] <- FALSE
       i <- i + 1L
     }
@@ -86,8 +86,8 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
         "Malformed comments.",
         "x" = "Number of start {.code /*} and end {.code */} \\
                delimiters are not equal.",
-        "i" = "Found {n_open} occurence{?s} of {.code /*}.",
-        "i" = "Found {n_close} occurence{?s} of {.code */}."
+        "i" = "Found {n_open} occurrence{?s} of {.code /*}.",
+        "i" = "Found {n_close} occurrence{?s} of {.code */}."
       ),
       class = "rextendr_error"
     )
