@@ -84,11 +84,11 @@ test_that("Macro generation fails on invalid comments in code", {
   )
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
-    "Found 3 occurences"
+    "Found 3 occurrences"
   )
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
-    "Found 1 occurence"
+    "Found 1 occurrence"
   )
 
   expect_rextendr_error(
