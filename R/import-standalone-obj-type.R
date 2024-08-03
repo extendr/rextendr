@@ -185,7 +185,6 @@ vec_or_scalar_type_friendly <- function(x, value) {
   )
 }
 
-
 vec_type_friendly <- function(x, length = FALSE) {
   if (!rlang::is_vector(x)) {
     rlang::abort("`x` must be a vector.")
@@ -193,36 +192,11 @@ vec_type_friendly <- function(x, length = FALSE) {
   type <- typeof(x)
   n_dim <- length(dim(x))
 
-  add_length <- function(type) {
-    if (length && !n_dim) {
-      paste0(type, sprintf(" of length %s", length(x)))
-    } else {
-      type
-    }
-  }
-
   if (type == "list") {
-    if (n_dim < 2) {
-      return(add_length("a list"))
-    } else if (is.data.frame(x)) {
-      return("a data frame")
-    } else if (n_dim == 2) {
-      return("a list matrix")
-    } else {
-      return("a list array")
-    }
+    return(.list_type_friendly(x, type, length, n_dim))
   }
 
-  type <- switch(type,
-    logical = "a logical %s",
-    integer = "an integer %s",
-    numeric = ,
-    double = "a double %s",
-    complex = "a complex %s",
-    character = "a character %s",
-    raw = "a raw %s",
-    type = paste0("a ", type, " %s")
-  )
+  type <- .get_message_pattern(type)
 
   if (n_dim < 2) {
     kind <- "vector"
@@ -236,8 +210,41 @@ vec_type_friendly <- function(x, length = FALSE) {
   if (n_dim >= 2) {
     out
   } else {
-    add_length(out)
+    .with_length(x, out, length, n_dim)
   }
+}
+
+.list_type_friendly <- function(x, type, length, n_dim) {
+  if (n_dim < 2) {
+    return(.with_length(x, "a list", length, n_dim))
+  } else if (is.data.frame(x)) {
+    return("a data frame")
+  } else if (n_dim == 2) {
+    return("a list matrix")
+  } else {
+    return("a list array")
+  }
+}
+
+.with_length <- function(x, type, length, n_dim) {
+  if (length && !n_dim) {
+    paste0(type, sprintf(" of length %s", length(x)))
+  } else {
+    type
+  }
+}
+
+.get_message_pattern <- function(type) {
+  switch(type,
+    logical = "a logical %s",
+    integer = "an integer %s",
+    numeric = ,
+    double = "a double %s",
+    complex = "a complex %s",
+    character = "a character %s",
+    raw = "a raw %s",
+    type = paste0("a ", type, " %s")
+  )
 }
 
 .rlang_as_friendly_type <- function(type) {
