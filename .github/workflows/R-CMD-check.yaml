@@ -39,7 +39,7 @@ jobs:
           toolchain: ${{ matrix.config.rust-version }}
           targets: ${{ matrix.config.rust-target }}
 
-      - uses: baptiste0928/cargo-install@v2
+      - uses: baptiste0928/cargo-install@v3
         if: matrix.config.r == 'release'
         with:
           crate: cargo-license
