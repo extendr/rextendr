@@ -130,3 +130,20 @@ test_that("`rust_source()` should not raise internal error for code without exte
 
   expect_no_error(rust_source(code = "fn test() {}"))
 })
+
+# https://github.com/extendr/rextendr/issues/356
+test_that("`rust_function()` supports `r#` prefix in rust function names", {
+  skip_if_cargo_unavailable()
+
+  rust_fn_src <- "
+    fn r#true() -> &'static str {
+        \"Specially-named function has been called\"
+    }
+    "
+
+  rust_function(
+    code = rust_fn_src
+  )
+
+  expect_equal(true(), "Specially-named function has been called")
+})
