@@ -52,10 +52,15 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
     )
   }
 
+  # create tools directory if it does not exist
+  if (!dir.exists("tools")) {
+    dir.create("tools")
+  }
+
   # add msrv.R template
   use_rextendr_template(
     "cran/msrv.R",
-    save_as = "tools/msrv.R",
+    save_as = file.path("tools", "msrv.R"),
     quiet = quiet,
     overwrite = overwrite
   )
