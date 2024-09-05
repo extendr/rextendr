@@ -12,7 +12,7 @@
       v Writing 'src/Makevars.win'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
-      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
+      v Adding '^src/\\.cargo$' to '.Rbuildignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
@@ -29,8 +29,8 @@
       v Writing 'configure.win'
       > File 'src/Makevars' already exists. Skip writing the file.
       > File 'src/Makevars.win' already exists. Skip writing the file.
-      v Adding "^src/rust/vendor$" to '.Rbuildignore'.
-      v Adding "src/rust/vendor" to '.gitignore'.
+      v Adding '^src/rust/vendor$' to '.Rbuildignore'
+      v Adding 'src/rust/vendor' to '.gitignore'
 
 ---
 
@@ -173,6 +173,10 @@
       cat_file("src", "rust", "vendor-config.toml")
     Output
       [source.crates-io]
+      replace-with = "vendored-sources"
+      
+      [source."git+https://github.com/extendr/extendr"]
+      git = "https://github.com/extendr/extendr"
       replace-with = "vendored-sources"
       
       [source.vendored-sources]

@@ -25,7 +25,8 @@
 
     # Version of 'extendr_api' to be used
     rextendr.extendr_deps = list(
-      `extendr-api` = "*"
+      # `extendr-api` = "*"
+      `extendr-api` = list(git = "https://github.com/extendr/extendr")
     ),
     rextendr.extendr_dev_deps = list(
       `extendr-api` = list(git = "https://github.com/extendr/extendr")

@@ -12,7 +12,7 @@
       v Writing 'src/Makevars.win'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
-      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
+      v Adding '^src/\\.cargo$' to '.Rbuildignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
@@ -169,7 +169,7 @@
       name = 'testpkg'
       
       [dependencies]
-      extendr-api = '*'
+      extendr-api = { git = 'https://github.com/extendr/extendr' }
 
 ---
 
@@ -248,7 +248,7 @@
       name = 'bar'
       
       [dependencies]
-      extendr-api = '*'
+      extendr-api = { git = 'https://github.com/extendr/extendr' }
 
 # use_rextendr_template() can overwrite existing files
 

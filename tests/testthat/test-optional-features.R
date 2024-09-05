@@ -23,7 +23,7 @@ test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled"
   rust_source(
     file = input,
     features = "ndarray",
-    extendr_deps = list(`extendr-api` = list(version = "*", features = array("serde")))
+    extendr_deps = list(`extendr-api` = list(git = "https://github.com/extendr/extendr", features = array("serde")))
   )
 
   data <- matrix(runif(100L), 25)

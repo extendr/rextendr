@@ -137,7 +137,8 @@ use_extendr <- function(path = ".",
   cargo_toml_content <- to_toml(
     package = list(name = crate_name, publish = FALSE, version = "0.1.0", edition = edition),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
-    dependencies = list(`extendr-api` = "*")
+    dependencies = list(`extendr-api` = list(git = "https://github.com/extendr/extendr"))
+    # dependencies = list(`extendr-api` = "*")
   )
 
   use_rextendr_template(
