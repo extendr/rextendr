@@ -7,15 +7,15 @@
       i Setting `Config/rextendr/version` to "0.3.1.9001" in the 'DESCRIPTION' file.
       i Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
-      v Writing 'src/entrypoint.c'.
-      v Writing 'src/Makevars'.
-      v Writing 'src/Makevars.win'.
-      v Writing 'src/Makevars.ucrt'.
-      v Writing 'src/.gitignore'.
+      v Writing 'src/entrypoint.c'
+      v Writing 'src/Makevars'
+      v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.ucrt'
+      v Writing 'src/.gitignore'
       v Adding "^src/\\.cargo$" to '.Rbuildignore'.
-      v Writing 'src/rust/Cargo.toml'.
-      v Writing 'src/rust/src/lib.rs'.
-      v Writing 'src/testpkg-win.def'.
+      v Writing 'src/rust/Cargo.toml'
+      v Writing 'src/rust/src/lib.rs'
+      v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
