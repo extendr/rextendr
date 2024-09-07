@@ -28,6 +28,7 @@
 <url><loc>/dev/reference/to_toml.html</loc></url>
 <url><loc>/dev/reference/use_crate.html</loc></url>
 <url><loc>/dev/reference/use_extendr.html</loc></url>
+<url><loc>/dev/reference/use_msrv.html</loc></url>
 <url><loc>/dev/reference/write_license_note.html</loc></url>
 </urlset>
 
