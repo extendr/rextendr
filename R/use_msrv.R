@@ -13,6 +13,8 @@
 #' 
 #' To determine the MSRV of your R package, we recommend installing the `cargo-msrv` cli. You can do so by running `cargo install cargo-msrv`. To determine your MSRV, set your working directory to `src/rust` then run `cargo msrv`. Note that this may take a while.
 #' 
+#' For more details, please see [cargo-msrv](https://github.com/foresterre/cargo-msrv). 
+#'
 #' @return `version`
 #' @export
 #' 
