@@ -1,6 +1,6 @@
 Package: rextendr
 Title: Call Rust Code from R using the 'extendr' Crate
-Version: 0.3.1.9000
+Version: 0.3.1.9001
 Authors@R: 
     c(person(given = "Claus O.",
              family = "Wilke",
@@ -69,6 +69,6 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile
     without error

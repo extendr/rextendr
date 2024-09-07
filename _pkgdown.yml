@@ -16,6 +16,7 @@ reference:
 - title: Package development
   contents:
   - use_extendr
+  - use_crate
   - document
   - register_extendr
   - write_license_note
