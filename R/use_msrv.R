@@ -47,11 +47,12 @@ use_msrv <- function(version, path = "."){
   if (is.na(prev)) {
     update_description("SystemRequirements", cur, desc_path = desc_path)
   } else if (!identical(cur, prev)) {
-    cli::cli_ul(
-      c(
-        "The SystemRequirements field in the {.file DESCRIPTION} file is already set.",
-        "Please update it manually if needed."
-      )
+  cli::cli_ul(
+    c(
+      "The SystemRequirements field in the {.file DESCRIPTION} file is already set.",
+      "Please update it manually if needed.",
+      "{.code SystemRequirements: {cur}}"
+     )
     )
   }
 
