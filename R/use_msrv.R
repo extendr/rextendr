@@ -17,12 +17,18 @@
 #' 
 use_msrv <- function(version = NULL, path = "."){
 
-  if (is.null(version)){
-    cli::cli_abort(
-      "Minimum supported Rust {.arg version} not specified.",
-      class = "rextendr_error"
-    )
+  if (length(version) != 1L) {
+    cli::cli_abort("Version must be a character scalar", class = "rextendr_error")
   }
+  
+  msrv_call <- rlang::caller_call()
+  version <- tryCatch(numeric_version(version), error = function(e) {
+    cli::cli_abort(
+      "Invalid version provided",
+      class = "rextendr_error",
+      call = msrv_call
+    )
+  })
 
   desc_path <- rprojroot::find_package_root_file("DESCRIPTION", path = path)
 
