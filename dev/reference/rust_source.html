@@ -9,7 +9,7 @@ compiles and loads a single Rust function for use in R."><meta name="robots" con
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,7 @@ otherwise, uses <code>rextendr.extendr_dev_deps</code> option
 
 <dt id="arg-features">features<a class="anchor" aria-label="anchor" href="#arg-features"></a></dt>
 <dd><p>A vector of <code>extendr-api</code> features that should be enabled.
-Supported values are <code>"ndarray"</code>, <code>"num-complex"</code>, <code>"serde"</code>, and <code>"graphics"</code>.
+Supported values are <code>"ndarray"</code>, <code>"faer"</code>, <code>"either"</code>, <code>"num-complex"</code>, <code>"serde"</code>, and <code>"graphics"</code>.
 Unknown features will produce a warning if <code>quiet</code> is not <code>TRUE</code>.</p></dd>
 
 
@@ -161,7 +161,7 @@ calls to <code>rust_source()</code>.</p></dd>
 
 <dt id="arg-use-rtools">use_rtools<a class="anchor" aria-label="anchor" href="#arg-use-rtools"></a></dt>
 <dd><p>Logical indicating whether to append the path to Rtools
-to the <code>PATH</code> variable on Windows using the <code>RTOOLS40_HOME</code> environment
+to the <code>PATH</code> variable on Windows using the <code>RTOOLS4X_HOME</code> environment
 variable (if it is set). The appended path depends on the process
 architecture. Does nothing on other platforms.</p></dd>
 

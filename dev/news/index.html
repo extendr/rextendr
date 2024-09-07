@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,8 +59,10 @@
 <code>create_extendr_package()</code> allows user to create project directory using RStudio’s <strong>Project Command</strong>. (<a href="https://github.com/extendr/rextendr/issues/321" class="external-link">#321</a>)</li>
 <li>Support <code>RTOOLS44</code> (<a href="https://github.com/extendr/rextendr/issues/347" class="external-link">#347</a>)</li>
 <li>Removed <code>use_try_from</code> as an option in <code>rust_function</code>, and added <code>use_rng</code> (<a href="https://github.com/extendr/rextendr/issues/354" class="external-link">#354</a>)</li>
-<li>Added <code>use_crate()</code> function to make adding dependencies to Cargo.toml easier within R, similar to <code><a href="https://usethis.r-lib.org/reference/use_package.html" class="external-link">usethis::use_package()</a></code> (<a href="https://github.com/extendr/rextendr/issues/361" class="external-link">#361</a>)</li>
+<li>Added <code><a href="../reference/use_crate.html">use_crate()</a></code> function to make adding dependencies to Cargo.toml easier within R, similar to <code><a href="https://usethis.r-lib.org/reference/use_package.html" class="external-link">usethis::use_package()</a></code> (<a href="https://github.com/extendr/rextendr/issues/361" class="external-link">#361</a>)</li>
 <li>Fixed an issue in <code><a href="../reference/rust_source.html">rust_source()</a></code> family of functions that prevented usage of <code>r#</code> escape sequences in Rust function names (<a href="https://github.com/extendr/rextendr/issues/374" class="external-link">#374</a>)</li>
+<li>
+<code><a href="../reference/cran.html">use_cran_defaults()</a></code> now checks the <code>SystemRequirements</code> field in the <code>DESCRIPTION</code> file for cargo and rustc. It will display installation instructions if either is missing or provide the minimum required version if the installed version is outdated.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="rextendr-030">rextendr 0.3.0<a class="anchor" aria-label="anchor" href="#rextendr-030"></a></h2><p class="text-muted">CRAN release: 2023-05-30</p>

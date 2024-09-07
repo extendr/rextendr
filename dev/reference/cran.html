@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@ If <code>NULL</code>, sanitized R package name is used instead.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>use_cran_defaults()</code> modifies an existing package to provide CRAN complaint
-settings and files. It creates <code>configure</code> and <code>configure.win</code> files as well as
+settings and files. It creates <code>tools/msrv.R</code>, <code>configure</code> and <code>configure.win</code> files as well as
 modifies <code>Makevars</code> and <code>Makevars.win</code> to use required CRAN settings.</p>
 <p><code>vendor_pkgs()</code> is used to package the dependencies as required by CRAN.
 It executes <code>cargo vendor</code> on your behalf creating a <code>vendor/</code> directory and a
