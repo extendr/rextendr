@@ -2,9 +2,9 @@
 #'
 #' `use_msrv()` sets the minimum supported rust version for your R package.
 #'
-#' @param version character scalar, the minimum supported Rust version
-#' @param path character scalar, path to folder containing DESCRIPTION file
-#'
+#' @param version character scalar, the minimum supported Rust version.
+#' @param path character scalar, path to folder containing DESCRIPTION file.
+#' @param overwrite default `FALSE`. Overwrites the `SystemRequirements` field if already set when `TRUE`.
 #' @details
 #'
 #' The minimum supported rust version (MSRV) is determined by the
@@ -38,13 +38,11 @@
 #' use_msrv("1.67.1")
 #' }
 #'
-use_msrv <- function(version, path = ".") {
-  if (length(version) != 1L) {
-    cli::cli_abort(
-      "Version must be a character scalar",
-      class = "rextendr_error"
-    )
-  }
+use_msrv <- function(version, path = ".", overwrite = FALSE) {
+
+  check_string(version, class = "rextendr_error")
+  check_string(path, class = "rextendr_error")
+  check_bool(overwrite, class = "rextendr_error")
 
   msrv_call <- rlang::caller_call()
   version <- tryCatch(numeric_version(version), error = function(e) {
@@ -68,10 +66,12 @@ use_msrv <- function(version, path = ".") {
 
   prev <- desc::desc_get("SystemRequirements", file = desc_path)[[1]]
   prev <- stringi::stri_trim_both(prev)
+  prev_is_default <- identical(prev, "Cargo (Rust's package manager), rustc")
 
-  if (is.na(prev)) {
+  # if it isn't set update the description or if overwrite is true
+  if (is.na(prev) || overwrite || prev_is_default) {
     update_description("SystemRequirements", cur, desc_path = desc_path)
-  } else if (!identical(cur, prev)) {
+  } else if (!identical(cur, prev) && !overwrite) {
     cli::cli_ul(
       c(
         "The SystemRequirements field in the {.file DESCRIPTION} file is
@@ -80,7 +80,7 @@ use_msrv <- function(version, path = ".") {
         "{.code SystemRequirements: {cur}}"
       )
     )
-  }
+  } 
 
   invisible(version)
 }
