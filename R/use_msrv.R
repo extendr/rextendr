@@ -4,7 +4,14 @@
 #' @param path character scalar, path to folder containing DESCRIPTION file
 #' 
 #' @details
-#' It is assumed that MSRV is greater than or equal to `version`. The result is
+
+#' The minimum supported rust version (MSRV) is determined by the `SystemRequirements` field in a package's `DESCRIPTION` file. For example, to set the MSRV to `1.67.0`, the `SystemRequirements` must have `rustc >= 1.67.0`.
+#' 
+#' By default, there is no MSRV set. However, some crates have features that depend on a minimum version of Rust. As of this writing the version of Rust on CRAN's Fedora machine's is 1.69. If you require a version of Rust that is greater than that, you must set it in your DESCRIPTION file.
+#' 
+#' It is also important to note that if CRAN's machines do not meet the specified MSRV, they will not be able to build a binary of your package. As a consequence, if users try to install the package they will be required to have Rust installed as well. 
+#' 
+#' To determine the MSRV of your R package, we recommend installing the `cargo-msrv` cli. You can do so by running `cargo install cargo-msrv`. To determine your MSRV, set your working directory to `src/rust` then run `cargo msrv`. Note that this may take a while.
 #' "SystemRequirements: Cargo (Rust's package manager), rustc >= `version`."
 #' 
 #' @return `version`
