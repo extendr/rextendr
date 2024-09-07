@@ -12,7 +12,6 @@
 #' It is also important to note that if CRAN's machines do not meet the specified MSRV, they will not be able to build a binary of your package. As a consequence, if users try to install the package they will be required to have Rust installed as well. 
 #' 
 #' To determine the MSRV of your R package, we recommend installing the `cargo-msrv` cli. You can do so by running `cargo install cargo-msrv`. To determine your MSRV, set your working directory to `src/rust` then run `cargo msrv`. Note that this may take a while.
-#' "SystemRequirements: Cargo (Rust's package manager), rustc >= `version`."
 #' 
 #' @return `version`
 #' @export
