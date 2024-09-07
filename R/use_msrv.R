@@ -7,7 +7,7 @@
 #' It is assumed that MSRV is greater than or equal to `version`. The result is
 #' "SystemRequirements: Cargo (Rust's package manager), rustc >= `version`."
 #' 
-#' @return NULL
+#' @return `version`
 #' @export
 #' 
 #' @examples
