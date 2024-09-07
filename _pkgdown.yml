@@ -22,6 +22,7 @@ reference:
   - write_license_note
   - clean
   - cran
+  - use_msrv
 
 - title: Various utility functions
   contents:
