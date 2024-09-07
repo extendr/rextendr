@@ -36,7 +36,7 @@ Modifies an extendr package to use CRAN compliant settings.
 }
 \details{
 \code{use_cran_defaults()} modifies an existing package to provide CRAN complaint
-settings and files. It creates \code{configure} and \code{configure.win} files as well as
+settings and files. It creates \code{tools/msrv.R}, \code{configure} and \code{configure.win} files as well as
 modifies \code{Makevars} and \code{Makevars.win} to use required CRAN settings.
 
 \code{vendor_pkgs()} is used to package the dependencies as required by CRAN.

@@ -11,6 +11,7 @@ test_that("use_cran_defaults() modifies and creates files correctly", {
   expect_snapshot(cat_file("src", "Makevars.win"))
   expect_snapshot(cat_file("configure"))
   expect_snapshot(cat_file("configure.win"))
+  expect_snapshot(cat_file("tools", "msrv.R"))
 })
 
 test_that("use_cran_defaults() quiet if quiet=TRUE", {

@@ -5,7 +5,7 @@
 #' @details
 #'
 #' `use_cran_defaults()` modifies an existing package to provide CRAN complaint
-#' settings and files. It creates `configure` and `configure.win` files as well as
+#' settings and files. It creates `tools/msrv.R`, `configure` and `configure.win` files as well as
 #'  modifies `Makevars` and `Makevars.win` to use required CRAN settings.
 #'
 #' `vendor_pkgs()` is used to package the dependencies as required by CRAN.
@@ -51,6 +51,19 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
       class = "rextendr_error"
     )
   }
+
+  # create tools directory if it does not exist
+  if (!dir.exists("tools")) {
+    dir.create("tools")
+  }
+
+  # add msrv.R template
+  use_rextendr_template(
+    "cran/msrv.R",
+    save_as = file.path("tools", "msrv.R"),
+    quiet = quiet,
+    overwrite = overwrite
+  )
 
   # add configure and configure.win templates
   use_rextendr_template(
