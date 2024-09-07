@@ -39,7 +39,6 @@
 #' }
 #'
 use_msrv <- function(version, path = ".", overwrite = FALSE) {
-
   check_string(version, class = "rextendr_error")
   check_string(path, class = "rextendr_error")
   check_bool(overwrite, class = "rextendr_error")
