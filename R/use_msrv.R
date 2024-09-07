@@ -80,7 +80,7 @@ use_msrv <- function(version, path = ".", overwrite = FALSE) {
         "{.code SystemRequirements: {cur}}"
       )
     )
-  } 
+  }
 
   invisible(version)
 }
