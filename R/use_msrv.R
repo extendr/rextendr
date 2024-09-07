@@ -1,4 +1,4 @@
-#' Add MSRV to DESCRIPTION
+#' Set the minimum supported rust version (MSRV)
 #' 
 #' @param version character scalar, the minimum supported Rust version
 #' @param path character scalar, path to folder containing DESCRIPTION file
