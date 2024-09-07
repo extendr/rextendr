@@ -39,7 +39,7 @@ jobs:
           toolchain: ${{ matrix.config.rust-version }}
           targets: ${{ matrix.config.rust-target }}
 
-      - uses: baptiste0928/cargo-install@v2
+      - uses: baptiste0928/cargo-install@v3
         if: matrix.config.r == 'release'
         with:
           crate: cargo-license
@@ -55,18 +55,6 @@ jobs:
           cache-version: 2
           extra-packages: rcmdcheck
 
-      # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
-      - name: Check R version
-        id: error-on
-        run: |
-          output <- Sys.getenv("GITHUB_OUTPUT")
-          if (.Platform$OS.type == "windows" && getRversion() < "4.3.0") {
-            cat('level=error', file = output, append = TRUE)
-          } else {
-            cat('level=warning', file = output, append = TRUE)
-          }
-        shell: Rscript {0}
-
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: '"${{ steps.error-on.outputs.level }}"'
+          error-on: '"note"'
