@@ -15,7 +15,7 @@
 #' use_msrv("1.67.1")
 #' }
 #' 
-use_msrv <- function(version = NULL, path = "."){
+use_msrv <- function(version, path = "."){
 
   if (length(version) != 1L) {
     cli::cli_abort("Version must be a character scalar", class = "rextendr_error")
