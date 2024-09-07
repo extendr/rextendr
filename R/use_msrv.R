@@ -1,5 +1,5 @@
 #' Set the minimum supported rust version (MSRV)
-#' 
+#' `use_msrv()` sets the minimum supported rust version for your R package. 
 #' @param version character scalar, the minimum supported Rust version
 #' @param path character scalar, path to folder containing DESCRIPTION file
 #' 
