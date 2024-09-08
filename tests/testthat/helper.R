@@ -112,3 +112,16 @@ skip_if_opted_out_of_dev_tests <- function() {
     testthat::skip("Dev extendr tests disabled")
   }
 }
+
+#' Mask any version in snapshot files
+#' @param snapshot_lines Character vector, lines of the snapshot file
+#' @example
+#' expect_snapshot(some_operation(), transform = mask_any_version)
+#' @noRd
+mask_any_version <- function(snapshot_lines) {
+  stringi::stri_replace_all_regex(
+    snapshot_lines,
+    "\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?",
+    "*.*.*"
+  )
+}

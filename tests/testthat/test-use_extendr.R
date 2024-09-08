@@ -4,7 +4,7 @@ test_that("use_extendr() sets up extendr files correctly", {
   path <- local_package("testpkg")
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
-  expect_snapshot(use_extendr())
+  expect_snapshot(use_extendr(), transform = mask_any_version)
 
   # DESCRITION file
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
