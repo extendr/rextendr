@@ -25,7 +25,6 @@ $(STATLIB):
 		export CARGO_HOME=$(CARGOTMP); \
 	fi && \
         export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-            echo `cargo --version` && echo `rustc --version` && \
 			cargo build $(CRAN_FLAGS) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR);
 		rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(LIBDIR)/build; \
 

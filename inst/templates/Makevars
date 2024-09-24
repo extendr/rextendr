@@ -17,7 +17,6 @@ $(STATLIB):
 		export CARGO_HOME=$(CARGOTMP); \
 	fi && \
 		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-            echo `cargo --version` && echo `rustc --version` && \
             cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR);
 	if [ "$(NOT_CRAN)" != "true" ]; then \
 		rm -Rf $(CARGOTMP) && \
