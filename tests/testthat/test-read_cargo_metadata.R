@@ -1,4 +1,4 @@
-test_that("read_cargo_metadata() returns package or workspace metadata", {
+test_that("read_cargo_metadata() returns crate or workspace metadata", {
   skip_if_not_installed("usethis")
 
   path <- local_package("testpkg")
@@ -8,7 +8,7 @@ test_that("read_cargo_metadata() returns package or workspace metadata", {
 
   use_extendr(path, quiet = TRUE)
 
-  out <- read_cargo_metadata()
+  out <- read_cargo_metadata(path)
 
-  expect_s3_class(out, "list")
+  expect_type(out, "list")
 })
