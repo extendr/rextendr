@@ -70,6 +70,7 @@ jobs:
           devtools::create(".")
           usethis::proj_activate(".")
           rextendr::use_extendr()
+          rextendr::use_cran_defaults()
           usethis::use_mit_license()
           usethis::use_testthat()
           brio::write_lines(
