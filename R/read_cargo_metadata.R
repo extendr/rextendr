@@ -26,6 +26,8 @@
 #' }
 #'
 read_cargo_metadata <- function(path = ".") {
+  check_string(path, class = "rextendr_error")
+
   root <- rprojroot::find_package_root_file(path = path)
 
   rust_folder <- normalizePath(
