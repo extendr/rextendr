@@ -17,6 +17,9 @@
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
+      v Writing 'tools/msrv.R'
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -218,6 +221,9 @@
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
       > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -235,6 +241,9 @@
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Writing 'tools/msrv.R'
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 

@@ -17,6 +17,9 @@
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
+      v Writing 'tools/msrv.R'
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -25,9 +28,9 @@
     Code
       use_cran_defaults()
     Message
-      v Writing 'tools/msrv.R'
-      v Writing 'configure'
-      v Writing 'configure.win'
+      > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       > File 'src/Makevars' already exists. Skip writing the file.
       > File 'src/Makevars.win' already exists. Skip writing the file.
       v Adding "^src/rust/vendor$" to '.Rbuildignore'.
