@@ -12,7 +12,7 @@
       v Writing 'src/Makevars.win'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
-      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
+      v Adding '^src/\\.cargo$' to '.Rbuildignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
@@ -30,8 +30,8 @@
       v Writing 'configure.win'
       > File 'src/Makevars' already exists. Skip writing the file.
       > File 'src/Makevars.win' already exists. Skip writing the file.
-      v Adding "^src/rust/vendor$" to '.Rbuildignore'.
-      v Adding "src/rust/vendor" to '.gitignore'.
+      v Adding '^src/rust/vendor$' to '.Rbuildignore'
+      v Adding 'src/rust/vendor' to '.gitignore'
 
 ---
 
@@ -42,6 +42,9 @@
       LIBDIR = $(TARGET_DIR)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
+      
+      # Print linked static libraries at compile time
+      export RUSTFLAGS=--print=native-static-libs
       
       all: C_clean
       
@@ -80,6 +83,9 @@
       LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+      
+      # Print linked static libraries at compile time
+      export RUSTFLAGS=--print=native-static-libs
       
       all: C_clean
       
