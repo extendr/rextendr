@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/cran-compliance: cran-compliance.html
   package: package.html
   rmarkdown: rmarkdown.html
   setting_up_rust: setting_up_rust.html
-last_built: 2024-09-08T19:44Z
+last_built: 2024-10-28T05:51Z
