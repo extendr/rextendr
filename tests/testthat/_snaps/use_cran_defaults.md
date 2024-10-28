@@ -28,9 +28,6 @@
     Code
       use_cran_defaults()
     Message
-      > File 'tools/msrv.R' already exists. Skip writing the file.
-      > File 'configure' already exists. Skip writing the file.
-      > File 'configure.win' already exists. Skip writing the file.
       > File 'src/Makevars' already exists. Skip writing the file.
       > File 'src/Makevars.win' already exists. Skip writing the file.
       v Adding "^src/rust/vendor$" to '.Rbuildignore'.
