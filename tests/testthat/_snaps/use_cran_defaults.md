@@ -44,7 +44,7 @@
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
       # Print linked static libraries at compile time
-      export RUSTFLAGS=--print=native-static-libs
+      export RUSTFLAGS += --print=native-static-libs
       
       all: C_clean
       
@@ -85,7 +85,7 @@
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
       # Print linked static libraries at compile time
-      export RUSTFLAGS=--print=native-static-libs
+      export RUSTFLAGS += --print=native-static-libs
       
       all: C_clean
       

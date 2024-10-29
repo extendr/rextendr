@@ -6,7 +6,7 @@ STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
 
 # Print linked static libraries at compile time
-export RUSTFLAGS=--print=native-static-libs
+export RUSTFLAGS += --print=native-static-libs
 
 all: C_clean
 
