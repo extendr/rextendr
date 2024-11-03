@@ -52,42 +52,6 @@ use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_n
     )
   }
 
-  # create tools directory if it does not exist
-  if (!dir.exists("tools")) {
-    dir.create("tools")
-  }
-
-  # add msrv.R template
-  use_rextendr_template(
-    "cran/msrv.R",
-    save_as = file.path("tools", "msrv.R"),
-    quiet = quiet,
-    overwrite = overwrite
-  )
-
-  # add configure and configure.win templates
-  use_rextendr_template(
-    "cran/configure",
-    save_as = "configure",
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  # configure needs to be made executable
-  # ignore for Windows
-  if (.Platform[["OS.type"]] == "unix") {
-    Sys.chmod("configure", "0755")
-  }
-
-  use_rextendr_template(
-    "cran/configure.win",
-    save_as = "configure.win",
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
   # use CRAN specific Makevars templates
   use_rextendr_template(
     "cran/Makevars",
