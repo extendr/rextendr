@@ -172,6 +172,43 @@ use_extendr <- function(path = ".",
     data = list(pkg_name = pkg_name)
   )
 
+  # create tools directory if it does not exist
+  if (!dir.exists("tools")) {
+    dir.create("tools")
+  }
+
+  # add msrv.R template
+  use_rextendr_template(
+    "cran/msrv.R",
+    save_as = file.path("tools", "msrv.R"),
+    quiet = quiet,
+    overwrite = overwrite
+  )
+
+  # add configure and configure.win templates
+  use_rextendr_template(
+    "cran/configure",
+    save_as = "configure",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+  # configure needs to be made executable
+  # ignore for Windows
+  if (.Platform[["OS.type"]] == "unix") {
+    Sys.chmod("configure", "0755")
+  }
+
+  use_rextendr_template(
+    "cran/configure.win",
+    save_as = "configure.win",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
     cli::cli_ul(
