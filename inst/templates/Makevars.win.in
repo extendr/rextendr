@@ -5,9 +5,6 @@ LIBDIR = $(TARGET_DIR)/$(TARGET)/release
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
 
-# Print linked static libraries at compile time
-export RUSTFLAGS += --print=native-static-libs
-
 all: C_clean
 
 $(SHLIB): $(STATLIB)
@@ -24,17 +21,29 @@ $(STATLIB):
 	# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
 	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
-	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
-	if [ "$(NOT_CRAN)" != "true" ]; then \
-		export CARGO_HOME=$(CARGOTMP); \
-	fi && \
-		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
-		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-	if [ "$(NOT_CRAN)" != "true" ]; then \
-		rm -Rf $(CARGOTMP) && \
-		rm -Rf $(LIBDIR)/build; \
+	# Handle NOT_CRAN case: If NOT_CRAN is false, vendor tarball should be handled
+	if [ "$(NOT_CRAN)" = "false" ]; then \
+		if [ -f ./rust/vendor.tar.xz ]; then \
+			tar xf rust/vendor.tar.xz && \
+			mkdir -p $(CARGOTMP) && \
+			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+		fi; \
 	fi
+
+	# Build the project using Cargo with additional flags
+	export CARGO_HOME=$(CARGOTMP) && \
+	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+	export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo @CRAN_FLAGS@ build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+
+	# Always clean up CARGOTMP
+	rm -Rf $(CARGOTMP)
+
+ 	if [ "$(NOT_CRAN)" != "false" ]; then \
+        rm -Rf $(VENDOR_DIR); \
+        rm -Rf $(TARGET_DIR); \
+        rm -Rf $(LIBDIR)/build; \
+    fi
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)

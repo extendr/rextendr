@@ -101,16 +101,16 @@ use_extendr <- function(path = ".",
   )
 
   use_rextendr_template(
-    "Makevars",
-    save_as = file.path("src", "Makevars"),
+    "Makevars.in",
+    save_as = file.path("src", "Makevars.in"),
     quiet = quiet,
     overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
 
   use_rextendr_template(
-    "Makevars.win",
-    save_as = file.path("src", "Makevars.win"),
+    "Makevars.win.in",
+    save_as = file.path("src", "Makevars.win.in"),
     quiet = quiet,
     overwrite = overwrite,
     data = list(lib_name = lib_name)
@@ -179,7 +179,7 @@ use_extendr <- function(path = ".",
 
   # add msrv.R template
   use_rextendr_template(
-    "cran/msrv.R",
+    "msrv.R",
     save_as = file.path("tools", "msrv.R"),
     quiet = quiet,
     overwrite = overwrite
@@ -187,8 +187,24 @@ use_extendr <- function(path = ".",
 
   # add configure and configure.win templates
   use_rextendr_template(
-    "cran/configure",
+    "configure",
     save_as = "configure",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+  use_rextendr_template(
+    "cleanup",
+    save_as = "cleanup",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+  use_rextendr_template(
+    "configure.win",
+    save_as = "configure.win",
     quiet = quiet,
     overwrite = overwrite,
     data = list(lib_name = lib_name)
@@ -198,16 +214,8 @@ use_extendr <- function(path = ".",
   # ignore for Windows
   if (.Platform[["OS.type"]] == "unix") {
     Sys.chmod("configure", "0755")
+    Sys.chmod("cleanup", "0755")
   }
-
-  use_rextendr_template(
-    "cran/configure.win",
-    save_as = "configure.win",
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
