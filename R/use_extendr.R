@@ -222,6 +222,8 @@ use_extendr <- function(path = ".",
   # is built. This is handled via the configure file
   usethis::use_build_ignore("src/Makevars")
   usethis::use_git_ignore("src/Makevars")
+  usethis::use_build_ignore("src/Makevars.win")
+  usethis::use_git_ignore("src/Makevars.win")
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")

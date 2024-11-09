@@ -35,13 +35,7 @@ $(STATLIB):
 	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 	# Always clean up CARGOTMP
-	rm -Rf $(CARGOTMP)
-
- 	if [ "$(NOT_CRAN)" != "false" ]; then \
-        rm -Rf $(VENDOR_DIR); \
-        rm -Rf $(TARGET_DIR); \
-        rm -Rf $(LIBDIR)/build; \
-    fi
+	rm -Rf $(CARGOTMP);
 
 C_clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)

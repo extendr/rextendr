@@ -194,6 +194,7 @@ test_that("`use_extendr()` passes R CMD check", {
   # write the license file to pass R CMD check
   usethis::use_mit_license()
   use_extendr()
+  document()
   # store results
   res <- rcmdcheck::rcmdcheck()
 

@@ -14,17 +14,17 @@ test_that("vendor_pkgs() vendors dependencies", {
 
 
 test_that("rextendr passes NOT_CRAN=false checks", {
-    skip_if_not_installed("usethis")
-    skip_if_not_installed("rcmdcheck")
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("rcmdcheck")
 
-    path <- local_package("testpkg")
-    # write the license file to pass R CMD check
-    usethis::use_mit_license()
-    use_extendr()
-    document()
-    vendor_pkgs()
-    res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN"="false"))
-    expect_true(
-      rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-    )
+  path <- local_package("testpkg")
+  # write the license file to pass R CMD check
+  usethis::use_mit_license()
+  use_extendr()
+  document()
+  vendor_pkgs()
+  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN" = "false"))
+  expect_true(
+    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
+  )
 })
