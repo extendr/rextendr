@@ -64,7 +64,10 @@ use_crate <- function(
   )
 
   # clear empty options
-  is_null_or_empty_string <- function(x){ !nzchar(x) || rlang::is_empty(x) }
+  is_null_or_empty_string <- function(x) {
+    !nzchar(x) || rlang::is_empty(x)
+  }
+
   cargo_add_opts <- purrr::discard(cargo_add_opts, is_null_or_empty_string)
 
   # combine option names and values into single strings
