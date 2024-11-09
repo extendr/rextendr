@@ -1,0 +1,30 @@
+test_that("vendor_pkgs() vendors dependencies", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  # capture setup messages
+  withr::local_options(usethis.quiet = FALSE)
+  use_extendr(path, quiet = TRUE)
+
+  package_versions <- vendor_pkgs(path, quiet = TRUE)
+  expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
+  expect_snapshot(package_versions, transform = mask_any_version)
+  expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
+})
+
+
+test_that("rextendr passes NOT_CRAN=false checks", {
+    skip_if_not_installed("usethis")
+    skip_if_not_installed("rcmdcheck")
+
+    path <- local_package("testpkg")
+    # write the license file to pass R CMD check
+    usethis::use_mit_license()
+    use_extendr()
+    document()
+    vendor_pkgs()
+    res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN"="false"))
+    expect_true(
+      rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
+    )
+})

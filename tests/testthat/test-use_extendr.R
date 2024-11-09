@@ -18,8 +18,8 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_true(dir.exists(file.path("src", "rust", "src")))
 
   expect_snapshot(cat_file("R", "extendr-wrappers.R"))
-  expect_snapshot(cat_file("src", "Makevars"))
-  expect_snapshot(cat_file("src", "Makevars.win"))
+  expect_snapshot(cat_file("src", "Makevars.in"))
+  expect_snapshot(cat_file("src", "Makevars.win.in"))
   expect_snapshot(cat_file("src", "Makevars.ucrt"))
   expect_snapshot(cat_file("src", "entrypoint.c"))
   expect_snapshot(cat_file("src", "testpkg-win.def"))
@@ -87,23 +87,23 @@ test_that("use_rextendr_template() can overwrite existing files", {
 
   path <- local_package("testpkg.wrap")
   dir.create("src")
-  file_path <- file.path("src", "Makevars")
+  file_path <- file.path("src", "Makevars.in")
 
   use_rextendr_template(
-    "Makevars",
+    "Makevars.in",
     save_as = file_path,
     quiet = TRUE,
     data = list(lib_name = "foo")
   )
   use_rextendr_template(
-    "Makevars",
+    "Makevars.in",
     save_as = file_path,
     quiet = TRUE,
     overwrite = TRUE,
     data = list(lib_name = "bar")
   )
 
-  expect_snapshot(cat_file("src", "Makevars"))
+  expect_snapshot(cat_file("src", "Makevars.in"))
 })
 
 # Check that {rextendr} works in packages containing dots in their names.
@@ -140,7 +140,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 test_that("use_extendr() does not allow invalid rust names", {
   skip_if_not_installed("usethis")
 
-  path <- local_package("testPackage")
+  path <- local_package("testPackage") 
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
   expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
@@ -183,4 +183,22 @@ test_that("`use_extendr()` works correctly when path is specified explicitly", {
 
   use_extendr(path = "testpkg")
   succeed()
+})
+
+
+test_that("`use_extendr()` passes R CMD check", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("rcmdcheck")
+
+  path <- local_package("testpkg")
+  # write the license file to pass R CMD check
+  usethis::use_mit_license()
+  use_extendr()
+  # store results
+  res <- rcmdcheck::rcmdcheck()
+
+  # check the output 
+  expect_true(
+    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
+  )
 })

@@ -30,6 +30,7 @@ $(STATLIB):
 		fi; \
 	fi
 
+ 	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
 	# Build the project using Cargo with additional flags
 	export CARGO_HOME=$(CARGOTMP) && \
 	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \

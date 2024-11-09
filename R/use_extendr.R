@@ -131,8 +131,6 @@ use_extendr <- function(path = ".",
     overwrite = overwrite
   )
 
-  usethis::use_build_ignore("src/.cargo")
-
   edition <- match.arg(edition, several.ok = FALSE)
   cargo_toml_content <- to_toml(
     package = list(name = crate_name, publish = FALSE, version = "0.1.0", edition = edition),
@@ -195,14 +193,6 @@ use_extendr <- function(path = ".",
   )
 
   use_rextendr_template(
-    "cleanup",
-    save_as = "cleanup",
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
     quiet = quiet,
@@ -214,8 +204,24 @@ use_extendr <- function(path = ".",
   # ignore for Windows
   if (.Platform[["OS.type"]] == "unix") {
     Sys.chmod("configure", "0755")
-    Sys.chmod("cleanup", "0755")
   }
+
+  # the temporary cargo directory must be ignored
+  usethis::use_build_ignore("src/.cargo")
+
+  # ensure that the vendor directory is ignored
+  usethis::use_build_ignore(
+    file.path("src", "rust", "vendor")
+  )
+
+  usethis::use_git_ignore(
+    file.path("src", "rust", "vendor")
+  )
+
+  # the src/Makevars should be created each time the package
+  # is built. This is handled via the configure file
+  usethis::use_build_ignore("src/Makevars")
+  usethis::use_git_ignore("src/Makevars")
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")

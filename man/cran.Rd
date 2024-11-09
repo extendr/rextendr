@@ -2,12 +2,9 @@
 % Please edit documentation in R/cran-compliance.R
 \name{cran}
 \alias{cran}
-\alias{use_cran_defaults}
 \alias{vendor_pkgs}
-\title{Use CRAN compliant defaults}
+\title{Vendor Rust dependencies}
 \usage{
-use_cran_defaults(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL)
-
 vendor_pkgs(path = ".", quiet = FALSE, overwrite = NULL)
 }
 \arguments{
@@ -21,24 +18,13 @@ If \code{NULL} (default), the function will ask the user whether each file shoul
 be overwritten in an interactive session or do nothing in a non-interactive session.
 If \code{FALSE} and each file already exists, the function will do nothing.
 If \code{TRUE}, all files will be overwritten.}
-
-\item{lib_name}{String that is used as the name of the Rust library.
-If \code{NULL}, sanitized R package name is used instead.}
 }
 \value{
 \itemize{
 \item \code{vendor_pkgs()} returns a data.frame with two columns \code{crate} and \code{version}
-\item \code{use_cran_defaults()} returns \code{NULL} and is used solely for its side effects
 }
 }
 \description{
-Modifies an extendr package to use CRAN compliant settings.
-}
-\details{
-\code{use_cran_defaults()} modifies an existing package to provide CRAN complaint
-settings and files. It creates \code{tools/msrv.R}, \code{configure} and \code{configure.win} files as well as
-modifies \code{Makevars} and \code{Makevars.win} to use required CRAN settings.
-
 \code{vendor_pkgs()} is used to package the dependencies as required by CRAN.
 It executes \verb{cargo vendor} on your behalf creating a \verb{vendor/} directory and a
 compressed \code{vendor.tar.xz} which will be shipped with package itself.
@@ -46,8 +32,7 @@ If you have modified your dependencies, you will need need to repackage
 }
 \examples{
 
-if (interactive()) {
-  use_cran_defaults()
+\dontrun{
   vendor_pkgs()
 }
 }

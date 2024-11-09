@@ -1,99 +1,23 @@
-#' Use CRAN compliant defaults
-#'
-#' Modifies an extendr package to use CRAN compliant settings.
-#'
-#' @details
-#'
-#' `use_cran_defaults()` modifies an existing package to provide CRAN complaint
-#' settings and files. It creates `tools/msrv.R`, `configure` and `configure.win` files as well as
-#'  modifies `Makevars` and `Makevars.win` to use required CRAN settings.
+#' Vendor Rust dependencies
 #'
 #' `vendor_pkgs()` is used to package the dependencies as required by CRAN.
 #' It executes `cargo vendor` on your behalf creating a `vendor/` directory and a
 #' compressed `vendor.tar.xz` which will be shipped with package itself.
 #' If you have modified your dependencies, you will need need to repackage
-#  the vendored dependencies using `vendor_pkgs()`.
+#  the vendored dependencies using [`vendor_pkgs()`].
 #'
 #' @inheritParams use_extendr
 #' @returns
 #'
 #' - `vendor_pkgs()` returns a data.frame with two columns `crate` and `version`
-#' - `use_cran_defaults()` returns `NULL` and is used solely for its side effects
 #'
 #' @examples
 #'
-#' if (interactive()) {
-#'   use_cran_defaults()
+#' \dontrun{
 #'   vendor_pkgs()
 #' }
 #' @name cran
 #' @export
-use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL) {
-  # if not in an interactive session and overwrite is null, set it to false
-  if (!rlang::is_interactive()) {
-    overwrite <- overwrite %||% FALSE
-  }
-
-  # silence output
-  local_quiet_cli(quiet)
-
-  # find package root
-  pkg_root <- rprojroot::find_package_root_file(path)
-
-  # set the path for the duration of the function
-  withr::local_dir(pkg_root)
-
-  if (is.null(lib_name)) {
-    lib_name <- as_valid_rust_name(pkg_name(path))
-  } else if (length(lib_name) > 1) {
-    cli::cli_abort(
-      "{.arg lib_name} must be a character scalar",
-      class = "rextendr_error"
-    )
-  }
-
-  # use CRAN specific Makevars templates
-  use_rextendr_template(
-    "cran/Makevars",
-    save_as = file.path("src", "Makevars"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  use_rextendr_template(
-    "cran/Makevars.win",
-    save_as = file.path("src", "Makevars.win"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  # vendor directory should be ignored by git and R CMD build
-  if (!rlang::is_installed("usethis")) {
-    cli::cli_inform(
-      c(
-        "!" = "Add {.code ^src/rust/vendor$} to your {.file .Rbuildignore}",
-        "!" = "Add {.code ^src/rust/vendor$} to your {.file .gitignore}",
-        "i" = "Install {.pkg usethis} to have this done automatically."
-      )
-    )
-  } else {
-    # vendor folder will be large when expanded and should be ignored
-    usethis::use_build_ignore(
-      file.path("src", "rust", "vendor")
-    )
-
-    usethis::use_git_ignore(
-      file.path("src", "rust", "vendor")
-    )
-  }
-
-  invisible(NULL)
-}
-
-#' @export
-#' @name cran
 vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   stderr_line_callback <- function(x, proc) {
     if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
