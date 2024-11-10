@@ -10,7 +10,7 @@ test_that("use_crate() adds dependency to package or workspace", {
 
   use_crate(
     "serde",
-    features = "derive",    
+    features = "derive",
     version = "1.0.1",
     path = path
   )
@@ -22,7 +22,7 @@ test_that("use_crate() adds dependency to package or workspace", {
 
   expect_equal(dependency[["name"]], "serde")
 
-  expect_equal(dependency[["features"]], "derive")
+  expect_equal(dependency[["features"]][[1]], "derive")
 
   expect_equal(dependency[["req"]], "^1.0.1")
 })
