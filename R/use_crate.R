@@ -91,7 +91,7 @@ use_crate <- function(
   # run the commmand
   processx::run(
     "cargo",
-    c("add", crate, features, git),
+    c("add", crate, features, git, optional),
     echo_cmd = TRUE,
     wd = rust_folder
   )
