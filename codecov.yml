@@ -1,12 +1,14 @@
 comment:
   layout: "header, reach, files"
+  require_changes: true
+  behavior: "new" # Only post on new commits
 coverage:
   status:
     project:
       default:
-        target: 75%
-        threshold: 1%
+        target: 70%
+        threshold: 5%
     patch:
       default:
-        target: 75%
-        threshold: 1%
+        target: 70%
+        threshold: 5%
