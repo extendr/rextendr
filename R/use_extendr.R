@@ -37,9 +37,32 @@ use_extendr <- function(path = ".",
 
   rlang::check_installed("usethis")
 
-  rextendr_setup(path = path)
+  # Root path computed from user input
+  root_path <- try_get_root_path(path)
+  # Root path computed from `{usethis}`
+  usethis_proj_path <- try_get_proj_path()
 
-  pkg_name <- pkg_name(path)
+  # If they do not match, something is off, try to set up temporary project
+  if (!isTRUE(root_path == usethis_proj_path)) {
+    usethis::local_project(path, quiet = quiet)
+  }
+
+  # Check project path once again
+  usethis_proj_path <- try_get_proj_path()
+  # Check what is current working directory
+  curr_path <- try_get_normalized_path(getwd)
+
+  # If they do not match, let's temporarily change working directory
+  if (!isTRUE(curr_path == usethis_proj_path)) {
+    withr::local_dir(usethis_proj_path)
+  }
+
+  # At this point, our working directory is at the project root and
+  # we have an active `{usethis}` project
+
+  rextendr_setup()
+
+  pkg_name <- pkg_name()
   mod_name <- as_valid_rust_name(pkg_name)
 
   if (is.null(crate_name)) {
@@ -54,8 +77,9 @@ use_extendr <- function(path = ".",
     throw_if_invalid_rust_name(lib_name)
   }
 
-  src_dir <- rprojroot::find_package_root_file("src", path = path)
-  r_dir <- rprojroot::find_package_root_file("R", path = path)
+  src_dir <- rprojroot::find_package_root_file("src")
+  r_dir <- rprojroot::find_package_root_file("R")
+
 
   if (!dir.exists(r_dir)) {
     dir.create(r_dir)
@@ -148,6 +172,43 @@ use_extendr <- function(path = ".",
     data = list(pkg_name = pkg_name)
   )
 
+  # create tools directory if it does not exist
+  if (!dir.exists("tools")) {
+    dir.create("tools")
+  }
+
+  # add msrv.R template
+  use_rextendr_template(
+    "cran/msrv.R",
+    save_as = file.path("tools", "msrv.R"),
+    quiet = quiet,
+    overwrite = overwrite
+  )
+
+  # add configure and configure.win templates
+  use_rextendr_template(
+    "cran/configure",
+    save_as = "configure",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+  # configure needs to be made executable
+  # ignore for Windows
+  if (.Platform[["OS.type"]] == "unix") {
+    Sys.chmod("configure", "0755")
+  }
+
+  use_rextendr_template(
+    "cran/configure.win",
+    save_as = "configure.win",
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
     cli::cli_ul(
@@ -158,6 +219,18 @@ use_extendr <- function(path = ".",
   }
 
   return(invisible(TRUE))
+}
+
+try_get_normalized_path <- function(path_fn) {
+  tryCatch(normalizePath(path_fn(), winslash = "/", mustWork = FALSE), error = function(e) NA)
+}
+
+try_get_proj_path <- function() {
+  try_get_normalized_path(usethis::proj_get)
+}
+
+try_get_root_path <- function(path) {
+  try_get_normalized_path(function() rprojroot::find_package_root_file(path = path))
 }
 
 #' Checks if provided name is a valid Rust name (identifier)

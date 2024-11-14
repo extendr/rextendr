@@ -5,6 +5,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 name: test-coverage
 
@@ -13,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      REXTENDR_SKIP_DEV_TESTS: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
       - uses: actions/checkout@v3

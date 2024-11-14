@@ -4,13 +4,13 @@ test_that("use_extendr() sets up extendr files correctly", {
   path <- local_package("testpkg")
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
-  expect_snapshot(use_extendr())
+  expect_snapshot(use_extendr(), transform = mask_any_version)
 
   # DESCRITION file
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
   sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
   expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_equal(sysreq_in_desc, "Cargo (rustc package manager)")
+  expect_equal(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -113,7 +113,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("a.b.c")
   use_extendr()
@@ -127,7 +127,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   path <- local_package("testPackage")
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
@@ -174,4 +174,13 @@ test_that("Message if the SystemRequirements field is already set.", {
 
   expect_true(created)
   expect_equal(desc::desc_get("SystemRequirements")[[1]], sys_req)
+})
+
+test_that("`use_extendr()` works correctly when path is specified explicitly", {
+  skip_if_not_installed("usethis")
+  local_temp_dir("temp_dir")
+  usethis::create_package("testpkg")
+
+  use_extendr(path = "testpkg")
+  succeed()
 })

@@ -38,7 +38,7 @@ local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
 #' @return Logical scalar indicating if the command was available.
 #' @noRd
 cargo_command_available <- function(args = "--help") {
-  !any(is.na(try_exec_cmd("cargo", args)))
+  !anyNA(try_exec_cmd("cargo", args))
 }
 
 #' Helper function for executing commands.
@@ -49,7 +49,7 @@ cargo_command_available <- function(args = "--help") {
 try_exec_cmd <- function(cmd, args = character()) {
   result <- tryCatch(
     processx::run(cmd, args, error_on_status = FALSE),
-    error = \(...) list(status = -1)
+    error = function(...) list(status = -1)
   )
   if (result[["status"]] != 0) {
     NA_character_

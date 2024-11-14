@@ -4,19 +4,22 @@
       use_extendr()
     Message
       i First time using rextendr. Upgrading automatically...
-      i Setting `Config/rextendr/version` to "0.3.1.9000" in the 'DESCRIPTION' file.
-      i Setting `SystemRequirements` to "Cargo (rustc package manager)" in the 'DESCRIPTION' file.
+      i Setting `Config/rextendr/version` to "*.*.*" in the 'DESCRIPTION' file.
+      i Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars'
       v Writing 'src/Makevars.win'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
-      v Adding '^src/\\.cargo$' to '.Rbuildignore'
+      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
       v Writing 'R/extendr-wrappers.R'
+      v Writing 'tools/msrv.R'
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -48,6 +51,9 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
+      # Print linked static libraries at compile time
+      export RUSTFLAGS=--print=native-static-libs
+      
       all: C_clean
       
       $(SHLIB): $(STATLIB)
@@ -72,7 +78,7 @@
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
 ---
 
@@ -85,6 +91,9 @@
       LIBDIR = $(TARGET_DIR)/$(TARGET)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+      
+      # Print linked static libraries at compile time
+      export RUSTFLAGS=--print=native-static-libs
       
       all: C_clean
       
@@ -212,6 +221,9 @@
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
       > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -229,6 +241,9 @@
       v Writing 'src/rust/src/lib.rs'
       v Writing 'src/testpkg-win.def'
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      v Writing 'tools/msrv.R'
+      v Writing 'configure'
+      v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -260,6 +275,9 @@
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
       
+      # Print linked static libraries at compile time
+      export RUSTFLAGS=--print=native-static-libs
+      
       all: C_clean
       
       $(SHLIB): $(STATLIB)
@@ -284,5 +302,5 @@
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) rust/target
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 

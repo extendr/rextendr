@@ -3,6 +3,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 name: R-CMD-check
 
@@ -10,7 +15,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.rust-version }})
+    name: R-CMD-Check ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.rust-version }})
 
     strategy:
       fail-fast: false
@@ -18,7 +23,7 @@ jobs:
         config:
           - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '42' }
+          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '43' }
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
 
@@ -29,18 +34,17 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      REXTENDR_SKIP_DEV_TESTS: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
       - uses: actions/checkout@v3
-
-      - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.config.rust-version }}
           targets: ${{ matrix.config.rust-target }}
 
-      - uses: baptiste0928/cargo-install@v2
+      - uses: baptiste0928/cargo-install@v3
         if: matrix.config.r == 'release'
         with:
           crate: cargo-license
@@ -49,24 +53,13 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 2
           extra-packages: rcmdcheck
 
-      # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
-      - name: Check R version
-        id: error-on
-        run: |
-          output <- Sys.getenv("GITHUB_OUTPUT")
-          if (.Platform$OS.type == "windows" && getRversion() < "4.3.0") {
-            cat('level=error', file = output, append = TRUE)
-          } else {
-            cat('level=warning', file = output, append = TRUE)
-          }
-        shell: Rscript {0}
-
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: '"${{ steps.error-on.outputs.level }}"'
+          error-on: '"note"'
