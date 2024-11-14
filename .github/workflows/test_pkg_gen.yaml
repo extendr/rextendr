@@ -1,12 +1,13 @@
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [main, master]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 name: Test package generation
 
@@ -14,7 +15,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }} / ${{ matrix.config.rust-version }})
+    name: PkgGen ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.rust-version }})
 
     strategy:
       fail-fast: false
@@ -22,7 +23,7 @@ jobs:
         config:
           - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu'}
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu'}
-          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '42'}
+          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '43'}
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable'}
 
@@ -47,11 +48,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
-          # TODO: enable RSPM when all the packages are available
-          use-public-rspm: false
-
-      - name: Set up pandoc
-        uses: r-lib/actions/setup-pandoc@v2
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -87,17 +84,6 @@ jobs:
             ),
             file.path("tests", "testthat", "test-hello.R")
           )
-
-          # test NOT_CRAN envvar
-          brio::write_lines(
-            c(
-              "if [ \"$NOT_CRAN\" != \"true\" ]; then",
-              "  exit 1",
-              "fi"
-            ),
-            file.path("configure")
-          )
-          Sys.chmod("configure", "0755")
 
           # TODO: allow warnings on oldrel (cf., https://stat.ethz.ch/pipermail/r-package-devel/2023q2/009229.html)
           if (.Platform$OS.type == "windows" && getRversion() < "4.3.0") {

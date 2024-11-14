@@ -22,7 +22,7 @@
 #'   otherwise, uses `rextendr.extendr_dev_deps` option
 #'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
 #' @param features A vector of `extendr-api` features that should be enabled.
-#'  Supported values are `"ndarray"`, `"num-complex"`, `"serde"`, and `"graphics"`.
+#'  Supported values are `"ndarray"`, `"faer"`, `"either"`, `"num-complex"`, `"serde"`, and `"graphics"`.
 #'  Unknown features will produce a warning if `quiet` is not `TRUE`.
 #' @param env The R environment in which the wrapping functions will be defined.
 #' @param use_extendr_api Logical indicating whether
@@ -39,7 +39,7 @@
 #'   calls to [rust_source()].
 #' @param quiet Logical indicating whether compile output should be generated or not.
 #' @param use_rtools Logical indicating whether to append the path to Rtools
-#'   to the `PATH` variable on Windows using the `RTOOLS40_HOME` environment
+#'   to the `PATH` variable on Windows using the `RTOOLS4X_HOME` environment
 #'   variable (if it is set). The appended path depends on the process
 #'   architecture. Does nothing on other platforms.
 #' @param use_dev_extendr Logical indicating whether to use development version of
@@ -314,7 +314,11 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
         cli::cli_abort("rextendr currently supports R 4.x", class = "rextendr_error")
       }
 
-      if (package_version(R.version$minor) >= "3.0") {
+      minor_patch <- package_version(R.version$minor)
+
+      if (minor_patch >= "4.0") {
+        rtools_version <- "44" # nolint: object_usage_linter
+      } else if (minor_patch >= "3.0") {
         rtools_version <- "43" # nolint: object_usage_linter
       } else {
         rtools_version <- "42" # nolint: object_usage_linter

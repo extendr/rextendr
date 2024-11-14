@@ -20,12 +20,12 @@ find_extendr_attrs_ids <- function(lns) {
 }
 
 # Gets function/module metadata from a subset of lines.
-# Finds first occurence of `fn` or `impl`.
+# Finds first occurrence of `fn` or `impl`.
 extract_meta <- function(lns) {
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
     glue_collapse(lns, sep = "\n"),
-    "(?:(fn)|(impl)(?:\\s*<(.+?)>)?)\\s+(_\\w+|[A-z]\\w*)"
+    "(?:(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))"
   ) %>%
     tibble::as_tibble(.name_repair = "minimal") %>%
     rlang::set_names(c("match", "fn", "impl", "lifetime", "name")) %>%

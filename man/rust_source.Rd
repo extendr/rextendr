@@ -61,7 +61,7 @@ otherwise, uses \code{rextendr.extendr_dev_deps} option
 (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).}
 
 \item{features}{A vector of \code{extendr-api} features that should be enabled.
-Supported values are \code{"ndarray"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.
+Supported values are \code{"ndarray"}, \code{"faer"}, \code{"either"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.
 Unknown features will produce a warning if \code{quiet} is not \code{TRUE}.}
 
 \item{env}{The R environment in which the wrapping functions will be defined.}
@@ -84,7 +84,7 @@ calls to \code{\link[=rust_source]{rust_source()}}.}
 \item{quiet}{Logical indicating whether compile output should be generated or not.}
 
 \item{use_rtools}{Logical indicating whether to append the path to Rtools
-to the \code{PATH} variable on Windows using the \code{RTOOLS40_HOME} environment
+to the \code{PATH} variable on Windows using the \code{RTOOLS4X_HOME} environment
 variable (if it is set). The appended path depends on the process
 architecture. Does nothing on other platforms.}
 

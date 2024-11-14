@@ -52,7 +52,11 @@ rextendr::use_extendr()
 #> • Please run `rextendr::document()` for changes to take effect.
 ```
 
-Now we are just one step away from calling Rust functions from R. As the message says, we need to run `rextendr::document()`. 
+For developers who use RStudio, we also provide a project template that will call `usethis::create_package()` and `rextendr::use_extendr()` for you. This is done using RStudio's **Create Project** command, which you can find on the global toolbar or in the File menu. Choose "New Directory" then select "R package with extendr." You can then fill out the details to match your preferences.
+
+Once you have the project directory setup, we strongly encourage you to run `rextendr::rust_sitrep()` in the console. This will provide a detailed report of the current state of your Rust infrastructure, along with some helpful advice about how to address any issues that may arise.
+
+Assuming we have a proper installation of Rust, we are just one step away from calling Rust functions from R. As the message above says, we need to run `rextendr::document()`. 
 But, before moving forward, let's look at the files added.
 
 ## Package structure

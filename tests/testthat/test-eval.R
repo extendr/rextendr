@@ -1,5 +1,5 @@
 test_that("`rust_eval()` works", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   expect_equal(rust_eval("2 + 2"), 4)
   expect_visible(rust_eval("2 + 2"))
@@ -17,7 +17,7 @@ test_that("`rust_eval()` works", {
 # the order of compilation.
 # Returned integer values should be identical to the input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   provided_values <- seq_len(5)
   deferred_handles <- purrr::map(
@@ -44,7 +44,7 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
 # the reverse order.
 # Returned integer values should be identical to the reversed input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   provided_values <- seq_len(5)
 
@@ -72,7 +72,7 @@ test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
 # Third, attempt to execute the same compiled piece of code and
 # observe an error.
 test_that("`rust_eval_deferred()` disallows multiple executions of the same chunk", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   handle <- rust_eval_deferred("5i32 + 6i32")
 
@@ -92,7 +92,7 @@ test_that("`rust_eval_deferred()` disallows multiple executions of the same chun
 # Execute code chunk and verify result.
 # Test if the wrapper has been removed and dll unloaded.
 test_that("`rust_eval_deferred()` environment cleanup", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   handle <- rust_eval_deferred("42i32")
   fn_name <- attr(handle, "function_name")
@@ -116,7 +116,7 @@ test_that("`rust_eval_deferred()` environment cleanup", {
 # Compare wrapper function names and dll paths (should be unequal).
 # Execute both chunks and test results (should be equal).
 test_that("`rust_eval_deferred()` generates unique function names", {
-  skip_if_cargo_bin()
+  skip_if_cargo_unavailable()
 
   rust_code <- "42f64"
 

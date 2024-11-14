@@ -83,7 +83,7 @@ cat_file <- function(...) {
 
 #' Helper function for skipping tests when cargo subcommand is unavailable
 #' @param args Character vector, arguments to the `cargo` command. Pass to [processx::run()]'s args param.
-skip_if_cargo_bin <- function(args = "--help") {
+skip_if_cargo_unavailable <- function(args = "--help") {
   tryCatch(
     {
       processx::run("cargo", args, error_on_status = TRUE)
@@ -101,4 +101,27 @@ skip_on_R42_win <- function() {
   if (.Platform$OS.type == "windows" && getRversion() < "4.3") {
     testthat::skip("Long path is not supported by this version of Rtools.")
   }
+}
+
+skip_if_opted_out_of_dev_tests <- function() {
+  env_var <- Sys.getenv("REXTENDR_SKIP_DEV_TESTS") |>
+    stringi::stri_trim_both() |>
+    stringi::stri_trans_tolower()
+
+  if (env_var == "true" || env_var == "1") {
+    testthat::skip("Dev extendr tests disabled")
+  }
+}
+
+#' Mask any version in snapshot files
+#' @param snapshot_lines Character vector, lines of the snapshot file
+#' @example
+#' expect_snapshot(some_operation(), transform = mask_any_version)
+#' @noRd
+mask_any_version <- function(snapshot_lines) {
+  stringi::stri_replace_all_regex(
+    snapshot_lines,
+    "\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?",
+    "*.*.*"
+  )
 }
