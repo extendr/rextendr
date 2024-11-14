@@ -54,7 +54,8 @@ use_crate <- function(
 
   if (!is.null(version) && !is.null(git)) {
     cli::cli_abort(
-      "Cannot specify a git URL ('{git}') with a version ('{version}')."
+      "Cannot specify a git URL ('{git}') with a version ('{version}').",
+      class = "rextendr_error"
     )
   }
 
