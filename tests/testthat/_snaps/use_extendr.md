@@ -24,6 +24,8 @@
       v Adding "src/rust/vendor" to '.gitignore'.
       v Adding "^src/Makevars$" to '.Rbuildignore'.
       v Adding "src/Makevars" to '.gitignore'.
+      v Adding "^src/Makevars\\.win$" to '.Rbuildignore'.
+      v Adding "src/Makevars.win" to '.gitignore'.
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -69,12 +71,12 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When on CRAN, the vendor.tar.xz file is unzipped and used
-      # for offline compilation. It is ignored when NOT_CRAN != false
+      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+      # is unzipped and used for offline compilation.
       $(STATLIB):
       
       	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" = "false" ]; then \
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
       		if [ -f ./rust/vendor.tar.xz ]; then \
       			tar xf rust/vendor.tar.xz && \
       			mkdir -p $(CARGOTMP) && \
@@ -87,13 +89,7 @@
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP)
-      
-       	if [ "$(NOT_CRAN)" != "false" ]; then \
-              rm -Rf $(VENDOR_DIR); \
-              rm -Rf $(TARGET_DIR); \
-              rm -Rf $(LIBDIR)/build; \
-          fi
+      	rm -Rf $(CARGOTMP);
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
@@ -120,45 +116,40 @@
       CARGOTMP = $(CURDIR)/.cargo
       
       $(STATLIB):
-      	mkdir -p $(TARGET_DIR)/libgcc_mock
-      	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
-      	# `libgcc_eh` due to the compilation settings. So, in order to please the
-      	# compiler, we need to add empty `libgcc_eh` to the library search paths.
-      	#
-      	# For more details, please refer to
-      	# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
-      	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
+          mkdir -p $(TARGET_DIR)/libgcc_mock
+          # `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
+          # `libgcc_eh` due to the compilation settings. So, in order to please the
+          # compiler, we need to add empty `libgcc_eh` to the library search paths.
+          #
+          # For more details, please refer to
+          # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
+          touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	# Handle NOT_CRAN case: If NOT_CRAN is false, vendor tarball should be handled
-      	if [ "$(NOT_CRAN)" = "false" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
-      	fi
-      
-       	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
-      	# Build the project using Cargo with additional flags
-      	export CARGO_HOME=$(CARGOTMP) && \
-      	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
-      	export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo @CRAN_FLAGS@ build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      
-      	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP)
-      
-       	if [ "$(NOT_CRAN)" != "false" ]; then \
-              rm -Rf $(VENDOR_DIR); \
-              rm -Rf $(TARGET_DIR); \
-              rm -Rf $(LIBDIR)/build; \
+          # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+          # is unzipped and used for offline compilation.
+          if [ "$(NOT_CRAN)" != "true" ]; then \
+              if [ -f ./rust/vendor.tar.xz ]; then \
+                  tar xf rust/vendor.tar.xz && \
+                  mkdir -p $(CARGOTMP) && \
+                  cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+              fi; \
           fi
       
+           # CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+          # Build the project using Cargo with additional flags
+          export CARGO_HOME=$(CARGOTMP) && \
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+          export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+          RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo @CRAN_FLAGS@ build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+          # Always clean up CARGOTMP
+          rm -Rf $(CARGOTMP);
+      
       C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+          rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+          rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
 ---
 
@@ -320,12 +311,12 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When on CRAN, the vendor.tar.xz file is unzipped and used
-      # for offline compilation. It is ignored when NOT_CRAN != false
+      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+      # is unzipped and used for offline compilation.
       $(STATLIB):
       
       	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" = "false" ]; then \
+      	if [ "$(NOT_CRAN)" != "true" ]; then \
       		if [ -f ./rust/vendor.tar.xz ]; then \
       			tar xf rust/vendor.tar.xz && \
       			mkdir -p $(CARGOTMP) && \
@@ -338,13 +329,7 @@
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP)
-      
-       	if [ "$(NOT_CRAN)" != "false" ]; then \
-              rm -Rf $(VENDOR_DIR); \
-              rm -Rf $(TARGET_DIR); \
-              rm -Rf $(LIBDIR)/build; \
-          fi
+      	rm -Rf $(CARGOTMP);
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)

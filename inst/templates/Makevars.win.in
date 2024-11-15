@@ -21,8 +21,9 @@ $(STATLIB):
     # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
     touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
-    # Handle NOT_CRAN case: If NOT_CRAN is false, vendor tarball should be handled
-    if [ "$(NOT_CRAN)" = "false" ]; then \
+    # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+    # is unzipped and used for offline compilation.
+    if [ "$(NOT_CRAN)" != "true" ]; then \
         if [ -f ./rust/vendor.tar.xz ]; then \
             tar xf rust/vendor.tar.xz && \
             mkdir -p $(CARGOTMP) && \

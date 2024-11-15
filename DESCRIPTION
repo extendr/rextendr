@@ -57,6 +57,7 @@ Imports:
     withr
 Suggests:
     devtools,
+    rcmdcheck,
     knitr,
     lintr,
     rmarkdown,
