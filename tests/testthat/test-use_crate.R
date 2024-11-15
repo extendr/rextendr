@@ -71,3 +71,27 @@ test_that("use_crate(optional = TRUE) adds optional dependency", {
 
   expect_identical(dependency[["optional"]], TRUE)
 })
+
+test_that("use_crate(git = <url>) adds dependency with git source", {
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+
+  # capture setup messages
+  withr::local_options(usethis.quiet = FALSE)
+
+  use_extendr(path, quiet = TRUE)
+
+  use_crate(
+    "serde",
+    git = "https://github.com/serde-rs/serde",
+    path = path
+  )
+
+  metadata <- read_cargo_metadata(path)
+
+  dependency <- metadata[["packages"]][["dependencies"]][[1]]
+  dependency <- dependency[dependency[["name"]] == "serde", ]
+
+  expect_equal(dependency[["source"]], "git+https://github.com/serde-rs/serde")
+})
