@@ -9,8 +9,8 @@ test_that("use_extendr() sets up extendr files correctly", {
   # DESCRITION file
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
   sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
-  expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_equal(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
+  expect_identical(version_in_desc, as.character(packageVersion("rextendr")))
+  expect_identical(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -119,7 +119,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   use_extendr()
   document()
   devtools::load_all()
-  expect_equal(hello_world(), "Hello world!")
+  expect_identical(hello_world(), "Hello world!")
 })
 
 # Specify crate name and library names explicitly
@@ -133,7 +133,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
   document()
   devtools::load_all()
-  expect_equal(hello_world(), "Hello world!")
+  expect_identical(hello_world(), "Hello world!")
 })
 
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
@@ -173,7 +173,7 @@ test_that("Message if the SystemRequirements field is already set.", {
   )
 
   expect_true(created)
-  expect_equal(desc::desc_get("SystemRequirements")[[1]], sys_req)
+  expect_identical(desc::desc_get("SystemRequirements")[[1]], sys_req)
 })
 
 test_that("`use_extendr()` works correctly when path is specified explicitly", {
@@ -195,8 +195,9 @@ test_that("`use_extendr()` passes R CMD check", {
   usethis::use_mit_license()
   use_extendr()
   document()
+  
   # store results
-  res <- rcmdcheck::rcmdcheck()
+  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN"="true"))
 
   # check the output 
   expect_true(

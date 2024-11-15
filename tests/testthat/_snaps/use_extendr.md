@@ -7,18 +7,18 @@
       i Setting `Config/rextendr/version` to "*.*.*" in the 'DESCRIPTION' file.
       i Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
-      v Writing 'src/entrypoint.c'
-      v Writing 'src/Makevars.in'
-      v Writing 'src/Makevars.win.in'
-      v Writing 'src/Makevars.ucrt'
-      v Writing 'src/.gitignore'
-      v Writing 'src/rust/Cargo.toml'
-      v Writing 'src/rust/src/lib.rs'
-      v Writing 'src/testpkg-win.def'
+      v Writing 'src/entrypoint.c'.
+      v Writing 'src/Makevars.in'.
+      v Writing 'src/Makevars.win.in'.
+      v Writing 'src/Makevars.ucrt'.
+      v Writing 'src/.gitignore'.
+      v Writing 'src/rust/Cargo.toml'.
+      v Writing 'src/rust/src/lib.rs'.
+      v Writing 'src/testpkg-win.def'.
       v Writing 'R/extendr-wrappers.R'
-      v Writing 'tools/msrv.R'
-      v Writing 'configure'
-      v Writing 'configure.win'
+      v Writing 'tools/msrv.R'.
+      v Writing 'configure'.
+      v Writing 'configure.win'.
       v Adding "^src/\\.cargo$" to '.Rbuildignore'.
       v Adding "^src/rust/vendor$" to '.Rbuildignore'.
       v Adding "src/rust/vendor" to '.gitignore'.
@@ -234,18 +234,7 @@
     Code
       use_extendr()
     Message
-      > File 'src/entrypoint.c' already exists. Skip writing the file.
-      > File 'src/Makevars.in' already exists. Skip writing the file.
-      > File 'src/Makevars.win.in' already exists. Skip writing the file.
-      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
-      > File 'src/.gitignore' already exists. Skip writing the file.
-      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
-      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
-      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
-      > File 'tools/msrv.R' already exists. Skip writing the file.
-      > File 'configure' already exists. Skip writing the file.
-      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 

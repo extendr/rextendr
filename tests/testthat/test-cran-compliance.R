@@ -13,7 +13,7 @@ test_that("vendor_pkgs() vendors dependencies", {
 })
 
 
-test_that("rextendr passes NOT_CRAN=false checks", {
+test_that("rextendr passes CRAN checks", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
 
@@ -23,7 +23,17 @@ test_that("rextendr passes NOT_CRAN=false checks", {
   use_extendr()
   document()
   vendor_pkgs()
-  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN" = "false"))
+  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN" = ""))
+
+  # --offline flag should be set
+  expect_true(grepl("--offline", res$install_out))
+  # -j 2 flag should be set
+  expect_true(grepl("-j 2", res$install_out))
+
+  # "Downloading" should not be present 
+  expect_false(grepl("Downloading", res$install_out))
+  
+
   expect_true(
     rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
   )

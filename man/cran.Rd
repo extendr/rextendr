@@ -2,37 +2,34 @@
 % Please edit documentation in R/cran-compliance.R
 \name{cran}
 \alias{cran}
-\alias{vendor_pkgs}
-\title{Vendor Rust dependencies}
-\usage{
-vendor_pkgs(path = ".", quiet = FALSE, overwrite = NULL)
-}
-\arguments{
-\item{path}{File path to the package for which to generate wrapper code.}
-
-\item{quiet}{Logical indicating whether any progress messages should be
-generated or not.}
-
-\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the \code{path} should be overwritten.
-If \code{NULL} (default), the function will ask the user whether each file should
-be overwritten in an interactive session or do nothing in a non-interactive session.
-If \code{FALSE} and each file already exists, the function will do nothing.
-If \code{TRUE}, all files will be overwritten.}
-}
-\value{
-\itemize{
-\item \code{vendor_pkgs()} returns a data.frame with two columns \code{crate} and \code{version}
-}
-}
+\title{CRAN compliant extendr packages}
 \description{
-\code{vendor_pkgs()} is used to package the dependencies as required by CRAN.
-It executes \verb{cargo vendor} on your behalf creating a \verb{vendor/} directory and a
-compressed \code{vendor.tar.xz} which will be shipped with package itself.
-If you have modified your dependencies, you will need need to repackage
+R packages developed using extendr are not immediately ready to
+be published to CRAN. The extendr package template ensures that
+CRAN publication is (farily) painless.
 }
-\examples{
+\section{CRAN requirements}{
 
-\dontrun{
-  vendor_pkgs()
+
+In order to publish a Rust based package on CRAN it must meet certain
+requirements. These are:
+\itemize{
+\item Rust dependencies are vendored
+\item The package is compiled offline
+\item the \code{DESCRIPTION} file's \code{SystemRequirements} field contains \verb{Cargo (Rust's package manager), rustc}
 }
+
+The extendr templates handle all of this \emph{except} vendoring dependencies.
+This must be done prior to publication using \code{\link[=vendor_pkgs]{vendor_pkgs()}}.
+
+In addition, it is important to make sure that CRAN maintainers
+are aware that the package they are checking contains Rust code.
+Depending on which and how many crates are used as a dependencies
+the \code{vendor.tar.xz} will be larger than a few megabytes. If a
+built package is larger than 5mbs CRAN may reject the submission.
+
+To prevent rejection make a note in your \code{cran-comments.md} file
+(create one using \code{\link[usethis:use_cran_comments]{usethis::use_cran_comments()}}) along the lines of
+"The package tarball is 6mb because Rust dependencies are vendored within src/rust/vendor.tar.xz which is 5.9mb."
 }
+
