@@ -9,8 +9,8 @@ test_that("use_extendr() sets up extendr files correctly", {
   # DESCRITION file
   version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
   sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
-  expect_equal(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_equal(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
+  expect_identical(version_in_desc, as.character(packageVersion("rextendr")))
+  expect_identical(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -18,8 +18,8 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_true(dir.exists(file.path("src", "rust", "src")))
 
   expect_snapshot(cat_file("R", "extendr-wrappers.R"))
-  expect_snapshot(cat_file("src", "Makevars"))
-  expect_snapshot(cat_file("src", "Makevars.win"))
+  expect_snapshot(cat_file("src", "Makevars.in"))
+  expect_snapshot(cat_file("src", "Makevars.win.in"))
   expect_snapshot(cat_file("src", "Makevars.ucrt"))
   expect_snapshot(cat_file("src", "entrypoint.c"))
   expect_snapshot(cat_file("src", "testpkg-win.def"))
@@ -87,23 +87,23 @@ test_that("use_rextendr_template() can overwrite existing files", {
 
   path <- local_package("testpkg.wrap")
   dir.create("src")
-  file_path <- file.path("src", "Makevars")
+  file_path <- file.path("src", "Makevars.in")
 
   use_rextendr_template(
-    "Makevars",
+    "Makevars.in",
     save_as = file_path,
     quiet = TRUE,
     data = list(lib_name = "foo")
   )
   use_rextendr_template(
-    "Makevars",
+    "Makevars.in",
     save_as = file_path,
     quiet = TRUE,
     overwrite = TRUE,
     data = list(lib_name = "bar")
   )
 
-  expect_snapshot(cat_file("src", "Makevars"))
+  expect_snapshot(cat_file("src", "Makevars.in"))
 })
 
 # Check that {rextendr} works in packages containing dots in their names.
@@ -119,7 +119,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   use_extendr()
   document()
   devtools::load_all()
-  expect_equal(hello_world(), "Hello world!")
+  expect_identical(hello_world(), "Hello world!")
 })
 
 # Specify crate name and library names explicitly
@@ -133,14 +133,14 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
   document()
   devtools::load_all()
-  expect_equal(hello_world(), "Hello world!")
+  expect_identical(hello_world(), "Hello world!")
 })
 
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
 test_that("use_extendr() does not allow invalid rust names", {
   skip_if_not_installed("usethis")
 
-  path <- local_package("testPackage")
+  path <- local_package("testPackage") 
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
   expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
@@ -173,7 +173,7 @@ test_that("Message if the SystemRequirements field is already set.", {
   )
 
   expect_true(created)
-  expect_equal(desc::desc_get("SystemRequirements")[[1]], sys_req)
+  expect_identical(desc::desc_get("SystemRequirements")[[1]], sys_req)
 })
 
 test_that("`use_extendr()` works correctly when path is specified explicitly", {
@@ -183,4 +183,24 @@ test_that("`use_extendr()` works correctly when path is specified explicitly", {
 
   use_extendr(path = "testpkg")
   succeed()
+})
+
+
+test_that("`use_extendr()` passes R CMD check", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("rcmdcheck")
+
+  path <- local_package("testpkg")
+  # write the license file to pass R CMD check
+  usethis::use_mit_license()
+  use_extendr()
+  document()
+  
+  # store results
+  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN"="true"))
+
+  # check the output 
+  expect_true(
+    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
+  )
 })

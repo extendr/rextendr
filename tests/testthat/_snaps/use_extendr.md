@@ -7,19 +7,25 @@
       i Setting `Config/rextendr/version` to "*.*.*" in the 'DESCRIPTION' file.
       i Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc" in the 'DESCRIPTION' file.
       v Creating 'src/rust/src'.
-      v Writing 'src/entrypoint.c'
-      v Writing 'src/Makevars'
-      v Writing 'src/Makevars.win'
-      v Writing 'src/Makevars.ucrt'
-      v Writing 'src/.gitignore'
-      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
-      v Writing 'src/rust/Cargo.toml'
-      v Writing 'src/rust/src/lib.rs'
-      v Writing 'src/testpkg-win.def'
+      v Writing 'src/entrypoint.c'.
+      v Writing 'src/Makevars.in'.
+      v Writing 'src/Makevars.win.in'.
+      v Writing 'src/Makevars.ucrt'.
+      v Writing 'src/.gitignore'.
+      v Writing 'src/rust/Cargo.toml'.
+      v Writing 'src/rust/src/lib.rs'.
+      v Writing 'src/testpkg-win.def'.
       v Writing 'R/extendr-wrappers.R'
-      v Writing 'tools/msrv.R'
-      v Writing 'configure'
-      v Writing 'configure.win'
+      v Writing 'tools/msrv.R'.
+      v Writing 'configure'.
+      v Writing 'configure.win'.
+      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
+      v Adding "^src/rust/vendor$" to '.Rbuildignore'.
+      v Adding "src/rust/vendor" to '.gitignore'.
+      v Adding "^src/Makevars$" to '.Rbuildignore'.
+      v Adding "src/Makevars" to '.gitignore'.
+      v Adding "^src/Makevars\\.win$" to '.Rbuildignore'.
+      v Adding "src/Makevars.win" to '.gitignore'.
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -44,46 +50,57 @@
 ---
 
     Code
-      cat_file("src", "Makevars")
+      cat_file("src", "Makevars.in")
     Output
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/release
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
-      # Print linked static libraries at compile time
-      export RUSTFLAGS=--print=native-static-libs
-      
       all: C_clean
       
       $(SHLIB): $(STATLIB)
       
       CARGOTMP = $(CURDIR)/.cargo
+      VENDOR_DIR = $(CURDIR)/vendor
       
+      
+      # RUSTFLAGS appends --print=native-static-libs to ensure that 
+      # the correct linkers are used. Use this for debugging if need. 
+      #
+      # CRAN note: Cargo and Rustc versions are reported during
+      # configure via tools/msrv.R.
+      #
+      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+      # is unzipped and used for offline compilation.
       $(STATLIB):
-      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
-      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
-      	# therefore is only used if cargo is absent from the user's PATH.
+      
+      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
       	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		export CARGO_HOME=$(CARGOTMP); \
-      	fi && \
-      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		rm -Rf $(CARGOTMP) && \
-      		rm -Rf $(LIBDIR)/build; \
+      		if [ -f ./rust/vendor.tar.xz ]; then \
+      			tar xf rust/vendor.tar.xz && \
+      			mkdir -p $(CARGOTMP) && \
+      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		fi; \
       	fi
+      
+      	export CARGO_HOME=$(CARGOTMP) && \
+      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+      	# Always clean up CARGOTMP
+      	rm -Rf $(CARGOTMP);
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
 
 ---
 
     Code
-      cat_file("src", "Makevars.win")
+      cat_file("src", "Makevars.win.in")
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       
@@ -92,9 +109,6 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
-      # Print linked static libraries at compile time
-      export RUSTFLAGS=--print=native-static-libs
-      
       all: C_clean
       
       $(SHLIB): $(STATLIB)
@@ -102,32 +116,40 @@
       CARGOTMP = $(CURDIR)/.cargo
       
       $(STATLIB):
-      	mkdir -p $(TARGET_DIR)/libgcc_mock
-      	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
-      	# `libgcc_eh` due to the compilation settings. So, in order to please the
-      	# compiler, we need to add empty `libgcc_eh` to the library search paths.
-      	#
-      	# For more details, please refer to
-      	# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
-      	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
+          mkdir -p $(TARGET_DIR)/libgcc_mock
+          # `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
+          # `libgcc_eh` due to the compilation settings. So, in order to please the
+          # compiler, we need to add empty `libgcc_eh` to the library search paths.
+          #
+          # For more details, please refer to
+          # https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
+          touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		export CARGO_HOME=$(CARGOTMP); \
-      	fi && \
-      		export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
-      		export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      		cargo build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		rm -Rf $(CARGOTMP) && \
-      		rm -Rf $(LIBDIR)/build; \
-      	fi
+          # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+          # is unzipped and used for offline compilation.
+          if [ "$(NOT_CRAN)" != "true" ]; then \
+              if [ -f ./rust/vendor.tar.xz ]; then \
+                  tar xf rust/vendor.tar.xz && \
+                  mkdir -p $(CARGOTMP) && \
+                  cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+              fi; \
+          fi
+      
+           # CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
+          # Build the project using Cargo with additional flags
+          export CARGO_HOME=$(CARGOTMP) && \
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
+          export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+          RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo @CRAN_FLAGS@ build --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+          # Always clean up CARGOTMP
+          rm -Rf $(CARGOTMP);
       
       C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+          rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+          rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
 ---
 
@@ -212,18 +234,7 @@
     Code
       use_extendr()
     Message
-      > File 'src/entrypoint.c' already exists. Skip writing the file.
-      > File 'src/Makevars' already exists. Skip writing the file.
-      > File 'src/Makevars.win' already exists. Skip writing the file.
-      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
-      > File 'src/.gitignore' already exists. Skip writing the file.
-      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
-      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
-      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
-      > File 'tools/msrv.R' already exists. Skip writing the file.
-      > File 'configure' already exists. Skip writing the file.
-      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -233,8 +244,8 @@
       use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE)
     Message
       v Writing 'src/entrypoint.c'
-      v Writing 'src/Makevars'
-      v Writing 'src/Makevars.win'
+      v Writing 'src/Makevars.in'
+      v Writing 'src/Makevars.win.in'
       v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
@@ -268,39 +279,50 @@
 # use_rextendr_template() can overwrite existing files
 
     Code
-      cat_file("src", "Makevars")
+      cat_file("src", "Makevars.in")
     Output
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/release
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
       
-      # Print linked static libraries at compile time
-      export RUSTFLAGS=--print=native-static-libs
-      
       all: C_clean
       
       $(SHLIB): $(STATLIB)
       
       CARGOTMP = $(CURDIR)/.cargo
+      VENDOR_DIR = $(CURDIR)/vendor
       
+      
+      # RUSTFLAGS appends --print=native-static-libs to ensure that 
+      # the correct linkers are used. Use this for debugging if need. 
+      #
+      # CRAN note: Cargo and Rustc versions are reported during
+      # configure via tools/msrv.R.
+      #
+      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
+      # is unzipped and used for offline compilation.
       $(STATLIB):
-      	# In some environments, ~/.cargo/bin might not be included in PATH, so we need
-      	# to set it here to ensure cargo can be invoked. It is appended to PATH and
-      	# therefore is only used if cargo is absent from the user's PATH.
+      
+      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
       	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		export CARGO_HOME=$(CARGOTMP); \
-      	fi && \
-      		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      		cargo build --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		rm -Rf $(CARGOTMP) && \
-      		rm -Rf $(LIBDIR)/build; \
+      		if [ -f ./rust/vendor.tar.xz ]; then \
+      			tar xf rust/vendor.tar.xz && \
+      			mkdir -p $(CARGOTMP) && \
+      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		fi; \
       	fi
+      
+      	export CARGO_HOME=$(CARGOTMP) && \
+      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      
+      	# Always clean up CARGOTMP
+      	rm -Rf $(CARGOTMP);
       
       C_clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
 
