@@ -30,3 +30,4 @@ reference:
   - to_toml
   - make_module_macro
   - rust_sitrep
+  - read_cargo_metadata
