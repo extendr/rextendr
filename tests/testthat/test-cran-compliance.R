@@ -32,7 +32,6 @@ test_that("rextendr passes CRAN checks", {
 
   # "Downloading" should not be present 
   expect_false(grepl("Downloading", res$install_out))
-  
 
   expect_true(
     rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)

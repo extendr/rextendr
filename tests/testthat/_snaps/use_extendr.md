@@ -1,33 +1,186 @@
 # use_extendr() sets up extendr files correctly
 
     Code
-      use_extendr()
-    Message
-      i First time using rextendr. Upgrading automatically...
-      i Setting `Config/rextendr/version` to "*.*.*" in the 'DESCRIPTION' file.
-      i Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc" in the 'DESCRIPTION' file.
-      v Creating 'src/rust/src'.
-      v Writing 'src/entrypoint.c'.
-      v Writing 'src/Makevars.in'.
-      v Writing 'src/Makevars.win.in'.
-      v Writing 'src/Makevars.ucrt'.
-      v Writing 'src/.gitignore'.
-      v Writing 'src/rust/Cargo.toml'.
-      v Writing 'src/rust/src/lib.rs'.
-      v Writing 'src/testpkg-win.def'.
-      v Writing 'R/extendr-wrappers.R'
-      v Writing 'tools/msrv.R'.
-      v Writing 'configure'.
-      v Writing 'configure.win'.
-      v Adding "^src/\\.cargo$" to '.Rbuildignore'.
-      v Adding "^src/rust/vendor$" to '.Rbuildignore'.
-      v Adding "src/rust/vendor" to '.gitignore'.
-      v Adding "^src/Makevars$" to '.Rbuildignore'.
-      v Adding "src/Makevars" to '.gitignore'.
-      v Adding "^src/Makevars\\.win$" to '.Rbuildignore'.
-      v Adding "src/Makevars.win" to '.gitignore'.
-      v Finished configuring extendr for package testpkg.
-      * Please run `rextendr::document()` for changes to take effect.
+      cat_file(".gitignore")
+    Output
+      src/rust/vendor
+      src/Makevars
+      src/Makevars.win
+
+---
+
+    Code
+      cat_file(".Rbuildignore")
+    Output
+      ^src/\.cargo$
+      ^src/rust/vendor$
+      ^src/Makevars$
+      ^src/Makevars\.win$
+
+---
+
+    Code
+      cat_file("configure")
+    Output
+      #!/usr/bin/env sh
+      : "${R_HOME=`R RHOME`}"
+      "${R_HOME}/bin/Rscript" tools/msrv.R 
+      
+      # Set CRAN_FLAGS based on the NOT_CRAN value
+      if [ "${NOT_CRAN}" != "true" ]; then
+        export CRAN_FLAGS="-j 2 --offline"
+      else
+        export CRAN_FLAGS=""
+      fi
+      
+      # delete Makevars if it is present
+      [ -f src/Makevars ] && rm src/Makevars
+      
+      # Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
+      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars
+
+---
+
+    Code
+      cat_file("configure.win")
+    Output
+      #!/usr/bin/env sh
+      "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" tools/msrv.R
+      
+      # Set CRAN_FLAGS based on the NOT_CRAN value
+      if [ "${NOT_CRAN}" != "true" ]; then
+        export CRAN_FLAGS="-j 2 --offline"
+      else
+        export CRAN_FLAGS=""
+      fi
+      
+      # delete Makevars if it is present
+      [ -f src/Makevars ] && rm src/Makevars.win
+      
+      # Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
+      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars
+
+---
+
+    Code
+      cat_file("tools", "msrv.R")
+    Output
+      # read the DESCRIPTION file
+      desc <- read.dcf("DESCRIPTION")
+      
+      if (!"SystemRequirements" %in% colnames(desc)) {
+        fmt <- c(
+          "`SystemRequirements` not found in `DESCRIPTION`.",
+          "Please specify `SystemRequirements: Cargo (Rust's package manager), rustc`"
+        )
+        stop(paste(fmt, collapse = "\n"))
+      }
+      
+      # extract system requirements
+      sysreqs <- desc[, "SystemRequirements"]
+      
+      # check that cargo and rustc is found
+      if (!grepl("cargo", sysreqs, ignore.case = TRUE)) {
+        stop("You must specify `Cargo (Rust's package manager)` in your `SystemRequirements`")
+      }
+      
+      if (!grepl("rustc", sysreqs, ignore.case = TRUE)) {
+        stop("You must specify `Cargo (Rust's package manager), rustc` in your `SystemRequirements`")
+      }
+      
+      # split into parts
+      parts <- strsplit(sysreqs, ", ")[[1]]
+      
+      # identify which is the rustc
+      rustc_ver <- parts[grepl("rustc", parts)]
+      
+      # perform checks for the presence of rustc and cargo on the OS
+      no_cargo_msg <- c(
+        "----------------------- [CARGO NOT FOUND]--------------------------",
+        "The 'cargo' command was not found on the PATH. Please install Cargo",
+        "from: https://www.rust-lang.org/tools/install",
+        "",
+        "Alternatively, you may install Cargo from your OS package manager:",
+        " - Debian/Ubuntu: apt-get install cargo",
+        " - Fedora/CentOS: dnf install cargo",
+        " - macOS: brew install rustc",
+        "-------------------------------------------------------------------"
+      )
+      
+      no_rustc_msg <- c(
+        "----------------------- [RUST NOT FOUND]---------------------------",
+        "The 'rustc' compiler was not found on the PATH. Please install",
+        paste(rustc_ver, "or higher from:"),
+        "https://www.rust-lang.org/tools/install",
+        "",
+        "Alternatively, you may install Rust from your OS package manager:",
+        " - Debian/Ubuntu: apt-get install rustc",
+        " - Fedora/CentOS: dnf install rustc",
+        " - macOS: brew install rustc",
+        "-------------------------------------------------------------------"
+      )
+      
+      # Add {user}/.cargo/bin to path before checking
+      new_path <- paste0(
+        Sys.getenv("PATH"),
+        ":",
+        paste0(Sys.getenv("HOME"), "/.cargo/bin")
+      )
+      
+      # set the path with the new path
+      Sys.setenv("PATH" = new_path)
+      
+      # check for rustc installation
+      rustc_version <- tryCatch(
+        system("rustc --version", intern = TRUE),
+        error = function(e) {
+          stop(paste(no_rustc_msg, collapse = "\n"))
+        }
+      )
+      
+      # check for cargo installation
+      cargo_version <- tryCatch(
+        system("cargo --version", intern = TRUE),
+        error = function(e) {
+          stop(paste(no_cargo_msg, collapse = "\n"))
+        }
+      )
+      
+      # helper function to extract versions
+      extract_semver <- function(ver) {
+        if (grepl("\\d+\\.\\d+(\\.\\d+)?", ver)) {
+          sub(".*?(\\d+\\.\\d+(\\.\\d+)?).*", "\\1", ver)
+        } else {
+          NA
+        }
+      }
+      
+      # get the MSRV
+      msrv <- extract_semver(rustc_ver)
+      
+      # extract current version
+      current_rust_version <- extract_semver(rustc_version)
+      
+      # perform check
+      if (!is.na(msrv)) {
+        # -1 when current version is later
+        # 0 when they are the same
+        # 1 when MSRV is newer than current
+        is_msrv <- utils::compareVersion(msrv, current_rust_version)
+        if (is_msrv == 1) {
+          fmt <- paste0(
+            "\n------------------ [UNSUPPORTED RUST VERSION]------------------\n",
+            "- Minimum supported Rust version is %s.\n",
+            "- Installed Rust version is %s.\n",
+            "---------------------------------------------------------------"
+          )
+          stop(sprintf(fmt, msrv, current_rust_version))
+        }
+      }
+      
+      # print the versions
+      versions_fmt <- "Using %s\nUsing %s"
+      message(sprintf(versions_fmt, cargo_version, rustc_version))
 
 ---
 
@@ -46,6 +199,17 @@
       hello_world <- function() .Call(wrap__hello_world)
       
       # nolint end
+
+---
+
+    Code
+      cat_file("src", ".gitignore")
+    Output
+      *.o
+      *.so
+      *.dll
+      target
+      .cargo
 
 ---
 
@@ -96,6 +260,20 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+
+---
+
+    Code
+      cat_file("src", "entrypoint.c")
+    Output
+      // We need to forward routine registration from C to Rust
+      // to avoid the linker removing the static library.
+      
+      void R_init_testpkg_extendr(void *dll);
+      
+      void R_init_testpkg(void *dll) {
+          R_init_testpkg_extendr(dll);
+      }
 
 ---
 
@@ -165,20 +343,6 @@
 ---
 
     Code
-      cat_file("src", "entrypoint.c")
-    Output
-      // We need to forward routine registration from C to Rust
-      // to avoid the linker removing the static library.
-      
-      void R_init_testpkg_extendr(void *dll);
-      
-      void R_init_testpkg(void *dll) {
-          R_init_testpkg_extendr(dll);
-      }
-
----
-
-    Code
       cat_file("src", "testpkg-win.def")
     Output
       EXPORTS
@@ -234,7 +398,18 @@
     Code
       use_extendr()
     Message
+      > File 'src/entrypoint.c' already exists. Skip writing the file.
+      > File 'src/Makevars.in' already exists. Skip writing the file.
+      > File 'src/Makevars.win.in' already exists. Skip writing the file.
+      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
+      > File 'src/.gitignore' already exists. Skip writing the file.
+      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
+      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
+      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 
