@@ -23,14 +23,19 @@ test_that("rextendr passes CRAN checks", {
   use_extendr()
   document()
   vendor_pkgs()
-  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN" = ""))
+
+  res <- rcmdcheck::rcmdcheck(
+    env = c("NOT_CRAN" = ""),
+    args = "--no-manual",
+    libpath = rev(.libPaths())
+  )
 
   # --offline flag should be set
   expect_true(grepl("--offline", res$install_out))
   # -j 2 flag should be set
   expect_true(grepl("-j 2", res$install_out))
 
-  # "Downloading" should not be present 
+  # "Downloading" should not be present
   expect_false(grepl("Downloading", res$install_out))
 
   expect_true(

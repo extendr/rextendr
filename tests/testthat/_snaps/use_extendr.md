@@ -58,7 +58,7 @@
       [ -f src/Makevars ] && rm src/Makevars.win
       
       # Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
-      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars
+      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.win.in > src/Makevars.win
 
 ---
 

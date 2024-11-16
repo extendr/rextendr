@@ -148,7 +148,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 test_that("use_extendr() does not allow invalid rust names", {
   skip_if_not_installed("usethis")
 
-  path <- local_package("testPackage") 
+  path <- local_package("testPackage")
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
   expect_rextendr_error(use_extendr(lib_name = "@unsupported"))
 })
@@ -205,9 +205,12 @@ test_that("`use_extendr()` passes R CMD check", {
   document()
 
   # store results
-  res <- rcmdcheck::rcmdcheck(env = c("NOT_CRAN"="true"))
+  res <- rcmdcheck::rcmdcheck(
+    args = "--no-manual",
+    libpath = rev(.libPaths())
+  )
 
-  # check the output 
+  # check the output
   expect_true(
     rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
   )
