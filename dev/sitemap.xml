@@ -3,7 +3,6 @@
 <url><loc>/dev/CONTRIBUTING.html</loc></url>
 <url><loc>/dev/LICENSE-text.html</loc></url>
 <url><loc>/dev/LICENSE.html</loc></url>
-<url><loc>/dev/articles/cran-compliance.html</loc></url>
 <url><loc>/dev/articles/index.html</loc></url>
 <url><loc>/dev/articles/package.html</loc></url>
 <url><loc>/dev/articles/rmarkdown.html</loc></url>
@@ -30,6 +29,7 @@
 <url><loc>/dev/reference/use_crate.html</loc></url>
 <url><loc>/dev/reference/use_extendr.html</loc></url>
 <url><loc>/dev/reference/use_msrv.html</loc></url>
+<url><loc>/dev/reference/vendor_pkgs.html</loc></url>
 <url><loc>/dev/reference/write_license_note.html</loc></url>
 </urlset>
 
