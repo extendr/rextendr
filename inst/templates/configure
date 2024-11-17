@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+: "${R_HOME=`R RHOME`}"
+"${R_HOME}/bin/Rscript" tools/msrv.R 
+
+# Set CRAN_FLAGS based on the NOT_CRAN value
+if [ "${NOT_CRAN}" != "true" ] && [ -f ./src/rust/vendor.tar.xz ]; then
+  export CRAN_FLAGS="-j 2 --offline"
+else
+  export CRAN_FLAGS=""
+fi
+
+# delete Makevars if it is present
+[ -f src/Makevars ] && rm src/Makevars
+
+# Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
+sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars

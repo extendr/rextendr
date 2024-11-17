@@ -1,99 +1,21 @@
-#' Use CRAN compliant defaults
-#'
-#' Modifies an extendr package to use CRAN compliant settings.
-#'
-#' @details
-#'
-#' `use_cran_defaults()` modifies an existing package to provide CRAN complaint
-#' settings and files. It creates `tools/msrv.R`, `configure` and `configure.win` files as well as
-#'  modifies `Makevars` and `Makevars.win` to use required CRAN settings.
+#' Vendor Rust dependencies
 #'
 #' `vendor_pkgs()` is used to package the dependencies as required by CRAN.
 #' It executes `cargo vendor` on your behalf creating a `vendor/` directory and a
 #' compressed `vendor.tar.xz` which will be shipped with package itself.
 #' If you have modified your dependencies, you will need need to repackage
-#  the vendored dependencies using `vendor_pkgs()`.
+#  the vendored dependencies using [`vendor_pkgs()`].
 #'
 #' @inheritParams use_extendr
 #' @returns
 #'
 #' - `vendor_pkgs()` returns a data.frame with two columns `crate` and `version`
-#' - `use_cran_defaults()` returns `NULL` and is used solely for its side effects
 #'
 #' @examples
-#'
-#' if (interactive()) {
-#'   use_cran_defaults()
-#'   vendor_pkgs()
+#' \dontrun{
+#' vendor_pkgs()
 #' }
-#' @name cran
 #' @export
-use_cran_defaults <- function(path = ".", quiet = FALSE, overwrite = NULL, lib_name = NULL) {
-  # if not in an interactive session and overwrite is null, set it to false
-  if (!rlang::is_interactive()) {
-    overwrite <- overwrite %||% FALSE
-  }
-
-  # silence output
-  local_quiet_cli(quiet)
-
-  # find package root
-  pkg_root <- rprojroot::find_package_root_file(path)
-
-  # set the path for the duration of the function
-  withr::local_dir(pkg_root)
-
-  if (is.null(lib_name)) {
-    lib_name <- as_valid_rust_name(pkg_name(path))
-  } else if (length(lib_name) > 1) {
-    cli::cli_abort(
-      "{.arg lib_name} must be a character scalar",
-      class = "rextendr_error"
-    )
-  }
-
-  # use CRAN specific Makevars templates
-  use_rextendr_template(
-    "cran/Makevars",
-    save_as = file.path("src", "Makevars"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  use_rextendr_template(
-    "cran/Makevars.win",
-    save_as = file.path("src", "Makevars.win"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  # vendor directory should be ignored by git and R CMD build
-  if (!rlang::is_installed("usethis")) {
-    cli::cli_inform(
-      c(
-        "!" = "Add {.code ^src/rust/vendor$} to your {.file .Rbuildignore}",
-        "!" = "Add {.code ^src/rust/vendor$} to your {.file .gitignore}",
-        "i" = "Install {.pkg usethis} to have this done automatically."
-      )
-    )
-  } else {
-    # vendor folder will be large when expanded and should be ignored
-    usethis::use_build_ignore(
-      file.path("src", "rust", "vendor")
-    )
-
-    usethis::use_git_ignore(
-      file.path("src", "rust", "vendor")
-    )
-  }
-
-  invisible(NULL)
-}
-
-#' @export
-#' @name cran
 vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   stderr_line_callback <- function(x, proc) {
     if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
@@ -199,3 +121,34 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   # return packages and versions invisibly
   invisible(res)
 }
+
+
+#' CRAN compliant extendr packages
+#'
+#' R packages developed using extendr are not immediately ready to
+#' be published to CRAN. The extendr package template ensures that
+#' CRAN publication is (farily) painless.
+#'
+#' @section CRAN requirements:
+#'
+#' In order to publish a Rust based package on CRAN it must meet certain
+#' requirements. These are:
+#'
+#' - Rust dependencies are vendored
+#' - The package is compiled offline
+#' - the `DESCRIPTION` file's `SystemRequirements` field contains `Cargo (Rust's package manager), rustc`
+#'
+#' The extendr templates handle all of this _except_ vendoring dependencies.
+#' This must be done prior to publication using [`vendor_pkgs()`].
+#'
+#' In addition, it is important to make sure that CRAN maintainers
+#' are aware that the package they are checking contains Rust code.
+#' Depending on which and how many crates are used as a dependencies
+#' the `vendor.tar.xz` will be larger than a few megabytes. If a
+#' built package is larger than 5mbs CRAN may reject the submission.
+#'
+#' To prevent rejection make a note in your `cran-comments.md` file
+#' (create one using [`usethis::use_cran_comments()`]) along the lines of
+#' "The package tarball is 6mb because Rust dependencies are vendored within src/rust/vendor.tar.xz which is 5.9mb."
+#' @name cran
+NULL
