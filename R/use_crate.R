@@ -101,7 +101,7 @@ use_crate <- function(
     }
   )
 
-  out <- processx::run(
+  processx::run(
     command = "cargo",
     args = args,
     error_on_status = TRUE,

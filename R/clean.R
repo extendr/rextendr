@@ -58,7 +58,7 @@ clean <- function(path = ".", echo = TRUE) {
     }
   )
 
-  out <- processx::run(
+  processx::run(
     command = "cargo",
     args = args,
     error_on_status = TRUE,
