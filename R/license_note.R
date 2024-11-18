@@ -44,7 +44,28 @@ write_license_note <- function(
     dependencies = TRUE
   )[["packages"]]
 
-  .prep_authors <- function(authors, package) {
+  replace_na <- function(data, replace = NA, ...) {
+    if (vctrs::vec_any_missing(data)) {
+      missing <- vctrs::vec_detect_missing(data)
+      data <- vctrs::vec_assign(data, missing, replace,
+        x_arg = "data",
+        value_arg = "replace"
+      )
+    }
+    data
+  }
+
+  packages[["respository"]] <- replace_na(
+    packages[["repository"]],
+    "unknown"
+  )
+
+  packages[["licenses"]] <- replace_na(
+    packages[["repository"]],
+    "not provided"
+  )
+
+  prep_authors <- function(authors, package) {
     authors <- ifelse(
       is.na(authors),
       paste0(package, " authors"),
@@ -53,13 +74,14 @@ write_license_note <- function(
 
     authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
 
-    stringi::stri_replace_all_regex(authors, r"(\|)", ", ")
+    paste0(authors, collapse = ", ")
   }
 
-  packages[["authors"]] <- lapply(
+  packages[["authors"]] <- unlist(Map(
+    prep_authors,
     packages[["authors"]],
-    function(x) .prep_authors(x, packages[["name"]])
-  )
+    packages[["name"]]
+  ))
 
   separator <- "-------------------------------------------------------------"
 
