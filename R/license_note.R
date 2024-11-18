@@ -29,11 +29,6 @@ write_license_note <- function(
   check_bool(quiet, class = "rextendr_error")
   check_bool(overwrite, class = "rextendr_error")
 
-  rust_folder <- rprojroot::find_package_root_file(
-    "src", "rust",
-    path = path
-  )
-
   outfile <- rprojroot::find_package_root_file(
     "LICENSE.note",
     path = path
