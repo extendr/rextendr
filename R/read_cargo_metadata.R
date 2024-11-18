@@ -27,7 +27,10 @@
 #' read_cargo_metadata()
 #' }
 #'
-read_cargo_metadata <- function(path = ".", echo = TRUE) {
+read_cargo_metadata <- function(
+    path = ".",
+    dependencies = FALSE,
+    echo = TRUE) {
   check_string(path, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
 
@@ -36,7 +39,16 @@ read_cargo_metadata <- function(path = ".", echo = TRUE) {
     path = path
   )
 
-  args <- c("metadata", "--format-version=1", "--no-deps")
+  args <- c(
+    "metadata",
+    "--format-version=1",
+    "--no-deps",
+    if (tty_has_colors()) {
+      "--color=always"
+    } else {
+      "--color=never"
+    }
+  )
 
   out <- processx::run(
     command = "cargo",

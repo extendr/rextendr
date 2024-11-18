@@ -88,7 +88,18 @@ use_crate <- function(
     path = path
   )
 
-  args <- c("add", crate, features, git, optional)
+  args <- c(
+    "add",
+    crate,
+    features,
+    git,
+    optional,
+    if (tty_has_colors()) {
+      "--color=always"
+    } else {
+      "--color=never"
+    }
+  )
 
   out <- processx::run(
     command = "cargo",
