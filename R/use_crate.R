@@ -10,6 +10,8 @@
 #' @param optional boolean scalar, whether to mark the dependency as optional
 #' (FALSE by default)
 #' @param path character scalar, the package directory
+#' @param echo logical scalar, should cargo command and outputs be printed to
+#' console (default is TRUE)
 #'
 #' @details
 #' For more details regarding these and other options, see the
@@ -43,14 +45,15 @@ use_crate <- function(
     git = NULL,
     version = NULL,
     optional = FALSE,
-    path = ".") {
-  # check args
-  check_string(crate)
-  check_character(features, allow_null = TRUE)
-  check_string(git, allow_null = TRUE)
-  check_string(version, allow_null = TRUE)
-  check_bool(optional)
-  check_string(path)
+    path = ".",
+    echo = TRUE) {
+  check_string(crate, class = "rextendr_error")
+  check_character(features, allow_null = TRUE, class = "rextendr_error")
+  check_string(git, allow_null = TRUE, class = "rextendr_error")
+  check_string(version, allow_null = TRUE, class = "rextendr_error")
+  check_bool(optional, class = "rextendr_error")
+  check_string(path, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
   if (!is.null(version) && !is.null(git)) {
     cli::cli_abort(
@@ -80,21 +83,21 @@ use_crate <- function(
     optional <- NULL
   }
 
-  # get rust directory in project folder
-  root <- rprojroot::find_package_root_file(path = path)
-
-  rust_folder <- normalizePath(
-    file.path(root, "src", "rust"),
-    winslash = "/",
-    mustWork = FALSE
+  rust_folder <- rprojroot::find_package_root_file(
+    "src", "rust",
+    path = path
   )
 
-  # run the commmand
-  processx::run(
-    "cargo",
-    c("add", crate, features, git, optional),
-    echo_cmd = TRUE,
-    wd = rust_folder
+  args <- c("add", crate, features, git, optional)
+
+  out <- processx::run(
+    command = "cargo",
+    args = args,
+    error_on_status = TRUE,
+    wd = rust_folder,
+    echo_cmd = echo,
+    echo = echo,
+    env = get_cargo_envvars()
   )
 
   invisible()

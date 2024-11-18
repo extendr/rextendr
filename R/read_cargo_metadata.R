@@ -1,6 +1,8 @@
 #' Retrieve metadata for packages and workspaces
 #'
 #' @param path character scalar, the R package directory
+#' @param echo logical scalar, should cargo command and outputs be printed to
+#' console (default is TRUE)
 #'
 #' @details
 #' For more details, see
@@ -25,22 +27,29 @@
 #' read_cargo_metadata()
 #' }
 #'
-read_cargo_metadata <- function(path = ".") {
+read_cargo_metadata <- function(path = ".", echo = TRUE) {
   check_string(path, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
-  root <- rprojroot::find_package_root_file(path = path)
-
-  rust_folder <- normalizePath(
-    file.path(root, "src", "rust"),
-    winslash = "/",
-    mustWork = FALSE
+  rust_folder <- rprojroot::find_package_root_file(
+    "src", "rust",
+    path = path
   )
+
+  args <- c("metadata", "--format-version=1", "--no-deps")
 
   out <- processx::run(
-    "cargo",
-    args = c("metadata", "--format-version=1", "--no-deps"),
-    wd = rust_folder
+    command = "cargo",
+    args = args,
+    error_on_status = TRUE,
+    wd = rust_folder,
+    echo_cmd = echo,
+    echo = echo,
+    env = get_cargo_envvars()
   )
 
-  jsonlite::fromJSON(out[["stdout"]])
+  jsonlite::parse_json(
+    out[["stdout"]],
+    simplifyDataFrame = TRUE
+  )
 }
