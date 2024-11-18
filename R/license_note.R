@@ -39,10 +39,17 @@ write_license_note <- function(
     path = path
   )
 
-  packages <- read_cargo_metadata(
+  metadata <- read_cargo_metadata(
     path = path,
     dependencies = TRUE
-  )[["packages"]]
+  )
+
+  packages <- metadata[["packages"]]
+
+  # exclude current package from LICENSE.note
+  current_package <- metadata[["resolve"]][["root"]]
+
+  packages <- packages[packages[["id"]] != current_package, ]
 
   replace_na <- function(data, replace = NA, ...) {
     if (vctrs::vec_any_missing(data)) {
