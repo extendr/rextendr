@@ -4,10 +4,16 @@
 \alias{read_cargo_metadata}
 \title{Retrieve metadata for packages and workspaces}
 \usage{
-read_cargo_metadata(path = ".")
+read_cargo_metadata(path = ".", dependencies = FALSE, echo = TRUE)
 }
 \arguments{
 \item{path}{character scalar, the R package directory}
+
+\item{dependencies}{logical scalar, whether to include all recursive
+dependencies in stdout (default is FALSE)}
+
+\item{echo}{logical scalar, should cargo command and outputs be printed to
+console (default is TRUE)}
 }
 \value{
 \code{list}, including the following elements:
