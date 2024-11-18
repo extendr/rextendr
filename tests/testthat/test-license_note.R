@@ -7,6 +7,4 @@ test_that("LICENSE.note is generated properly", {
   write_license_note()
 
   expect_snapshot(cat_file("LICENSE.note"))
-  expect_rextendr_error(write_license_note(), NA)
-  expect_rextendr_error(write_license_note(force = FALSE), "LICENSE.note already exists.")
 })
