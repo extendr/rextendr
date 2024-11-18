@@ -1,6 +1,8 @@
 #' Retrieve metadata for packages and workspaces
 #'
 #' @param path character scalar, the R package directory
+#' @param dependencies logical scalar, whether to include all recursive
+#' dependencies in stdout (default is FALSE)
 #' @param echo logical scalar, should cargo command and outputs be printed to
 #' console (default is TRUE)
 #'
@@ -32,6 +34,7 @@ read_cargo_metadata <- function(
     dependencies = FALSE,
     echo = TRUE) {
   check_string(path, class = "rextendr_error")
+  check_bool(dependencies, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
 
   rust_folder <- rprojroot::find_package_root_file(
@@ -42,7 +45,9 @@ read_cargo_metadata <- function(
   args <- c(
     "metadata",
     "--format-version=1",
-    "--no-deps",
+    if (isFALSE(dependencies)) {
+      "--no-deps"
+    },
     if (tty_has_colors()) {
       "--color=always"
     } else {
