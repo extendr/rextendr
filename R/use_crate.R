@@ -83,11 +83,6 @@ use_crate <- function(
     optional <- NULL
   }
 
-  rust_folder <- rprojroot::find_package_root_file(
-    "src", "rust",
-    path = path
-  )
-
   args <- c(
     "add",
     crate,
@@ -101,14 +96,11 @@ use_crate <- function(
     }
   )
 
-  processx::run(
-    command = "cargo",
-    args = args,
-    error_on_status = TRUE,
-    wd = rust_folder,
+  run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
     echo_cmd = echo,
-    echo = echo,
-    env = get_cargo_envvars()
+    echo = echo
   )
 
   invisible()
