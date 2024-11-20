@@ -18,7 +18,7 @@
 #' \href{https://doc.rust-lang.org/cargo/commands/cargo-add.html}{Cargo docs}
 #' for `cargo-add`.
 #'
-#' @return `NULL`, invisibly
+#' @return `NULL` (invisibly)
 #'
 #' @export
 #'

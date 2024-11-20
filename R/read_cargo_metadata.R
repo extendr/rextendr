@@ -37,15 +37,10 @@ read_cargo_metadata <- function(
   check_bool(dependencies, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
 
-  rust_folder <- rprojroot::find_package_root_file(
-    "src", "rust",
-    path = path
-  )
-
   args <- c(
     "metadata",
     "--format-version=1",
-    if (isFALSE(dependencies)) {
+    if (!dependencies) {
       "--no-deps"
     },
     if (tty_has_colors()) {
@@ -55,18 +50,11 @@ read_cargo_metadata <- function(
     }
   )
 
-  out <- processx::run(
-    command = "cargo",
-    args = args,
-    error_on_status = TRUE,
-    wd = rust_folder,
+  run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
     echo_cmd = echo,
     echo = echo,
-    env = get_cargo_envvars()
-  )
-
-  jsonlite::parse_json(
-    out[["stdout"]],
-    simplifyDataFrame = TRUE
+    parse_json = TRUE
   )
 }

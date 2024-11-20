@@ -8,10 +8,10 @@
 #' console (default is `TRUE`)
 #' @param quiet logical scalar, whether to signal successful writing of
 #' LICENSE.note (default is `FALSE`)
-#' @param overwrite logical scalar, whether to regenerate LICENSE.note if
+#' @param force logical scalar, whether to regenerate LICENSE.note if
 #' LICENSE.note already exists (default is `TRUE`)
 #'
-#' @return No return value, called for side effects.
+#' @return text printed to LICENSE.note (invisibly).
 #'
 #' @export
 #'
@@ -23,40 +23,68 @@ write_license_note <- function(
     path = ".",
     echo = TRUE,
     quiet = FALSE,
-    overwrite = TRUE) {
+    force = TRUE) {
   check_string(path, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
   check_bool(quiet, class = "rextendr_error")
-  check_bool(overwrite, class = "rextendr_error")
+  check_bool(force, class = "rextendr_error")
 
   outfile <- rprojroot::find_package_root_file(
     "LICENSE.note",
     path = path
   )
 
-  metadata <- read_cargo_metadata(
-    path = path,
-    dependencies = TRUE
+  args <- c(
+    "metadata",
+    "--format-version=1"
+  )
+
+  metadata <- run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
+    echo_cmd = echo,
+    echo = echo,
+    parse_json = TRUE
   )
 
   packages <- metadata[["packages"]]
 
+  # did we actually get the recursive dependency metadata we need?
+  required_variables <- c("name", "repository", "authors", "license", "id")
+
+  packages_exist <- is.data.frame(packages) &&
+    !is.null(packages) &&
+    nrow(packages) > 0 &&
+    all(required_variables %in% names(packages))
+
+  if (!packages_exist) {
+    cli::cli_abort(
+      "Unable to write LICENSE.note.",
+      "Metadata for recursive dependencies not found.",
+      call = rlang::caller_call(),
+      class = "rextendr_error"
+    )
+  }
+
   # exclude current package from LICENSE.note
   current_package <- metadata[["resolve"]][["root"]]
 
-  packages <- packages[packages[["id"]] != current_package, ]
+  current_package_exists <- length(current_package) == 1 &&
+    is.character(current_package) &&
+    !is.null(current_package)
 
-  replace_na <- function(data, replace = NA, ...) {
-    if (vctrs::vec_any_missing(data)) {
-      missing <- vctrs::vec_detect_missing(data)
-      data <- vctrs::vec_assign(data, missing, replace,
-        x_arg = "data",
-        value_arg = "replace"
-      )
-    }
-    data
+  if (!current_package_exists) {
+    cli::cli_abort(
+      "Unable to write LICENSE.note.",
+      "Failed to identify current Rust crate.",
+      call = rlang::caller_call(),
+      class = "rextendr_error"
+    )
   }
 
+  packages <- packages[packages[["id"]] != current_package, ]
+
+  # replace missing values
   packages[["respository"]] <- replace_na(
     packages[["repository"]],
     "unknown"
@@ -67,18 +95,8 @@ write_license_note <- function(
     "not provided"
   )
 
-  prep_authors <- function(authors, package) {
-    authors <- ifelse(
-      is.na(authors),
-      paste0(package, " authors"),
-      authors
-    )
-
-    authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
-
-    paste0(authors, collapse = ", ")
-  }
-
+  # remove email addresses and special characters and combine all authors
+  # of a crate into a single character scalar
   packages[["authors"]] <- unlist(Map(
     prep_authors,
     packages[["authors"]],
@@ -87,27 +105,22 @@ write_license_note <- function(
 
   separator <- "-------------------------------------------------------------"
 
-  note_header <- glue::glue(
-    "
-    The binary compiled from the source code of this package \\
-    contains the following Rust crates:
-
-
-    {separator}
-    "
+  note_header <- paste0(
+    "The binary compiled from the source code of this package ",
+    "contains the following Rust crates:\n",
+    "\n",
+    "\n",
+    separator, "\n"
   )
 
-  note_body <- glue::glue_data(
-    packages,
-    "
-
-    Name:        {name}
-    Repository:  {repository}
-    Authors:     {authors}
-    License:     {license}
-
-    {separator}
-    "
+  note_body <- paste0(
+    "\n",
+    "Name:        ", packages[["name"]], "\n",
+    "Repository:  ", packages[["repository"]], "\n",
+    "Authors:     ", packages[["authors"]], "\n",
+    "License      ", packages[["license"]], "\n",
+    "\n",
+    separator, "\n"
   )
 
   write_file(
@@ -115,6 +128,18 @@ write_license_note <- function(
     path = outfile,
     search_root_from = path,
     quiet = quiet,
-    overwrite = overwrite
+    overwrite = force
   )
+}
+
+prep_authors <- function(authors, package) {
+  authors <- ifelse(
+    is.na(authors),
+    paste0(package, " authors"),
+    authors
+  )
+
+  authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
+
+  paste0(authors, collapse = ", ")
 }

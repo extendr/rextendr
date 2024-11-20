@@ -4,9 +4,12 @@
 #' invokes `cargo clean` to reset cargo target directory
 #' (found by default at `pkg_root/src/rust/target/`).
 #' Useful when Rust code should be recompiled from scratch.
-#' @param path \[ string \] Path to the package root.
+#'
+#' @param path character scalar, path to R package root.
 #' @param echo logical scalar, should cargo command and outputs be printed to
-#' console (default is TRUE)
+#' console (default is `TRUE`)
+#'
+#' @return character vector with names of all deleted files (invisibly).
 #'
 #' @export
 #'
@@ -18,33 +21,20 @@ clean <- function(path = ".", echo = TRUE) {
   check_string(path, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
 
-  root <- rprojroot::find_package_root_file(path = path)
-
-  rust_folder <- normalizePath(
-    file.path(root, "src", "rust"),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  manifest_path <- normalizePath(
-    file.path(rust_folder, "Cargo.toml"),
-    winslash = "/",
-    mustWork = FALSE
-  )
+  manifest_path <- find_extendr_manifest(path = path)
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
-  target_dir <- normalizePath( # nolint: object_usage_linter
-    file.path(rust_folder, "target"),
-    winslash = "/",
-    mustWork = FALSE
+  target_dir <- rprojroot::find_package_root_file(
+    "src", "rust", "target",
+    path = path
   )
 
-  if (!file.exists(manifest_path)) {
-    cli::cli_abort(c(
-      "Unable to clean binaries.",
-      "!" = "{.file Cargo.toml} not found in {.path {rust_folder}}.",
+  if (!dir.exists(target_dir)) {
+    cli::cli_abort(
+      "Could not clean binaries.",
+      "Target directory not found at {.path target_dir}.",
       class = "rextendr_error"
-    ))
+    )
   }
 
   args <- c(
@@ -58,14 +48,11 @@ clean <- function(path = ".", echo = TRUE) {
     }
   )
 
-  processx::run(
-    command = "cargo",
-    args = args,
-    error_on_status = TRUE,
-    wd = rust_folder,
+  run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
     echo_cmd = echo,
-    echo = echo,
-    env = get_cargo_envvars()
+    echo = echo
   )
 
   pkgbuild::clean_dll(path = root)
