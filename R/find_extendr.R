@@ -9,6 +9,8 @@
 #' @examples
 #' \dontrun{
 #' find_extendr_crate()
+#' @keywords internal
+#' @noRd
 #' }
 find_extendr_crate <- function(
     path = ".",
