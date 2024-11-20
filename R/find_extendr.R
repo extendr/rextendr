@@ -44,6 +44,8 @@ find_extendr_crate <- function(
 #' @examples
 #' \dontrun{
 #' find_extendr_manifest()
+#' @keywords internal
+#' @noRd
 #' }
 find_extendr_manifest <- function(
     path = ".",
