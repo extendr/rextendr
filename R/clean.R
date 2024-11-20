@@ -33,6 +33,7 @@ clean <- function(path = ".", echo = TRUE) {
     cli::cli_abort(
       "Could not clean binaries.",
       "Target directory not found at {.path target_dir}.",
+      call = rlang::caller_call(),
       class = "rextendr_error"
     )
   }
@@ -54,6 +55,17 @@ clean <- function(path = ".", echo = TRUE) {
     echo_cmd = echo,
     echo = echo
   )
+
+  root <- rprojroot::find_package_root_file(path = path)
+
+  if (!dir.exists(root)) {
+    cli::cli_abort(
+      "Could not clean binaries.",
+      "R package directory not found at {.path root}.",
+      call = rlang::caller_call(),
+      class = "rextendr_error"
+    )
+  }
 
   pkgbuild::clean_dll(path = root)
 }
