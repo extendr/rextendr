@@ -6,12 +6,8 @@
 #'
 #' @return character scalar, path to Rust crate
 #'
-#' @examples
-#' \dontrun{
-#' find_extendr_crate()
 #' @keywords internal
 #' @noRd
-#' }
 find_extendr_crate <- function(
     path = ".",
     error_call = rlang::caller_call()) {
@@ -41,12 +37,8 @@ find_extendr_crate <- function(
 #'
 #' @return character scalar, path to Cargo manifest
 #'
-#' @examples
-#' \dontrun{
-#' find_extendr_manifest()
 #' @keywords internal
 #' @noRd
-#' }
 find_extendr_manifest <- function(
     path = ".",
     error_call = rlang::caller_call()) {
