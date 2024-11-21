@@ -10,7 +10,8 @@ use_crate(
   git = NULL,
   version = NULL,
   optional = FALSE,
-  path = "."
+  path = ".",
+  echo = TRUE
 )
 }
 \arguments{
@@ -27,9 +28,12 @@ crate}
 (FALSE by default)}
 
 \item{path}{character scalar, the package directory}
+
+\item{echo}{logical scalar, should cargo command and outputs be printed to
+console (default is TRUE)}
 }
 \value{
-\code{NULL}, invisibly
+\code{NULL} (invisibly)
 }
 \description{
 Analogous to \code{usethis::use_package()} but for crate dependencies.

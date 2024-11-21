@@ -32,42 +32,42 @@
       Name:        once_cell
       Repository:  https://github.com/matklad/once_cell
       Authors:     Aleksey Kladov
-      License:     Apache-2.0 OR MIT
+      License:     MIT OR Apache-2.0
       
       -------------------------------------------------------------
       
       Name:        paste
       Repository:  https://github.com/dtolnay/paste
       Authors:     David Tolnay
-      License:     Apache-2.0 OR MIT
+      License:     MIT OR Apache-2.0
       
       -------------------------------------------------------------
       
       Name:        proc-macro2
       Repository:  https://github.com/dtolnay/proc-macro2
       Authors:     David Tolnay, Alex Crichton
-      License:     Apache-2.0 OR MIT
+      License:     MIT OR Apache-2.0
       
       -------------------------------------------------------------
       
       Name:        quote
       Repository:  https://github.com/dtolnay/quote
       Authors:     David Tolnay
-      License:     Apache-2.0 OR MIT
+      License:     MIT OR Apache-2.0
       
       -------------------------------------------------------------
       
       Name:        syn
       Repository:  https://github.com/dtolnay/syn
       Authors:     David Tolnay
-      License:     Apache-2.0 OR MIT
+      License:     MIT OR Apache-2.0
       
       -------------------------------------------------------------
       
       Name:        unicode-ident
       Repository:  https://github.com/dtolnay/unicode-ident
       Authors:     David Tolnay
-      License:     (MIT OR Apache-2.0) AND Unicode-DFS-2016
+      License:     (MIT OR Apache-2.0) AND Unicode-3.0
       
       -------------------------------------------------------------
 

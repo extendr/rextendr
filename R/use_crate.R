@@ -10,13 +10,15 @@
 #' @param optional boolean scalar, whether to mark the dependency as optional
 #' (FALSE by default)
 #' @param path character scalar, the package directory
+#' @param echo logical scalar, should cargo command and outputs be printed to
+#' console (default is TRUE)
 #'
 #' @details
 #' For more details regarding these and other options, see the
 #' \href{https://doc.rust-lang.org/cargo/commands/cargo-add.html}{Cargo docs}
 #' for `cargo-add`.
 #'
-#' @return `NULL`, invisibly
+#' @return `NULL` (invisibly)
 #'
 #' @export
 #'
@@ -43,14 +45,15 @@ use_crate <- function(
     git = NULL,
     version = NULL,
     optional = FALSE,
-    path = ".") {
-  # check args
-  check_string(crate)
-  check_character(features, allow_null = TRUE)
-  check_string(git, allow_null = TRUE)
-  check_string(version, allow_null = TRUE)
-  check_bool(optional)
-  check_string(path)
+    path = ".",
+    echo = TRUE) {
+  check_string(crate, class = "rextendr_error")
+  check_character(features, allow_null = TRUE, class = "rextendr_error")
+  check_string(git, allow_null = TRUE, class = "rextendr_error")
+  check_string(version, allow_null = TRUE, class = "rextendr_error")
+  check_bool(optional, class = "rextendr_error")
+  check_string(path, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
   if (!is.null(version) && !is.null(git)) {
     cli::cli_abort(
@@ -80,21 +83,23 @@ use_crate <- function(
     optional <- NULL
   }
 
-  # get rust directory in project folder
-  root <- rprojroot::find_package_root_file(path = path)
-
-  rust_folder <- normalizePath(
-    file.path(root, "src", "rust"),
-    winslash = "/",
-    mustWork = FALSE
+  args <- c(
+    "add",
+    crate,
+    features,
+    git,
+    optional,
+    if (tty_has_colors()) {
+      "--color=always"
+    } else {
+      "--color=never"
+    }
   )
 
-  # run the commmand
-  processx::run(
-    "cargo",
-    c("add", crate, features, git, optional),
-    echo_cmd = TRUE,
-    wd = rust_folder
+  run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
+    echo = echo
   )
 
   invisible()

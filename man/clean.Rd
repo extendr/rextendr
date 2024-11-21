@@ -4,14 +4,25 @@
 \alias{clean}
 \title{Clean Rust binaries and package cache.}
 \usage{
-clean(path = ".")
+clean(path = ".", echo = TRUE)
 }
 \arguments{
-\item{path}{[ string ] Path to the package root.}
+\item{path}{character scalar, path to R package root.}
+
+\item{echo}{logical scalar, should cargo command and outputs be printed to
+console (default is \code{TRUE})}
+}
+\value{
+character vector with names of all deleted files (invisibly).
 }
 \description{
 Removes Rust binaries (such as \code{.dll}/\code{.so} libraries), C wrapper object files,
 invokes \verb{cargo clean} to reset cargo target directory
 (found by default at \verb{pkg_root/src/rust/target/}).
 Useful when Rust code should be recompiled from scratch.
+}
+\examples{
+\dontrun{
+clean()
+}
 }

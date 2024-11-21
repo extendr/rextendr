@@ -57,3 +57,23 @@ try_exec_cmd <- function(cmd, args = character()) {
     stringi::stri_split_lines1(result$stdout)
   }
 }
+
+#' Replace missing values in vector
+#'
+#' @param data vector, data with missing values to replace
+#' @param replace scalar, value to substitute for missing values in data
+#' @param ... currently ignored
+#'
+#' @keywords internal
+#' @noRd
+#'
+replace_na <- function(data, replace = NA, ...) {
+  if (vctrs::vec_any_missing(data)) {
+    missing <- vctrs::vec_detect_missing(data)
+    data <- vctrs::vec_assign(data, missing, replace,
+      x_arg = "data",
+      value_arg = "replace"
+    )
+  }
+  data
+}

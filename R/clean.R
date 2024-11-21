@@ -4,76 +4,69 @@
 #' invokes `cargo clean` to reset cargo target directory
 #' (found by default at `pkg_root/src/rust/target/`).
 #' Useful when Rust code should be recompiled from scratch.
-#' @param path \[ string \] Path to the package root.
+#'
+#' @param path character scalar, path to R package root.
+#' @param echo logical scalar, should cargo command and outputs be printed to
+#' console (default is `TRUE`)
+#'
+#' @return character vector with names of all deleted files (invisibly).
+#'
 #' @export
-clean <- function(path = ".") {
-  root <- rprojroot::find_package_root_file(path = path)
+#'
+#' @examples
+#' \dontrun{
+#' clean()
+#' }
+clean <- function(path = ".", echo = TRUE) {
+  check_string(path, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
-  rust_folder <- normalizePath(
-    file.path(root, "src", "rust"),
-    winslash = "/",
-    mustWork = FALSE
-  )
-
-  toml_path <- normalizePath(
-    file.path(rust_folder, "Cargo.toml"),
-    winslash = "/",
-    mustWork = FALSE
-  )
+  manifest_path <- find_extendr_manifest(path = path)
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
-  target_dir <- normalizePath( # nolint: object_usage_linter
-    file.path(rust_folder, "target"),
-    winslash = "/",
-    mustWork = FALSE
+  target_dir <- rprojroot::find_package_root_file(
+    "src", "rust", "target",
+    path = path
   )
 
-  if (!file.exists(toml_path)) {
-    cli::cli_abort(c(
-      "Unable to clean binaries.",
-      "!" = "{.file Cargo.toml} not found in {.path {rust_folder}}.",
+  if (!dir.exists(target_dir)) {
+    cli::cli_abort(
+      c(
+        "Could not clean binaries.",
+        "Target directory not found at {.path target_dir}."
+      ),
+      call = rlang::caller_call(),
       class = "rextendr_error"
-    ))
+    )
   }
-
-  cargo_envvars <- get_cargo_envvars()
 
   args <- c(
     "clean",
-    glue("--manifest-path={toml_path}"),
-    glue("--target-dir={target_dir}"),
+    glue::glue("--manifest-path={manifest_path}"),
+    glue::glue("--target-dir={target_dir}"),
     if (tty_has_colors()) {
       "--color=always"
     } else {
       "--color=never"
-    },
-    "--quiet"
-  )
-  exec_result <- processx::run(
-    command = "cargo",
-    args = args,
-    echo_cmd = FALSE,
-    windows_verbatim_args = FALSE,
-    stderr = "|",
-    stdout = "|",
-    error_on_status = FALSE,
-    env = cargo_envvars
+    }
   )
 
-  if (!isTRUE(exec_result$status == 0)) {
-    if (!tty_has_colors()) {
-      err_msg <- cli::ansi_strip(exec_result$stderr)
-    } else {
-      err_msg <- exec_result$stderr
-    }
+  run_cargo(
+    args,
+    wd = find_extendr_crate(path = path),
+    echo = echo
+  )
+
+  root <- rprojroot::find_package_root_file(path = path)
+
+  if (!dir.exists(root)) {
     cli::cli_abort(
-      c(
-        "Unable to execute {.code cargo clean}.",
-        "x" = paste(err_msg, collapse = "\n")
-      ),
-      call = caller_env(),
+      "Could not clean binaries.",
+      "R package directory not found at {.path root}.",
+      call = rlang::caller_call(),
       class = "rextendr_error"
     )
   }
+
   pkgbuild::clean_dll(path = root)
 }

@@ -30,8 +30,7 @@ compressed \code{vendor.tar.xz} which will be shipped with package itself.
 If you have modified your dependencies, you will need need to repackage
 }
 \examples{
-
 \dontrun{
-  vendor_pkgs()
+vendor_pkgs()
 }
 }
