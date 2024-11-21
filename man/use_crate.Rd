@@ -33,7 +33,7 @@ crate}
 console (default is TRUE)}
 }
 \value{
-\code{NULL}, invisibly
+\code{NULL} (invisibly)
 }
 \description{
 Analogous to \code{usethis::use_package()} but for crate dependencies.

@@ -7,10 +7,13 @@
 clean(path = ".", echo = TRUE)
 }
 \arguments{
-\item{path}{[ string ] Path to the package root.}
+\item{path}{character scalar, path to R package root.}
 
 \item{echo}{logical scalar, should cargo command and outputs be printed to
-console (default is TRUE)}
+console (default is \code{TRUE})}
+}
+\value{
+character vector with names of all deleted files (invisibly).
 }
 \description{
 Removes Rust binaries (such as \code{.dll}/\code{.so} libraries), C wrapper object files,
