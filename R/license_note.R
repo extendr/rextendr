@@ -110,7 +110,7 @@ write_license_note <- function(
     "contains the following Rust crates:\n",
     "\n",
     "\n",
-    separator, "\n"
+    separator
   )
 
   note_body <- paste0(
@@ -118,9 +118,9 @@ write_license_note <- function(
     "Name:        ", packages[["name"]], "\n",
     "Repository:  ", packages[["repository"]], "\n",
     "Authors:     ", packages[["authors"]], "\n",
-    "License      ", packages[["license"]], "\n",
+    "License:     ", packages[["license"]], "\n",
     "\n",
-    separator, "\n"
+    separator
   )
 
   write_file(

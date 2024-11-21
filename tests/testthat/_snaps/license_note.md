@@ -67,7 +67,7 @@
       Name:        unicode-ident
       Repository:  https://github.com/dtolnay/unicode-ident
       Authors:     David Tolnay
-      License:     (MIT OR Apache-2.0) AND Unicode-DFS-2016
+      License:     (MIT OR Apache-2.0) AND Unicode-3.0
       
       -------------------------------------------------------------
 
