@@ -4,28 +4,28 @@
 \alias{read_cargo_metadata}
 \title{Retrieve metadata for packages and workspaces}
 \usage{
-read_cargo_metadata(path = ".", dependencies = FALSE, echo = TRUE)
+read_cargo_metadata(path = ".", dependencies = FALSE, echo = FALSE)
 }
 \arguments{
 \item{path}{character scalar, the R package directory}
 
-\item{dependencies}{logical scalar, whether to include all recursive
-dependencies in stdout (default is FALSE)}
+\item{dependencies}{Default \code{FALSE}. A logical scalar, whether to include
+all recursive dependencies in stdout.}
 
-\item{echo}{logical scalar, should cargo command and outputs be printed to
-console (default is TRUE)}
+\item{echo}{Default \code{FALSE}. A logical scalar, should cargo command and
+outputs be printed to the console.}
 }
 \value{
-\code{list}, including the following elements:
+A \code{list} including the following elements:
 \itemize{
-\item "packages"
-\item "workspace_members"
-\item "workspace_default_members"
-\item "resolve"
-\item "target_directory"
-\item "version"
-\item "workspace_root"
-\item "metadata"
+\item \code{packages}
+\item \code{workspace_members}
+\item \code{workspace_default_members}
+\item \code{resolve}
+\item \code{target_directory}
+\item \code{version}
+\item \code{workspace_root}
+\item \code{metadata}
 }
 }
 \description{

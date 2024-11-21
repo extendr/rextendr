@@ -4,13 +4,10 @@
 \alias{write_license_note}
 \title{Generate LICENSE.note file.}
 \usage{
-write_license_note(path = ".", echo = TRUE, quiet = FALSE, force = TRUE)
+write_license_note(path = ".", quiet = FALSE, force = TRUE)
 }
 \arguments{
 \item{path}{character scalar, the R package directory}
-
-\item{echo}{logical scalar, whether to print cargo command and outputs to the
-console (default is \code{TRUE})}
 
 \item{quiet}{logical scalar, whether to signal successful writing of
 LICENSE.note (default is \code{FALSE})}

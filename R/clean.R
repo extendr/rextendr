@@ -31,8 +31,10 @@ clean <- function(path = ".", echo = TRUE) {
 
   if (!dir.exists(target_dir)) {
     cli::cli_abort(
-      "Could not clean binaries.",
-      "Target directory not found at {.path target_dir}.",
+      c(
+        "Could not clean binaries.",
+        "Target directory not found at {.path target_dir}."
+      ),
       call = rlang::caller_call(),
       class = "rextendr_error"
     )
@@ -52,7 +54,6 @@ clean <- function(path = ".", echo = TRUE) {
   run_cargo(
     args,
     wd = find_extendr_crate(path = path),
-    echo_cmd = echo,
     echo = echo
   )
 

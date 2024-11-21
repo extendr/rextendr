@@ -11,8 +11,15 @@ test_that("rextendr::clean() removes cargo target directory & binaries", {
 
   expect_equal(length(dir("src", pattern = "testpkg\\..*")), 1)
   expect_true(dir.exists(file.path("src", "rust", "target")))
+
+  # clean once
   clean()
 
+  # we expect an error the second time
+  expect_error(clean())
+
+  expect_error(clean(1L))
+  expect_error(clean(echo = NULL))
   expect_equal(length(dir("src", pattern = "testpkg\\..*")), 0)
   expect_false(dir.exists(file.path("src", "rust", "target")))
 })

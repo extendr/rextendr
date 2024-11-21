@@ -99,7 +99,6 @@ use_crate <- function(
   run_cargo(
     args,
     wd = find_extendr_crate(path = path),
-    echo_cmd = echo,
     echo = echo
   )
 

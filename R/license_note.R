@@ -4,8 +4,6 @@
 #' recursive dependencies in Rust crate.
 #'
 #' @param path character scalar, the R package directory
-#' @param echo logical scalar, whether to print cargo command and outputs to the
-#' console (default is `TRUE`)
 #' @param quiet logical scalar, whether to signal successful writing of
 #' LICENSE.note (default is `FALSE`)
 #' @param force logical scalar, whether to regenerate LICENSE.note if
@@ -21,11 +19,9 @@
 #' }
 write_license_note <- function(
     path = ".",
-    echo = TRUE,
     quiet = FALSE,
     force = TRUE) {
   check_string(path, class = "rextendr_error")
-  check_bool(echo, class = "rextendr_error")
   check_bool(quiet, class = "rextendr_error")
   check_bool(force, class = "rextendr_error")
 
@@ -42,8 +38,7 @@ write_license_note <- function(
   metadata <- run_cargo(
     args,
     wd = find_extendr_crate(path = path),
-    echo_cmd = echo,
-    echo = echo,
+    echo = FALSE,
     parse_json = TRUE
   )
 
