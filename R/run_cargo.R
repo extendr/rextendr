@@ -18,20 +18,21 @@
 #' the function running in the frame was invoked.
 #' @param ... additional arguments passed to [`processx::run()`].
 #' @returns
-#' A list with elements `status`, `stdout`, `stderr`, and `timeout`. See [`processx::run()`]. If `parse_json = TRUE`, result of parsing JSON-structured standard
-#' output.
+#' A list with elements `status`, `stdout`, `stderr`, and `timeout`.
+#' See [`processx::run()`]. If `parse_json = TRUE`, result of parsing
+#' JSON-structured standard output.
 #'
 #' @keywords internal
 #' @noRd
 run_cargo <- function(
-    args,
-    wd = find_extendr_crate(),
-    error_on_status = TRUE,
-    echo = TRUE,
-    env = get_cargo_envvars(),
-    parse_json = FALSE,
-    error_call = rlang::caller_call(), 
-    ...
+  args,
+  wd = find_extendr_crate(),
+  error_on_status = TRUE,
+  echo = TRUE,
+  env = get_cargo_envvars(),
+  parse_json = FALSE,
+  error_call = rlang::caller_call(),
+  ...
 ) {
   check_character(args, call = error_call, class = "rextendr_error")
   check_string(wd, call = error_call, class = "rextendr_error")

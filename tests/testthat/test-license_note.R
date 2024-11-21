@@ -8,7 +8,7 @@ test_that("LICENSE.note is generated properly", {
   dir.create(file.path("src", "rust"), recursive = TRUE)
   expect_error(write_license_note())
 
-  # create license note for extendr package 
+  # create license note for extendr package
   use_extendr()
   write_license_note()
   expect_snapshot(cat_file("LICENSE.note"))
