@@ -52,14 +52,16 @@ use_msrv <- function(version, path = ".", overwrite = FALSE) {
     )
   })
 
-  desc_path <- rprojroot::find_package_root_file("DESCRIPTION", path = path)
-
-  if (!file.exists(desc_path)) {
-    cli::cli_abort(
-      "{.arg path} ({.path {path}}) does not contain a DESCRIPTION",
-      class = "rextendr_error"
-    )
-  }
+  desc_path <- rlang::try_fetch(
+    rprojroot::find_package_root_file("DESCRIPTION", path = path),
+    error = function(cnd) {
+      cli::cli_abort(
+        "{.arg path} ({.path {path}}) does not contain a DESCRIPTION",
+        class = "rextendr_error",
+        call = rlang::env_parent()
+      )
+    }
+  )
 
   cur <- paste("Cargo (Rust's package manager), rustc", paste(">=", version))
 

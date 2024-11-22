@@ -2,6 +2,8 @@ test_that("vendor_pkgs() vendors dependencies", {
   skip_if_not_installed("usethis")
 
   path <- local_package("testpkg")
+
+  expect_error(vendor_pkgs(path))
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
   use_extendr(path, quiet = TRUE)

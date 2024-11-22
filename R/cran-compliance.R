@@ -25,12 +25,12 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   local_quiet_cli(quiet)
 
   # get path to rust folder
-  src_dir <- rprojroot::find_package_root_file(path, "src/rust")
+  src_dir <- rprojroot::find_package_root_file("src", "rust", path = path)
 
   # if `src/rust` does not exist error
   if (!dir.exists(src_dir)) {
     cli::cli_abort(
-      c("{.path src/rust} cannot be found", "i" = "Did you run {.fn use_extendr}?"),
+      "{.path src/rust} cannot be found. Did you run {.fn use_extendr}?",
       class = "rextendr_error"
     )
   }
