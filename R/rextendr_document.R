@@ -10,8 +10,6 @@
 #' @return No return value, called for side effects.
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
-  try_save_all(quiet = quiet)
-
   withr::local_envvar(devtools::r_env_vars())
 
   register_extendr(path = pkg, quiet = quiet)

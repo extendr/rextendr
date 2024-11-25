@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* `document()` will no longer try to save all open files using rstudioapi <https://github.com/extendr/rextendr/issues/404> <https://github.com/extendr/rextendr/issues/407>
 * `use_cran_default()` has been removed as the default package template is CRAN compatible <https://github.com/extendr/rextendr/pull/394>
 * `use_extendr()` now creates `tools/msrv.R`, `configure` and `configure.win`. These have been moved out of `use_cran_defaults()` <https://github.com/extendr/rextendr/pull/393>
 * `Makevars` now prints linked static libraries at compile time by adding `--print=native-static-libs` to `RUSTFLAGS` <https://github.com/extendr/rextendr/pull/393>
