@@ -25,7 +25,7 @@ create_extendr_package <- function(path, ...) {
     if (rlang::is_string(x) && nzchar(x)) x else NULL
   }
 
-  args <- purrr::map(args, nullify_empty_string)
+  args <- map(args, nullify_empty_string)
 
   # build package directory, but don't start a new R session with
   # it as the working directory! i.e., set `open = FALSE`

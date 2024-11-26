@@ -48,7 +48,6 @@ Imports:
     jsonlite,
     pkgbuild (>= 1.4.0),
     processx,
-    purrr,
     rlang (>= 1.0.5),
     rprojroot,
     stringi,
@@ -72,4 +71,3 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile
     without error
-Config/rextendr/version: 0.3.1.9001

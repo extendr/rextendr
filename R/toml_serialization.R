@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(purrr::map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
+  invalid <- which(map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -55,7 +55,7 @@ to_toml <- function(...,
     )
   }
 
-  tables <- map2_chr(names, args, function(nm, a) {
+  tables <- map2(names, args, function(nm, a) {
     header <- make_header(nm, a)
     body <- format_toml(
       a,
@@ -75,6 +75,7 @@ to_toml <- function(...,
     # remove them by `c()` first, and then concatenate by "\n" if both exists
     glue_collapse(c(header, body), "\n")
   })
+
   glue_collapse(tables, "\n\n")
 }
 
@@ -97,7 +98,7 @@ simplify_row <- function(row) {
   result <- map_if(
     row,
     ~ is.list(.x) && all(!nzchar(names2(.x))),
-    ~ .x[[1]],
+    ~ .x[1],
     .else = ~.x
   )
   discard(
@@ -134,20 +135,21 @@ format_toml.data.frame <- function(x,
         if (length(item) == 0L) {
           result <- character(0)
         } else {
+
           result <- format_toml(
-            item,
+            as.list(item),
             ...,
             .top_level = TRUE
           )
         }
         if (!is_atomic(result)) {
-          result <- flatten_chr(result)
+          result <- list_c(result)
         }
 
         c(header, result)
       }
     )
-  flatten_chr(result)
+  list_c(result)
 }
 
 # This handles missing args
@@ -200,7 +202,7 @@ format_toml_atomic <- function(x,
   if (len == 0L) {
     "[ ]"
   } else {
-    formatter <- as_function(.formatter)
+    formatter <- rlang::as_function(.formatter)
     items <- glue_collapse(formatter(x, ...), ", ")
     if (len > 1L || !is.null(dims)) {
       items <- glue("[ {items} ]")
@@ -296,7 +298,7 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
     result <- glue("{{ {paste0(result, collapse = \", \")} }}")
   }
   if (!is_atomic(result)) {
-    result <- flatten_chr(result)
+    result <- list_c(result)
   }
   # Ensure type-stability
   as.character(result)

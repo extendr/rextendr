@@ -27,21 +27,21 @@ convert_function_options <- function(options, suppress_warnings) {
   options_table <- tibble::tibble(Name = rlang::names2(options), Value = unname(options)) %>%
     dplyr::left_join(extendr_function_config$known_options, by = "Name") %>%
     dplyr::mutate(
-      Value = purrr::pmap(
+      Value = pmap(
         list(.data$Value, .data$Ptype, .data$Name),
         ~ if (rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
       ),
     )
 
   unknown_option_names <- options_table %>%
-    dplyr::filter(purrr::map_lgl(.data$Ptype, rlang::is_null)) %>%
+    dplyr::filter(map_lgl(.data$Ptype, rlang::is_null)) %>%
     dplyr::pull(.data$Name)
 
   invalid_options <- options_table %>%
     dplyr::mutate(
       IsNameInvalid = !is_valid_rust_name(.data$Name),
-      IsValueNull = purrr::map_lgl(.data$Value, rlang::is_null),
-      IsNotScalar = !.data$IsValueNull & !purrr::map_lgl(.data$Value, vctrs::vec_is, size = 1L)
+      IsValueNull = map_lgl(.data$Value, rlang::is_null),
+      IsNotScalar = !.data$IsValueNull & !map_lgl(.data$Value, vctrs::vec_is, size = 1L)
     ) %>%
     dplyr::filter(
       .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
@@ -59,7 +59,7 @@ convert_function_options <- function(options, suppress_warnings) {
   options_table %>%
     dplyr::transmute(
       .data$Name,
-      RustValue = purrr::map_chr(.data$Value, convert_option_to_rust)
+      RustValue = map_chr(.data$Value, convert_option_to_rust)
     )
 }
 

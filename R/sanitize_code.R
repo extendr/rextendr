@@ -35,8 +35,8 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   # A sorted DF having `start`, `end`, and `type`
   comment_syms <-
     locations %>%
-    purrr::map(tibble::as_tibble) %>%
-    purrr::imap(
+    map(tibble::as_tibble) %>%
+    imap(
       ~ dplyr::mutate(
         .x,
         type = dplyr::if_else(.y == 1L, "open", "close")
@@ -136,20 +136,16 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   # of the same length -- this is needed to preserve line length
   # and previously computed positions, and it does not affect
   # parsing at later stages.
-  result <- purrr::reduce2(
-    to_replace[["start_open"]],
-    to_replace[["end_close"]],
-    function(ln, from, to) {
-      stringi::stri_sub(
-        ln,
-        from,
-        to,
-      ) <- strrep(fill_with, to - from + 1L)
-      ln
-    },
-    .init = lns
-  )
+  .open <- to_replace[["start_open"]]
+  .close <- to_replace[["end_close"]]
+  gap_size <- (.close - .open) + 1
 
+  result <- stringi::stri_sub_replace_all(
+    lns,
+    .open,
+    .close,
+    replacement = strrep(fill_with, gap_size)
+  )
 
   result <- stringi::stri_split_lines(result, omit_empty = TRUE)[[1]]
   result

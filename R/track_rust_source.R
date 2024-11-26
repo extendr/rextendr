@@ -87,7 +87,7 @@ pretty_rel_single_path <- function(path, search_from = ".") {
 #'
 #' @noRd
 pretty_rel_path <- function(path, search_from = ".") {
-  purrr::map_chr(path, pretty_rel_single_path, search_from = search_from)
+  map_chr(path, pretty_rel_single_path, search_from = search_from)
 }
 
 get_library_path <- function(path = ".") {

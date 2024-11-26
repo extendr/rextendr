@@ -119,7 +119,7 @@ fn {fn_name}() -> Result<Robj> {{
 #'   `NULL` if no such dll is loaded.
 #' @noRd
 find_loaded_dll <- function(name) {
-  dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["name"]] == name)
+  dlls <- keep(getLoadedDLLs(), ~ .x[["name"]] == name)
   if (rlang::is_empty(dlls)) {
     NULL
   } else {
