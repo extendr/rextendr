@@ -123,7 +123,6 @@ format_toml.data.frame <- function(x,
                                    .tbl_name,
                                    .top_level = FALSE) {
   rows <- nrow(x)
-  # header <- glue("[[{.tbl_name}]]")
   header <- paste0("[[", .tbl_name, "]]")
   if (rows == 0L) {
     return(as.character(header))
