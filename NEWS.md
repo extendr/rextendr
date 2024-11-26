@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* `purrr` has been replaced with [`R/standalone-purrr.R`](https://github.com/r-lib/rlang/blob/main/R/standalone-purrr.R) removing `purrr` from `Imports` <https://github.com/extendr/rextendr/pull/408>
 * `use_cran_default()` has been removed as the default package template is CRAN compatible <https://github.com/extendr/rextendr/pull/394>
 * `use_extendr()` now creates `tools/msrv.R`, `configure` and `configure.win`. These have been moved out of `use_cran_defaults()` <https://github.com/extendr/rextendr/pull/393>
 * `Makevars` now prints linked static libraries at compile time by adding `--print=native-static-libs` to `RUSTFLAGS` <https://github.com/extendr/rextendr/pull/393>
