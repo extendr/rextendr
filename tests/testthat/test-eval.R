@@ -20,12 +20,12 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
   skip_if_cargo_unavailable()
 
   provided_values <- seq_len(5)
-  deferred_handles <- purrr::map(
+  deferred_handles <- map(
     provided_values,
     ~ rust_eval_deferred(glue::glue("{.x}i32"))
   )
 
-  obtained_values <- purrr::map_int(deferred_handles, ~ (.x)())
+  obtained_values <- map_int(deferred_handles, ~ (.x)())
 
   testthat::expect_equal(
     obtained_values,
@@ -48,14 +48,14 @@ test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
 
   provided_values <- seq_len(5)
 
-  deferred_handles <- purrr::map(
+  deferred_handles <- map(
     provided_values,
     ~ rust_eval_deferred(glue::glue("{.x}i32"))
   )
 
   deferred_handles <- rev(deferred_handles)
 
-  obtained_values <- purrr::map_int(deferred_handles, ~ (.x)())
+  obtained_values <- map_int(deferred_handles, ~ (.x)())
 
   testthat::expect_equal(
     obtained_values,
@@ -99,13 +99,13 @@ test_that("`rust_eval_deferred()` environment cleanup", {
   dll_path <- attr(handle, "dll_path")
 
   testthat::expect_true(exists(fn_name))
-  dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
+  dlls <- keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
   testthat::expect_length(dlls, 1L)
 
   testthat::expect_equal(handle(), 42L)
 
   testthat::expect_false(exists(fn_name))
-  dlls <- purrr::keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
+  dlls <- keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
   testthat::expect_length(dlls, 0L)
 })
 

@@ -133,10 +133,10 @@ y <- c(1, 2, 3, 4, 5)
 tibble::tibble(
   Name = c("x", "y"),
   Data = list(x, y),
-  Types = purrr::map_chr(Data, typeof),
-  Sum = purrr::map(Data, get_sum),
-  SumRaw = purrr::flatten_dbl(Sum),
-  ResultType = purrr::map_chr(Sum, typeof)
+  Types = map_chr(Data, typeof),
+  Sum = map(Data, get_sum),
+  SumRaw = flatten_dbl(Sum),
+  ResultType = map_chr(Sum, typeof)
 )
 ```
 

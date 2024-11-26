@@ -404,10 +404,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 gather_cargo_output <- function(json_output, level, tty_has_colors) {
   rendered_output <-
     json_output %>%
-    purrr::keep(
+    keep(
       ~ .x$reason == "compiler-message" && .x$message$level == level
     ) %>%
-    purrr::map_chr(~ .x$message$rendered)
+    map_chr(~ .x$message$rendered)
 
   if (!tty_has_colors) {
     rendered_output <- cli::ansi_strip(rendered_output)
@@ -433,7 +433,7 @@ gather_cargo_output <- function(json_output, level, tty_has_colors) {
 #' @param call Caller environment used for error message formatting.
 #' @noRd
 check_cargo_output <- function(compilation_result, message_buffer, tty_has_colors, quiet, call = caller_env()) {
-  cargo_output <- purrr::map(
+  cargo_output <- map(
     message_buffer,
     jsonlite::parse_json
   )
@@ -445,7 +445,7 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
         "error",
         tty_has_colors
       ) %>%
-      purrr::map_chr(
+      map_chr(
         cli::format_inline,
         keep_whitespace = TRUE
       ) %>%

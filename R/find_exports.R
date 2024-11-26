@@ -8,7 +8,7 @@ find_exports <- function(clean_lns) {
     return(tibble::tibble(name = character(0), type = character(0), lifetime = character(0)))
   }
 
-  purrr::map2(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
+  map2(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
     dplyr::bind_rows() %>%
     dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) %>%
     dplyr::select(dplyr::all_of(c("name", "type", "lifetime")))
