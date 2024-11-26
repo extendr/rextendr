@@ -3,14 +3,13 @@ generate_cargo.toml <- function(libname = "rextendr",
                                 patch.crates_io = NULL,
                                 extendr_deps = NULL,
                                 features = character(0)) {
-  
+
   # create an empty list if no dependencies are provided
   deps <- dependencies %||% list()
   # enabled extendr features that we need to impute into all of the
   # dependencies
   to_impute <- enable_features(extendr_deps, features)
 
-  # impute that extendr 
   for (.name in names(to_impute)) {
     deps[[.name]] <- to_impute[[.name]]
   }
