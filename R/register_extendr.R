@@ -101,9 +101,9 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     error = function(e) {
       cli::cli_abort(
         c("Failed to generate wrapper functions.",
-x = e[["message"]],
+          x = e[["message"]],
           y = e[["parent"]][["message"]]
-),
+        ),
         class = "rextendr_error"
       )
     }
