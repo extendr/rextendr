@@ -100,7 +100,10 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
     ),
     error = function(e) {
       cli::cli_abort(
-        c("Failed to generate wrapper functions.", x = e[["message"]]),
+        c("Failed to generate wrapper functions.",
+          x = e[["message"]],
+          y = e[["parent"]][["message"]]
+        ),
         class = "rextendr_error"
       )
     }
@@ -118,7 +121,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 #' @param package_name The name of the package.
 #' @param outfile Determines where to write wrapper code.
 #' @param path Path from which package root is looked up. Used for message formatting.
-#' @param use_symbols Logical, indicating wether to add additonal symbol information to
+#' @param use_symbols Logical, indicating wether to add additional symbol information to
 #' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
 #' while `TRUE` is used to make wrappers for dynamically generated libraries using
 #' [`rust_source`], [`rust_function`], etc.
