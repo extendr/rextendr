@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R build status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 [![Codecov test coverage](https://codecov.io/gh/extendr/rextendr/graph/badge.svg)](https://app.codecov.io/gh/extendr/rextendr)
+[![extendr](https://img.shields.io/badge/extendr-^0.7.1-276DC2)](https://extendr.github.io/extendr/extendr_api/)
 <!-- badges: end -->
 
 ## Installation
