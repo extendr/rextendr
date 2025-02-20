@@ -24,6 +24,15 @@ rust_sitrep <- function() {
     cargo_msg
   )
 
+  if (is.na(try_exec_cmd("rustup", "show"))) {
+    cli::cli_abort(
+      c(
+        "Default toolchain not set.",
+        "i" = "Please set the default toolchain. See https://rust-lang.github.io/rustup/concepts/toolchains.html"
+      )
+    )
+  }
+
   if (!is.na(rustup_v)) {
     rustup_status <- rustup_toolchain_target() # nolint: object_usage
     msgs <- c(
