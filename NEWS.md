@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* Removes `Makevars.ucrt` as R versions < 4.1 are not supported by extendr <https://github.com/extendr/rextendr/pull/414> 
 * `purrr` has been replaced with [`R/standalone-purrr.R`](https://github.com/r-lib/rlang/blob/main/R/standalone-purrr.R) removing `purrr` from `Imports` <https://github.com/extendr/rextendr/pull/408>
 * `document()` will no longer try to save all open files using rstudioapi <https://github.com/extendr/rextendr/issues/404> <https://github.com/extendr/rextendr/issues/407>
 * `use_cran_default()` has been removed as the default package template is CRAN compatible <https://github.com/extendr/rextendr/pull/394>
