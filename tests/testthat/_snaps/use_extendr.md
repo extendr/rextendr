@@ -103,7 +103,7 @@
         "Alternatively, you may install Cargo from your OS package manager:",
         " - Debian/Ubuntu: apt-get install cargo",
         " - Fedora/CentOS: dnf install cargo",
-        " - macOS: brew install rustc",
+        " - macOS: brew install rust",
         "-------------------------------------------------------------------"
       )
       
@@ -116,7 +116,7 @@
         "Alternatively, you may install Rust from your OS package manager:",
         " - Debian/Ubuntu: apt-get install rustc",
         " - Fedora/CentOS: dnf install rustc",
-        " - macOS: brew install rustc",
+        " - macOS: brew install rust",
         "-------------------------------------------------------------------"
       )
       
@@ -313,7 +313,6 @@
       		fi; \
       	fi
       
-      	# CARGO_LINKER is provided in Makevars.ucrt for R >= 4.2
       	# Build the project using Cargo with additional flags
       	export CARGO_HOME=$(CARGOTMP) && \
       	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
@@ -328,17 +327,6 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
-
----
-
-    Code
-      cat_file("src", "Makevars.ucrt")
-    Output
-      # Rtools42 doesn't have the linker in the location that cargo expects, so we
-      # need to overwrite it via configuration.
-      CARGO_LINKER = x86_64-w64-mingw32.static.posix-gcc.exe
-      
-      include Makevars.win
 
 ---
 
@@ -401,7 +389,6 @@
       > File 'src/entrypoint.c' already exists. Skip writing the file.
       > File 'src/Makevars.in' already exists. Skip writing the file.
       > File 'src/Makevars.win.in' already exists. Skip writing the file.
-      > File 'src/Makevars.ucrt' already exists. Skip writing the file.
       > File 'src/.gitignore' already exists. Skip writing the file.
       > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
@@ -421,7 +408,6 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars.in'
       v Writing 'src/Makevars.win.in'
-      v Writing 'src/Makevars.ucrt'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'

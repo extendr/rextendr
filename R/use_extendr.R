@@ -117,14 +117,6 @@ use_extendr <- function(path = ".",
   )
 
   use_rextendr_template(
-    "Makevars.ucrt",
-    save_as = file.path("src", "Makevars.ucrt"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
     quiet = quiet,

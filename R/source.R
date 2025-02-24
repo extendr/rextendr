@@ -503,7 +503,7 @@ get_specific_target_name <- function() {
     )
   }
 
-  return(NULL)
+  NULL
 }
 
 the <- new.env(parent = emptyenv())
