@@ -10,6 +10,7 @@
 #' }
 #'
 #' @inheritParams use_extendr
+#' @export
 use_extendr_badge <- function(path = ".") {
   rlang::check_installed("usethis")
   meta <- read_cargo_metadata(path)

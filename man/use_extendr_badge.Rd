@@ -9,11 +9,11 @@ use_extendr_badge(path = ".")
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
 }
-\value{
-Returns a boolean invisibly.
-}
 \description{
 Add the version of extendr being used by an R package to its README.
+}
+\details{
+Requires \code{usethis} to be available.
 }
 \examples{
 \dontrun{
