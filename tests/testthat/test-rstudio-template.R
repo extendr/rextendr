@@ -15,7 +15,7 @@ test_that("RStudio template generation is correct", {
     "configure", "configure.win", "DESCRIPTION",
     "extendrtest.Rproj", "NAMESPACE", "R/extendr-wrappers.R",
     "src/entrypoint.c", "src/extendrtest-win.def",
-    "src/Makevars.in", "src/Makevars.ucrt", "src/Makevars.win.in",
+    "src/Makevars.in", "src/Makevars.win.in",
     "src/rust/Cargo.toml", "src/rust/src/lib.rs", "tools/msrv.R"
   )
 

@@ -36,7 +36,7 @@ no_cargo_msg <- c(
   "Alternatively, you may install Cargo from your OS package manager:",
   " - Debian/Ubuntu: apt-get install cargo",
   " - Fedora/CentOS: dnf install cargo",
-  " - macOS: brew install rustc",
+  " - macOS: brew install rust",
   "-------------------------------------------------------------------"
 )
 
@@ -49,7 +49,7 @@ no_rustc_msg <- c(
   "Alternatively, you may install Rust from your OS package manager:",
   " - Debian/Ubuntu: apt-get install rustc",
   " - Fedora/CentOS: dnf install rustc",
-  " - macOS: brew install rustc",
+  " - macOS: brew install rust",
   "-------------------------------------------------------------------"
 )
 

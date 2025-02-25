@@ -29,7 +29,6 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_snapshot(cat_file("src", "Makevars.in"))
   expect_snapshot(cat_file("src", "entrypoint.c"))
   expect_snapshot(cat_file("src", "Makevars.win.in"))
-  expect_snapshot(cat_file("src", "Makevars.ucrt"))
   expect_snapshot(cat_file("src", "testpkg-win.def"))
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
   expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
