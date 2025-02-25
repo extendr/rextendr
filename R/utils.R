@@ -78,11 +78,11 @@ replace_na <- function(data, replace = NA, ...) {
   data
 }
 
-get_os <- function(){
+get_os <- function() {
   sysinf <- Sys.info()
-  if (!is.null(sysinf)){
-    os <- sysinf['sysname']
-    if (os == 'Darwin')
+  if (!is.null(sysinf)) {
+    os <- sysinf["sysname"]
+    if (os == "Darwin")
       os <- "osx"
   } else { ## mystery machine
     os <- .Platform$OS.type
