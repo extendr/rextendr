@@ -115,9 +115,9 @@ rustup_toolchain_target <- function() {
   # ----------------
   #
   # stable-x86_64-pc-windows-msvc (default)
-  host <- if (is.na(try_exec_cmd("rustup", "show"))) {
+  host <- if (get_os() == "osx" && is.na(try_exec_cmd("rustup", "show"))) {
     output <- try_exec_cmd("rustc", c("--version", "--verbose"))
-    host_index <- stringi::stri_detect_fixed(output, "host:")
+    host_index <- grep("host:", output)
     gsub("host: ", "", output[host_index])
   } else {
     try_exec_cmd("rustup", "show") %>%
