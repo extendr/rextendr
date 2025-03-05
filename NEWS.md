@@ -24,6 +24,7 @@
 * Added `use_msrv()` to aid in specifying the minimum supported rust version (MSRV) for an R package
 * Added `read_cargo_metadata()` to retrieve Cargo metadata for packages and
   workspaces. (#389)
+* `rustup_sitrep()` now checks if a default toolchain has been set. <https://github.com/extendr/rextendr/pull/416>
 
 # rextend 0.3.1
 
