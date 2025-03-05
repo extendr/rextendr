@@ -83,5 +83,5 @@ is_osx <- function() {
   if (!is.null(sysinf)) {
     return(identical(sysinf["sysname"], c(sysname = "Darwin")))
   }
-  return(grepl("^darwin", R.version$os, ignore.case = TRUE))
+  grepl("^darwin", R.version$os, ignore.case = TRUE)
 }
