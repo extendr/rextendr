@@ -104,7 +104,7 @@
       ! Target required-target is required on this host machine
       i Run `rustup target add required-target` to install it
 
-# Detects host when default toolchain is not set (MacOS)
+# Detects host when default toolchain is not set
 
     Code
       rust_sitrep()
@@ -116,4 +116,20 @@
       i toolchain: stable-aarch64-apple-darwin
       ! This toolchain should be default: stable-aarch64-apple-darwin
       i Run e.g. `rustup default stable-aarch64-apple-darwin`
+
+---
+
+    Code
+      rust_sitrep()
+    Message
+      Rust infrastructure sitrep:
+      v "rustup": 1.0.0 (0000000 0000-00-00)
+      x "cargo": not found
+      i host: arch-pc-os-tool
+      i toolchain: stable-arch-pc-os-tool
+      ! This toolchain should be default: stable-arch-pc-os-tool
+      i Run e.g. `rustup default stable-arch-pc-os-tool`
+      x "cargo" is required to build rextendr-powered packages
+      i It is recommended to use "rustup" to manage "cargo" and "rustc"
+      i See <https://rustup.rs/> for installation instructions
 
