@@ -14,6 +14,7 @@
     Output
       ^src/\.cargo$
       ^src/rust/vendor$
+      ^src/rust/target$
       ^src/Makevars$
       ^src/Makevars\.win$
 
@@ -221,7 +222,7 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
       
       $(SHLIB): $(STATLIB)
       
@@ -255,11 +256,11 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
 ---
 
@@ -287,7 +288,7 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
       
       $(SHLIB): $(STATLIB)
       
@@ -322,8 +323,8 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
@@ -447,7 +448,7 @@
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
       
       $(SHLIB): $(STATLIB)
       
@@ -481,9 +482,9 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 

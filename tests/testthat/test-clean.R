@@ -9,6 +9,8 @@ test_that("rextendr::clean() removes cargo target directory & binaries", {
   use_extendr()
   document()
 
+  # manually run cargo check here to regenerate the target directory
+  system("cargo check --manifest-path=src/rust/Cargo.toml")
   expect_equal(length(dir("src", pattern = "testpkg\\..*")), 1)
   expect_true(dir.exists(file.path("src", "rust", "target")))
 

@@ -24,6 +24,6 @@
       5 paste          *.*.* 
       6 proc-macro2    *.*.* 
       7 quote          *.*.* 
-      8 syn            *.*.* 
+      8 syn            *.*.*
       9 unicode-ident  *.*.* 
 

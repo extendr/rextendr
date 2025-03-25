@@ -3,7 +3,7 @@ LIBDIR = $(TARGET_DIR)/release
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 
-all: $(SHLIB) C_clean
+all: $(SHLIB) rust_clean
 
 $(SHLIB): $(STATLIB)
 
@@ -37,8 +37,8 @@ $(STATLIB):
 	# Always clean up CARGOTMP
 	rm -Rf $(CARGOTMP);
 
-C_clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+rust_clean:
+	rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
