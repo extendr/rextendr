@@ -133,7 +133,7 @@ use_extendr <- function(
       publish = FALSE,
       version = "0.1.0",
       edition = edition,
-      `rust-version` = "1.68.0"
+      `rust-version` = "1.65"
     ),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
