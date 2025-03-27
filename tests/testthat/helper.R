@@ -121,7 +121,7 @@ skip_if_opted_out_of_dev_tests <- function() {
 mask_any_version <- function(snapshot_lines) {
   stringi::stri_replace_all_regex(
     snapshot_lines,
-    "\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?",
+    "\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?\\s*",
     "*.*.*"
   )
 }
