@@ -35,7 +35,7 @@ if (!is_not_cran) {
 .clean_targets <- ifelse(is_debug, "", "$(TARGET_DIR)")
 
 # when we are using a debug build we need to use target/debug instead of target/release
-.libdir = ifelse(is_debug, "debug", "release")
+.libdir <- ifelse(is_debug, "debug", "release")
 
 # read in the Makevars.in file
 is_windows <- .Platform[["OS.type"]] == "windows"
