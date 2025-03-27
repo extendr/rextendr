@@ -32,3 +32,4 @@ reference:
   - make_module_macro
   - rust_sitrep
   - read_cargo_metadata
+  - use_extendr_badge

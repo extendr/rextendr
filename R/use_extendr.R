@@ -198,6 +198,9 @@ use_extendr <- function(path = ".",
     Sys.chmod("configure", "0755")
   }
 
+  # Set the minimum version of R to 4.2 as now required by libR-sys 0.7
+  usethis::use_package("R", "Depends", "4.2")
+
   # the temporary cargo directory must be ignored
   usethis::use_build_ignore("src/.cargo")
 
@@ -216,6 +219,9 @@ use_extendr <- function(path = ".",
   usethis::use_git_ignore("src/Makevars")
   usethis::use_build_ignore("src/Makevars.win")
   usethis::use_git_ignore("src/Makevars.win")
+
+
+  use_extendr_badge()
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success("Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}.")
