@@ -77,3 +77,11 @@ replace_na <- function(data, replace = NA, ...) {
   }
   data
 }
+
+is_osx <- function() {
+  sysinf <- Sys.info()
+  if (!is.null(sysinf)) {
+    return(identical(sysinf["sysname"], c(sysname = "Darwin")))
+  }
+  grepl("^darwin", R.version$os, ignore.case = TRUE)
+}
