@@ -132,7 +132,8 @@ use_extendr <- function(
       name = crate_name,
       publish = FALSE,
       version = "0.1.0",
-      edition = edition
+      edition = edition,
+      `rust-version` = "1.68.0"
     ),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*")
@@ -183,6 +184,14 @@ use_extendr <- function(
     overwrite = overwrite
   )
 
+  # add config.R template
+  use_rextendr_template(
+    "config.R",
+    save_as = file.path("tools", "config.R"),
+    quiet = quiet,
+    overwrite = overwrite
+  )
+
   # add configure and configure.win templates
   use_rextendr_template(
     "configure",
@@ -205,6 +214,9 @@ use_extendr <- function(
   if (.Platform[["OS.type"]] == "unix") {
     Sys.chmod("configure", "0755")
   }
+
+  # Set the minimum version of R to 4.2 which is 64 bit
+  usethis::use_package("R", "Depends", "4.2")
 
   # the temporary cargo directory must be ignored
   usethis::use_build_ignore("src/.cargo")
