@@ -5,6 +5,8 @@ PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 
 all: $(SHLIB) rust_clean
 
+.PHONY: $(STATLIB)
+
 $(SHLIB): $(STATLIB)
 
 CARGOTMP = $(CURDIR)/.cargo

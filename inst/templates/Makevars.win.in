@@ -7,6 +7,8 @@ PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -
 
 all: $(SHLIB) rust_clean
 
+.PHONY: $(STATLIB)
+
 $(SHLIB): $(STATLIB)
 
 CARGOTMP = $(CURDIR)/.cargo

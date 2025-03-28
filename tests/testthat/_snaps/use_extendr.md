@@ -198,6 +198,8 @@
       
       all: $(SHLIB) rust_clean
       
+      .PHONY: $(STATLIB)
+      
       $(SHLIB): $(STATLIB)
       
       CARGOTMP = $(CURDIR)/.cargo
@@ -263,6 +265,8 @@
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
       all: $(SHLIB) rust_clean
+      
+      .PHONY: $(STATLIB)
       
       $(SHLIB): $(STATLIB)
       
@@ -420,6 +424,8 @@
       PKG_LIBS = -L$(LIBDIR) -lbar
       
       all: $(SHLIB) rust_clean
+      
+      .PHONY: $(STATLIB)
       
       $(SHLIB): $(STATLIB)
       
