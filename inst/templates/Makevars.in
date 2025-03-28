@@ -1,9 +1,11 @@
 TARGET_DIR = ./rust/target
-LIBDIR = $(TARGET_DIR)/release
+LIBDIR = $(TARGET_DIR)/@LIBDIR@
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 
-all: C_clean
+all: $(SHLIB) rust_clean
+
+.PHONY: $(STATLIB)
 
 $(SHLIB): $(STATLIB)
 
@@ -32,13 +34,13 @@ $(STATLIB):
 
 	export CARGO_HOME=$(CARGOTMP) && \
 	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
 
 	# Always clean up CARGOTMP
 	rm -Rf $(CARGOTMP);
 
-C_clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+rust_clean:
+	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)

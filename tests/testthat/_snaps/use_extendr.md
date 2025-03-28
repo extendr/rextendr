@@ -14,6 +14,7 @@
     Output
       ^src/\.cargo$
       ^src/rust/vendor$
+      ^src/rust/target$
       ^src/Makevars$
       ^src/Makevars\.win$
 
@@ -24,20 +25,7 @@
     Output
       #!/usr/bin/env sh
       : "${R_HOME=`R RHOME`}"
-      "${R_HOME}/bin/Rscript" tools/msrv.R 
-      
-      # Set CRAN_FLAGS based on the NOT_CRAN value
-      if [ "${NOT_CRAN}" != "true" ] && [ -f ./src/rust/vendor.tar.xz ]; then
-        export CRAN_FLAGS="-j 2 --offline"
-      else
-        export CRAN_FLAGS=""
-      fi
-      
-      # delete Makevars if it is present
-      [ -f src/Makevars ] && rm src/Makevars
-      
-      # Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
-      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.in > src/Makevars
+      "${R_HOME}/bin/Rscript" tools/config.R
 
 ---
 
@@ -45,20 +33,7 @@
       cat_file("configure.win")
     Output
       #!/usr/bin/env sh
-      "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" tools/msrv.R
-      
-      # Set CRAN_FLAGS based on the NOT_CRAN value
-      if [ "${NOT_CRAN}" != "true" ] && [ -f ./src/rust/vendor.tar.xz ]; then
-        export CRAN_FLAGS="-j 2 --offline"
-      else
-        export CRAN_FLAGS=""
-      fi
-      
-      # delete Makevars.win if it is present
-      [ -f src/Makevars.win ] && rm src/Makevars.win
-      
-      # Substitute @CRAN_FLAGS@ in Makevars.in with the actual value of $CRAN_FLAGS
-      sed -e "s|@CRAN_FLAGS@|$CRAN_FLAGS|" src/Makevars.win.in > src/Makevars.win
+      "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" tools/config.R
 
 ---
 
@@ -217,11 +192,13 @@
       cat_file("src", "Makevars.in")
     Output
       TARGET_DIR = ./rust/target
-      LIBDIR = $(TARGET_DIR)/release
+      LIBDIR = $(TARGET_DIR)/@LIBDIR@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
+      
+      .PHONY: $(STATLIB)
       
       $(SHLIB): $(STATLIB)
       
@@ -250,16 +227,16 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
 ---
 
@@ -283,28 +260,23 @@
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       
       TARGET_DIR = ./rust/target
-      LIBDIR = $(TARGET_DIR)/$(TARGET)/release
+      LIBDIR = $(TARGET_DIR)/$(TARGET)/@LIBDIR@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
+      
+      .PHONY: $(STATLIB)
       
       $(SHLIB): $(STATLIB)
       
       CARGOTMP = $(CURDIR)/.cargo
+      VENDOR_DIR = vendor
       
       $(STATLIB):
       	mkdir -p $(TARGET_DIR)/libgcc_mock
-      	# `rustc` adds `-lgcc_eh` flags to the compiler, but Rtools' GCC doesn't have
-      	# `libgcc_eh` due to the compilation settings. So, in order to please the
-      	# compiler, we need to add empty `libgcc_eh` to the library search paths.
-      	#
-      	# For more details, please refer to
-      	# https://github.com/r-windows/rtools-packages/blob/2407b23f1e0925bbb20a4162c963600105236318/mingw-w64-gcc/PKGBUILD#L313-L316
       	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	# When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
-      	# is unzipped and used for offline compilation.
       	if [ "$(NOT_CRAN)" != "true" ]; then \
       		if [ -f ./rust/vendor.tar.xz ]; then \
       			tar xf rust/vendor.tar.xz && \
@@ -316,14 +288,14 @@
       	# Build the project using Cargo with additional flags
       	export CARGO_HOME=$(CARGOTMP) && \
       	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
-      	export LIBRARY_PATH="$${LIBRARY_PATH};$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
@@ -346,6 +318,7 @@
       publish = false
       version = '0.1.0'
       edition = '2021'
+      rust-version = '1.65'
       
       [lib]
       crate-type = [ 'staticlib' ]
@@ -395,6 +368,7 @@
       > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'tools/config.R' already exists. Skip writing the file.
       > File 'configure' already exists. Skip writing the file.
       > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
@@ -414,6 +388,7 @@
       v Writing 'src/testpkg-win.def'
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
       v Writing 'tools/msrv.R'
+      v Writing 'tools/config.R'
       v Writing 'configure'
       v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
@@ -429,6 +404,7 @@
       publish = false
       version = '0.1.0'
       edition = '2021'
+      rust-version = '1.65'
       
       [lib]
       crate-type = [ 'staticlib' ]
@@ -443,11 +419,13 @@
       cat_file("src", "Makevars.in")
     Output
       TARGET_DIR = ./rust/target
-      LIBDIR = $(TARGET_DIR)/release
+      LIBDIR = $(TARGET_DIR)/@LIBDIR@
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
       
-      all: C_clean
+      all: $(SHLIB) rust_clean
+      
+      .PHONY: $(STATLIB)
       
       $(SHLIB): $(STATLIB)
       
@@ -476,14 +454,14 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib --release --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      C_clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS)
+      rust_clean:
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
 
