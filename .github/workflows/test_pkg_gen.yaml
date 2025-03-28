@@ -120,6 +120,6 @@ jobs:
 
           # check if compile = TRUE forces compile, and accordingly the wrapper generation
           rextendr::register_extendr(compile = TRUE)
-          stopifnot(library_mtime_before <= file.info(library_path)$mtime)
-          stopifnot(wrappers_mtime_before <= file.info(wrappers_path)$mtime)
+          stopifnot(library_mtime_before < file.info(library_path)$mtime)
+          stopifnot(wrappers_mtime_before < file.info(wrappers_path)$mtime)
         shell: Rscript {0}

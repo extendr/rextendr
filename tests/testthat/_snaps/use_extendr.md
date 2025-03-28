@@ -285,13 +285,13 @@
       	export CARGO_HOME=$(CURDIR)/$(CARGOTMP) && \
       	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(CARGO_LINKER)" && \
       	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build --jobs 2 --offline --target=$(TARGET) --lib --release --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
       rust_clean:
-      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) $(TARGET_DIR)
+      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
@@ -314,7 +314,7 @@
       publish = false
       version = '0.1.0'
       edition = '2021'
-      rust-version = '1.68.0'
+      rust-version = '1.65'
       
       [lib]
       crate-type = [ 'staticlib' ]
@@ -400,7 +400,7 @@
       publish = false
       version = '0.1.0'
       edition = '2021'
-      rust-version = '1.68.0'
+      rust-version = '1.65'
       
       [lib]
       crate-type = [ 'staticlib' ]
