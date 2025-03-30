@@ -130,7 +130,7 @@ test_that("Required target is not available", {
   expect_snapshot(rust_sitrep())
 })
 
-test_that("Detects host when default toolchain is not set", {
+test_that("Detects host when default toolchain is not set on OSX", {
   local_mocked_bindings(is_osx = function() TRUE)
 
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
@@ -152,7 +152,9 @@ test_that("Detects host when default toolchain is not set", {
     }
   })
   expect_snapshot(rust_sitrep())
+})
 
+test_that("Detects host when default toolchain is not set on non-OSX", {
   local_mocked_bindings(is_osx = function() FALSE)
 
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {

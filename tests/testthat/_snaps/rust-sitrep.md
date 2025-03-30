@@ -104,7 +104,7 @@
       ! Target required-target is required on this host machine
       i Run `rustup target add required-target` to install it
 
-# Detects host when default toolchain is not set
+# Detects host when default toolchain is not set on OSX
 
     Code
       rust_sitrep()
@@ -117,7 +117,7 @@
       ! This toolchain should be default: stable-aarch64-apple-darwin
       i Run e.g. `rustup default stable-aarch64-apple-darwin`
 
----
+# Detects host when default toolchain is not set on non-OSX
 
     Code
       rust_sitrep()
