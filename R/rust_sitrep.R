@@ -115,9 +115,15 @@ rustup_toolchain_target <- function() {
   # ----------------
   #
   # stable-x86_64-pc-windows-msvc (default)
-  host <- try_exec_cmd("rustup", "show") %>%
-    stringi::stri_sub(from = 15L) %>%
-    vctrs::vec_slice(1L)
+  host <- if (is_osx() && is.na(try_exec_cmd("rustup", "show"))) {
+    output <- try_exec_cmd("rustc", c("--version", "--verbose"))
+    host_index <- grep("host:", output)
+    gsub("host: ", "", output[host_index])
+  } else {
+    try_exec_cmd("rustup", "show") %>%
+      stringi::stri_sub(from = 15L) %>%
+      vctrs::vec_slice(1L)
+  }
 
   # > rustup toolchain list
   # stable-x86_64-pc-windows-msvc
@@ -177,7 +183,7 @@ verify_toolchains <- function(toolchains, host) {
   } else {
     toolchains[default_toolchain_index] <- cli::col_red(toolchains[default_toolchain_index])
     candidates <- stringi::stri_detect_fixed(toolchains, host)
-    if (any(candidates)) {
+    if (!all(is.na(candidates)) && any(candidates)) {
       candidate_toolchains <- toolchains[candidates]
       toolchains[candidates] <- cli::col_yellow(toolchains[candidates])
     } else {
