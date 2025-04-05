@@ -232,7 +232,7 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      rust_clean:
+      rust_clean: $(SHLIB)
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
@@ -293,7 +293,7 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      rust_clean:
+      rust_clean: $(SHLIB)
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
@@ -458,7 +458,7 @@
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
       
-      rust_clean:
+      rust_clean: $(SHLIB)
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
