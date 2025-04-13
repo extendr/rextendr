@@ -37,7 +37,7 @@ jobs:
       REXTENDR_SKIP_DEV_TESTS: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@master
         with:
@@ -57,6 +57,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          install-pandoc: false
+          install-quarto: false
           cache-version: 2
           extra-packages: rcmdcheck
 
