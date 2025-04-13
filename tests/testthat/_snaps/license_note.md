@@ -8,23 +8,30 @@
       
       -------------------------------------------------------------
       
+      Name:        build-print
+      Repository:  NA
+      Authors:     sam0x17
+      License:     MIT
+      
+      -------------------------------------------------------------
+      
       Name:        extendr-api
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+      License:     MIT
+      
+      -------------------------------------------------------------
+      
+      Name:        extendr-ffi
+      Repository:  https://github.com/extendr/extendr
+      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
       License:     MIT
       
       -------------------------------------------------------------
       
       Name:        extendr-macros
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
-      License:     MIT
-      
-      -------------------------------------------------------------
-      
-      Name:        libR-sys
-      Repository:  https://github.com/extendr/libR-sys
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Ilia A. Kosenkov, Hiroaki Yutani
+      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
       License:     MIT
       
       -------------------------------------------------------------
