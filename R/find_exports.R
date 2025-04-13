@@ -9,7 +9,7 @@ find_exports <- function(clean_lns) {
   }
 
   map2(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
-    discard(~ is.na(.x["impl"]) & is.na(.x["fn"])) %>% 
+    discard(~ is.na(.x["impl"]) & is.na(.x["fn"])) %>%
     dplyr::bind_rows() %>%
     dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) %>%
     dplyr::select(dplyr::all_of(c("name", "type", "lifetime")))
@@ -26,7 +26,7 @@ extract_meta <- function(lns) {
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
     glue_collapse(lns, sep = "\n"),
-    "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))"
+    "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))" # nolint: line_length_linter
   ) %>%
     tibble::as_tibble(.name_repair = "minimal") %>%
     rlang::set_names(c("match", "struct", "enum", "fn", "impl", "lifetime", "name")) %>%
