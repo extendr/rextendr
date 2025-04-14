@@ -1,3 +1,6 @@
+# Note: Any variables prefixed with `.` are used for text
+# replacement in the Makevars.in and Makevars.win.in
+
 # check the packages MSRV first
 source("tools/msrv.R")
 
@@ -34,8 +37,25 @@ if (!is_not_cran) {
 .profile <- ifelse(is_debug, "", "--release")
 .clean_targets <- ifelse(is_debug, "", "$(TARGET_DIR)")
 
+# check for webR
+is_wasm <- R.version$platform == "wasm32-unknown-emscripten"
+
+if (is_wasm) {
+  message("Building for webR")
+}
+
+# use this to replace @TARGET@
+.target <- ifelse(is_wasm, "--target=wasm32-unknown-emscripten", "")
+
 # when we are using a debug build we need to use target/debug instead of target/release
-.libdir <- ifelse(is_debug, "debug", "release")
+# if we're in wasm then we use wasm32-unknown-emscripten prefix
+.libdir <- if (is_wasm) {
+  "wasm32-unknown-emscripten/release"
+} else if (is_debug) {
+  "debug"
+} else {
+  "release"
+}
 
 # read in the Makevars.in file
 is_windows <- .Platform[["OS.type"]] == "windows"
