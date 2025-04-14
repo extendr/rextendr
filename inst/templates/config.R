@@ -37,25 +37,40 @@ if (!is_not_cran) {
 .profile <- ifelse(is_debug, "", "--release")
 .clean_targets <- ifelse(is_debug, "", "$(TARGET_DIR)")
 
-# check for webR
-is_wasm <- R.version$platform == "wasm32-unknown-emscripten"
+# We specify this target when building for webR
+webr_target <- "wasm32-unknown-emscripten"
 
+# here we check if the platform we are building for is webr
+is_wasm <- identical(R.version$platform, webr_target)
+
+# print to terminal to inform we are building for webr
 if (is_wasm) {
-  message("Building for webR")
+  message("Building for WebR")
+}
+
+# if so, our target_lib path is specified, otherwise null
+# this will be used to fill out the LIBDIR env var for Makevars.in
+target_libpath <- if (is_wasm) {
+  paste0(webr_target, "/")
+} else {
+  NULL
+}
+
+# we check if we are making a debug build or not
+# if so, the LIBDIR environment variable becomes:
+# LIBDIR = $(TARGET_DIR)/{wasm32-unknown-emscripten}/debug
+.libdir <- if (is_debug) {
+  paste0(target_libpath, "debug")
+} else {
+  paste0(target_libpath, "release")
 }
 
 # use this to replace @TARGET@
-.target <- ifelse(is_wasm, "--target=wasm32-unknown-emscripten/", "")
+# we specify the target _only_ on webR
+# there may be use cases later where this can be adapted or expanded
+.target <- ifelse(is_wasm, paste0("--target=", webr_target), "")
 
-# when we are using a debug build we need to use target/debug instead of target/release
-# if we're in wasm then we use wasm32-unknown-emscripten prefix
-.libdir <- if (is_debug) {
-  paste0(.target, "debug")
-} else {
-  paste0(.target, "release")
-}
-
-# read in the Makevars.in file
+# read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
 # if windows we replace in the Makevars.win.in
