@@ -16,6 +16,7 @@ fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 
+#[extendr]
 struct Counter {
     n: i32,
 }
@@ -149,6 +150,8 @@ test_that("Rust metadata capturing", {
     extract_meta("#[extendr] pub \tfn\t      test_fn  \t() {}"),
     tibble::tibble(
       match = "fn\t      test_fn",
+      struct = NA_character_,
+      enum = NA_character_,
       fn = "fn",
       impl = NA_character_,
       lifetime = NA_character_,
@@ -163,6 +166,8 @@ test_that("Rust metadata capturing", {
     )),
     tibble::tibble(
       match = "impl  <'a, \t 'b>  X",
+      struct = NA_character_,
+      enum = NA_character_,
       fn = NA_character_,
       impl = "impl",
       lifetime = "'a, \t 'b",
