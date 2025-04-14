@@ -57,8 +57,6 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          install-pandoc: false
-          install-quarto: false
           cache-version: 2
           extra-packages: rcmdcheck
 
