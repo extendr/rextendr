@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Claus O.
 Wilke</h4>
             
-            <h4 data-toc-skip class="date">2025-04-07</h4>
+            <h4 data-toc-skip class="date">2025-04-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/main/vignettes/rmarkdown.Rmd" class="external-link"><code>vignettes/rmarkdown.Rmd</code></a></small>
       <div class="d-none name"><code>rmarkdown.Rmd</code></div>
@@ -205,25 +205,26 @@ and <code>foo()</code>, as well as a class called
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="in">    rprintln!("Data sent to Rust: {}, {}", a, b);</span></span>
 <span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="in">struct Counter {</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="in">    n: i32,</span></span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="in">#[extendr]</span></span>
-<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="in">impl Counter {</span></span>
-<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="in">    fn new() -&gt; Self {</span></span>
-<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="in">        Self { n: 0 }</span></span>
-<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a><span class="in">    </span></span>
-<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="in">    fn increment(&amp;mut self) {</span></span>
-<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="in">        self.n += 1;</span></span>
-<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="in">    </span></span>
-<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="in">    fn get(&amp;self) -&gt; i32 {</span></span>
-<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="in">        self.n</span></span>
-<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a><span class="in">    }</span></span>
-<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="in">#[extendr]</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="in">struct Counter {</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="in">    n: i32,</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="in">#[extendr]</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="in">impl Counter {</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="in">    fn new() -&gt; Self {</span></span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="in">        Self { n: 0 }</span></span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="in">    fn increment(&amp;mut self) {</span></span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="in">        self.n += 1;</span></span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="in">    fn get(&amp;self) -&gt; i32 {</span></span>
+<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a><span class="in">        self.n</span></span>
+<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-31"><a href="#cb15-31" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>The only output the chunk itself creates is the Rust source code:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="kw">fn</span> hello() <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">'static</span> <span class="dt">str</span> <span class="op">{</span></span>
@@ -235,24 +236,25 @@ and <code>foo()</code>, as well as a class called
 <span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>    <span class="pp">rprintln!</span>(<span class="st">"Data sent to Rust: {}, {}"</span><span class="op">,</span> a<span class="op">,</span> b)<span class="op">;</span></span>
 <span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="kw">struct</span> Counter <span class="op">{</span></span>
-<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>    n<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
-<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="kw">impl</span> Counter <span class="op">{</span></span>
-<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a>    <span class="kw">fn</span> new() <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
-<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a>        <span class="dt">Self</span> <span class="op">{</span> n<span class="op">:</span> <span class="dv">0</span> <span class="op">}</span></span>
-<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>    </span>
-<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>    <span class="kw">fn</span> increment(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span>) <span class="op">{</span></span>
-<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>    </span>
-<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>    <span class="kw">fn</span> get(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
-<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n</span>
-<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="kw">struct</span> Counter <span class="op">{</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>    n<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a><span class="kw">impl</span> Counter <span class="op">{</span></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a>    <span class="kw">fn</span> new() <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a>        <span class="dt">Self</span> <span class="op">{</span> n<span class="op">:</span> <span class="dv">0</span> <span class="op">}</span></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>    </span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a>    <span class="kw">fn</span> increment(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span>) <span class="op">{</span></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>    </span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>    <span class="kw">fn</span> get(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>n</span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>However, now we can call the functions <code>hello()</code> and
 <code>foo()</code> from R and use the <code>Counter</code> object:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
