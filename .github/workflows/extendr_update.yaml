@@ -1,0 +1,8 @@
+name: Run Tests on extendr Update
+on:
+	repository_dispatch:
+		types: [extendr-pr-merged]
+
+jobs:
+	run_rextendr_tests:
+		uses: ./.github/workflows/R-CMD-check.yaml
