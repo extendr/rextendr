@@ -45,16 +45,14 @@ if (is_wasm) {
 }
 
 # use this to replace @TARGET@
-.target <- ifelse(is_wasm, "--target=wasm32-unknown-emscripten", "")
+.target <- ifelse(is_wasm, "--target=wasm32-unknown-emscripten/", "")
 
 # when we are using a debug build we need to use target/debug instead of target/release
 # if we're in wasm then we use wasm32-unknown-emscripten prefix
-.libdir <- if (is_wasm) {
-  "wasm32-unknown-emscripten/release"
-} else if (is_debug) {
-  "debug"
+.libdir <- if (is_debug) {
+  paste0(.target, "debug")
 } else {
-  "release"
+  paste0(.target, "release")
 }
 
 # read in the Makevars.in file
