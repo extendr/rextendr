@@ -48,22 +48,15 @@ if (is_wasm) {
   message("Building for WebR")
 }
 
-# if so, our target_lib path is specified, otherwise null
-# this will be used to fill out the LIBDIR env var for Makevars.in
-target_libpath <- if (is_wasm) {
-  paste0(webr_target, "/")
-} else {
-  NULL
-}
-
 # we check if we are making a debug build or not
 # if so, the LIBDIR environment variable becomes:
 # LIBDIR = $(TARGET_DIR)/{wasm32-unknown-emscripten}/debug
-.libdir <- if (is_debug) {
-  paste0(target_libpath, "debug")
-} else {
-  paste0(target_libpath, "release")
-}
+# this will be used to fill out the LIBDIR env var for Makevars.in
+target_libpath <- if (is_wasm) "wasm32-unknown-emscripten" else NULL
+cfg <- if (is_debug) "debug" else "release"
+
+# used to replace @LIBDIR@
+.libdir <- paste(c(target_libpath, cfg), collapse = "/")
 
 # use this to replace @TARGET@
 # we specify the target _only_ on webR
