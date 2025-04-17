@@ -5,7 +5,7 @@ find_exports <- function(clean_lns) {
 
   # start and end may empty
   if (rlang::is_empty(start) || rlang::is_empty(end)) {
-    return(tibble::tibble(name = character(0), type = character(0), lifetime = character(0)))
+    return(data.frame(name = character(0), type = character(0), lifetime = character(0)))
   }
 
   map2(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
@@ -28,7 +28,7 @@ extract_meta <- function(lns) {
     glue_collapse(lns, sep = "\n"),
     "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))" # nolint: line_length_linter
   ) %>%
-    tibble::as_tibble(.name_repair = "minimal") %>%
+    as.data.frame() %>%
     rlang::set_names(c("match", "struct", "enum", "fn", "impl", "lifetime", "name")) %>%
     dplyr::filter(!is.na(.data$match))
 

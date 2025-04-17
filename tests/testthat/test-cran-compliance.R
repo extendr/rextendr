@@ -10,8 +10,22 @@ test_that("vendor_pkgs() vendors dependencies", {
   use_extendr(path, quiet = TRUE)
 
   package_versions <- vendor_pkgs(path, quiet = TRUE)
+
+  defaults <- c(
+    "build-print",
+    "extendr-api",
+    "extendr-ffi",
+    "extendr-macros",
+    "once_cell",
+    "paste",
+    "proc-macro2",
+    "quote",
+    "syn",
+    "unicode-ident"
+  )
+
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
-  expect_snapshot(package_versions, transform = mask_any_version)
+  expect_setequal(package_versions[["crate"]], defaults)
   expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
 })
 

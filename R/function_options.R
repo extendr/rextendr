@@ -1,9 +1,7 @@
 extendr_function_config <- rlang::env(
-  known_options = tibble::tribble(
-    ~Name, ~Ptype,
-    "r_name", character(),
-    "mod_name", character(),
-    "use_rng", logical()
+  known_options = data.frame(
+    Name = c("r_name", "mod_name", "use_rng"),
+    Ptype = I(list(character(), character(), logical()))
   )
 )
 
@@ -14,7 +12,7 @@ extendr_function_config <- rlang::env(
 #' @noRd
 convert_function_options <- function(options, suppress_warnings) {
   if (rlang::is_null(options) || rlang::is_empty(options)) {
-    return(tibble::tibble(Name = character(), RustValue = character()))
+    return(data.frame(Name = character(), RustValue = character()))
   }
 
   if (!rlang::is_list(options) || !rlang::is_named(options)) {
@@ -24,28 +22,38 @@ convert_function_options <- function(options, suppress_warnings) {
     )
   }
 
-  options_table <- tibble::tibble(Name = rlang::names2(options), Value = unname(options)) %>%
-    dplyr::left_join(extendr_function_config$known_options, by = "Name") %>%
-    dplyr::mutate(
-      Value = pmap(
-        list(.data$Value, .data$Ptype, .data$Name),
-        ~ if (rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
-      ),
-    )
+  options_table <- data.frame(
+    Name = rlang::names2(options),
+    Value = unname(options)
+  )
 
-  unknown_option_names <- options_table %>%
-    dplyr::filter(map_lgl(.data$Ptype, rlang::is_null)) %>%
-    dplyr::pull(.data$Name)
+  options_table <- dplyr::left_join(
+    options_table,
+    extendr_function_config$known_options,
+    by = "Name"
+  )
 
-  invalid_options <- options_table %>%
-    dplyr::mutate(
-      IsNameInvalid = !is_valid_rust_name(.data$Name),
-      IsValueNull = map_lgl(.data$Value, rlang::is_null),
-      IsNotScalar = !.data$IsValueNull & !map_lgl(.data$Value, vctrs::vec_is, size = 1L)
-    ) %>%
-    dplyr::filter(
-      .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
-    )
+  options_table[["Value"]] <- purrr::pmap(
+    options_table,
+    ~ if (rlang::is_null(..2)) ..1 else vctrs::vec_cast(..1, ..2, x_arg = ..3)
+  )
+
+  unknown_option_names <- dplyr::filter(
+    options_table,
+    map_lgl(.data$Ptype, rlang::is_null)
+  )[["Name"]]
+
+  invalid_options <- dplyr::mutate(
+    options_table,
+    IsNameInvalid = !is_valid_rust_name(.data$Name),
+    IsValueNull = map_lgl(.data$Value, rlang::is_null),
+    IsNotScalar = !.data$IsValueNull & !map_lgl(.data$Value, vctrs::vec_is, size = 1L)
+  )
+
+  invalid_options <- dplyr::filter(
+    invalid_options,
+    .data$IsNameInvalid | .data$IsValueNull | .data$IsNotScalar
+  )
 
   if (vctrs::vec_size(invalid_options) > 0) {
     cli_abort_invalid_options(invalid_options)
@@ -56,11 +64,11 @@ convert_function_options <- function(options, suppress_warnings) {
     ))
   }
 
-  options_table %>%
-    dplyr::transmute(
-      .data$Name,
-      RustValue = map_chr(.data$Value, convert_option_to_rust)
-    )
+  dplyr::transmute(
+    options_table,
+    .data$Name,
+    RustValue = map_chr(.data$Value, convert_option_to_rust)
+  )
 }
 
 #' Throws an error given a data frame of invalid options

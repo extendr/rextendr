@@ -35,7 +35,7 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   # A sorted DF having `start`, `end`, and `type`
   comment_syms <-
     locations %>%
-    map(tibble::as_tibble) %>%
+    map(as.data.frame) %>%
     imap(
       ~ dplyr::mutate(
         .x,
@@ -126,18 +126,16 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
       class = "rextendr_error"
     )
   }
-  # Manual `pivot_wider`.
-  to_replace <- tibble::tibble(
-    start_open = dplyr::filter(to_replace, .data$type == "open")[["start"]],
-    end_close = dplyr::filter(to_replace, .data$type == "close")[["end"]],
-  )
 
   # Replaces each continuous commnet block with whitespaces
   # of the same length -- this is needed to preserve line length
   # and previously computed positions, and it does not affect
   # parsing at later stages.
-  .open <- to_replace[["start_open"]]
-  .close <- to_replace[["end_close"]]
+  i_open <- to_replace[["type"]] == "open"
+  i_close <- to_replace[["type"]] == "close"
+
+  .open <- to_replace[i_open, "start", drop = TRUE]
+  .close <- to_replace[i_close, "end", drop = TRUE]
   gap_size <- (.close - .open) + 1
 
   result <- stringi::stri_sub_replace_all(

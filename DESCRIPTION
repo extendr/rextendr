@@ -50,8 +50,7 @@ Imports:
     processx,
     rlang (>= 1.0.5),
     rprojroot,
-    stringi,
-    tibble,
+    stringi,    
     vctrs,
     withr
 Suggests:
@@ -61,6 +60,7 @@ Suggests:
     lintr,
     rmarkdown,
     testthat (>= 3.1.7),
+    tibble,
     usethis
 VignetteBuilder: 
     knitr
@@ -68,6 +68,6 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.2.9000
 SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile
     without error

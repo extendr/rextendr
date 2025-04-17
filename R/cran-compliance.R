@@ -86,7 +86,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     stringi::stri_split_lines1()
 
   res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") %>%
-    tibble::as_tibble(.name_repair = "minimal") %>%
+    data.frame() %>%
     rlang::set_names(c("source", "crate", "version")) %>%
     dplyr::filter(!is.na(source)) %>%
     dplyr::select(-source) %>%
