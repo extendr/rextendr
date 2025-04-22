@@ -40,7 +40,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rextendr-development-version">rextendr (development version)<a class="anchor" aria-label="anchor" href="#rextendr-development-version"></a></h2>
-<ul><li>Addresses new CRAN check in R 4.5+ adding warning for <code>_abort</code> usage</li>
+<ul><li>Adds <a href="https://docs.r-wasm.org/webr/latest/" class="external-link">WebR</a> support out of the box for all extendr packages.
+<ul><li>Note that not all Rust crates are wasm compatible. This change only enables the package to build in the <code>wasm32-unknown-emscripten</code> target. It does not guarantee all dependencies will compile.</li>
+</ul></li>
+<li>Addresses new CRAN check in R 4.5+ adding warning for <code>_abort</code> usage</li>
 <li>Removes <code>Makevars.ucrt</code> as R versions &lt; 4.1 are not supported by extendr <a href="https://github.com/extendr/rextendr/pull/414" class="external-link uri">https://github.com/extendr/rextendr/pull/414</a>
 </li>
 <li>
