@@ -316,8 +316,10 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
       minor_patch <- package_version(R.version$minor)
 
-      if (minor_patch >= "4.0") {
+      if (minor_patch >= "5.0") {
         rtools_version <- "45" # nolint: object_usage_linter
+      } else if (minor_patch >= "4.0") {
+        rtools_version <- "44" # nolint: object_usage_linter
       } else if (minor_patch >= "3.0") {
         rtools_version <- "43" # nolint: object_usage_linter
       } else {
