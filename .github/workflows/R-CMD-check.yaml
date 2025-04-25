@@ -21,9 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '43' }
+          - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
+          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
+          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '44' }
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
 
