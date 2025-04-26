@@ -37,7 +37,7 @@ License: MIT + file LICENSE
 URL: https://extendr.github.io/rextendr/
 BugReports: https://github.com/extendr/rextendr/issues
 Depends:
-    R (>= 4.0)
+    R (>= 4.1)
 Imports:
     brio,
     callr,
