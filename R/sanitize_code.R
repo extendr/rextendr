@@ -37,10 +37,12 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
     locations |>
     map(as.data.frame) |>
     imap(
-      \(.x, .y) dplyr::mutate(
-        .x,
-        type = dplyr::if_else(.y == 1L, "open", "close")
-      )
+      \(.x, .y) {
+        dplyr::mutate(
+          .x,
+          type = dplyr::if_else(.y == 1L, "open", "close")
+        )
+      }
     ) |>
     dplyr::bind_rows() |>
     dplyr::filter(!is.na(.data$start)) |>
