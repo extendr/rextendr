@@ -28,6 +28,8 @@
 * Added `read_cargo_metadata()` to retrieve Cargo metadata for packages and
   workspaces. (#389)
 * `rustup_sitrep()` now checks if a default toolchain has been set. <https://github.com/extendr/rextendr/pull/416>
+* Minimum R version is set to `4.1`
+* `{tibble}` is no longer a dependency
 
 # rextend 0.3.1
 
