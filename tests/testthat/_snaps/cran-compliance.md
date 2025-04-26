@@ -14,17 +14,15 @@
     Code
       package_versions
     Output
-      # A tibble: 10 x 2
-         crate          version
-         <chr>          <chr>  
-       1 build-print    *.*.*
-       2 extendr-api    *.*.*
-       3 extendr-ffi    *.*.*
-       4 extendr-macros *.*.*
-       5 once_cell      *.*.*
-       6 paste          *.*.*
-       7 proc-macro2    *.*.*
-       8 quote          *.*.*
-       9 syn            *.*.*
-      10 unicode-ident  *.*.*
+                  crate version
+      1     build-print   *.*.*
+      2     extendr-api   *.*.*
+      3     extendr-ffi   *.*.*
+      4  extendr-macros   *.*.*
+      5       once_cell  *.*.*
+      6           paste  *.*.*
+      7     proc-macro2  *.*.*
+      8           quote  *.*.*
+      9             syn *.*.*
+      10  unicode-ident  *.*.*
 
