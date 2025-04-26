@@ -148,7 +148,7 @@ test_that("Rust metadata capturing", {
 
   expect_equal(
     extract_meta("#[extendr] pub \tfn\t      test_fn  \t() {}"),
-    tibble::tibble(
+    data.frame(
       match = "fn\t      test_fn",
       struct = NA_character_,
       enum = NA_character_,
@@ -164,7 +164,7 @@ test_that("Rust metadata capturing", {
       "#[extendr]",
       "pub impl  <'a, \t 'b>  X   <a', 'b> {}"
     )),
-    tibble::tibble(
+    data.frame(
       match = "impl  <'a, \t 'b>  X",
       struct = NA_character_,
       enum = NA_character_,
