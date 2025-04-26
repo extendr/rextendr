@@ -51,7 +51,6 @@ Imports:
     rlang (>= 1.0.5),
     rprojroot,
     stringi,
-    tibble,
     vctrs,
     withr
 Suggests:
