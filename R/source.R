@@ -239,8 +239,8 @@ rust_function <- function(code,
   if (vctrs::vec_is_empty(options)) {
     attr_arg <- ""
   } else {
-    attr_arg <- options %>%
-      glue::glue_data("{Name} = {RustValue}") %>%
+    attr_arg <- options |>
+      glue::glue_data("{Name} = {RustValue}") |>
       glue::glue_collapse(sep = ", ")
     attr_arg <- glue::glue("({attr_arg})")
   }
@@ -405,11 +405,11 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 #' @noRd
 gather_cargo_output <- function(json_output, level, tty_has_colors) {
   rendered_output <-
-    json_output %>%
+    json_output |>
     keep(
-      ~ .x$reason == "compiler-message" && .x$message$level == level
-    ) %>%
-    map_chr(~ .x$message$rendered)
+      \(.x) .x$reason == "compiler-message" && .x$message$level == level
+    ) |>
+    map_chr(\(.x) .x$message$rendered)
 
   if (!tty_has_colors) {
     rendered_output <- cli::ansi_strip(rendered_output)
@@ -446,13 +446,13 @@ check_cargo_output <- function(compilation_result, message_buffer, tty_has_color
         cargo_output,
         "error",
         tty_has_colors
-      ) %>%
+      ) |>
       map_chr(
         cli::format_inline,
         keep_whitespace = TRUE
-      ) %>%
+      ) |>
       # removing double new lines with single new line
-      stringi::stri_replace_all_fixed("\n\n", "\n") %>%
+      stringi::stri_replace_all_fixed("\n\n", "\n") |>
       # ensures that the leading cli style `x` is there
       rlang::set_names("x")
 
