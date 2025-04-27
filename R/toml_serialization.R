@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
+  invalid <- which(map2_lgl(names, args, \(.x, .y) !nzchar(.x) && is.atomic(.y)))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -97,13 +97,13 @@ get_toml_missing_msg <- function() {
 simplify_row <- function(row) {
   result <- map_if(
     row,
-    ~ is.list(.x) && all(!nzchar(names2(.x))),
-    ~ .x[1],
-    .else = ~.x
+    \(.x) is.list(.x) && all(!nzchar(names2(.x))),
+    \(.x) .x[1],
+    .else = identity
   )
   discard(
     result,
-    ~ is_na(.x) || is_null(unlist(.x))
+    \(.x) is_na(.x) || is_null(unlist(.x))
   )
 }
 
