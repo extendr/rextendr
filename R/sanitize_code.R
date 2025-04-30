@@ -1,8 +1,8 @@
 sanitize_rust_code <- function(lines) {
-  lines %>%
-    remove_empty_or_whitespace() %>%
-    fill_block_comments() %>%
-    remove_line_comments() %>%
+  lines |>
+    remove_empty_or_whitespace() |>
+    fill_block_comments() |>
+    remove_line_comments() |>
     remove_empty_or_whitespace()
 }
 
@@ -34,16 +34,18 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
 
   # A sorted DF having `start`, `end`, and `type`
   comment_syms <-
-    locations %>%
-    map(tibble::as_tibble) %>%
+    locations |>
+    map(as.data.frame) |>
     imap(
-      ~ dplyr::mutate(
-        .x,
-        type = dplyr::if_else(.y == 1L, "open", "close")
-      )
-    ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::filter(!is.na(.data$start)) %>%
+      \(.x, .y) {
+        dplyr::mutate(
+          .x,
+          type = dplyr::if_else(.y == 1L, "open", "close")
+        )
+      }
+    ) |>
+    dplyr::bind_rows() |>
+    dplyr::filter(!is.na(.data$start)) |>
     dplyr::arrange(.data$start)
 
   # Fast path if no comments are found at all.
@@ -98,10 +100,10 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
   # and the next delimiter starts the new block, so we include both, as well as
   # the first in the table.
   to_replace <-
-    valid_syms %>%
+    valid_syms |>
     dplyr::mutate(
       cnt = cumsum(dplyr::if_else(.data$type == "open", +1L, -1L))
-    ) %>%
+    ) |>
     dplyr::filter(
       dplyr::lag(.data$cnt) == 0 | .data$cnt == 0 | dplyr::row_number() == 1
     )
@@ -127,9 +129,9 @@ fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_l
     )
   }
   # Manual `pivot_wider`.
-  to_replace <- tibble::tibble(
+  to_replace <- data.frame(
     start_open = dplyr::filter(to_replace, .data$type == "open")[["start"]],
-    end_close = dplyr::filter(to_replace, .data$type == "close")[["end"]],
+    end_close = dplyr::filter(to_replace, .data$type == "close")[["end"]]
   )
 
   # Replaces each continuous commnet block with whitespaces
