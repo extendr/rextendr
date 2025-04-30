@@ -103,7 +103,6 @@ Basic use example:
 
 ``` r
 library(rextendr)
-#> Warning: package 'rextendr' was built under R version 4.4.3
 
 # create a Rust function
 rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
