@@ -1,4 +1,4 @@
-# rextendr (development version)
+# rextendr 0.4.0
 
 # rextendr 0.4.0
 
