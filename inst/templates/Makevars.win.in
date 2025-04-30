@@ -18,12 +18,10 @@ $(STATLIB):
 	mkdir -p $(TARGET_DIR)/libgcc_mock
 	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
 
-	if [ "$(NOT_CRAN)" != "true" ]; then \
-		if [ -f ./rust/vendor.tar.xz ]; then \
-			tar xf rust/vendor.tar.xz && \
-			mkdir -p $(CARGOTMP) && \
-			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-		fi; \
+	if [ -f ./rust/vendor.tar.xz ]; then \
+		tar xf rust/vendor.tar.xz && \
+		mkdir -p $(CARGOTMP) && \
+		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
 	fi
 
 	# Build the project using Cargo with additional flags
