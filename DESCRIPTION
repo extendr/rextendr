@@ -1,6 +1,6 @@
 Package: rextendr
 Title: Call Rust Code from R using the 'extendr' Crate
-Version: 0.3.1.9001
+Version: 0.4.0
 Authors@R:
     c(person(given = "Claus O.",
              family = "Wilke",
@@ -28,7 +28,18 @@ Authors@R:
       person(given = "Josiah",
              family = "Parry",
              role = "ctb",
-             comment = c(ORCID = "0000-0001-9910-865X")))
+             email = "josiah.parry@gmail.con",
+             comment = c(ORCID = "0000-0001-9910-865X")),
+      person(given = "Kenneth",
+             family = "Vernon",
+             role = "ctb",
+             email = "kenneth.b.vernon@gmail.com",
+             comment = c(ORCID = "0000-0003-0098-5092")),
+      person(given = "Alberson",
+             family = "Miranda",
+             role = "ctb",
+             email = "albersonmiranda@hotmail.com",
+             comment = c(ORCID = "0000-0001-9252-4175")))
 Description: Provides functions to compile and load Rust code from R, similar
     to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Also provides
     helper functions to create R packages that use Rust code. Under the hood,
