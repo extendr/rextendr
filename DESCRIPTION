@@ -72,7 +72,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.1.7),
     usethis
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
