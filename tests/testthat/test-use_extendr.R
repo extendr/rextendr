@@ -200,6 +200,7 @@ test_that("`use_extendr()` passes R CMD check", {
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
   usethis::use_mit_license()
+  usethis::use_test("dummy", FALSE)
   use_extendr()
   document()
 
@@ -210,7 +211,6 @@ test_that("`use_extendr()` passes R CMD check", {
   )
 
   # check the output
-  expect_true(
-    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-  )
+  expect_length(res$errors, 0)
+  expect_length(res$warnings, 0)
 })

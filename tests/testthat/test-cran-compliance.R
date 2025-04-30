@@ -23,6 +23,7 @@ test_that("rextendr passes CRAN checks", {
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
   usethis::use_mit_license()
+  usethis::use_test("dummy", FALSE)
   use_extendr()
   document()
   vendor_pkgs()
@@ -41,7 +42,6 @@ test_that("rextendr passes CRAN checks", {
   # "Downloading" should not be present
   expect_false(grepl("Downloading", res$install_out))
 
-  expect_true(
-    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-  )
+  expect_length(res$errors, 0)
+  expect_length(res$warnings, 0)
 })
