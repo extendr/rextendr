@@ -65,7 +65,7 @@ to_toml <- function(...,
       .format_int = .format_int,
       .format_dbl = .format_dbl
     )
-    body <- glue_collapse(body, "\n")
+    body <- paste0(body, collapse = "\n")
     if (!nzchar(body)) {
       body <- NULL
     }
@@ -73,17 +73,17 @@ to_toml <- function(...,
     # The values can be (1) header and body, (2) header only, or (3) body only.
     # In the case of (2) and (3) the other element is of length 0, so we need to
     # remove them by `c()` first, and then concatenate by "\n" if both exists
-    glue_collapse(c(header, body), "\n")
+    paste0(c(header, body), collapse = "\n")
   })
 
-  glue_collapse(tables, "\n\n")
+  paste0(tables, collapse = "\n\n")
 }
 
 make_header <- function(nm, arg) {
   # For future support of array-of-table
   # https://toml.io/en/v1.0.0-rc.3#array-of-tables
   if (nzchar(nm) && !is.data.frame(arg)) {
-    as.character(glue("[{nm}]"))
+    paste0("[", nm, "]")
   } else {
     character(0)
   }
@@ -123,7 +123,7 @@ format_toml.data.frame <- function(x,
                                    .tbl_name,
                                    .top_level = FALSE) {
   rows <- nrow(x)
-  header <- glue("[[{.tbl_name}]]")
+  header <- paste0("[[", .tbl_name, "]]")
   if (rows == 0L) {
     return(as.character(header))
   }
@@ -135,7 +135,6 @@ format_toml.data.frame <- function(x,
         if (length(item) == 0L) {
           result <- character(0)
         } else {
-
           result <- format_toml(
             as.list(item),
             ...,
@@ -203,9 +202,9 @@ format_toml_atomic <- function(x,
     "[ ]"
   } else {
     formatter <- rlang::as_function(.formatter)
-    items <- glue_collapse(formatter(x), ", ")
+    items <- paste0(formatter(x), collapse = ", ")
     if (len > 1L || !is.null(dims)) {
-      items <- glue("[ {items} ]")
+      items <- paste0("[ ", items, " ]")
     }
     # Ensure type-stability
     as.character(items)
@@ -223,9 +222,9 @@ format_toml.character <- function(x,
                                   .str_as_literal = TRUE,
                                   .top_level = FALSE) {
   if (isTRUE(.str_as_literal)) {
-    .formatter <- \(.x) glue("'{.x}'")
+    .formatter <- \(.x) paste0("'", .x, "'")
   } else {
-    .formatter <- \(.x) glue("\"{escape_dbl_quotes(.x)}\"")
+    .formatter <- \(.x) paste0("\"", escape_dbl_quotes(.x), "\"")
   }
   format_toml_atomic(
     x,
@@ -291,11 +290,11 @@ format_toml.list <- function(x, ..., .top_level = FALSE) {
     )
   }
   result <- map2(names, x, function(nm, val) {
-    glue("{nm} = {format_toml(val, ..., .top_level = FALSE)}")
+    paste0(nm, " = ", format_toml(val, ..., .top_level = FALSE))
   })
 
   if (!.top_level) {
-    result <- glue("{{ {paste0(result, collapse = \", \")} }}")
+    result <- paste("{", paste0(result, collapse = ", "), "}")
   }
   if (!is_atomic(result)) {
     result <- list_c(result)

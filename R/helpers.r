@@ -29,7 +29,7 @@ get_cargo_envvars <- function() {
     path_envvar <- Sys.getenv("PATH", unset = "") # nolint: object_usage_linter
     cargo_path <- path.expand("~/.cargo/bin") # nolint: object_usage_linter
     # "current" means appending or overwriting the envvars in addition to the current ones.
-    cargo_envvars <- c("current", PATH = glue("{path_envvar}:{cargo_path}"))
+    cargo_envvars <- c("current", PATH = paste(path_envvar, cargo_path, sep = ":"))
   }
   cargo_envvars
 }

@@ -29,6 +29,9 @@
 #' }
 #' @export
 rust_eval <- function(code, env = parent.frame(), ...) {
+  check_character(code, call = rlang::caller_call(), class = "rextendr_error")
+  check_environment(env, call = rlang::caller_call(), class = "rextendr_error")
+
   rust_eval_deferred(code = code, env = env, ...)()
 }
 
@@ -45,7 +48,7 @@ rust_eval <- function(code, env = parent.frame(), ...) {
 #' @noRd
 rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   # make sure code is given as a single character string
-  code <- glue_collapse(code, sep = "\n")
+  code <- paste0(code, collapse = "\n")
 
   # Snippet hash is constructed from the Rust source code and
   # a unique identifier of the compiled dll.
@@ -57,17 +60,14 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   snippet_hash <- rlang::hash(list(the$count, code)) # nolint: object_usage_linter
 
   # The unique hash is then used to generate unique function names
-  fn_name <- glue("rextendr_rust_eval_fun_{snippet_hash}")
+  fn_name <- paste0("rextendr_rust_eval_fun_", snippet_hash)
 
   # wrap code into Rust function
-  code_wrapped <- glue(r"(
-fn {fn_name}() -> Result<Robj> {{
-  let x = {{
-    {code}
-  }};
-  Ok(x.into())
-}}
-)")
+  code_wrapped <- sprintf(
+    "fn %s() -> Result<Robj> {\n  let x = {\n    %s\n  };\n  Ok(x.into())\n}",
+    fn_name,
+    code
+  )
 
   # Attempt to figure out whether the Rust code returns a result or not,
   # and make the result invisible or not accordingly. This regex approach

@@ -28,6 +28,11 @@
 #' @seealso [rextendr::document()]
 #' @export
 register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
+  check_string(path, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(quiet, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(force, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(compile, allow_na = TRUE, call = rlang::caller_call(), class = "rextendr_error")
+
   local_quiet_cli(quiet)
 
   rextendr_setup(path = path)
@@ -130,7 +135,7 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 #' @noRd
 make_wrappers <- function(module_name, package_name, outfile,
                           path = ".", use_symbols = FALSE, quiet = FALSE) {
-  wrapper_function <- glue("wrap__make_{module_name}_wrappers")
+  wrapper_function <- paste0("wrap__make_", module_name, "_wrappers")
   x <- .Call(
     wrapper_function,
     use_symbols = use_symbols,

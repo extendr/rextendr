@@ -42,8 +42,8 @@ clean <- function(path = ".", echo = TRUE) {
 
   args <- c(
     "clean",
-    glue::glue("--manifest-path={manifest_path}"),
-    glue::glue("--target-dir={target_dir}"),
+    paste0("--manifest-path=", manifest_path),
+    paste0("--target-dir=", target_dir),
     if (tty_has_colors()) {
       "--color=always"
     } else {

@@ -16,8 +16,6 @@ eng_extendrsrc <- function(options) {
   eng_impl(options, rust_source)
 }
 
-
-
 eng_impl <- function(options, extendr_engine) {
   if (!requireNamespace("knitr", quietly = TRUE)) {
     cli::cli_abort(
@@ -36,8 +34,8 @@ eng_impl <- function(options, extendr_engine) {
     code <- options$code
   }
 
-  code <- glue_collapse(code, sep = "\n") # code to compile
-  code_out <- glue_collapse(options$code, sep = "\n") # code to output to html
+  code <- paste0(code, collapse = "\n") # code to compile
+  code_out <- paste0(options$code, collapse = "\n") # code to output to html
 
   # engine.opts is a list of arguments to be passed to rust_eval, e.g.
   # engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))
