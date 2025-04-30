@@ -212,17 +212,13 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
-      # is unzipped and used for offline compilation.
+      # vendor.tar.xz, if present, is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+      	if [ -f ./rust/vendor.tar.xz ]; then \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	export CARGO_HOME=$(CARGOTMP) && \
@@ -277,12 +273,10 @@
       	mkdir -p $(TARGET_DIR)/libgcc_mock
       	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+      	if [ -f ./rust/vendor.tar.xz ]; then \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	# Build the project using Cargo with additional flags
@@ -438,17 +432,13 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
-      # is unzipped and used for offline compilation.
+      # vendor.tar.xz, if present, is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+      	if [ -f ./rust/vendor.tar.xz ]; then \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	export CARGO_HOME=$(CARGOTMP) && \
