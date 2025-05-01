@@ -262,7 +262,7 @@
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       
       all: $(SHLIB) rust_clean
-      	rm -f $(CURDIR)/Makevars
+      	rm -f $(CURDIR)/Makevars.win
       
       .PHONY: $(STATLIB)
       
