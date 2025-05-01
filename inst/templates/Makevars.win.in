@@ -6,6 +6,7 @@ STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
 
 all: $(SHLIB) rust_clean
+	rm -f $(CURDIR)/Makevars
 
 .PHONY: $(STATLIB)
 
@@ -36,4 +37,4 @@ rust_clean: $(SHLIB)
 	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
