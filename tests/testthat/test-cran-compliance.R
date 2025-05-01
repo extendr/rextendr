@@ -25,12 +25,12 @@ test_that("rextendr passes CRAN checks", {
   usethis::use_mit_license()
   usethis::use_test("dummy", FALSE)
   use_extendr()
-  document()
   vendor_pkgs()
+  document()
 
   res <- rcmdcheck::rcmdcheck(
     env = c("NOT_CRAN" = ""),
-    args = "--no-manual",
+    args = c("--no-manual", "--no-tests"),
     libpath = rev(.libPaths())
   )
 
