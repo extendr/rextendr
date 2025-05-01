@@ -2,9 +2,12 @@
 % Please edit documentation in R/use_vscode.R
 \name{use_vscode}
 \alias{use_vscode}
+\alias{use_positron}
 \title{Set up VS Code configuration for a rextendr project}
 \usage{
 use_vscode(quiet = FALSE, overwrite = FALSE)
+
+use_positron(quiet = FALSE, overwrite = FALSE)
 }
 \arguments{
 \item{quiet}{If \code{TRUE}, suppress messages.}

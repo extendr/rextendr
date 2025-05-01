@@ -51,3 +51,7 @@ use_vscode <- function(quiet = FALSE, overwrite = FALSE) {
 
   invisible(TRUE)
 }
+
+#' @rdname use_vscode
+#' @export
+use_positron <- use_vscode
