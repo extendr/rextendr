@@ -98,12 +98,12 @@
       # Add {user}/.cargo/bin to path before checking
       new_path <- paste0(
         Sys.getenv("PATH"),
-        ":",
-        paste0(Sys.getenv("HOME"), "/.cargo/bin")
+        .Platform$path.sep,
+        paste0(path.expand("~"), "/.cargo/bin")
       )
       
       # set the path with the new path
-      Sys.setenv("PATH" = new_path)
+      Sys.setenv(PATH = new_path)
       
       # check for rustc installation
       rustc_version <- tryCatch(
@@ -222,8 +222,6 @@
       		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
-      	export CARGO_HOME=$(CARGOTMP) && \
-      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
@@ -282,7 +280,6 @@
       	fi
       
       	# Build the project using Cargo with additional flags
-      	export CARGO_HOME=$(CARGOTMP) && \
       	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
       
@@ -444,8 +441,6 @@
       		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
-      	export CARGO_HOME=$(CARGOTMP) && \
-      	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
