@@ -25,6 +25,7 @@ reference:
   - cran
   - vendor_pkgs
   - use_msrv
+  - use_vscode
 
 - title: Various utility functions
   contents:

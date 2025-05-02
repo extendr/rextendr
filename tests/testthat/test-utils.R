@@ -32,3 +32,31 @@ test_that("`replace_na()` replaces with the correct value", {
   x[2] <- NA_integer_
   expect_identical(replace_na(x, -99L), c(1L, -99L, 3L, 4L, 5L))
 })
+
+test_that("is_vscode() returns FALSE when VSCode environment variables are not set", {
+  withr::with_envvar(
+    c(
+      VSCODE_PID = "",
+      VSCODE_CWD = "",
+      VSCODE_IPC_HOOK_CLI = "",
+      TERM_PROGRAM = ""
+    ),
+    {
+      expect_false(is_vscode())
+    }
+  )
+})
+
+test_that("is_vscode() returns TRUE when VSCode environment variables are set", {
+  withr::with_envvar(
+    c(
+      VSCODE_PID = "",
+      VSCODE_CWD = "",
+      VSCODE_IPC_HOOK_CLI = "",
+      TERM_PROGRAM = "vscode"
+    ),
+    {
+      expect_true(is_vscode())
+    }
+  )
+})
