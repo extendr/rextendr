@@ -98,7 +98,7 @@
       # Add {user}/.cargo/bin to path before checking
       new_path <- paste0(
         Sys.getenv("PATH"),
-        ":",
+        .Platform$path.sep,
         paste0(Sys.getenv("HOME"), "/.cargo/bin")
       )
       
@@ -280,7 +280,7 @@
       	fi
       
       	# Build the project using Cargo with additional flags
-      	export LIBRARY_PATH="$(LIBRARY_PATH):$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+      	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
       
       	# Always clean up CARGOTMP
