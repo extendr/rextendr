@@ -39,17 +39,16 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   cargo_lock_fp <- file.path(src_dir, "Cargo.lock")
 
   if (!file.exists(cargo_lock_fp)) {
-    withr::with_dir(src_dir, {
-      update_res <- processx::run(
-        "cargo",
-        c(
-          "generate-lockfile",
-          "--manifest-path",
-          file.path(src_dir, "Cargo.toml")
-        ),
-        stderr_line_callback = stderr_line_callback
-      )
-    })
+    update_res <- processx::run(
+      wd = src_dir,
+      "cargo",
+      c(
+        "generate-lockfile",
+        "--manifest-path",
+        file.path(src_dir, "Cargo.toml")
+      ),
+      stderr_line_callback = stderr_line_callback
+    )
 
     if (update_res[["status"]] != 0) {
       cli::cli_abort(
@@ -60,18 +59,17 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   }
 
   # vendor crates
-  withr::with_dir(src_dir, {
-    vendor_res <- processx::run(
-      "cargo",
-      c(
-        "vendor",
-        "--locked",
-        "--manifest-path",
-        file.path(src_dir, "Cargo.toml")
-      ),
-      stderr_line_callback = stderr_line_callback
-    )
-  })
+  vendor_res <- processx::run(
+    wd = src_dir,
+    "cargo",
+    c(
+      "vendor",
+      "--locked",
+      "--manifest-path",
+      file.path(src_dir, "Cargo.toml")
+    ),
+    stderr_line_callback = stderr_line_callback
+  )
 
   if (vendor_res[["status"]] != 0) {
     cli::cli_abort(
@@ -103,13 +101,12 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   cli::cli_alert_info("Writing {.file src/rust/vendor-config.toml}")
 
   # compress to vendor.tar.xz
-  compress_res <- withr::with_dir(src_dir, {
-    processx::run(
+  compress_res <- processx::run(
+      wd = src_dir,
       "tar", c(
         "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor"
       )
     )
-  })
 
   if (compress_res[["status"]] != 0) {
     cli::cli_abort(
