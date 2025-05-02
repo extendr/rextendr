@@ -61,7 +61,7 @@ new_path <- paste0(
 )
 
 # set the path with the new path
-Sys.setenv("PATH" = new_path)
+Sys.setenv(PATH = new_path)
 
 # check for rustc installation
 rustc_version <- tryCatch(
