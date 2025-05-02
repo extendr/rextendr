@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.4.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@ packages with Rust code using extendr:</p>
 <ul>
 <li>
 <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code>: create the scaffolding to use
-extendr, similar to <code><a href="https://usethis.r-lib.org/reference/use_cpp11.html" class="external-link">usethis::use_cpp11()</a></code>.</li>
+extendr, similar to <code><a href="https://rdrr.io/pkg/usethis/man/use_cpp11.html" class="external-link">usethis::use_cpp11()</a></code>.</li>
 <li>
 <code><a href="../reference/document.html">rextendr::document()</a></code>: compile Rust code and generate
 package documentation, similar to
@@ -91,10 +91,10 @@ package developers use the functions provided by devtools.</p>
 <p>Creating an R package with extendr is very easy with the rextendr
 package.</p>
 <p>First, create an empty R package. You can do this with
-<code><a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">usethis::create_package()</a></code>. Let’s pick
+<code><a href="https://rdrr.io/pkg/usethis/man/create_package.html" class="external-link">usethis::create_package()</a></code>. Let’s pick
 <code>myextendr</code> as the package name.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">create_package</a></span><span class="op">(</span><span class="st">"path/to/myextendr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/usethis/man/create_package.html" class="external-link">create_package</a></span><span class="op">(</span><span class="st">"path/to/myextendr"</span><span class="op">)</span></span></code></pre></div>
 <p>Then, execute <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code> inside the package
 directory to create the scaffolding to use extendr.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -112,7 +112,7 @@ directory to create the scaffolding to use extendr.</p>
 <span><span class="co">#&gt; • Please update the system requirement in DESCRIPTION file.</span></span>
 <span><span class="co">#&gt; • Please run `rextendr::document()` for changes to take effect.</span></span></code></pre></div>
 <p>For developers who use RStudio, we also provide a project template
-that will call <code><a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">usethis::create_package()</a></code> and
+that will call <code><a href="https://rdrr.io/pkg/usethis/man/create_package.html" class="external-link">usethis::create_package()</a></code> and
 <code><a href="../reference/use_extendr.html">rextendr::use_extendr()</a></code> for you. This is done using
 RStudio’s <strong>Create Project</strong> command, which you can find on
 the global toolbar or in the File menu. Choose “New Directory” then
