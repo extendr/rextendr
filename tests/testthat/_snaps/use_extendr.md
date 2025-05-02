@@ -99,7 +99,7 @@
       new_path <- paste0(
         Sys.getenv("PATH"),
         .Platform$path.sep,
-        paste0(Sys.getenv("HOME"), "/.cargo/bin")
+        paste0(path.expand("~"), "/.cargo/bin")
       )
       
       # set the path with the new path
