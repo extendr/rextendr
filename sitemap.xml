@@ -1,87 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/CODE-OF-CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/package.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmarkdown.html</loc>
-  </url>
-  <url>
-    <loc>/articles/setting_up_rust.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/principles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clean.html</loc>
-  </url>
-  <url>
-    <loc>/reference/document.html</loc>
-  </url>
-  <url>
-    <loc>/reference/eng_extendr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/inf_dev_extendr_used.html</loc>
-  </url>
-  <url>
-    <loc>/reference/local_quiet_cli.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_module_macro.html</loc>
-  </url>
-  <url>
-    <loc>/reference/register_extendr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rextendr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rust_eval.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rust_sitrep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rust_source.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_toml.html</loc>
-  </url>
-  <url>
-    <loc>/reference/use_extendr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_license_note.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://extendr.github.io/rextendr/404.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/CODE-OF-CONDUCT.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/CONTRIBUTING.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/LICENSE-text.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/LICENSE.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/articles/index.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/articles/package.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/articles/rmarkdown.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/articles/setting_up_rust.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/authors.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/index.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/news/index.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/principles.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/clean.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/cran.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/document.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/eng_extendr.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/index.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/inf_dev_extendr_used.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/local_quiet_cli.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/make_module_macro.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/read_cargo_metadata.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/register_extendr.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/rextendr.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/rust_eval.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/rust_sitrep.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/rust_source.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/to_toml.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/use_crate.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/use_extendr.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/use_msrv.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/vendor_pkgs.html</loc></url>
+<url><loc>https://extendr.github.io/rextendr/reference/write_license_note.html</loc></url>
 </urlset>
+
