@@ -17,7 +17,7 @@ get_cargo_envvars <- function() {
 
       cargo_envvars <- c("current",
         CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "x86_64-w64-mingw32.static.posix-gcc.exe",
-        LIBRARY_PATH = paste0(libgcc_path, ";", Sys.getenv("LIBRARY_PATH"))
+        LIBRARY_PATH = paste0(libgcc_path, ":", Sys.getenv("LIBRARY_PATH"))
       )
     } else {
       cargo_envvars <- NULL
