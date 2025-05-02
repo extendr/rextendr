@@ -102,11 +102,9 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
 
   # compress to vendor.tar.xz
   compress_res <- processx::run(
-      wd = src_dir,
-      "tar", c(
-        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor"
-      )
-    )
+    wd = src_dir,
+    "tar", c("-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor")
+  )
 
   if (compress_res[["status"]] != 0) {
     cli::cli_abort(
