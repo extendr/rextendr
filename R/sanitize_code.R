@@ -23,7 +23,7 @@ remove_line_comments <- function(lns) {
 #   comments.
 # 4. We fill in space between remaining delimiters with spaces (simplest way).
 fill_block_comments <- function(lns, fill_with = " ") { # nolint: object_usage_linter
-  lns <- glue_collapse(lns, sep = "\n")
+  lns <- paste0(lns, collapse = "\n")
 
   # Fast path if character input is empty
   if (length(lns) == 0L || !nzchar(lns)) {
