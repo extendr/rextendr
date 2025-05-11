@@ -93,3 +93,11 @@ is_vscode <- function() {
   }
   FALSE
 }
+
+is_positron <- function() {
+  e <- Sys.getenv(c("POSITRON", "POSITRON_LONG_VERSION", "POSITRON_MODE", "POSITRON_VERSION"))
+  if (nzchar(e["POSITRON"]) || nzchar(e["POSITRON_LONG_VERSION"]) || nzchar(e["POSITRON_MODE"]) || nzchar(e["POSITRON_VERSION"])) { # nolint
+    return(TRUE)
+  }
+  FALSE
+}
