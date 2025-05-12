@@ -1,5 +1,8 @@
 test_that("use_vscode creates .vscode and writes settings.json", {
-  withr::local_dir(withr::local_tempdir())
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  withr::local_options(usethis.quiet = FALSE)
 
   use_vscode(quiet = TRUE, overwrite = TRUE)
 
@@ -12,7 +15,10 @@ test_that("use_vscode creates .vscode and writes settings.json", {
 })
 
 test_that("use_vscode is idempotent and does not duplicate entries", {
-  withr::local_dir(withr::local_tempdir())
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  withr::local_options(usethis.quiet = FALSE)
 
   use_vscode(quiet = TRUE, overwrite = TRUE)
   use_vscode(quiet = TRUE, overwrite = FALSE)
@@ -22,8 +28,10 @@ test_that("use_vscode is idempotent and does not duplicate entries", {
 })
 
 test_that("overwrite = TRUE replaces existing settings.json", {
-  td <- withr::local_tempdir()
-  withr::local_dir(td)
+  skip_if_not_installed("usethis")
+
+  path <- local_package("testpkg")
+  withr::local_options(usethis.quiet = FALSE)
 
   use_vscode(quiet = TRUE, overwrite = TRUE)
   # corrupt the file
