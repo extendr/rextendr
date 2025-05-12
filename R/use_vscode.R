@@ -6,7 +6,7 @@
 #'
 #' @param quiet If `TRUE`, suppress messages.
 #' @param overwrite If `TRUE`, overwrite existing files.
-#' @details Rust-Analyzer VSCode extension looks for a cargo.toml file in the
+#' @details Rust-Analyzer VSCode extension looks for a `Cargo.toml` file in the
 #'   workspace root by default. This function creates a `.vscode` folder and
 #'   populates it with a `settings.json` file that sets the workspace root to
 #'   the `src` directory of the package. This allows you to open the package
