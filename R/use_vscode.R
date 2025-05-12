@@ -1,4 +1,4 @@
-#' Set up VS Code configuration for a rextendr project
+#' Set up VS Code configuration for an rextendr project
 #'
 #' @description This creates a `.vscode` folder (if needed) and populates it with a
 #' `settings.json` template. If already exists, it will be updated to include
