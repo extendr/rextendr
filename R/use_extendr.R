@@ -210,7 +210,7 @@ use_extendr <- function(
   )
 
   # create settings.json file
-  if (is_vscode()) use_vscode()
+  if (is_vscode() || is_positron()) use_vscode()
 
   # configure needs to be made executable
   # ignore for Windows
