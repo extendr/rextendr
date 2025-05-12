@@ -13,7 +13,8 @@ badge](https://extendr.r-universe.dev/badges/rextendr)](https://extendr.r-univer
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R build
 status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
-[![codecov](https://codecov.io/gh/extendr/rextendr/branch/main/graph/badge.svg?token=5H6ID0LAO7)](https://app.codecov.io/gh/extendr/rextendr)
+[![Codecov test
+coverage](https://codecov.io/gh/extendr/rextendr/graph/badge.svg)](https://app.codecov.io/gh/extendr/rextendr)
 <!-- badges: end -->
 
 ## Installation
@@ -34,7 +35,7 @@ You can also install `{rextendr}` from
 [r-universe](https://extendr.r-universe.dev/rextendr):
 
 ``` r
-install.packages('rextendr', repos = c('https://extendr.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages("rextendr", repos = c("https://extendr.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Latest development version can be installed from GitHub:
@@ -125,8 +126,8 @@ rust_function(
           Either::Right(x) => Either::Right(x.iter().sum()),
       }
   }",
-  use_dev_extendr = TRUE,                        # Use development version of extendr from GitHub
-  features = "either",                           # Enable support for Either crate
+  use_dev_extendr = TRUE, # Use development version of extendr from GitHub
+  features = "either", # Enable support for Either crate
 )
 
 x <- 1:5
