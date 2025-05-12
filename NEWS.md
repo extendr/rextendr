@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+# rextendr 0.4.0
+
 * Adds [WebR](https://docs.r-wasm.org/webr/latest/) support out of the box for all extendr packages.
   * Note that not all Rust crates are wasm compatible. This change only enables the package to build in the `wasm32-unknown-emscripten` target. It does not guarantee all dependencies will compile.
 * Addresses new CRAN check in R 4.5+ adding warning for `_abort` usage

@@ -200,17 +200,18 @@ test_that("`use_extendr()` passes R CMD check", {
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
   usethis::use_mit_license()
+  usethis::use_test("dummy", FALSE)
   use_extendr()
+  vendor_pkgs()
   document()
 
   # store results
   res <- rcmdcheck::rcmdcheck(
-    args = "--no-manual",
+    args = c("--no-manual", "--no-tests"),
     libpath = rev(.libPaths())
   )
 
   # check the output
-  expect_true(
-    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-  )
+  expect_length(res$errors, 0)
+  expect_length(res$warnings, 0)
 })
