@@ -3,7 +3,7 @@
 \name{use_vscode}
 \alias{use_vscode}
 \alias{use_positron}
-\title{Set up VS Code configuration for a rextendr project}
+\title{Set up VS Code configuration for an rextendr project}
 \usage{
 use_vscode(quiet = FALSE, overwrite = FALSE)
 
@@ -23,7 +23,7 @@ This creates a \code{.vscode} folder (if needed) and populates it with a
 the \code{rust-analyzer.linkedProjects} setting.
 }
 \details{
-Rust-Analyzer VSCode extension looks for a cargo.toml file in the
+Rust-Analyzer VSCode extension looks for a \code{Cargo.toml} file in the
 workspace root by default. This function creates a \code{.vscode} folder and
 populates it with a \code{settings.json} file that sets the workspace root to
 the \code{src} directory of the package. This allows you to open the package
