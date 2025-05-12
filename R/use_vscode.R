@@ -18,20 +18,55 @@ use_vscode <- function(quiet = FALSE, overwrite = FALSE) {
     dir.create(".vscode")
   }
 
+  usethis::use_build_ignore(file.path(".vscode"))
+
   settings_path <- file.path(".vscode", "settings.json")
-  proj_entry <- "${workspaceFolder}/src/rust/Cargo.toml"
+  rust_analyzer_path <- "${workspaceFolder}/src/rust/Cargo.toml"
+  files_associations <- list(
+    "Makevars.in" = "makefile",
+    "Makevars.win" = "makefile",
+    "configure" = "shellscript",
+    "configure.win" = "shellscript",
+    "cleanup" = "shellscript",
+    "cleanup.win" = "shellscript"
+  )
 
   if (file.exists(settings_path) && !overwrite) {
     if (!quiet) message("Updating existing .vscode/settings.json")
-    settings <- jsonlite::read_json(settings_path)
 
+    # settings.json accepts trailing commas before braces and brackets and {jsonlite} doesn't dig that
+    tryCatch({
+      settings <- jsonlite::read_json(settings_path)
+    }, error = function(e) {
+      if (grepl("parse error", e$message)) {
+        stop(
+          "Could not parse .vscode/settings.json. Do you have a trailing comma before braces or brackets?\n",
+          "Original error: : ", e$message
+        )
+      } else {
+        stop(e$message)
+      }
+    })
+
+    # checking and updating cargo.toml path for Rust-Analyzer
     if (!"rust-analyzer.linkedProjects" %in% names(settings)) {
-      settings[["rust-analyzer.linkedProjects"]] <- list(proj_entry)
-    } else if (!proj_entry %in% settings[["rust-analyzer.linkedProjects"]]) {
+      settings[["rust-analyzer.linkedProjects"]] <- list(rust_analyzer_path)
+    } else if (!rust_analyzer_path %in% settings[["rust-analyzer.linkedProjects"]]) {
       settings[["rust-analyzer.linkedProjects"]] <- c(
         settings[["rust-analyzer.linkedProjects"]],
-        proj_entry
+        rust_analyzer_path
       )
+    }
+
+    # checking and updating files associations
+    if (!"files.associations" %in% names(settings)) {
+      settings[["files.associations"]] <- files_associations
+    } else {
+      current_assoc <- settings[["files.associations"]]
+      for (name in names(files_associations)) {
+        current_assoc[[name]] <- files_associations[[name]]
+      }
+      settings[["files.associations"]] <- current_assoc
     }
 
     jsonlite::write_json(
