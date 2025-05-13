@@ -22,7 +22,7 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
   provided_values <- seq_len(5)
   deferred_handles <- map(
     provided_values,
-    \(.x) rust_eval_deferred(glue::glue("{.x}i32"))
+    \(.x) rust_eval_deferred(paste0(.x, "i32"))
   )
 
   obtained_values <- map_int(deferred_handles, rlang::exec)

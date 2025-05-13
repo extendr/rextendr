@@ -10,13 +10,17 @@
 #' @return No return value, called for side effects.
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
+  check_string(pkg, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(quiet, call = rlang::caller_call(), class = "rextendr_error")
+  check_character(roclets, allow_null = TRUE, call = rlang::caller_call(), class = "rextendr_error")
+
   withr::local_envvar(devtools::r_env_vars())
 
   register_extendr(path = pkg, quiet = quiet)
 
   rlang::check_installed("devtools")
   devtools::document(pkg = pkg, roclets = roclets, quiet = quiet)
-  if (!isTRUE(quiet)) {
+  if (!quiet) {
     check_namespace_file(pkg)
   }
 }
@@ -26,7 +30,7 @@ check_if_roxygen_used <- function(namespace_content) {
 }
 
 check_if_dyn_lib_used <- function(namespace_content, pkg_name) {
-  expected_pattern <- glue::glue("useDynLib\\({pkg_name},\\s*\\.registration = TRUE\\)")
+  expected_pattern <- paste0("useDynLib\\(", pkg_name, ",\\s*\\.registration = TRUE\\)")
 
   any(stringi::stri_detect_regex(namespace_content, expected_pattern))
 }
@@ -50,7 +54,7 @@ check_namespace_file <- function(path = ".") {
       )
     )
 
-    use_dyn_lib_ref <- glue::glue("useDynLib({package_name}, .registration = TRUE)") # nolint: object_usage_linter.
+    use_dyn_lib_ref <- paste0("useDynLib(", package_name, ", .registration = TRUE)") # nolint: object_usage_linter.
 
     cli::cli_warn(
       c(
