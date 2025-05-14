@@ -1,5 +1,8 @@
 # rextendr (development version)
 
+* Added `use_vscode()` and its alias `use_positron()` to create `.vscode/settings.json`, enhancing the `rextendr` experience in VSCode/Positron.
+  Additionally, `use_extendr()` now automatically calls `use_vscode()` when VSCode or Positron is detected as the IDE (#441).
+
 # rextendr 0.4.0
 
 * Adds [WebR](https://docs.r-wasm.org/webr/latest/) support out of the box for all extendr packages.

@@ -209,6 +209,9 @@ use_extendr <- function(
     data = list(lib_name = lib_name)
   )
 
+  # create settings.json file
+  if (is_vscode() || is_positron()) use_vscode()
+
   # configure needs to be made executable
   # ignore for Windows
   if (.Platform[["OS.type"]] == "unix") {
