@@ -56,12 +56,12 @@ no_rustc_msg <- c(
 # Add {user}/.cargo/bin to path before checking
 new_path <- paste0(
   Sys.getenv("PATH"),
-  ":",
-  paste0(Sys.getenv("HOME"), "/.cargo/bin")
+  .Platform$path.sep,
+  paste0(path.expand("~"), "/.cargo/bin")
 )
 
 # set the path with the new path
-Sys.setenv("PATH" = new_path)
+Sys.setenv(PATH = new_path)
 
 # check for rustc installation
 rustc_version <- tryCatch(
