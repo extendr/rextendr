@@ -130,32 +130,7 @@ test_that("Required target is not available", {
   expect_snapshot(rust_sitrep())
 })
 
-test_that("Detects host when default toolchain is not set on OSX", {
-  local_mocked_bindings(is_osx = function() TRUE)
-
-  local_mocked_bindings(try_exec_cmd = function(cmd, args) {
-    if (cmd == "cargo") {
-      "cargo 1.0.0 (0000000 0000-00-00)"
-    } else if (cmd == "rustup" & all(args %in% "--version")) {
-      "rustup 1.0.0 (0000000 0000-00-00)"
-    } else if (cmd == "rustc") {
-      "host: aarch64-apple-darwin"
-    } else if (all(args %in% "--version")) {
-      "rustup 1.0.0 (0000000 0000-00-00)"
-      NA_character_
-    } else if (all(args %in% c("toolchain", "list"))) {
-      "stable-aarch64-apple-darwin"
-    } else if (all(args %in% c("target", "list", "--installed"))) {
-      NA_character_
-    } else {
-      NA_character_
-    }
-  })
-  expect_snapshot(rust_sitrep())
-})
-
-test_that("Detects host when default toolchain is not set on non-OSX", {
-  local_mocked_bindings(is_osx = function() FALSE)
+test_that("Detects host when default toolchain is not set", {
 
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
     if (cmd == "cargo") {
