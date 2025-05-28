@@ -115,15 +115,9 @@ rustup_toolchain_target <- function() {
   # ----------------
   #
   # stable-x86_64-pc-windows-msvc (default)
-  host <- if (is_osx() && is.na(try_exec_cmd("rustup", "show"))) {
-    output <- try_exec_cmd("rustc", c("--version", "--verbose"))
-    host_index <- grep("host:", output)
-    gsub("host: ", "", output[host_index])
-  } else {
-    try_exec_cmd("rustup", "show") |>
-      stringi::stri_sub(from = 15L) |>
-      vctrs::vec_slice(1L)
-  }
+  host <- try_exec_cmd("rustup", "show") |>
+    stringi::stri_sub(from = 15L) |>
+    vctrs::vec_slice(1L)
 
   # > rustup toolchain list
   # stable-x86_64-pc-windows-msvc
