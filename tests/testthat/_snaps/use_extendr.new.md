@@ -192,7 +192,7 @@
     Code
       cat_file("src", "Makevars.in")
     Output
-      TARGET_DIR = ./rust/target
+      TARGET_DIR = src/rust/target
       LIBDIR = $(TARGET_DIR)/@LIBDIR@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
@@ -234,6 +234,8 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -f $(CURDIR)/Makevars
+      	rm -f $(CURDIR)/Makevars.win
 
 ---
 
@@ -256,7 +258,7 @@
     Output
       TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
       
-      TARGET_DIR = ./rust/target
+      TARGET_DIR = src/rust/target
       LIBDIR = $(TARGET_DIR)/$(TARGET)/@LIBDIR@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
@@ -293,6 +295,8 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -f $(CURDIR)/Makevars
+      	rm -f $(CURDIR)/Makevars.win
 
 ---
 
@@ -414,7 +418,7 @@
     Code
       cat_file("src", "Makevars.in")
     Output
-      TARGET_DIR = ./rust/target
+      TARGET_DIR = src/rust/target
       LIBDIR = $(TARGET_DIR)/@LIBDIR@
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
@@ -456,4 +460,6 @@
       
       clean:
       	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -f $(CURDIR)/Makevars
+      	rm -f $(CURDIR)/Makevars.win
 
