@@ -4,7 +4,6 @@ STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 
 all: $(SHLIB) rust_clean
-	rm -f $(CURDIR)/Makevars
 
 .PHONY: $(STATLIB)
 

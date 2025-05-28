@@ -1,5 +1,6 @@
 test_that("vendor_pkgs() vendors dependencies", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg")
 
@@ -19,6 +20,7 @@ test_that("vendor_pkgs() vendors dependencies", {
 test_that("rextendr passes CRAN checks", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
