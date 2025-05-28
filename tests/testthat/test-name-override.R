@@ -1,5 +1,6 @@
 test_that("Multiple rust functions with the same name", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   rust_src_1 <- "
   #[extendr]

@@ -1,5 +1,6 @@
 test_that("`rust_eval()` works", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   expect_equal(rust_eval("2 + 2"), 4)
   expect_visible(rust_eval("2 + 2"))
@@ -18,6 +19,7 @@ test_that("`rust_eval()` works", {
 # Returned integer values should be identical to the input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   provided_values <- seq_len(5)
   deferred_handles <- map(
@@ -45,6 +47,7 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
 # Returned integer values should be identical to the reversed input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   provided_values <- seq_len(5)
 
