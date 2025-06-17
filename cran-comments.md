@@ -1,3 +1,7 @@
+## Remarks on the previous version
+
+`rextendr` version `0.4.0` was submitted to CRAN but failed to pass some checks due to a complex testing suite, which is designed to support development process via GitHub Actions CI. We adjusted our tests to ensure that the package is CRAN-compliant.
+
 ## revdepcheck results
 
 We checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
