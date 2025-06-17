@@ -1,6 +1,9 @@
 ## Remarks on the previous version
 
-`rextendr` version `0.4.0` was submitted to CRAN but failed to pass some checks due to a complex testing suite, which is designed to support development process via GitHub Actions CI. We adjusted our tests to ensure that the package is CRAN-compliant.
+`rextendr` version `0.4.0` was submitted to CRAN but failed to pass some checks due to a complex testing suite, which is designed to support development process via GitHub Actions CI. As a result, `rextendr` has been temporarily removed from CRAN and CRAN checks might warn about this, e.g.:
+> X-CRAN-Comment: Archived on 2025-05-16 as issues were not corrected in time.
+
+ We adjusted our tests to ensure that the package is CRAN-compliant.
 
 ## revdepcheck results
 
