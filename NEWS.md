@@ -1,4 +1,6 @@
-# rextendr (development version)
+# rextendr 0.4.1
+
+* Fix tests executed on CRAN (#449)
 
 * Added `use_vscode()` and its alias `use_positron()` to create `.vscode/settings.json`, enhancing the `rextendr` experience in VSCode/Positron.
   Additionally, `use_extendr()` now automatically calls `use_vscode()` when VSCode or Positron is detected as the IDE (#441).
