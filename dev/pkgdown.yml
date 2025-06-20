@@ -5,7 +5,7 @@ articles:
   package: package.html
   rmarkdown: rmarkdown.html
   setting_up_rust: setting_up_rust.html
-last_built: 2025-05-28T15:06Z
+last_built: 2025-06-20T01:57Z
 urls:
   reference: https://extendr.github.io/rextendr/reference
   article: https://extendr.github.io/rextendr/articles
