@@ -1,3 +1,5 @@
+# rextendr (development version)
+
 # rextendr 0.4.1
 
 * Fix tests executed on CRAN (#449)
