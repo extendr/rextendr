@@ -239,14 +239,17 @@ rust_function <- function(code,
   if (vctrs::vec_is_empty(options)) {
     attr_arg <- ""
   } else {
-    attr_arg <- options |>
-      glue::glue_data("{Name} = {RustValue}") |>
-      glue::glue_collapse(sep = ", ")
-    attr_arg <- glue::glue("({attr_arg})")
+    attr_arg <- paste(
+      options[["Name"]],
+      options[["RustValue"]],
+      sep = " = ",
+      collapse = ", "
+    )
+    attr_arg <- paste0("(", attr_arg, ")")
   }
 
   code <- c(
-    glue::glue("#[extendr{attr_arg}]"),
+    paste0("#[extendr", attr_arg, "]"),
     stringi::stri_trim(code)
   )
 
@@ -328,8 +331,8 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 
       rtools_home <- normalizePath(
         Sys.getenv(
-          glue("RTOOLS{rtools_version}_HOME"),
-          glue("C:\\rtools{rtools_version}")
+          paste0("RTOOLS", rtools_version, "_HOME"),
+          paste0("C:\\rtools", rtools_version)
         ),
         mustWork = TRUE
       )
@@ -362,13 +365,13 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
   compilation_result <- processx::run(
     command = "cargo",
     args = c(
-      glue("+{toolchain}"),
+      paste0("+", toolchain),
       "build",
       "--lib",
-      glue("--target={specific_target}"),
-      glue("--manifest-path={file.path(dir, 'Cargo.toml')}"),
-      glue("--target-dir={file.path(dir, 'target')}"),
-      glue("--profile={profile}"),
+      paste0("--target=", specific_target),
+      paste0("--manifest-path=", file.path(dir, "Cargo.toml")),
+      paste0("--target-dir=", file.path(dir, "target")),
+      paste0("--profile=", profile),
       "--message-format=json-diagnostic-rendered-ansi",
       if (tty_has_colors()) {
         "--color=always"
@@ -394,14 +397,14 @@ invoke_cargo <- function(toolchain, specific_target, dir, profile,
 #'
 #' Checks the output of cargo and filters messages according to `level`.
 #' Retrieves rendered ANSI strings and prepares them
-#' for `cli` and `glue` formatting.
+#' for `cli` formatting.
 #' @param json_output \[ JSON(n) \] JSON messages produced by cargo.
 #' @param level \[ string \] Log level.
 #' Commonly used values are `"error"` and `"warning"`.
 #' @param tty_has_colors \[ logical(1) \] Indicates if output
 #' supports ANSI sequences. If `FALSE`, ANSI sequences are stripped off.
 #' @return \[ character(n) \] Vector of strings
-#' that can be passed to `cli` or `glue` functions.
+#' that can be passed to `cli` functions.
 #' @noRd
 gather_cargo_output <- function(json_output, level, tty_has_colors) {
   rendered_output <-
