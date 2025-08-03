@@ -66,19 +66,24 @@ cfg <- if (is_debug) "debug" else "release"
 # read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
-# if windows we replace in the Makevars.win.in
-mv_fp <- ifelse(
-  is_windows,
-  "src/Makevars.win.in",
-  "src/Makevars.in"
-)
+# if windows we replace in the Makevars.win.in,
+# if webR replace in the Makevars.wasm.in
+if (is_wasm) {
+  mv_fp <- get_template("wasm", TRUE)
+} else if (is_windows) {
+  mv_fp <- get_template("win", TRUE)
+} else {
+  mv_fp <- get_template("unix", TRUE)
+}
 
 # set the output file
-mv_ofp <- ifelse(
-  is_windows,
-  "src/Makevars.win",
-  "src/Makevars"
-)
+if (is_wasm) {
+  mv_ofp <- get_template("wasm", FALSE)
+} else if (is_windows) {
+  mv_ofp <- get_template("win", FALSE)
+} else {
+  mv_ofp <- get_template("unix", FALSE)
+}
 
 # delete the existing Makevars{.win}
 if (file.exists(mv_ofp)) {
