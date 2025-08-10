@@ -120,6 +120,14 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
+    "Makevars.wasm.in",
+    save_as = file.path("src", "Makevars.wasm.in"),
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name)
+  )
+
+  use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
     quiet = quiet,
@@ -244,6 +252,8 @@ use_extendr <- function(
   usethis::use_git_ignore("src/Makevars")
   usethis::use_build_ignore("src/Makevars.win")
   usethis::use_git_ignore("src/Makevars.win")
+  usethis::use_build_ignore("src/Makevars.wasm")
+  usethis::use_git_ignore("src/Makevars.wasm")
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success(

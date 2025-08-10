@@ -68,24 +68,24 @@ is_windows <- .Platform[["OS.type"]] == "windows"
 
 # if windows we replace in the Makevars.win.in,
 # if webR replace in the Makevars.wasm.in
-if (is_wasm) {
-  mv_fp <- get_template("wasm", TRUE)
-} else if (is_windows) {
-  mv_fp <- get_template("win", TRUE)
+if (is_windows) {
+  mv_fp <- "src/Makevars.win.in"
+} else if (is_wasm) {
+  mv_fp <- "src/Makevars.wasm.in"
 } else {
-  mv_fp <- get_template("unix", TRUE)
+  mv_fp <- "src/Makevars.in"
 }
 
 # set the output file
-if (is_wasm) {
-  mv_ofp <- get_template("wasm", FALSE)
-} else if (is_windows) {
-  mv_ofp <- get_template("win", FALSE)
+if (is_windows) {
+  mv_ofp <- "src/Makevars.in"
+} else if (is_wasm) {
+  mv_ofp <- "src/Makevars.wasm"
 } else {
-  mv_ofp <- get_template("unix", FALSE)
+  mv_ofp <- "src/Makevars"
 }
 
-# delete the existing Makevars{.win}
+# delete the existing Makevars{.win/.wasm}
 if (file.exists(mv_ofp)) {
   message("Cleaning previous `", mv_ofp, "`.")
   invisible(file.remove(mv_ofp))

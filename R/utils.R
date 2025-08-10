@@ -101,20 +101,3 @@ is_positron <- function() {
   }
   FALSE
 }
-
-get_makevars <- function(platform, template) {
-  match.arg(platform, c("wasm", "win", "unix"))
-  if (!is.logical(template)) stop("`template` must be a boolean")
-
-  if (template) {
-    if (platform == "wasm") makevars <- "Makevars.wasm.in"
-    else if (platform == "win") makevars <- "Makevars.win.in"
-    else makevars <- "Makevars.in"
-  } else {
-    if (platform == "wasm") makevars <- "Makevars.wasm"
-    else if (platform == "win") makevars <- "Makevars.win"
-    else makevars <- "Makevars"
-  }
-
-  file.path("inst", "templates", makevars)
-}
