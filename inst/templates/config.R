@@ -78,7 +78,7 @@ if (is_windows) {
 
 # set the output file
 if (is_windows) {
-  mv_ofp <- "src/Makevars.in"
+  mv_ofp <- "src/Makevars.win"
 } else if (is_wasm) {
   mv_ofp <- "src/Makevars.wasm"
 } else {

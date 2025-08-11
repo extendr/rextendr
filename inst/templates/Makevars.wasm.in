@@ -30,9 +30,9 @@ $(STATLIB):
 
 	export CARGO_HOME=$(CARGOTMP) && \
 	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-  export CARGO_PROFILE_DEV_PANIC="abort" && \
-  export CARGO_PROFILE_RELEASE_PANIC="abort" && \
-  export RUSTFLAGS="$(RUSTFLAGS) -Zdefault-visibility=hidden" && \
+	export CARGO_PROFILE_DEV_PANIC="abort" && \
+	export CARGO_PROFILE_RELEASE_PANIC="abort" && \
+	export RUSTFLAGS="$(RUSTFLAGS) -Zdefault-visibility=hidden" && \
 	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo +nightly build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
 
 	# Always clean up CARGOTMP
