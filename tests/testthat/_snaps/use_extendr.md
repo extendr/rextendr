@@ -6,17 +6,20 @@
       src/rust/vendor
       src/Makevars
       src/Makevars.win
+      src/Makevars.wasm
 
 ---
 
     Code
       cat_file(".Rbuildignore")
     Output
+      ^\.vscode$
       ^src/\.cargo$
       ^src/rust/vendor$
       ^src/rust/target$
       ^src/Makevars$
       ^src/Makevars\.win$
+      ^src/Makevars\.wasm$
 
 ---
 
@@ -355,6 +358,7 @@
       > File 'src/entrypoint.c' already exists. Skip writing the file.
       > File 'src/Makevars.in' already exists. Skip writing the file.
       > File 'src/Makevars.win.in' already exists. Skip writing the file.
+      > File 'src/Makevars.wasm.in' already exists. Skip writing the file.
       > File 'src/.gitignore' already exists. Skip writing the file.
       > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
@@ -364,6 +368,7 @@
       > File 'tools/config.R' already exists. Skip writing the file.
       > File 'configure' already exists. Skip writing the file.
       > File 'configure.win' already exists. Skip writing the file.
+      Updating existing .vscode/settings.json
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
 
@@ -375,6 +380,7 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars.in'
       v Writing 'src/Makevars.win.in'
+      v Writing 'src/Makevars.wasm.in'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
@@ -384,6 +390,7 @@
       v Writing 'tools/config.R'
       v Writing 'configure'
       v Writing 'configure.win'
+      Updating existing .vscode/settings.json
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
 
