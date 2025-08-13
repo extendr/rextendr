@@ -210,7 +210,9 @@ use_extendr <- function(
   )
 
   # create settings.json file
-  if (is_vscode() || is_positron()) use_vscode()
+  if (is_vscode() || is_positron()) {
+    use_vscode()
+  }
 
   # configure needs to be made executable
   # ignore for Windows
@@ -244,8 +246,6 @@ use_extendr <- function(
   usethis::use_git_ignore("src/Makevars")
   usethis::use_build_ignore("src/Makevars.win")
   usethis::use_git_ignore("src/Makevars.win")
-  usethis::use_build_ignore("src/Makevars.wasm")
-  usethis::use_git_ignore("src/Makevars.wasm")
 
   if (!isTRUE(quiet)) {
     cli::cli_alert_success(
