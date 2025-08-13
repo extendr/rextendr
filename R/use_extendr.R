@@ -120,14 +120,6 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
-    "Makevars.wasm.in",
-    save_as = file.path("src", "Makevars.wasm.in"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
-  )
-
-  use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
     quiet = quiet,

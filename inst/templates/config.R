@@ -63,27 +63,29 @@ cfg <- if (is_debug) "debug" else "release"
 # there may be use cases later where this can be adapted or expanded
 .target <- ifelse(is_wasm, paste0("--target=", webr_target), "")
 
+# add panic exports only for WASM builds
+.panic_exports <- ifelse(
+  is_wasm,
+  "CARGO_PROFILE_DEV_PANIC=\"abort\" CARGO_PROFILE_RELEASE_PANIC=\"abort\" ",
+  ""
+)
+
 # read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
-# if windows we replace in the Makevars.win.in,
-# if webR replace in the Makevars.wasm.in
-if (is_windows) {
-  mv_fp <- "src/Makevars.win.in"
-} else if (is_wasm) {
-  mv_fp <- "src/Makevars.wasm.in"
-} else {
-  mv_fp <- "src/Makevars.in"
-}
+# if windows we replace in the Makevars.win.in
+mv_fp <- ifelse(
+  is_windows,
+  "src/Makevars.win.in",
+  "src/Makevars.in"
+)
 
 # set the output file
-if (is_windows) {
-  mv_ofp <- "src/Makevars.win"
-} else if (is_wasm) {
-  mv_ofp <- "src/Makevars.wasm"
-} else {
-  mv_ofp <- "src/Makevars"
-}
+mv_ofp <- ifelse(
+  is_windows,
+  "src/Makevars.win",
+  "src/Makevars"
+)
 
 # delete the existing Makevars{.win/.wasm}
 if (file.exists(mv_ofp)) {
@@ -99,7 +101,8 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@PROFILE@", .profile, x = _) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
-  gsub("@TARGET@", .target, x = _)
+  gsub("@TARGET@", .target, x = _) |>
+  gsub("@PANIC_EXPORTS@", .panic_exports, x = _)
 
 message("Writing `", mv_ofp, "`.")
 con <- file(mv_ofp, open = "wb")
