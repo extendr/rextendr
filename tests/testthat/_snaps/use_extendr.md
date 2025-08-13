@@ -225,7 +225,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -357,7 +357,6 @@
       > File 'src/entrypoint.c' already exists. Skip writing the file.
       > File 'src/Makevars.in' already exists. Skip writing the file.
       > File 'src/Makevars.win.in' already exists. Skip writing the file.
-      > File 'src/Makevars.wasm.in' already exists. Skip writing the file.
       > File 'src/.gitignore' already exists. Skip writing the file.
       > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
@@ -378,7 +377,6 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars.in'
       v Writing 'src/Makevars.win.in'
-      v Writing 'src/Makevars.wasm.in'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
@@ -447,7 +445,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
