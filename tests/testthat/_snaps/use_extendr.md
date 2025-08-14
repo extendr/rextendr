@@ -12,6 +12,7 @@
     Code
       cat_file(".Rbuildignore")
     Output
+      ^\.vscode$
       ^src/\.cargo$
       ^src/rust/vendor$
       ^src/rust/target$
@@ -319,6 +320,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 ---
 
@@ -405,6 +410,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 # use_rextendr_template() can overwrite existing files
 
