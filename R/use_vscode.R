@@ -13,7 +13,7 @@
 #'   directory in VSCode and have the Rust-Analyzer extension work correctly.
 #' @return `TRUE` (invisibly) if the settings file was created or updated.
 #' @export
-use_vscode <- function(quiet = FALSE, overwrite = FALSE) {
+use_vscode <- function(quiet = FALSE, overwrite = NULL) {
   if (!dir.exists(".vscode")) {
     dir.create(".vscode")
   }
@@ -31,7 +31,7 @@ use_vscode <- function(quiet = FALSE, overwrite = FALSE) {
     "cleanup.win" = "shellscript"
   )
 
-  if (file.exists(settings_path) && !overwrite) {
+  if (file.exists(settings_path) && isFALSE(overwrite)) {
     if (!quiet) message("Updating existing .vscode/settings.json")
 
     # settings.json accepts trailing commas before braces and brackets and {jsonlite} doesn't dig that

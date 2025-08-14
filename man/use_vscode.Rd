@@ -5,9 +5,9 @@
 \alias{use_positron}
 \title{Set up VS Code configuration for an rextendr project}
 \usage{
-use_vscode(quiet = FALSE, overwrite = FALSE)
+use_vscode(quiet = FALSE, overwrite = NULL)
 
-use_positron(quiet = FALSE, overwrite = FALSE)
+use_positron(quiet = FALSE, overwrite = NULL)
 }
 \arguments{
 \item{quiet}{If \code{TRUE}, suppress messages.}
