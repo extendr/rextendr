@@ -138,7 +138,7 @@ use_extendr <- function(
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
     dependencies = list(`extendr-api` = "*"),
     `profile.release` = list(
-      lto = "true",
+      lto = TRUE,
       `codegen-units` = 1
     )
   )
