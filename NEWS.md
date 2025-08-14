@@ -1,5 +1,7 @@
 # rextendr (development version)
 
+* Fixes compatibility with WebR by adding `CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"` when targeting `wasm32-unknown-emsacripten` target <https://github.com/extendr/rextendr/pull/461>
+
 # rextendr 0.4.1
 
 * Fix tests executed on CRAN (#449)
