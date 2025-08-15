@@ -40,7 +40,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rextendr-development-version">rextendr (development version)<a class="anchor" aria-label="anchor" href="#rextendr-development-version"></a></h2>
-<ul><li>Fixes compatibility with WebR by adding <code>CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"</code> when targeting <code>wasm32-unknown-emsacripten</code> target <a href="https://github.com/extendr/rextendr/pull/461" class="external-link uri">https://github.com/extendr/rextendr/pull/461</a>
+<ul><li>Sets the release profile to use <code>lto=true</code> and <code>codegen-units=1</code> to ensure compatible builds with WebR as well as reduce the overall compiled package size <a href="https://github.com/extendr/rextendr/pull/465" class="external-link uri">https://github.com/extendr/rextendr/pull/465</a>.</li>
+<li>Fixes compatibility with WebR by adding <code>CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"</code> when targeting <code>wasm32-unknown-emsacripten</code> target <a href="https://github.com/extendr/rextendr/pull/461" class="external-link uri">https://github.com/extendr/rextendr/pull/461</a>
 </li>
 </ul></div>
     <div class="section level2">
