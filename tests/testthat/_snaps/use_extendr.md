@@ -319,6 +319,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 ---
 
@@ -405,6 +409,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 # use_rextendr_template() can overwrite existing files
 

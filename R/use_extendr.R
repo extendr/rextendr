@@ -136,7 +136,11 @@ use_extendr <- function(
       `rust-version` = "1.65"
     ),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
-    dependencies = list(`extendr-api` = "*")
+    dependencies = list(`extendr-api` = "*"),
+    `profile.release` = list(
+      lto = TRUE,
+      `codegen-units` = 1
+    )
   )
 
   use_rextendr_template(
