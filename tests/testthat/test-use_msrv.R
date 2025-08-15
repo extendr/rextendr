@@ -7,7 +7,7 @@ test_that("use_msrv() modifies the MSRV in the DESCRIPTION", {
   withr::local_options(usethis.quiet = FALSE)
 
   use_extendr(path, quiet = TRUE)
-  expect_no_error(use_msrv("1.70", path))
+  expect_no_error(use_msrv("1.70", path, TRUE))
 
   d <- desc::desc("DESCRIPTION")
 
@@ -16,9 +16,9 @@ test_that("use_msrv() modifies the MSRV in the DESCRIPTION", {
     d$get_field("SystemRequirements")
   )
 
-  expect_error(use_msrv("adksfghu", path))
+  expect_error(use_msrv("adksfghu", path, TRUE))
 
-  expect_error(use_msrv("1.70", path = "../doesntexist"))
+  expect_error(use_msrv("1.70", path = "../doesntexist", TRUE))
 
   # when overwrite is FALSE and SystemRequirements is already set
   expect_message(
