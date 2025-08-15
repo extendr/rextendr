@@ -1,6 +1,6 @@
 # rextendr (development version)
 
-* Sets the release profile to use `lto=true` and `codegen-units=1` to ensure compatible builds with WebR as well as reduce the overall compiled package size. 
+* Sets the release profile to use `lto=true` and `codegen-units=1` to ensure compatible builds with WebR as well as reduce the overall compiled package size <https://github.com/extendr/rextendr/pull/466>. 
 * Fixes compatibility with WebR by adding `CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"` when targeting `wasm32-unknown-emsacripten` target <https://github.com/extendr/rextendr/pull/461>
 
 # rextendr 0.4.1
