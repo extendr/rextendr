@@ -118,6 +118,12 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
     )
   }
 
+  # clean up vendor directory
+  if (dir.exists(file.path(src_dir, "vendor"))) {
+    cli::cli_alert_info("Removing {.path src/rust/vendor} directory")
+    unlink(file.path(src_dir, "vendor"), recursive = TRUE)
+  }
+
   # return packages and versions invisibly
   invisible(res)
 }
