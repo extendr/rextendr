@@ -368,15 +368,9 @@
       > File 'tools/config.R' already exists. Skip writing the file.
       > File 'configure' already exists. Skip writing the file.
       > File 'configure.win' already exists. Skip writing the file.
-      ! Can't find a README for the current project.
-      i See `usethis::use_readme_rmd()` for help creating this file.
-      i Badge link will only be printed to screen.
-      [ ] Copy and paste the following lines into 'README':
-        <!-- badges: start -->
-        [![extendr](https://img.shields.io/badge/extendr-*-276DC2)](https://extendr.github.io/extendr/extendr_api/)
-        <!-- badges: end -->
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
+      i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 # use_extendr() can overwrite files in non-interactive sessions
 
@@ -395,15 +389,9 @@
       v Writing 'tools/config.R'
       v Writing 'configure'
       v Writing 'configure.win'
-      ! Can't find a README for the current project.
-      i See `usethis::use_readme_rmd()` for help creating this file.
-      i Badge link will only be printed to screen.
-      [ ] Copy and paste the following lines into 'README':
-        <!-- badges: start -->
-        [![extendr](https://img.shields.io/badge/extendr-*-276DC2)](https://extendr.github.io/extendr/extendr_api/)
-        <!-- badges: end -->
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
+      i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 ---
 

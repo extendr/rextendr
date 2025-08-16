@@ -259,8 +259,6 @@ use_extendr <- function(
   usethis::use_build_ignore("src/Makevars.win")
   usethis::use_git_ignore("src/Makevars.win")
 
-  use_extendr_badge()
-
   if (!isTRUE(quiet)) {
     cli::cli_alert_success(
       "Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}."
@@ -269,6 +267,10 @@ use_extendr <- function(
       c(
         "Please run {.fun rextendr::document} for changes to take effect."
       )
+    )
+    # encourage use of use_extendr__badge
+    cli::cli_alert_info(
+      "Call {.fn use_extendr_badge} to add an extendr badge to your {.file README}"
     )
   }
 
