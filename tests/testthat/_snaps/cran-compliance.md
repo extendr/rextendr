@@ -20,7 +20,7 @@
       3 extendr-macros   *.*.*
       4      once_cell  *.*.*
       5          paste  *.*.*
-      6    proc-macro2  *.*.*
+      6    proc-macro2 *.*.*
       7          quote  *.*.*
       8            syn *.*.*
       9  unicode-ident  *.*.*
