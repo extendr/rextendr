@@ -13,6 +13,7 @@ See \code{\link[=rust_source]{rust_source()}} for details.
 Useful links:
 \itemize{
   \item \url{https://extendr.github.io/rextendr/}
+  \item \url{https://github.com/extendr/rextendr}
   \item Report bugs at \url{https://github.com/extendr/rextendr/issues}
 }
 
@@ -30,7 +31,9 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Josiah Parry (\href{https://orcid.org/0000-0001-9910-865X}{ORCID}) [contributor]
+  \item Josiah Parry \email{josiah.parry@gmail.con} (\href{https://orcid.org/0000-0001-9910-865X}{ORCID}) [contributor]
+  \item Kenneth Vernon \email{kenneth.b.vernon@gmail.com} (\href{https://orcid.org/0000-0003-0098-5092}{ORCID}) [contributor]
+  \item Alberson Miranda \email{albersonmiranda@hotmail.com} (\href{https://orcid.org/0000-0001-9252-4175}{ORCID}) [contributor]
 }
 
 }

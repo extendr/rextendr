@@ -36,7 +36,7 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@master
         with:
@@ -52,6 +52,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          install-pandoc: false
+          install-quarto: false
           # increment this version number when we need to clear the cache
           cache-version: 3
           extra-packages: rcmdcheck, devtools, usethis
@@ -120,6 +122,7 @@ jobs:
 
           # check if compile = TRUE forces compile, and accordingly the wrapper generation
           rextendr::register_extendr(compile = TRUE)
+
           stopifnot(library_mtime_before < file.info(library_path)$mtime)
           stopifnot(wrappers_mtime_before < file.info(wrappers_path)$mtime)
         shell: Rscript {0}

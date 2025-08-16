@@ -7,6 +7,27 @@
     )
   }
 
+  # fetch most recent stable release version instead of setting it to "*"
+  # fall back to "*" when internet or API fails
+  extendr_api_version <- suppressWarnings(
+    rlang::try_fetch(
+      {
+        res <- jsonlite::read_json(
+          "https://crates.io/api/v1/crates/extendr-api"
+        )[[c("crate", "max_stable_version")]]
+
+        if (is.null(res)) {
+          "*"
+        } else {
+          res
+        }
+      },
+      error = function(cnd) {
+        "*"
+      }
+    )
+  )
+
   # Setting default options
   # If rextendr options are already set, do not override
   # NULL values are present for reference and may later be replaced
@@ -25,13 +46,12 @@
 
     # Version of 'extendr_api' to be used
     rextendr.extendr_deps = list(
-      `extendr-api` = "*"
+      `extendr-api` = extendr_api_version
     ),
     rextendr.extendr_dev_deps = list(
       `extendr-api` = list(git = "https://github.com/extendr/extendr")
     )
   )
-
 
   id_opts_to_set <- !(names(rextendr_opts) %in% names(options()))
 

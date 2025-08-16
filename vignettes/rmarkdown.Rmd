@@ -141,6 +141,7 @@ fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 
+#[extendr]
 struct Counter {
     n: i32,
 }
@@ -174,6 +175,7 @@ fn foo(a: &str, b: i64) {
     rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 
+#[extendr]
 struct Counter {
     n: i32,
 }

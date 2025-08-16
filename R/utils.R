@@ -77,3 +77,27 @@ replace_na <- function(data, replace = NA, ...) {
   }
   data
 }
+
+is_osx <- function() {
+  sysinf <- Sys.info()
+  if (!is.null(sysinf)) {
+    return(identical(sysinf["sysname"], c(sysname = "Darwin")))
+  }
+  grepl("^darwin", R.version$os, ignore.case = TRUE)
+}
+
+is_vscode <- function() {
+  e <- Sys.getenv(c("VSCODE_PID", "VSCODE_CWD", "VSCODE_IPC_HOOK_CLI", "TERM_PROGRAM"))
+  if (nzchar(e["VSCODE_PID"]) || nzchar(e["VSCODE_CWD"]) || nzchar(e["VSCODE_IPC_HOOK_CLI"]) || tolower(e["TERM_PROGRAM"]) == "vscode") { # nolint
+    return(TRUE)
+  }
+  FALSE
+}
+
+is_positron <- function() {
+  e <- Sys.getenv(c("POSITRON", "POSITRON_LONG_VERSION", "POSITRON_MODE", "POSITRON_VERSION"))
+  if (nzchar(e["POSITRON"]) || nzchar(e["POSITRON_LONG_VERSION"]) || nzchar(e["POSITRON_MODE"]) || nzchar(e["POSITRON_VERSION"])) { # nolint
+    return(TRUE)
+  }
+  FALSE
+}

@@ -5,12 +5,13 @@ find_exports <- function(clean_lns) {
 
   # start and end may empty
   if (rlang::is_empty(start) || rlang::is_empty(end)) {
-    return(tibble::tibble(name = character(0), type = character(0), lifetime = character(0)))
+    return(data.frame(name = character(0), type = character(0), lifetime = character(0)))
   }
 
-  map2(start, end, ~ extract_meta(clean_lns[.x:.y])) %>%
-    dplyr::bind_rows() %>%
-    dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) %>%
+  map2(start, end, \(.x, .y) extract_meta(clean_lns[.x:.y])) |>
+    discard(\(.x) is.na(.x["impl"]) & is.na(.x["fn"])) |>
+    dplyr::bind_rows() |>
+    dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) |>
     dplyr::select(dplyr::all_of(c("name", "type", "lifetime")))
 }
 
@@ -25,10 +26,10 @@ extract_meta <- function(lns) {
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
     glue_collapse(lns, sep = "\n"),
-    "(?:(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))"
-  ) %>%
-    tibble::as_tibble(.name_repair = "minimal") %>%
-    rlang::set_names(c("match", "fn", "impl", "lifetime", "name")) %>%
+    "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))" # nolint: line_length_linter
+  ) |>
+    as.data.frame() |>
+    rlang::set_names(c("match", "struct", "enum", "fn", "impl", "lifetime", "name")) |>
     dplyr::filter(!is.na(.data$match))
 
   # If no matches have been found, then the attribute is misplaced

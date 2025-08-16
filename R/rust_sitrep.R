@@ -115,15 +115,15 @@ rustup_toolchain_target <- function() {
   # ----------------
   #
   # stable-x86_64-pc-windows-msvc (default)
-  host <- try_exec_cmd("rustup", "show") %>%
-    stringi::stri_sub(from = 15L) %>%
+  host <- try_exec_cmd("rustup", "show") |>
+    stringi::stri_sub(from = 15L) |>
     vctrs::vec_slice(1L)
 
   # > rustup toolchain list
   # stable-x86_64-pc-windows-msvc
   # nightly-x86_64-pc-windows-msvc (default)
-  toolchain_info <- try_exec_cmd("rustup", c("toolchain", "list")) %>%
-    stringi::stri_trim_both() %>%
+  toolchain_info <- try_exec_cmd("rustup", c("toolchain", "list")) |>
+    stringi::stri_trim_both() |>
     verify_toolchains(host)
 
   if (is.null(toolchain_info[["missing_toolchain"]]) && is.null(toolchain_info[["candidate_toolchains"]])) {
@@ -131,15 +131,15 @@ rustup_toolchain_target <- function() {
     # i686-pc-windows-gnu
     # x86_64-pc-windows-gnu
     # x86_64-pc-windows-msvc
-    targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) %>%
-      stringi::stri_trim_both() %>%
+    targets_info <- try_exec_cmd("rustup", c("target", "list", "--installed")) |>
+      stringi::stri_trim_both() |>
       verify_targets(host)
   } else {
     targets_info <- list()
   }
 
-  list(host = host) %>%
-    append(targets_info) %>%
+  list(host = host) |>
+    append(targets_info) |>
     append(toolchain_info)
 }
 
@@ -177,7 +177,7 @@ verify_toolchains <- function(toolchains, host) {
   } else {
     toolchains[default_toolchain_index] <- cli::col_red(toolchains[default_toolchain_index])
     candidates <- stringi::stri_detect_fixed(toolchains, host)
-    if (any(candidates)) {
+    if (!all(is.na(candidates)) && any(candidates)) {
       candidate_toolchains <- toolchains[candidates]
       toolchains[candidates] <- cli::col_yellow(toolchains[candidates])
     } else {

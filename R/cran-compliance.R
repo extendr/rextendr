@@ -81,20 +81,20 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   }
 
   # create a dataframe of vendored crates
-  vendored <- vendor_res[["stderr"]] %>%
-    cli::ansi_strip() %>%
+  vendored <- vendor_res[["stderr"]] |>
+    cli::ansi_strip() |>
     stringi::stri_split_lines1()
 
-  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") %>%
-    tibble::as_tibble(.name_repair = "minimal") %>%
-    rlang::set_names(c("source", "crate", "version")) %>%
-    dplyr::filter(!is.na(source)) %>%
-    dplyr::select(-source) %>%
+  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") |>
+    as.data.frame() |>
+    rlang::set_names(c("source", "crate", "version")) |>
+    dplyr::filter(!is.na(source)) |>
+    dplyr::select(-source) |>
     dplyr::arrange(.data$crate)
 
   # capture vendor-config.toml content
-  config_toml <- vendor_res[["stdout"]] %>%
-    cli::ansi_strip() %>%
+  config_toml <- vendor_res[["stdout"]] |>
+    cli::ansi_strip() |>
     stringi::stri_split_lines1()
 
   # always write to file as cargo vendor catches things like patch.crates-io
@@ -116,6 +116,12 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
       "Folder {.path vendor} could not be compressed",
       class = "rextendr_error"
     )
+  }
+
+  # clean up vendor directory
+  if (dir.exists(file.path(src_dir, "vendor"))) {
+    cli::cli_alert_info("Removing {.path src/rust/vendor} directory")
+    unlink(file.path(src_dir, "vendor"), recursive = TRUE)
   }
 
   # return packages and versions invisibly

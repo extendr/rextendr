@@ -1,6 +1,7 @@
 test_that("knitr-engine works", {
   skip_if_cargo_unavailable()
   skip_if_not_installed("knitr")
+  skip_on_cran()
 
   options <- knitr::opts_chunk$merge(list(
     code = "2 + 2",
@@ -25,6 +26,7 @@ test_that("knitr-engine works", {
 test_that("Snapshot test of knitr-engine", {
   skip_if_cargo_unavailable()
   skip_if_not_installed("knitr")
+  skip_on_cran()
 
   input <- file.path("../data/test-knitr-engine-source-01.Rmd")
   output <- withr::local_file("snapshot_knitr_test.md")

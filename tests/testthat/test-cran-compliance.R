@@ -1,9 +1,11 @@
 test_that("vendor_pkgs() vendors dependencies", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg")
 
   expect_error(vendor_pkgs(path))
+
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
   use_extendr(path, quiet = TRUE)
@@ -18,17 +20,19 @@ test_that("vendor_pkgs() vendors dependencies", {
 test_that("rextendr passes CRAN checks", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
   usethis::use_mit_license()
+  usethis::use_test("dummy", FALSE)
   use_extendr()
-  document()
   vendor_pkgs()
+  document()
 
   res <- rcmdcheck::rcmdcheck(
     env = c("NOT_CRAN" = ""),
-    args = "--no-manual",
+    args = c("--no-manual", "--no-tests"),
     libpath = rev(.libPaths())
   )
 
@@ -40,7 +44,6 @@ test_that("rextendr passes CRAN checks", {
   # "Downloading" should not be present
   expect_false(grepl("Downloading", res$install_out))
 
-  expect_true(
-    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-  )
+  expect_length(res$errors, 0)
+  expect_length(res$warnings, 0)
 })

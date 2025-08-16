@@ -6,7 +6,7 @@
 #' @keywords internal
 "_PACKAGE"
 
-#' @importFrom dplyr   mutate %>%
+#' @importFrom dplyr   mutate
 #' @importFrom glue    glue glue_collapse
 #' @importFrom rlang   dots_list names2 as_function is_missing is_atomic is_null
 #' @importFrom rlang   is_na .data .env caller_env as_name as_label enquo %||%
