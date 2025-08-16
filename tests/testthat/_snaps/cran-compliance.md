@@ -14,15 +14,14 @@
     Code
       package_versions
     Output
-                  crate version
-      1     build-print   *.*.*
-      2     extendr-api   *.*.*
-      3     extendr-ffi   *.*.*
-      4  extendr-macros   *.*.*
-      5       once_cell  *.*.*
-      6           paste  *.*.*
-      7     proc-macro2  *.*.*
-      8           quote  *.*.*
-      9             syn *.*.*
-      10  unicode-ident  *.*.*
+                 crate version
+      1    extendr-api   *.*.*
+      2    extendr-ffi   *.*.*
+      3 extendr-macros   *.*.*
+      4      once_cell  *.*.*
+      5          paste  *.*.*
+      6    proc-macro2  *.*.*
+      7          quote  *.*.*
+      8            syn *.*.*
+      9  unicode-ident  *.*.*
 

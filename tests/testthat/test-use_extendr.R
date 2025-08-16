@@ -8,10 +8,19 @@ test_that("use_extendr() sets up extendr files correctly", {
   use_extendr()
 
   # DESCRITION file
-  version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
-  sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
+  version_in_desc <- stringi::stri_trim_both(desc::desc_get(
+    "Config/rextendr/version",
+    path
+  )[[1]])
+  sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get(
+    "SystemRequirements",
+    path
+  )[[1]])
   expect_identical(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_identical(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
+  expect_identical(
+    sysreq_in_desc,
+    "Cargo (Rust's package manager), rustc >= 1.65.0, xz"
+  )
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -60,7 +69,11 @@ test_that("use_extendr() can overwrite files in non-interactive sessions", {
   path <- local_package("testpkg")
   use_extendr()
   withr::local_options(usethis.quiet = FALSE)
-  expect_snapshot(use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE))
+  expect_snapshot(use_extendr(
+    crate_name = "foo",
+    lib_name = "bar",
+    overwrite = TRUE
+  ))
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
 })
 
@@ -91,7 +104,10 @@ test_that("use_rextendr_template() works when usethis not available", {
     is_installed = function(...) FALSE
   )
 
-  expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
+  expect_identical(
+    brio::read_file(file.path("installed")),
+    brio::read_file(file.path("not_installed"))
+  )
 })
 
 test_that("use_rextendr_template() can overwrite existing files", {

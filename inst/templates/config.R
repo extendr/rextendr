@@ -63,6 +63,13 @@ cfg <- if (is_debug) "debug" else "release"
 # there may be use cases later where this can be adapted or expanded
 .target <- ifelse(is_wasm, paste0("--target=", webr_target), "")
 
+# add panic exports only for WASM builds
+.panic_exports <- ifelse(
+  is_wasm,
+  "CARGO_PROFILE_DEV_PANIC=\"abort\" CARGO_PROFILE_RELEASE_PANIC=\"abort\" ",
+  ""
+)
+
 # read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
@@ -80,7 +87,7 @@ mv_ofp <- ifelse(
   "src/Makevars"
 )
 
-# delete the existing Makevars{.win}
+# delete the existing Makevars{.win/.wasm}
 if (file.exists(mv_ofp)) {
   message("Cleaning previous `", mv_ofp, "`.")
   invisible(file.remove(mv_ofp))
@@ -94,7 +101,8 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@PROFILE@", .profile, x = _) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
-  gsub("@TARGET@", .target, x = _)
+  gsub("@TARGET@", .target, x = _) |>
+  gsub("@PANIC_EXPORTS@", .panic_exports, x = _)
 
 message("Writing `", mv_ofp, "`.")
 con <- file(mv_ofp, open = "wb")

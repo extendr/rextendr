@@ -8,13 +8,6 @@
       
       -------------------------------------------------------------
       
-      Name:        build-print
-      Repository:  NA
-      Authors:     sam0x17
-      License:     MIT
-      
-      -------------------------------------------------------------
-      
       Name:        extendr-api
       Repository:  https://github.com/extendr/extendr
       Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton

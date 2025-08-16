@@ -127,6 +127,12 @@ use_extendr <- function(
   )
 
   edition <- match.arg(edition, several.ok = FALSE)
+
+  # fetch extendr-api version from options
+  # this is defined in zzz.R
+  # defaults to latest stable version or falls back to "*"
+  extendr_api_version <- options("rextendr.extendr_deps")[[1]][["extendr-api"]]
+
   cargo_toml_content <- to_toml(
     package = list(
       name = crate_name,
@@ -136,7 +142,13 @@ use_extendr <- function(
       `rust-version` = "1.65"
     ),
     lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
-    dependencies = list(`extendr-api` = "*")
+    dependencies = list(
+      `extendr-api` = extendr_api_version
+    ),
+    `profile.release` = list(
+      lto = TRUE,
+      `codegen-units` = 1
+    )
   )
 
   use_rextendr_template(
@@ -210,7 +222,9 @@ use_extendr <- function(
   )
 
   # create settings.json file
-  if (is_vscode() || is_positron()) use_vscode()
+  if (is_vscode() || is_positron()) {
+    use_vscode()
+  }
 
   # configure needs to be made executable
   # ignore for Windows

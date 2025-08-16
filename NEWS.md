@@ -1,5 +1,14 @@
 # rextendr (development version)
 
+* Sets the `extendr-api` version to the latest stable version instead of `"*"` when creating a new package. This is fetched from https://crates.io/api/v1/crates/extendr-api and will fall back to `"*"` if not available <https://github.com/extendr/rextendr/pull/467>
+* Adds `xz` to `SystemRequirements` to ensure extendr based packages build on Posit Package Manager <https://github.com/extendr/rextendr/pull/467>
+* Sets the release profile to use `lto=true` and `codegen-units=1` to ensure compatible builds with WebR as well as reduce the overall compiled package size <https://github.com/extendr/rextendr/pull/465>. 
+* Fixes compatibility with WebR by adding `CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"` when targeting `wasm32-unknown-emsacripten` target <https://github.com/extendr/rextendr/pull/461>
+
+# rextendr 0.4.1
+
+* Fix tests executed on CRAN (#449)
+
 * Added `use_vscode()` and its alias `use_positron()` to create `.vscode/settings.json`, enhancing the `rextendr` experience in VSCode/Positron.
   Additionally, `use_extendr()` now automatically calls `use_vscode()` when VSCode or Positron is detected as the IDE (#441).
 
