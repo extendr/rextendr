@@ -59,6 +59,9 @@
 <ul><li>Note that not all Rust crates are wasm compatible. This change only enables the package to build in the <code>wasm32-unknown-emscripten</code> target. It does not guarantee all dependencies will compile.</li>
 </ul></li>
 <li>Addresses new CRAN check in R 4.5+ adding warning for <code>_abort</code> usage</li>
+<li>
+<code><a href="../reference/use_extendr_badge.html">use_extendr_badge()</a></code> has been added to add an extendr-specific badge to a <code>README.Rmd</code> via <code><a href="https://usethis.r-lib.org/reference/badges.html" class="external-link">usethis::use_badge()</a></code> <a href="https://github.com/extendr/rextendr/pull/417" class="external-link uri">https://github.com/extendr/rextendr/pull/417</a>
+</li>
 <li>Removes <code>Makevars.ucrt</code> as R versions &lt; 4.1 are not supported by extendr <a href="https://github.com/extendr/rextendr/pull/414" class="external-link uri">https://github.com/extendr/rextendr/pull/414</a>
 </li>
 <li>
