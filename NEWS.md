@@ -17,6 +17,7 @@
 * Adds [WebR](https://docs.r-wasm.org/webr/latest/) support out of the box for all extendr packages.
   * Note that not all Rust crates are wasm compatible. This change only enables the package to build in the `wasm32-unknown-emscripten` target. It does not guarantee all dependencies will compile.
 * Addresses new CRAN check in R 4.5+ adding warning for `_abort` usage
+* `use_extendr_badge()` has been added to add an extendr-specific badge to a `README.Rmd` via `usethis::use_badge()` <https://github.com/extendr/rextendr/pull/417>
 * Removes `Makevars.ucrt` as R versions < 4.1 are not supported by extendr <https://github.com/extendr/rextendr/pull/414> 
 * `purrr` has been replaced with [`R/standalone-purrr.R`](https://github.com/r-lib/rlang/blob/main/R/standalone-purrr.R) removing `purrr` from `Imports` <https://github.com/extendr/rextendr/pull/408>
 * `document()` will no longer try to save all open files using rstudioapi <https://github.com/extendr/rextendr/issues/404> <https://github.com/extendr/rextendr/issues/407>

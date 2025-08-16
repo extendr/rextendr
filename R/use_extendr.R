@@ -268,6 +268,10 @@ use_extendr <- function(
         "Please run {.fun rextendr::document} for changes to take effect."
       )
     )
+    # encourage use of use_extendr__badge
+    cli::cli_alert_info(
+      "Call {.fn use_extendr_badge} to add an extendr badge to your {.file README}"
+    )
   }
 
   return(invisible(TRUE))
