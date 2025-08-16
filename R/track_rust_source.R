@@ -94,6 +94,6 @@ get_library_path <- function(path = ".") {
   # Constructs path to the library file (e.g., package_name.dll)
   file.path(
     rprojroot::find_package_root_file("src", path = path),
-    glue::glue("{pkg_name(path)}{.Platform$dynlib.ext}")
+    paste0(pkg_name(path), .Platform$dynlib.ext)
   )
 }

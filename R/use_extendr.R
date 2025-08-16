@@ -22,14 +22,20 @@
 #' generated or not.
 #' @export
 use_extendr <- function(
-  path = ".",
-  crate_name = NULL,
-  lib_name = NULL,
-  quiet = FALSE,
-  overwrite = NULL,
-  edition = c("2021", "2018")
-) {
+    path = ".",
+    crate_name = NULL,
+    lib_name = NULL,
+    quiet = FALSE,
+    overwrite = NULL,
+    edition = c("2021", "2018")) {
   # https://github.com/r-lib/cli/issues/434
+
+  check_string(path, call = rlang::caller_call(), class = "rextendr_error")
+  check_string(crate_name, allow_null = TRUE, call = rlang::caller_call(), class = "rextendr_error")
+  check_string(lib_name, allow_null = TRUE, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(quiet, call = rlang::caller_call(), class = "rextendr_error")
+  check_bool(overwrite, allow_null = TRUE, call = rlang::caller_call(), class = "rextendr_error")
+  # check_string(edition, call = rlang::caller_call(), class = "rextendr_error")
 
   local_quiet_cli(quiet)
 
@@ -326,7 +332,7 @@ as_valid_rust_name <- function(name) {
 #' @param call \[ env \] Environment of the caller, passed to `cli::cli_abort()`.
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
-  quo <- enquo(name) # nolint: object_usage_linter
+  quo <- rlang::enquo(name) # nolint: object_usage_linter
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
     cli::cli_abort(
       c(
@@ -352,12 +358,11 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #' Otherwise, the file will be overwritten.
 #' @noRd
 use_rextendr_template <- function(
-  template,
-  save_as = template,
-  data = list(),
-  quiet = FALSE,
-  overwrite = NULL
-) {
+    template,
+    save_as = template,
+    data = list(),
+    quiet = FALSE,
+    overwrite = NULL) {
   local_quiet_cli(quiet)
 
   if (isFALSE(overwrite) && file.exists(save_as)) {
@@ -367,7 +372,7 @@ use_rextendr_template <- function(
     return(invisible(NULL))
   }
 
-  if (is_installed("usethis") && is.null(overwrite)) {
+  if (rlang::is_installed("usethis") && is.null(overwrite)) {
     created <- usethis::use_template(
       template,
       save_as = save_as,
@@ -388,13 +393,13 @@ use_rextendr_template <- function(
 
   template_content <- brio::read_file(template_path)
 
-  template_content <- glue::glue_data(
-    template_content,
-    .x = data,
-    .open = "{{{",
-    .close = "}}}",
-    .trim = FALSE
-  )
+  if (!rlang::is_empty(data)) {
+    template_content <- gsub(
+      pattern = paste0("\\{\\{\\{", names(data), "\\}\\}\\}"),
+      replacement = unlist(data, use.names = FALSE),
+      x = template_content
+    )
+  }
 
   write_file(
     stringi::stri_trim(template_content),
