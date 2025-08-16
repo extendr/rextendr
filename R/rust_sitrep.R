@@ -166,7 +166,7 @@ rustup_toolchain_target <- function() {
 #' @noRd
 verify_toolchains <- function(toolchains, host) {
   if (rlang::is_empty(toolchains)) {
-    return(list(toolchains = toolchains, missing_toolchain = glue("stable-{host}")))
+    return(list(toolchains = toolchains, missing_toolchain = paste0("stable-", host)))
   }
 
   default_toolchain_index <- stringi::stri_detect_fixed(toolchains, "(default)")
@@ -181,7 +181,7 @@ verify_toolchains <- function(toolchains, host) {
       candidate_toolchains <- toolchains[candidates]
       toolchains[candidates] <- cli::col_yellow(toolchains[candidates])
     } else {
-      missing_toolchain <- glue("stable-{host}")
+      missing_toolchain <- paste0("stable-", host)
     }
   }
   list(toolchains = toolchains, missing_toolchain = missing_toolchain, candidate_toolchains = candidate_toolchains)
