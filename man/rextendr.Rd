@@ -12,7 +12,7 @@ See \code{\link[=rust_source]{rust_source()}} for details.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://extendr.github.io/rextendr/}
+  \item \url{https://extendr.rs/rextendr/}
   \item \url{https://github.com/extendr/rextendr}
   \item Report bugs at \url{https://github.com/extendr/rextendr/issues}
 }
