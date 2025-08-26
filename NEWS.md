@@ -1,3 +1,5 @@
+# rextendr (development version)
+
 # rextendr 0.4.2
 
 * Sets the `extendr-api` version to the latest stable version instead of `"*"` when creating a new package. This is fetched from <https://crates.io/api/v1/crates/extendr-api> and will fall back to `"*"` if not available <https://github.com/extendr/rextendr/pull/467>
