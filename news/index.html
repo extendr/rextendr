@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,12 +35,23 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/extendr/rextendr/blob/v0.4.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/extendr/rextendr/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.2" id="rextendr-042">rextendr 0.4.2<a class="anchor" aria-label="anchor" href="#rextendr-042"></a></h2><p class="text-muted">CRAN release: 2025-08-26</p>
+<ul><li>Sets the <code>extendr-api</code> version to the latest stable version instead of <code>"*"</code> when creating a new package. This is fetched from <a href="https://crates.io/api/v1/crates/extendr-api" class="external-link uri">https://crates.io/api/v1/crates/extendr-api</a> and will fall back to <code>"*"</code> if not available <a href="https://github.com/extendr/rextendr/pull/467" class="external-link uri">https://github.com/extendr/rextendr/pull/467</a>
+</li>
+<li>Adds <code>xz</code> to <code>SystemRequirements</code> to ensure extendr based packages build on Posit Package Manager <a href="https://github.com/extendr/rextendr/pull/467" class="external-link uri">https://github.com/extendr/rextendr/pull/467</a>
+</li>
+<li>Sets the release profile to use <code>lto=true</code> and <code>codegen-units=1</code> to ensure compatible builds with WebR as well as reduce the overall compiled package size <a href="https://github.com/extendr/rextendr/pull/465" class="external-link uri">https://github.com/extendr/rextendr/pull/465</a>.</li>
+<li>Fixes compatibility with WebR by adding <code>CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"</code> when targeting <code>wasm32-unknown-emsacripten</code> target <a href="https://github.com/extendr/rextendr/pull/461" class="external-link uri">https://github.com/extendr/rextendr/pull/461</a>
+</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.1" id="rextendr-041">rextendr 0.4.1<a class="anchor" aria-label="anchor" href="#rextendr-041"></a></h2><p class="text-muted">CRAN release: 2025-06-19</p>
-<ul><li>Fix tests executed on CRAN (<a href="https://github.com/extendr/rextendr/issues/449" class="external-link">#449</a>)</li>
+<ul><li><p>Fix tests executed on CRAN (<a href="https://github.com/extendr/rextendr/issues/449" class="external-link">#449</a>)</p></li>
+<li><p>Added <code><a href="../reference/use_vscode.html">use_vscode()</a></code> and its alias <code><a href="../reference/use_vscode.html">use_positron()</a></code> to create <code>.vscode/settings.json</code>, enhancing the <code>rextendr</code> experience in VSCode/Positron. Additionally, <code><a href="../reference/use_extendr.html">use_extendr()</a></code> now automatically calls <code><a href="../reference/use_vscode.html">use_vscode()</a></code> when VSCode or Positron is detected as the IDE (<a href="https://github.com/extendr/rextendr/issues/441" class="external-link">#441</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="rextendr-040">rextendr 0.4.0<a class="anchor" aria-label="anchor" href="#rextendr-040"></a></h2><p class="text-muted">CRAN release: 2025-05-02</p>
@@ -48,6 +59,9 @@
 <ul><li>Note that not all Rust crates are wasm compatible. This change only enables the package to build in the <code>wasm32-unknown-emscripten</code> target. It does not guarantee all dependencies will compile.</li>
 </ul></li>
 <li>Addresses new CRAN check in R 4.5+ adding warning for <code>_abort</code> usage</li>
+<li>
+<code><a href="../reference/use_extendr_badge.html">use_extendr_badge()</a></code> has been added to add an extendr-specific badge to a <code>README.Rmd</code> via <code><a href="https://usethis.r-lib.org/reference/badges.html" class="external-link">usethis::use_badge()</a></code> <a href="https://github.com/extendr/rextendr/pull/417" class="external-link uri">https://github.com/extendr/rextendr/pull/417</a>
+</li>
 <li>Removes <code>Makevars.ucrt</code> as R versions &lt; 4.1 are not supported by extendr <a href="https://github.com/extendr/rextendr/pull/414" class="external-link uri">https://github.com/extendr/rextendr/pull/414</a>
 </li>
 <li>

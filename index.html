@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rextendr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
 <p>or use <a href="https://remotes.r-lib.org" class="external-link">remotes</a></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_cran.html" class="external-link">install_cran</a></span><span class="op">(</span><span class="st">"rextendr"</span><span class="op">)</span></span></code></pre></div>
-<p>You can also install <a href="https://extendr.github.io/rextendr/">rextendr</a> from <a href="https://extendr.r-universe.dev/rextendr" class="external-link">r-universe</a>:</p>
+<p>You can also install <a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a> from <a href="https://extendr.r-universe.dev/rextendr" class="external-link">r-universe</a>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rextendr"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://extendr.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Latest development version can be installed from GitHub:</p>
@@ -101,7 +101,7 @@
 <span><span class="co"># ! Toolchain stable-x86_64-pc-windows-msvc is required to be installed and set as default</span></span>
 <span><span class="co"># ℹ Run `rustup toolchain install stable-x86_64-pc-windows-msvc` to install it</span></span>
 <span><span class="co"># ℹ Run `rustup default stable-x86_64-pc-windows-msvc` to make it default</span></span></code></pre></div>
-<p>Finally, if you are missing the required target (on all platforms but Windows <a href="https://extendr.github.io/rextendr/">rextendr</a> uses default target), the report will resemble the following:</p>
+<p>Finally, if you are missing the required target (on all platforms but Windows <a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a> uses default target), the report will resemble the following:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Rust infrastructure sitrep:</span></span>
@@ -118,7 +118,7 @@
 </h3>
 <p>Basic use example:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/">rextendr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a Rust function</span></span>
 <span><span class="fu"><a href="reference/rust_source.html">rust_function</a></span><span class="op">(</span><span class="st">"fn add(a:f64, b:f64) -&gt; f64 { a + b }"</span><span class="op">)</span></span>
@@ -128,7 +128,7 @@
 <span><span class="co">#&gt; [1] 7.2</span></span></code></pre></div>
 <p>Something more sophisticated:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.github.io/rextendr/">rextendr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Rust function that computes a sum of integer or double vectors, preserving the type</span></span>
 <span></span>
