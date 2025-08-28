@@ -54,8 +54,7 @@ Imports:
     callr,
     cli,
     desc,
-    dplyr,
-    glue (>= 1.7.0),
+    dplyr,    
     jsonlite,
     pkgbuild (>= 1.4.0),
     processx,
@@ -78,6 +77,6 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.2.9000
 SystemRequirements: Rust 'cargo'; the crate 'libR-sys' must compile
     without error

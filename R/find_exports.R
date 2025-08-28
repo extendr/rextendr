@@ -25,7 +25,7 @@ find_extendr_attrs_ids <- function(lns) {
 extract_meta <- function(lns) {
   # Matches fn|impl<'a> item_name
   result <- stringi::stri_match_first_regex(
-    glue_collapse(lns, sep = "\n"),
+    paste0(lns, collapse = "\n"),
     "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))" # nolint: line_length_linter
   ) |>
     as.data.frame() |>
@@ -37,7 +37,7 @@ extract_meta <- function(lns) {
     # This unfortunately does not provide
     # meaningful output or source line numbers.
     code_sample <- stringi::stri_sub(
-      glue_collapse(lns, sep = "\n  "),
+      paste0(lns, collapse = "\n  "),
       1, 80
     )
 

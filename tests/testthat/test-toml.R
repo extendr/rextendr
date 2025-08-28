@@ -93,7 +93,7 @@ test_that("`toml` is generated correctly", {
     "ndarray = [ ]"
   )
 
-  reference <- glue_collapse(reference, "\n")
+  reference <- paste0(reference, collapse = "\n")
 
   expect_equal(toml, reference)
 })
