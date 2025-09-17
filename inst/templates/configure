@@ -1,3 +1,29 @@
 #!/usr/bin/env sh
+
+# Initialize variables
+FEATURES=""
+PROFILE=""
+
+# Parse and validate configure arguments
+for arg in "$@"; do
+  case $arg in
+    --with-features=*)
+      value="${arg#*=}"
+      if [ -n "$FEATURES" ]; then
+        FEATURES="${FEATURES},${value}"
+      else
+        FEATURES="${value}"
+      fi
+      ;;
+    --with-profile=*)
+      PROFILE="${arg#*=}"
+      ;;
+    *)
+      echo "configure: error: unknown argument: $arg" >&2
+      exit 1
+      ;;
+  esac
+done
+
 : "${R_HOME=`R RHOME`}"
-"${R_HOME}/bin/Rscript" tools/config.R 
+"${R_HOME}/bin/Rscript" tools/config.R "${PROFILE}" "${FEATURES}"

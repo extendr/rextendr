@@ -201,7 +201,8 @@ use_extendr <- function(
     "config.R",
     save_as = file.path("tools", "config.R"),
     quiet = quiet,
-    overwrite = overwrite
+    overwrite = overwrite,
+    data = list(pkg_name = pkg_name)
   )
 
   # add configure and configure.win templates
