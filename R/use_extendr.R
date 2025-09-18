@@ -223,7 +223,8 @@ use_extendr <- function(
   )
 
   # create settings.json file
-  if (is_vscode() || is_positron()) {
+  if (!identical(Sys.getenv("TESTTHAT"), "true") &&
+    (is_vscode() || is_positron())) {
     use_vscode()
   }
 
