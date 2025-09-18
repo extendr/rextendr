@@ -12,7 +12,6 @@
     Code
       cat_file(".Rbuildignore")
     Output
-      ^\.vscode$
       ^src/\.cargo$
       ^src/rust/vendor$
       ^src/rust/target$
