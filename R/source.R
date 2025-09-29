@@ -15,7 +15,7 @@ the$count <- 1L
 #' @param env environment, the R environment in which the wrapping functions
 #'   will be defined. Default is `parent.frame()`.
 #' @param echo logical scalar, whether to print standard output and errors of
-#'   `cargo` commands to the console. Default is `TRUE`.
+#'   `cargo` commands to the console. Default is `FALSE`.
 #' @param quiet logical scalar, whether to print `cli` errors and warnings.
 #'   Default is `FALSE`.
 #' @param opts `extendr_opts` list, set using `extendr_options()`. Default is
@@ -128,7 +128,7 @@ rust_source <- function(
   file = NULL,
   code = NULL,
   env = parent.frame(),
-  echo = TRUE,
+  echo = FALSE,
   quiet = FALSE,
   opts = NULL,
   ...
@@ -416,7 +416,7 @@ rust_function <- function(
   code,
   extendr_fn_options = NULL,
   env = parent.frame(),
-  echo = TRUE,
+  echo = FALSE,
   quiet = FALSE,
   opts = NULL,
   ...

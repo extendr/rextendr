@@ -11,7 +11,7 @@ rust_source(
   file = NULL,
   code = NULL,
   env = parent.frame(),
-  echo = TRUE,
+  echo = FALSE,
   quiet = FALSE,
   opts = NULL,
   ...
@@ -21,7 +21,7 @@ rust_function(
   code,
   extendr_fn_options = NULL,
   env = parent.frame(),
-  echo = TRUE,
+  echo = FALSE,
   quiet = FALSE,
   opts = NULL,
   ...
@@ -53,7 +53,7 @@ extendr_options(
 will be defined. Default is \code{parent.frame()}.}
 
 \item{echo}{logical scalar, whether to print standard output and errors of
-\code{cargo} commands to the console. Default is \code{TRUE}.}
+\code{cargo} commands to the console. Default is \code{FALSE}.}
 
 \item{quiet}{logical scalar, whether to print \code{cli} errors and warnings.
 Default is \code{FALSE}.}
@@ -167,9 +167,12 @@ code <- r"(
     output
   }
 )"
+
 rust_source(
   code = code,
-  dependencies = list(`pulldown-cmark` = "0.8")
+  opts = extendr_options(
+    dependencies = list(`pulldown-cmark` = "0.8")
+  )
 )
 
 md_text <- "# The story of the fox
@@ -178,15 +181,7 @@ The quick *brown fox* jumps over the lazy dog."
 
 md_to_html(md_text)
 
-# equivalent to using extendr_options()
-rust_source(
-  code = code,
-  opts = extendr_options(
-    dependencies = list(`pulldown-cmark` = "0.8")
-  )
-)
-
-# see current options
+# see default options
 extendr_options()
 }
 }
