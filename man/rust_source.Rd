@@ -3,106 +3,131 @@
 \name{rust_source}
 \alias{rust_source}
 \alias{rust_function}
+\alias{extendr_options}
+\alias{print.extendr_opts}
 \title{Compile Rust code and call from R}
 \usage{
 rust_source(
-  file,
+  file = NULL,
   code = NULL,
-  module_name = "rextendr",
-  dependencies = NULL,
-  patch.crates_io = getOption("rextendr.patch.crates_io"),
-  profile = c("dev", "release", "perf"),
-  toolchain = getOption("rextendr.toolchain"),
-  extendr_deps = NULL,
-  features = NULL,
   env = parent.frame(),
-  use_extendr_api = TRUE,
-  generate_module_macro = TRUE,
-  cache_build = TRUE,
+  echo = TRUE,
   quiet = FALSE,
-  use_rtools = TRUE,
-  use_dev_extendr = FALSE
+  opts = NULL,
+  ...
 )
 
 rust_function(
   code,
   extendr_fn_options = NULL,
   env = parent.frame(),
+  echo = TRUE,
   quiet = FALSE,
-  use_dev_extendr = FALSE,
+  opts = NULL,
   ...
 )
+
+extendr_options(
+  cache_build = TRUE,
+  dependencies = NULL,
+  extendr_deps = NULL,
+  features = NULL,
+  generate_module_macro = TRUE,
+  module_name = "rextendr",
+  patch.crates_io = getOption("rextendr.patch.crates_io"),
+  profile = c("dev", "release", "perf"),
+  toolchain = getOption("rextendr.toolchain"),
+  use_dev_extendr = FALSE,
+  use_extendr_api = TRUE,
+  use_rtools = TRUE
+)
+
+\method{print}{extendr_opts}(x, ...)
 }
 \arguments{
-\item{file}{Input rust file to source.}
+\item{file}{character scalar, input rust file to source.}
 
-\item{code}{Input rust code, to be used instead of \code{file}.}
+\item{code}{character scalar, input rust code to be used instead of \code{file}.}
 
-\item{module_name}{Name of the module defined in the Rust source via
-\verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
-or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
+\item{env}{environment, the R environment in which the wrapping functions
+will be defined. Default is \code{parent.frame()}.}
 
-\item{dependencies}{Character vector of dependencies lines to be added to the
-\code{Cargo.toml} file.}
+\item{echo}{logical scalar, whether to print standard output and errors of
+\code{cargo} commands to the console. Default is \code{TRUE}.}
 
-\item{patch.crates_io}{Character vector of patch statements for crates.io to
-be added to the \code{Cargo.toml} file.}
+\item{quiet}{logical scalar, whether to print \code{cli} errors and warnings.
+Default is \code{FALSE}.}
 
-\item{profile}{Rust profile. Can be either \code{"dev"}, \code{"release"} or \code{"perf"}.
-The default, \code{"dev"}, compiles faster but produces slower code.}
+\item{opts}{\code{extendr_opts} list, set using \code{extendr_options()}. Default is
+\code{NULL}.}
 
-\item{toolchain}{Rust toolchain. The default, \code{NULL}, compiles with the
-system default toolchain. Accepts valid Rust toolchain qualifiers,
-such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
+\item{...}{user supplied extendr options to be injected into the
+\code{extendr_opts} list (for backwards compatibility).}
 
-\item{extendr_deps}{Versions of \verb{extendr-*} crates. Defaults to \code{rextendr.extendr_deps} option
-(\code{list(`extendr-api` = "*")}) if \code{use_dev_extendr} is not \code{TRUE},
-otherwise, uses \code{rextendr.extendr_dev_deps} option
-(\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).}
+\item{extendr_fn_options}{A list of extendr function options that are
+inserted into the \verb{#[extendr(...)]} attribute}
 
-\item{features}{A vector of \code{extendr-api} features that should be enabled.
+\item{cache_build}{logical scalar, whether builds should be cached between
+calls to \code{\link[=rust_source]{rust_source()}}.}
+
+\item{dependencies}{character vector, dependencies to be added to \code{Cargo.toml}.}
+
+\item{extendr_deps}{named list, versions of \verb{extendr-*} crates. Defaults to
+\code{rextendr.extendr_deps} option (\code{list(`extendr-api` = "*")}) if
+\code{use_dev_extendr} is not \code{TRUE}, otherwise, uses
+\code{rextendr.extendr_dev_deps} option (\code{list(`extendr-api` = list(git =
+  "https://github.com/extendr/extendr")}).}
+
+\item{features}{character vector, \code{extendr-api} features that should be enabled.
 Supported values are \code{"ndarray"}, \code{"faer"}, \code{"either"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.
 Unknown features will produce a warning if \code{quiet} is not \code{TRUE}.}
 
-\item{env}{The R environment in which the wrapping functions will be defined.}
-
-\item{use_extendr_api}{Logical indicating whether
-\verb{use extendr_api::prelude::*;} should be added at the top of the Rust source
-provided via \code{code}. Default is \code{TRUE}. Ignored for Rust source provided
-via \code{file}.}
-
-\item{generate_module_macro}{Logical indicating whether the Rust module
+\item{generate_module_macro}{logical scalar, whether the Rust module
 macro should be automatically generated from the code. Default is \code{TRUE}.
 Ignored for Rust source provided via \code{file}. The macro generation is done
 with \code{\link[=make_module_macro]{make_module_macro()}} and it may fail in complex cases. If something
 doesn't work, try calling \code{\link[=make_module_macro]{make_module_macro()}} on your code to see whether
 the generated macro code has issues.}
 
-\item{cache_build}{Logical indicating whether builds should be cached between
-calls to \code{\link[=rust_source]{rust_source()}}.}
+\item{module_name}{character scalar, name of the module defined in the Rust source via
+\verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
+or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
 
-\item{quiet}{Logical indicating whether compile output should be generated or not.}
+\item{patch.crates_io}{character vector, patch statements for crates.io to
+be added to \code{Cargo.toml}.}
 
-\item{use_rtools}{Logical indicating whether to append the path to Rtools
-to the \code{PATH} variable on Windows using the \code{RTOOLS4X_HOME} environment
-variable (if it is set). The appended path depends on the process
-architecture. Does nothing on other platforms.}
+\item{profile}{character scalar, Rust profile. Can be either \code{"dev"}, \code{"release"} or \code{"perf"}.
+The default, \code{"dev"}, compiles faster but produces slower code.}
 
-\item{use_dev_extendr}{Logical indicating whether to use development version of
+\item{toolchain}{character scalar, Rust toolchain. The default, \code{NULL}, compiles with the
+system default toolchain. Accepts valid Rust toolchain qualifiers,
+such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
+
+\item{use_dev_extendr}{logical scalar, whether to use development version of
 \code{extendr}. Has no effect if \code{extendr_deps} are set.}
 
-\item{extendr_fn_options}{A list of extendr function options that are inserted into
-\verb{#[extendr(...)]} attribute}
+\item{use_extendr_api}{logical scalar, whether \verb{use extendr_api::prelude::*;}
+should be added at the top of the Rust source provided via \code{code}. Default
+is \code{TRUE}. Ignored for Rust source provided via \code{file}.}
 
-\item{...}{Other parameters handed off to \code{\link[=rust_source]{rust_source()}}.}
+\item{use_rtools}{logical scalar, whether to append the path to Rtools to the
+\code{PATH} variable on Windows using the \code{RTOOLS4X_HOME} environment variable
+(if it is set). The appended path depends on the process architecture. Does
+nothing on other platforms.}
+
+\item{x}{an \code{extendr_opts} list}
 }
 \value{
-The result from \code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}.
-See \code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more details.
+For \code{rust_source()} and \code{rust_function()}, the result from
+\code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}. See \code{\link[=getLoadedDLLs]{getLoadedDLLs()}}
+for more details. For \code{extendr_options()}, an \code{extendr_opts} list.
 }
 \description{
-\code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R. \code{\link[=rust_function]{rust_function()}}
-compiles and loads a single Rust function for use in R.
+\code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R.
+\code{\link[=rust_function]{rust_function()}} compiles and loads a single Rust function for use in R.
+\code{\link[=extendr_options]{extendr_options()}} is a helper function to make it easier to pass additional
+options when sourcing Rust code. It also proivdes defaults for each option
+and does additional type checking.
 }
 \examples{
 \dontrun{
@@ -126,7 +151,6 @@ fn test( a: &str, b: i64) {
 rust_source(code = code)
 hello()
 test("a string", 42)
-
 
 # use case with an external dependency: a function that converts
 # markdown text to html, using the `pulldown_cmark` crate.
@@ -153,5 +177,16 @@ The quick brown fox **jumps over** the lazy dog.
 The quick *brown fox* jumps over the lazy dog."
 
 md_to_html(md_text)
+
+# equivalent to using extendr_options()
+rust_source(
+  code = code,
+  opts = extendr_options(
+    dependencies = list(`pulldown-cmark` = "0.8")
+  )
+)
+
+# see current options
+extendr_options()
 }
 }
