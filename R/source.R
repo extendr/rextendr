@@ -66,8 +66,6 @@ the$count <- 1L
 #'   [dyn.load()], which is an object of class `DLLInfo`. See [getLoadedDLLs()]
 #'   for more details. For `extendr_options()`, an `extendr_opts` list.
 #'
-#' @details
-#'
 #' @name rust_source
 #' @export
 #'
@@ -109,9 +107,12 @@ the$count <- 1L
 #'     output
 #'   }
 #' )"
+#'
 #' rust_source(
 #'   code = code,
-#'   dependencies = list(`pulldown-cmark` = "0.8")
+#'   opts = extendr_options(
+#'     dependencies = list(`pulldown-cmark` = "0.8")
+#'   )
 #' )
 #'
 #' md_text <- "# The story of the fox
@@ -120,15 +121,7 @@ the$count <- 1L
 #'
 #' md_to_html(md_text)
 #'
-#' # equivalent to using extendr_options()
-#' rust_source(
-#'   code = code,
-#'   opts = extendr_options(
-#'     dependencies = list(`pulldown-cmark` = "0.8")
-#'   )
-#' )
-#'
-#' # see current options
+#' # see default options
 #' extendr_options()
 #' }
 rust_source <- function(
@@ -196,15 +189,20 @@ rust_source <- function(
   if (rlang::is_null(opts)) {
     opts <- rlang::inject(extendr_options(!!!user_opts))
   } else if (!rlang::is_empty(user_opts)) {
-    cli::cli_warn(c(
-      "User supplied arguments to both `...` and `opts = extendr_options()`",
-      "i" = "Ignoring options passed to `...`."
-    ))
+    cli::cli_abort(
+      c(
+        "Options may be passed through `...` or `opts = extendr_options()`, not both!",
+        "i" = "User is encouraged to use `extendr_options()`."
+      ),
+      call = rlang::caller_call(),
+      class = "rextendr_error"
+    )
   }
 
   check_extendr_opts(opts, call = rlang::caller_call())
 
   if (!opts[["cache_build"]] && !rlang::is_null(the$build_dir)) {
+    cli::cli_alert_info("Removing build directory {.path {the$build_dir}}")
     unlink(the$build_dir, recursive = TRUE)
     the$build_dir <- NULL
   }
@@ -294,7 +292,8 @@ rust_source <- function(
       # TODO: update this when R 5.0 is released.
       if (!identical(R.version$major, "4")) {
         cli::cli_abort(
-          "rextendr currently supports R 4.x",
+          "rextendr currently supports R 4.2",
+          call = rlang::caller_call(),
           class = "rextendr_error"
         )
       }
@@ -453,10 +452,14 @@ rust_function <- function(
   if (rlang::is_null(opts)) {
     opts <- rlang::inject(extendr_options(!!!user_opts))
   } else if (!rlang::is_empty(user_opts)) {
-    cli::cli_warn(c(
-      "User supplied arguments to both `...` and `opts = extendr_options()`",
-      "i" = "Ignoring options passed to `...`."
-    ))
+    cli::cli_abort(
+      c(
+        "Options may be passed through `...` or `opts = extendr_options()`, not both!",
+        "i" = "User is encouraged to use `extendr_options()`."
+      ),
+      call = rlang::caller_call(),
+      class = "rextendr_error"
+    )
   }
 
   check_extendr_opts(opts, call = rlang::caller_call())
@@ -477,11 +480,11 @@ rust_function <- function(
       extendr_fn_options,
       FUN = function(.x) {
         if (rlang::is_character(.x)) {
-          return(sprintf('"%s"', .x))
+          sprintf('"%s"', .x)
         } else if (rlang::is_logical(.x)) {
-          return(tolower(as.character(.x)))
+          tolower(as.character(.x))
         } else {
-          return(as.character(.x))
+          as.character(.x)
         }
       },
       FUN.VALUE = character(1),
@@ -608,7 +611,7 @@ print.extendr_opts <- function(x, ...) {
   values <- unlist(as.character(x), use.names = FALSE)
 
   df <- data.frame(VALUE = values)
-  rownames(df) <- names(x)
+  rownames(df) <- parameters
 
   cli::cli_text("extendr options")
   print(df, quote = FALSE)
@@ -746,7 +749,7 @@ check_extendr_fn_options <- function(
     )
   }
 
-  invisible(NULL)
+  invisible(extendr_fn_options)
 }
 
 #' Generates valid rust library path given file_name.
