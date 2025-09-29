@@ -90,8 +90,8 @@ test_that("`rust_function()` errors if `extendr_fn_options` contains an option n
   )
 })
 
-# fmt: skip
-test_that("`rust_function()` errors if `extendr_fn_options` contains an option in dev but `use_dev_extendr` is `FALSE`", { # nolint: line_length_linter
+# nolint start: line_length_linter
+test_that("`rust_function()` errors if `extendr_fn_options` contains an option in dev but `use_dev_extendr` is `FALSE`", {
   skip_if_cargo_unavailable()
   skip_on_cran()
 
@@ -104,6 +104,7 @@ test_that("`rust_function()` errors if `extendr_fn_options` contains an option i
     )
   )
 })
+# nolint end
 
 test_that("`rust_function()` does not emit any messages when `quiet = TRUE`", {
   skip_if_cargo_unavailable()
