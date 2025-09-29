@@ -40,7 +40,17 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rextendr-development-version">rextendr (development version)<a class="anchor" aria-label="anchor" href="#rextendr-development-version"></a></h2>
-</div>
+<ul><li>Refactor of <code><a href="../reference/rust_source.html">rust_source()</a></code> and <code><a href="../reference/rust_source.html">rust_function()</a></code> &lt;(<a href="https://github.com/extendr/rextendr/pull/478" class="external-link uri">https://github.com/extendr/rextendr/pull/478</a>)&gt;
+<ul><li>Adds <code>opts = extendr_options()</code> to simplify <code><a href="../reference/rust_source.html">rust_source()</a></code> API with <code>...</code> to maintain backwards compatibility</li>
+<li>Adds rlang standalone type checks to <code><a href="../reference/rust_source.html">rust_source()</a></code> and <code><a href="../reference/rust_source.html">rust_function()</a></code>
+</li>
+<li>Replaces internal <code>invoke_cargo()</code> with <code>run_cargo()</code> in <code><a href="../reference/rust_source.html">rust_source()</a></code>
+</li>
+<li>Simplifies handling of macro options in <code>rust_function(extendr_fn_options = list())</code>
+</li>
+<li>Unknown macro options in dev and release now throw errors instead of warnings</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="rextendr-042">rextendr 0.4.2<a class="anchor" aria-label="anchor" href="#rextendr-042"></a></h2><p class="text-muted">CRAN release: 2025-08-26</p>
 <ul><li>Sets the <code>extendr-api</code> version to the latest stable version instead of <code>"*"</code> when creating a new package. This is fetched from <a href="https://crates.io/api/v1/crates/extendr-api" class="external-link uri">https://crates.io/api/v1/crates/extendr-api</a> and will fall back to <code>"*"</code> if not available <a href="https://github.com/extendr/rextendr/pull/467" class="external-link uri">https://github.com/extendr/rextendr/pull/467</a>
