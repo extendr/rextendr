@@ -6,6 +6,8 @@
   * Replaces internal `invoke_cargo()` with `run_cargo()` in `rust_source()` 
   * Simplifies handling of macro options in `rust_function(extendr_fn_options = list())` 
   * Unknown macro options in dev and release now throw errors instead of warnings
+* `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` directory after creating the `vendor.tar.xz` file. (#479)
+* `Makevars`(.win) now uses the `vendor/`, if it exists, before unzipping the tarball. (#479)
 
 # rextendr 0.4.2
 
