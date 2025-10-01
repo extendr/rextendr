@@ -1,8 +1,22 @@
+args <- commandArgs(TRUE) # configure-args
+
 # Note: Any variables prefixed with `.` are used for text
 # replacement in the Makevars.in and Makevars.win.in
 
 # check the packages MSRV first
 source("tools/msrv.R")
+
+# Configure arguments
+input_profile <- args[[1L]]
+input_features <- args[[2L]]
+
+if (!nzchar(input_profile)) {
+  input_profile <- Sys.getenv("{{{pkg_name}}}}_PROFILE")
+}
+
+if (!nzchar(input_features)) {
+  input_features <- Sys.getenv("{{{pkg_name}}}}_FEATURES")
+}
 
 # check DEBUG and NOT_CRAN environment variables
 env_debug <- Sys.getenv("DEBUG")
@@ -34,7 +48,28 @@ if (!is_not_cran) {
 )
 
 # when DEBUG env var is present we use `--debug` build
-.profile <- ifelse(is_debug, "", "--release")
+.profile <- if (nzchar(input_profile)) {
+  message("Using input profile: --", input_profile)
+  sprintf("--%s", input_profile)
+} else if (is_debug) {
+  ""
+} else {
+  "--release"
+}
+
+if (nzchar(input_features)) {
+  .features <- unique(strsplit(input_features, "[, ]")[[1L]])
+  .features <- .features[nzchar(.features)]
+  if (length(.features)) {
+    # Space or comma separated list of features to activate
+    .features <- paste(.features, collapse = ",")
+    message("Using input features: ", .features)
+    .features <- sprintf("--features %s", .features)
+  }
+} else {
+  .features <- ""
+}
+
 .clean_targets <- ifelse(is_debug, "", "$(TARGET_DIR)")
 
 # We specify this target when building for webR
@@ -99,6 +134,7 @@ mv_txt <- readLines(mv_fp)
 # replace placeholder values
 new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@PROFILE@", .profile, x = _) |>
+  gsub("@FEATURES@", .features, x = _) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
   gsub("@TARGET@", .target, x = _) |>

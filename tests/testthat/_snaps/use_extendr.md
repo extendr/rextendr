@@ -24,16 +24,66 @@
       cat_file("configure")
     Output
       #!/usr/bin/env sh
+      
+      # Initialize variables
+      FEATURES=""
+      PROFILE=""
+      
+      # Parse and validate configure arguments
+      for arg in "$@"; do
+        case $arg in
+          --with-features=*)
+            value="${arg#*=}"
+            if [ -n "$FEATURES" ]; then
+              FEATURES="${FEATURES},${value}"
+            else
+              FEATURES="${value}"
+            fi
+            ;;
+          --with-profile=*)
+            PROFILE="${arg#*=}"
+            ;;
+          *)
+            echo "configure: error: unknown argument: $arg" >&2
+            exit 1
+            ;;
+        esac
+      done
+      
       : "${R_HOME=`R RHOME`}"
-      "${R_HOME}/bin/Rscript" tools/config.R
+      "${R_HOME}/bin/Rscript" tools/config.R "${PROFILE}" "${FEATURES}"
 
 ---
 
     Code
       cat_file("configure.win")
     Output
-      #!/usr/bin/env sh
-      "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" tools/config.R
+      # Initialize variables
+      FEATURES=""
+      PROFILE=""
+      
+      # Parse and validate configure arguments
+      for arg in "$@"; do
+        case $arg in
+          --with-features=*)
+            value="${arg#*=}"
+            if [ -n "$FEATURES" ]; then
+              FEATURES="${FEATURES},${value}"
+            else
+              FEATURES="${value}"
+            fi
+            ;;
+          --with-profile=*)
+            PROFILE="${arg#*=}"
+            ;;
+          *)
+            echo "configure.win: error: unknown argument: $arg" >&2
+            exit 1
+            ;;
+        esac
+      done
+      
+      "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" tools/config.R  "${PROFILE}" "${FEATURES}"
 
 ---
 
@@ -223,7 +273,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@ @FEATURES@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -282,7 +332,7 @@
       	# Build the project using Cargo with additional flags
       	export CARGO_HOME=$(CARGOTMP) && \
       	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR) @FEATURES@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -453,7 +503,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@ @FEATURES@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
