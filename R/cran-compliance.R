@@ -7,6 +7,10 @@
 #  the vendored dependencies using [`vendor_pkgs()`].
 #'
 #' @inheritParams use_extendr
+#'
+#' @param clean `logical(1)` indicating whether the `vendor/` directory should be removed after
+#' creating the `vendor.tar.xz` file. Defaults to `FALSE`.
+#'
 #' @returns
 #'
 #' - `vendor_pkgs()` returns a data.frame with two columns `crate` and `version`
@@ -16,7 +20,7 @@
 #' vendor_pkgs()
 #' }
 #' @export
-vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
+vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FALSE) {
   stderr_line_callback <- function(x, proc) {
     if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
       cli::cat_bullet(stringi::stri_trim_left(x))
@@ -119,7 +123,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL) {
   }
 
   # clean up vendor directory
-  if (dir.exists(file.path(src_dir, "vendor"))) {
+  if (clean && dir.exists(file.path(src_dir, "vendor"))) {
     cli::cli_alert_info("Removing {.path src/rust/vendor} directory")
     unlink(file.path(src_dir, "vendor"), recursive = TRUE)
   }
