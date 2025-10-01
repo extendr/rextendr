@@ -1,5 +1,12 @@
 # rextendr (development version)
 
+* Refactor of `rust_source()` and `rust_function()` <(https://github.com/extendr/rextendr/pull/478)> 
+  * Adds `opts = extendr_options()` to simplify `rust_source()` API with `...` to maintain backwards compatibility
+  * Adds rlang standalone type checks to `rust_source()` and `rust_function()` 
+  * Replaces internal `invoke_cargo()` with `run_cargo()` in `rust_source()` 
+  * Simplifies handling of macro options in `rust_function(extendr_fn_options = list())` 
+  * Unknown macro options in dev and release now throw errors instead of warnings
+
 # rextendr 0.4.2
 
 * Sets the `extendr-api` version to the latest stable version instead of `"*"` when creating a new package. This is fetched from <https://crates.io/api/v1/crates/extendr-api> and will fall back to `"*"` if not available <https://github.com/extendr/rextendr/pull/467>

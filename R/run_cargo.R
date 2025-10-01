@@ -35,7 +35,12 @@ run_cargo <- function(
   ...
 ) {
   check_character(args, call = error_call, class = "rextendr_error")
-  check_string(wd, call = error_call, class = "rextendr_error")
+  check_string(
+    wd,
+    allow_null = TRUE,
+    call = error_call,
+    class = "rextendr_error"
+  )
   check_bool(error_on_status, call = error_call, class = "rextendr_error")
   check_bool(echo, call = error_call, class = "rextendr_error")
   check_character(env, call = error_call, class = "rextendr_error")
