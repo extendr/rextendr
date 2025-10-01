@@ -212,10 +212,16 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # vendor.tar.xz, if present, is unzipped and used for offline compilation.
+      # If a vendor directory exists, it is used for offline compilation. Otherwise if
+      # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	if [ -f ./rust/vendor.tar.xz ]; then \
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
       		mkdir -p $(CARGOTMP) && \
       		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
@@ -273,7 +279,14 @@
       	mkdir -p $(TARGET_DIR)/libgcc_mock
       	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	if [ -f ./rust/vendor.tar.xz ]; then \
+        # If a vendor directory exists, it is used for offline compilation. Otherwise if
+        # vendor.tar.xz exists, it is unzipped and used for offline compilation.
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
       		mkdir -p $(CARGOTMP) && \
       		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
@@ -442,10 +455,16 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # vendor.tar.xz, if present, is unzipped and used for offline compilation.
+      # If a vendor directory exists, it is used for offline compilation. Otherwise if
+      # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	if [ -f ./rust/vendor.tar.xz ]; then \
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
       		mkdir -p $(CARGOTMP) && \
       		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
