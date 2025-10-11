@@ -61,7 +61,7 @@ get_path_to_cargo_folder_arm <- function(rtools_root) {
     cli::cli_abort(
       c(
         "{.code rextendr} on ARM Windows requires an ARM-compatible Rust toolchain.",
-        "i" = "Check this instructions to set up {.code cargo} using ARM version of RTools: {.url https://github.com/r-rust/faq?tab=readme-ov-file#does-rust-support-windows-on-arm64-aarch64}."
+        "i" = "Check this instructions to set up {.code cargo} using ARM version of RTools: {.url https://github.com/r-rust/faq?tab=readme-ov-file#does-rust-support-windows-on-arm64-aarch64}." # nolint: line_length_linter
       ),
       class = "rextendr_error"
     )
@@ -73,8 +73,6 @@ get_path_to_cargo_folder_arm <- function(rtools_root) {
 use_rtools <- function(.local_envir = parent.frame()) {
   throw_if_no_rtools()
   throw_if_not_ucrt()
-
-  minor_patch <- package_version(R.version$minor)
 
   is_arm <- is_windows_arm()
 
@@ -107,7 +105,7 @@ use_rtools <- function(.local_envir = parent.frame()) {
   rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"))
   withr::local_path(rtools_bin_path, action = "suffix", .local_envir = .local_envir)
 
-  if(is_arm){
+  if (is_arm) {
     cargo_path <- get_path_to_cargo_folder_arm(rtools_home)
     withr::local_path(cargo_path, .local_envir = .local_envir)
   }
