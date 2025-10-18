@@ -98,13 +98,14 @@ test_that("throw_if_not_ucrt does not throw when R is UCRT", {
   mockery::expect_called(abort_mock, 0)
 })
 
-patrick::with_parameters_test_that("get_rtools_version returns correct Rtools version:", {
-  mockery::stub(get_rtools_version, "get_r_version", list(minor = minor_version))
+patrick::with_parameters_test_that("get_rtools_version returns correct Rtools version:",
+  {
+    mockery::stub(get_rtools_version, "get_r_version", list(minor = minor_version))
 
-  result <- get_rtools_version()
+    result <- get_rtools_version()
 
-  expect_equal(result, expected_rtools_version)
-},
+    expect_equal(result, expected_rtools_version)
+  },
   minor_version = c("5.1", "5.0", "4.3", "4.2", "4.1", "4.0", "3.3", "2.3"),
   expected_rtools_version = c("45", "45", "44", "44", "44", "44", "43", "42"),
   .test_name = "when R minor version is {minor_version}, Rtools should be {expected_rtools_version}"
@@ -158,53 +159,55 @@ test_that("get_path_to_cargo_folder_arm throws when cargo.exe does not exist", {
   expect_equal(abort_mock_args[["class"]], "rextendr_error")
 })
 
-patrick::with_parameters_test_that("get_rtools_home returns correct path:", {
-  env_var <- "env_var"
-  default_path <- "default_path"
-  get_env_result <- "get_env_result"
-  normalize_path_result <- "normalize_path_result"
+patrick::with_parameters_test_that("get_rtools_home returns correct path:",
+  {
+    env_var <- "env_var"
+    default_path <- "default_path"
+    get_env_result <- "get_env_result"
+    normalize_path_result <- "normalize_path_result"
 
-  sprintf_mock <- mockery::mock(env_var, default_path)
-  getenv_mock <- mockery::mock(get_env_result)
-  normalize_path_mock <- mockery::mock(normalize_path_result)
+    sprintf_mock <- mockery::mock(env_var, default_path)
+    getenv_mock <- mockery::mock(get_env_result)
+    normalize_path_mock <- mockery::mock(normalize_path_result)
 
-  mockery::stub(get_rtools_home, "sprintf", sprintf_mock)
-  mockery::stub(get_rtools_home, "Sys.getenv", getenv_mock)
-  mockery::stub(get_rtools_home, "normalizePath", normalize_path_mock)
+    mockery::stub(get_rtools_home, "sprintf", sprintf_mock)
+    mockery::stub(get_rtools_home, "Sys.getenv", getenv_mock)
+    mockery::stub(get_rtools_home, "normalizePath", normalize_path_mock)
 
-  rtools_version <- "rtools_version"
+    rtools_version <- "rtools_version"
 
-  result <- get_rtools_home(rtools_version, is_arm)
+    result <- get_rtools_home(rtools_version, is_arm)
 
-  expect_equal(result, normalize_path_result)
-  mockery::expect_args(sprintf_mock, 1, rtools_env_var_template, rtools_version)
-  mockery::expect_args(sprintf_mock, 2, rtools_default_path_template, rtools_version)
-  mockery::expect_args(getenv_mock, 1, env_var, default_path)
-  mockery::expect_args(normalize_path_mock, 1, get_env_result, mustWork = TRUE)
-},
+    expect_equal(result, normalize_path_result)
+    mockery::expect_args(sprintf_mock, 1, rtools_env_var_template, rtools_version)
+    mockery::expect_args(sprintf_mock, 2, rtools_default_path_template, rtools_version)
+    mockery::expect_args(getenv_mock, 1, env_var, default_path)
+    mockery::expect_args(normalize_path_mock, 1, get_env_result, mustWork = TRUE)
+  },
   is_arm = c(TRUE, FALSE),
   rtools_env_var_template = c("RTOOLS%s_AARCH64_HOME", "RTOOLS%s_HOME"),
   rtools_default_path_template = c("C:\\rtools%s-aarch64", "C:\\rtools%s"),
-  .test_name = "when is_arm is {is_arm}, env var should be {rtools_env_var_template} and default path should start with {rtools_default_path_template}"
+  .test_name = "when is_arm is {is_arm}, env var should be {rtools_env_var_template} and default path should start with {rtools_default_path_template}" # nolint: line_length_linter
 )
 
-patrick::with_parameters_test_that("get_rtools_bin_path returns correct path:", {
-  rtools_home <- "rtools_home"
-  file_path_result <- "file/path/result"
-  expected_path <- "normalized/path"
-  file_path_mock <- mockery::mock(file_path_result)
-  normalize_path_mock <- mockery::mock(expected_path)
+patrick::with_parameters_test_that("get_rtools_bin_path returns correct path:",
+  {
+    rtools_home <- "rtools_home"
+    file_path_result <- "file/path/result"
+    expected_path <- "normalized/path"
+    file_path_mock <- mockery::mock(file_path_result)
+    normalize_path_mock <- mockery::mock(expected_path)
 
-  mockery::stub(get_rtools_bin_path, "file.path", file_path_mock)
-  mockery::stub(get_rtools_bin_path, "normalizePath", normalize_path_mock)
+    mockery::stub(get_rtools_bin_path, "file.path", file_path_mock)
+    mockery::stub(get_rtools_bin_path, "normalizePath", normalize_path_mock)
 
-  result <- get_rtools_bin_path(rtools_home, is_arm)
+    result <- get_rtools_bin_path(rtools_home, is_arm)
 
-  expect_equal(result, expected_path)
-  expected_arg <- c(subdir, "usr", "bin")
-  mockery::expect_args(file_path_mock, 1, rtools_home, expected_arg)
-  mockery::expect_args(normalize_path_mock, 1, file_path_result, mustWork = TRUE)
-},
+    expect_equal(result, expected_path)
+    expected_arg <- c(subdir, "usr", "bin")
+    mockery::expect_args(file_path_mock, 1, rtools_home, expected_arg)
+    mockery::expect_args(normalize_path_mock, 1, file_path_result, mustWork = TRUE)
+  },
   is_arm = c(TRUE, FALSE),
   subdir = c("aarch64-w64-mingw32.static.posix", "x86_64-w64-mingw32.static.posix"),
   .test_name = "when is_arm is {is_arm}, subdir should start with {subdir}"
@@ -246,8 +249,8 @@ test_that("use_rtools handled aarch64 architecture", {
 
   withr_local_path_mock <- mockery::mock()
   get_rtools_home_mock <- mockery::mock(rtools_home)
-  get_rtools_bin_path_mock <- mockery::mock(rtools_bin_path)
-  get_path_to_cargo_folder_arm_mock <- mockery::mock(cargo_path)
+  get_rtools_bin_path_mock <- mockery::mock(rtools_bin_path) # nolint: object_length_linter
+  get_path_to_cargo_folder_arm_mock <- mockery::mock(cargo_path) # nolint: object_length_linter
 
   mockery::stub(use_rtools, "throw_if_no_rtools", NULL)
   mockery::stub(use_rtools, "throw_if_not_ucrt", NULL)
@@ -269,4 +272,3 @@ test_that("use_rtools handled aarch64 architecture", {
   mockery::expect_args(get_path_to_cargo_folder_arm_mock, 1, rtools_home)
   mockery::expect_args(withr_local_path_mock, 2, cargo_path, .local_envir = parent_env)
 })
-

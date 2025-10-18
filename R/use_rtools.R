@@ -1,4 +1,4 @@
-get_r_version <- function () {
+get_r_version <- function() {
   R.version
 }
 
