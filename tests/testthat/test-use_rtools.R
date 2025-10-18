@@ -157,3 +157,88 @@ test_that("get_path_to_cargo_folder_arm throws when cargo.exe does not exist", {
   expect_equal(abort_mock_args[[1]][[1]], "{.code rextendr} on ARM Windows requires an ARM-compatible Rust toolchain.")
   expect_equal(abort_mock_args[["class"]], "rextendr_error")
 })
+
+test_that("use_rtools handled x86_64 architecture", {
+  rtools_version <- "rtools_version"
+  env_var <- "env_var"
+  default_path <- "default_path"
+  rtools_home <- "rtools_home"
+  sys_getenv_result <- "sys_getenv_result"
+  file_path_result <- "file_path_result"
+  rtools_bin_path <- "rtools_bin_path"
+
+  sprintf_mock <- mockery::mock(env_var, default_path)
+  normalize_path_mock <- mockery::mock(rtools_home, rtools_bin_path)
+  sys_getenv_mock <- mockery::mock(sys_getenv_result)
+  file_path_mock <- mockery::mock(file_path_result)
+  withr_local_path_mock <- mockery::mock()
+  get_path_to_cargo_folder_arm_mock <- mockery::mock()
+
+  mockery::stub(use_rtools, "throw_if_no_rtools", NULL)
+  mockery::stub(use_rtools, "throw_if_not_ucrt", NULL)
+  mockery::stub(use_rtools, "is_windows_arm", FALSE)
+  mockery::stub(use_rtools, "get_rtools_version", rtools_version)
+
+  mockery::stub(use_rtools, "sprintf", sprintf_mock)
+  mockery::stub(use_rtools, "Sys.getenv", sys_getenv_mock)
+  mockery::stub(use_rtools, "normalizePath", normalize_path_mock)
+  mockery::stub(use_rtools, "file.path", file_path_mock)
+  mockery::stub(use_rtools, "withr::local_path", withr_local_path_mock)
+  mockery::stub(use_rtools, "get_path_to_cargo_folder_arm", get_path_to_cargo_folder_arm_mock)
+
+  parent_env <- "parent_env"
+
+  use_rtools(parent_env)
+
+  mockery::expect_args(sprintf_mock, 1, "RTOOLS%s_HOME", rtools_version)
+  mockery::expect_args(sprintf_mock, 2, "C:\\rtools%s", rtools_version)
+  mockery::expect_args(sys_getenv_mock, 1, env_var, default_path)
+  mockery::expect_args(normalize_path_mock, 1, sys_getenv_result, mustWork = TRUE)
+  mockery::expect_args(normalize_path_mock, 2, file_path_result, mustWork = TRUE)
+  mockery::expect_args(file_path_mock, 1, rtools_home, c("x86_64-w64-mingw32.static.posix", "usr"), "bin")
+  mockery::expect_args(withr_local_path_mock, 1, rtools_bin_path, action = "suffix", .local_envir = parent_env)
+})
+
+test_that("use_rtools handled ARM64 architecture", {
+  rtools_version <- "rtools_version"
+  env_var <- "env_var"
+  default_path <- "default_path"
+  rtools_home <- "rtools_home"
+  sys_getenv_result <- "sys_getenv_result"
+  file_path_result <- "file_path_result"
+  rtools_bin_path <- "rtools_bin_path"
+  cargo_path <- "cargo_path"
+
+  sprintf_mock <- mockery::mock(env_var, default_path)
+  normalize_path_mock <- mockery::mock(rtools_home, rtools_bin_path)
+  sys_getenv_mock <- mockery::mock(sys_getenv_result)
+  file_path_mock <- mockery::mock(file_path_result)
+  withr_local_path_mock <- mockery::mock()
+  get_path_to_cargo_folder_arm_mock <- mockery::mock(cargo_path)
+
+  mockery::stub(use_rtools, "throw_if_no_rtools", NULL)
+  mockery::stub(use_rtools, "throw_if_not_ucrt", NULL)
+  mockery::stub(use_rtools, "is_windows_arm", TRUE)
+  mockery::stub(use_rtools, "get_rtools_version", rtools_version)
+
+  mockery::stub(use_rtools, "sprintf", sprintf_mock)
+  mockery::stub(use_rtools, "Sys.getenv", sys_getenv_mock)
+  mockery::stub(use_rtools, "normalizePath", normalize_path_mock)
+  mockery::stub(use_rtools, "file.path", file_path_mock)
+  mockery::stub(use_rtools, "withr::local_path", withr_local_path_mock)
+  mockery::stub(use_rtools, "get_path_to_cargo_folder_arm", get_path_to_cargo_folder_arm_mock)
+
+  parent_env <- "parent_env"
+
+  use_rtools(parent_env)
+
+  mockery::expect_args(sprintf_mock, 1, "RTOOLS%s_AARCH64_HOME", rtools_version)
+  mockery::expect_args(sprintf_mock, 2, "C:\\rtools%s-aarch64", rtools_version)
+  mockery::expect_args(sys_getenv_mock, 1, env_var, default_path)
+  mockery::expect_args(normalize_path_mock, 1, sys_getenv_result, mustWork = TRUE)
+  mockery::expect_args(normalize_path_mock, 2, file_path_result, mustWork = TRUE)
+  mockery::expect_args(file_path_mock, 1, rtools_home, c("aarch64-w64-mingw32.static.posix", "usr"), "bin")
+  mockery::expect_args(withr_local_path_mock, 1, rtools_bin_path, action = "suffix", .local_envir = parent_env)
+  mockery::expect_args(get_path_to_cargo_folder_arm_mock, 1, rtools_home)
+  mockery::expect_args(withr_local_path_mock, 2, cargo_path, .local_envir = parent_env)
+})

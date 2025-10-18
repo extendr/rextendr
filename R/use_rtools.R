@@ -106,11 +106,13 @@ use_rtools <- function(.local_envir = parent.frame()) {
     c("x86_64-w64-mingw32.static.posix", "usr")
   }
 
-  rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"))
+  rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"), mustWork = TRUE)
   withr::local_path(rtools_bin_path, action = "suffix", .local_envir = .local_envir)
 
   if (is_arm) {
     cargo_path <- get_path_to_cargo_folder_arm(rtools_home)
     withr::local_path(cargo_path, .local_envir = .local_envir)
   }
+
+  invisible()
 }
