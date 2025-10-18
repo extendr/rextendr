@@ -74,14 +74,7 @@ get_path_to_cargo_folder_arm <- function(rtools_root) {
   normalizePath(path_to_cargo_folder, mustWork = TRUE)
 }
 
-use_rtools <- function(.local_envir = parent.frame()) {
-  throw_if_no_rtools()
-  throw_if_not_ucrt()
-
-  is_arm <- is_windows_arm()
-
-  rtools_version <- get_rtools_version()
-
+get_rtools_home <- function(rtools_version, is_arm) {
   env_var <- if (is_arm) {
     sprintf("RTOOLS%s_AARCH64_HOME", rtools_version)
   } else {
@@ -94,19 +87,32 @@ use_rtools <- function(.local_envir = parent.frame()) {
     sprintf("C:\\rtools%s", rtools_version)
   }
 
-  rtools_home <- normalizePath(
+  normalizePath(
     Sys.getenv(env_var, default_path),
     mustWork = TRUE
   )
+}
 
+get_rtools_bin_path <- function(rtools_home, is_arm) {
   # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
   subdir <- if (is_arm) {
-    c("aarch64-w64-mingw32.static.posix", "usr")
+    c("aarch64-w64-mingw32.static.posix", "usr", "bin")
   } else {
-    c("x86_64-w64-mingw32.static.posix", "usr")
+    c("x86_64-w64-mingw32.static.posix", "usr", "bin")
   }
 
-  rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"), mustWork = TRUE)
+  normalizePath(file.path(rtools_home, subdir), mustWork = TRUE)
+}
+
+use_rtools <- function(.local_envir = parent.frame()) {
+  throw_if_no_rtools()
+  throw_if_not_ucrt()
+
+  is_arm <- is_windows_arm()
+  rtools_version <- get_rtools_version()
+  rtools_home <- get_rtools_home(rtools_version, is_arm)
+  rtools_bin_path <- get_rtools_bin_path(rtools_home, is_arm)
+
   withr::local_path(rtools_bin_path, action = "suffix", .local_envir = .local_envir)
 
   if (is_arm) {
