@@ -158,6 +158,58 @@ test_that("get_path_to_cargo_folder_arm throws when cargo.exe does not exist", {
   expect_equal(abort_mock_args[["class"]], "rextendr_error")
 })
 
+patrick::with_parameters_test_that("get_rtools_home returns correct path:", {
+  env_var <- "env_var"
+  default_path <- "default_path"
+  get_env_result <- "get_env_result"
+  normalize_path_result <- "normalize_path_result"
+
+  sprintf_mock <- mockery::mock(env_var, default_path)
+  getenv_mock <- mockery::mock(get_env_result)
+  normalize_path_mock <- mockery::mock(normalize_path_result)
+
+  mockery::stub(get_rtools_home, "sprintf", sprintf_mock)
+  mockery::stub(get_rtools_home, "Sys.getenv", getenv_mock)
+  mockery::stub(get_rtools_home, "normalizePath", normalize_path_mock)
+
+  rtools_version <- "rtools_version"
+
+  result <- get_rtools_home(rtools_version, is_arm)
+
+  expect_equal(result, normalize_path_result)
+  mockery::expect_args(sprintf_mock, 1, rtools_env_var_template, rtools_version)
+  mockery::expect_args(sprintf_mock, 2, rtools_default_path_template, rtools_version)
+  mockery::expect_args(getenv_mock, 1, env_var, default_path)
+  mockery::expect_args(normalize_path_mock, 1, get_env_result, mustWork = TRUE)
+},
+  is_arm = c(TRUE, FALSE),
+  rtools_env_var_template = c("RTOOLS%s_AARCH64_HOME", "RTOOLS%s_HOME"),
+  rtools_default_path_template = c("C:\\rtools%s-aarch64", "C:\\rtools%s"),
+  .test_name = "when is_arm is {is_arm}, env var should be {rtools_env_var_template} and default path should start with {rtools_default_path_template}"
+)
+
+patrick::with_parameters_test_that("get_rtools_bin_path returns correct path:", {
+  rtools_home <- "rtools_home"
+  file_path_result <- "file/path/result"
+  expected_path <- "normalized/path"
+  file_path_mock <- mockery::mock(file_path_result)
+  normalize_path_mock <- mockery::mock(expected_path)
+
+  mockery::stub(get_rtools_bin_path, "file.path", file_path_mock)
+  mockery::stub(get_rtools_bin_path, "normalizePath", normalize_path_mock)
+
+  result <- get_rtools_bin_path(rtools_home, is_arm)
+
+  expect_equal(result, expected_path)
+  expected_arg <- c(subdir, "usr", "bin")
+  mockery::expect_args(file_path_mock, 1, rtools_home, expected_arg)
+  mockery::expect_args(normalize_path_mock, 1, file_path_result, mustWork = TRUE)
+},
+  is_arm = c(TRUE, FALSE),
+  subdir = c("aarch64-w64-mingw32.static.posix", "x86_64-w64-mingw32.static.posix"),
+  .test_name = "when is_arm is {is_arm}, subdir should start with {subdir}"
+)
+
 test_that("use_rtools handled x86_64 architecture", {
   rtools_version <- "rtools_version"
   rtools_home <- "rtools_home"
