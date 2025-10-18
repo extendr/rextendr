@@ -1,6 +1,10 @@
+get_r_version <- function () {
+  R.version
+}
+
 is_windows_arm <- function() {
   proc_arch <- Sys.getenv("PROCESSOR_ARCHITECTURE")
-  r_arch <- R.version[["arch"]]
+  r_arch <- get_r_version()[["arch"]]
 
   if (identical(proc_arch, "ARM64") && !identical(r_arch, "aarch64")) {
     cli::cli_abort(
@@ -29,7 +33,7 @@ throw_if_no_rtools <- function() {
 }
 
 throw_if_not_ucrt <- function() {
-  if (!identical(R.version$crt, "ucrt")) {
+  if (!identical(get_r_version()[["ucrt"]], "ucrt")) {
     cli::cli_abort(
       c(
         "R must be built with UCRT to use rextendr.",
@@ -41,7 +45,7 @@ throw_if_not_ucrt <- function() {
 }
 
 get_rtools_version <- function() {
-  minor_patch <- package_version(R.version$minor)
+  minor_patch <- package_version(get_r_version()[["minor"]])
 
   if (minor_patch >= "5.0") {
     "45"

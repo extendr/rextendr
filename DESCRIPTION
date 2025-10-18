@@ -69,6 +69,8 @@ Suggests:
     rcmdcheck,
     knitr,
     lintr,
+    mockery (>= 0.4.5),
+    patrick (>= 0.3.0),
     rmarkdown,
     testthat (>= 3.1.7),
     usethis
