@@ -86,7 +86,7 @@ test_that("throw_if_not_ucrt does not throw when R is UCRT", {
   mockery::expect_called(abort_mock, 0)
 })
 
-patrick::with_parameters_test_that("get_rtools_version returns correct Rtools version:",
+patrick::with_parameters_test_that("get_rtools_version:",
   {
     mockery::stub(get_rtools_version, "get_r_version", list(minor = minor_version))
 
@@ -96,7 +96,7 @@ patrick::with_parameters_test_that("get_rtools_version returns correct Rtools ve
   },
   minor_version = c("5.1", "5.0", "4.3", "4.2", "4.1", "4.0", "3.3", "2.3"),
   expected_rtools_version = c("45", "45", "44", "44", "44", "44", "43", "42"),
-  .test_name = "when R minor version is {minor_version}, Rtools should be {expected_rtools_version}"
+  .test_name = "when R minor version is {minor_version}, returns {expected_rtools_version}"
 )
 
 test_that("get_path_to_cargo_folder_arm constructs correct path when folder exists", {
@@ -147,7 +147,7 @@ test_that("get_path_to_cargo_folder_arm throws when cargo.exe does not exist", {
   expect_equal(abort_mock_args[["class"]], "rextendr_error")
 })
 
-patrick::with_parameters_test_that("get_rtools_home returns correct path:",
+patrick::with_parameters_test_that("get_rtools_home:",
   {
     env_var <- "env_var"
     default_path <- "default_path"
@@ -178,7 +178,7 @@ patrick::with_parameters_test_that("get_rtools_home returns correct path:",
   .test_name = "when is_arm is {is_arm}, env var should be {rtools_env_var_template} and default path should start with {rtools_default_path_template}" # nolint: line_length_linter
 )
 
-patrick::with_parameters_test_that("get_rtools_bin_path returns correct path:",
+patrick::with_parameters_test_that("get_rtools_bin_path:",
   {
     rtools_home <- "rtools_home"
     file_path_result <- "file/path/result"
