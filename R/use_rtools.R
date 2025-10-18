@@ -33,7 +33,7 @@ throw_if_no_rtools <- function() {
 }
 
 throw_if_not_ucrt <- function() {
-  if (!identical(get_r_version()[["ucrt"]], "ucrt")) {
+  if (!identical(get_r_version()[["crt"]], "ucrt")) {
     cli::cli_abort(
       c(
         "R must be built with UCRT to use rextendr.",

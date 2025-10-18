@@ -65,7 +65,7 @@ test_that("throw_if_no_rtools does not throw when Rtools is found", {
 test_that("throw_if_not_ucrt throws when R is not UCRT", {
   abort_mock <- mockery::mock(stop("Aborted in test"))
 
-  mockery::stub(throw_if_not_ucrt, "get_r_version", list(ucrt = "non-ucrt"))
+  mockery::stub(throw_if_not_ucrt, "get_r_version", list(crt = "non-ucrt"))
   mockery::stub(throw_if_not_ucrt, "cli::cli_abort", abort_mock)
 
   expect_error(throw_if_not_ucrt(), "Aborted in test")
@@ -78,7 +78,7 @@ test_that("throw_if_not_ucrt throws when R is not UCRT", {
 test_that("throw_if_not_ucrt does not throw when R is UCRT", {
   abort_mock <- mockery::mock(stop("Aborted in test"))
 
-  mockery::stub(throw_if_not_ucrt, "get_r_version", list(ucrt = "ucrt"))
+  mockery::stub(throw_if_not_ucrt, "get_r_version", list(crt = "ucrt"))
   mockery::stub(throw_if_not_ucrt, "cli::cli_abort", abort_mock)
 
   expect_silent(throw_if_not_ucrt())
