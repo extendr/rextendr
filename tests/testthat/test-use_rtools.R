@@ -1,38 +1,26 @@
-test_that("is_windows_arm returns TRUE on Windows ARM64 with R aarch64", {
-  getenv_mock <- mockery::mock("ARM64")
-  abort_spy <- mockery::mock()
+patrick::with_parameters_test_that("is_windows_arm: ",
+  {
+    getenv_mock <- mockery::mock(proc_arch)
+    abort_spy <- mockery::mock()
 
-  mockery::stub(is_windows_arm, "Sys.getenv", getenv_mock)
-  mockery::stub(is_windows_arm, "cli::cli_abort", abort_spy)
-  mockery::stub(is_windows_arm, "get_r_version", list(arch = "aarch64"))
+    mockery::stub(is_windows_arm, "Sys.getenv", getenv_mock)
+    mockery::stub(is_windows_arm, "cli::cli_abort", abort_spy)
+    mockery::stub(is_windows_arm, "get_r_version", list(arch = r_arch))
 
-  result <- is_windows_arm()
+    result <- is_windows_arm()
 
-  expect_true(result)
+    expect_equal(result, is_arm)
 
-  mockery::expect_called(getenv_mock, 1)
-  mockery::expect_args(getenv_mock, 1, "PROCESSOR_ARCHITECTURE")
+    mockery::expect_called(getenv_mock, 1)
+    mockery::expect_args(getenv_mock, 1, "PROCESSOR_ARCHITECTURE")
 
-  mockery::expect_called(abort_spy, 0)
-})
-
-test_that("is_windows_arm returns FALSE on Windows AMD64 with R x86_64", {
-  getenv_mock <- mockery::mock("AMD64")
-  abort_spy <- mockery::mock()
-
-  mockery::stub(is_windows_arm, "Sys.getenv", getenv_mock)
-  mockery::stub(is_windows_arm, "cli::cli_abort", abort_spy)
-  mockery::stub(is_windows_arm, "get_r_version", list(arch = "x86_64"))
-
-  result <- is_windows_arm()
-
-  expect_false(result)
-
-  mockery::expect_called(getenv_mock, 1)
-  mockery::expect_args(getenv_mock, 1, "PROCESSOR_ARCHITECTURE")
-
-  mockery::expect_called(abort_spy, 0)
-})
+    mockery::expect_called(abort_spy, 0)
+  },
+  is_arm = c(TRUE, FALSE),
+  proc_arch = c("ARM64", "AMD64"),
+  r_arch = c("aarch64", "x86_64"),
+  .test_name = "when proc_arch is {proc_arch} and r_arch is {r_arch}, returns {is_arm}"
+)
 
 test_that("is_windows_arm throws on Windows ARM64 with R not aarch64", {
   getenv_mock <- mockery::mock("ARM64")
