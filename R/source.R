@@ -278,65 +278,7 @@ rust_source <- function(
 
   # append rtools path to the end of PATH on Windows
   if (opts[["use_rtools"]] && .Platform$OS.type == "windows") {
-    if (!suppressMessages(pkgbuild::has_rtools())) {
-      cli::cli_abort(
-        c(
-          "Unable to find Rtools that are needed for compilation.",
-          "i" = "Required version is {.emph {pkgbuild::rtools_needed()}}."
-        ),
-        class = "rextendr_error"
-      )
-    }
-
-    if (identical(R.version$crt, "ucrt")) {
-      # TODO: update this when R 5.0 is released.
-      if (!identical(R.version$major, "4")) {
-        cli::cli_abort(
-          "rextendr currently supports R 4.2",
-          call = rlang::caller_call(),
-          class = "rextendr_error"
-        )
-      }
-
-      minor_patch <- package_version(R.version$minor)
-
-      if (minor_patch >= "5.0") {
-        rtools_version <- "45" # nolint: object_usage_linter
-      } else if (minor_patch >= "4.0") {
-        rtools_version <- "44" # nolint: object_usage_linter
-      } else if (minor_patch >= "3.0") {
-        rtools_version <- "43" # nolint: object_usage_linter
-      } else {
-        rtools_version <- "42" # nolint: object_usage_linter
-      }
-
-      rtools_home <- normalizePath(
-        Sys.getenv(
-          glue("RTOOLS{rtools_version}_HOME"),
-          glue("C:\\rtools{rtools_version}")
-        ),
-        mustWork = TRUE
-      )
-
-      # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
-      subdir <- c("x86_64-w64-mingw32.static.posix", "usr")
-    } else {
-      # rtools_path() returns path to the RTOOLS40_HOME\usr\bin,
-      # but we need RTOOLS40_HOME\mingw{arch}\bin, hence the "../.."
-      rtools_home <- normalizePath(
-        # `pkgbuild` may return two paths for R < 4.2 with Rtools40v2
-        file.path(pkgbuild::rtools_path()[1], "..", ".."),
-        winslash = "/",
-        mustWork = TRUE
-      )
-
-      subdir <- paste0("mingw", ifelse(R.version$arch == "i386", "32", "64"))
-      # if RTOOLS40_HOME is properly set, this will have no real effect
-      withr::local_envvar(RTOOLS40_HOME = rtools_home)
-    }
-
-    rtools_bin_path <- normalizePath(file.path(rtools_home, subdir, "bin"))
-    withr::local_path(rtools_bin_path, action = "suffix")
+    use_rtools()
   }
 
   # get target name, not null for Windows
@@ -802,6 +744,10 @@ get_specific_target_name <- function() {
 
     if (R.version$arch == "i386") {
       return("i686-pc-windows-gnu")
+    }
+
+    if (R.version$arch == "aarch64") {
+      return(NULL)
     }
 
     cli::cli_abort(
