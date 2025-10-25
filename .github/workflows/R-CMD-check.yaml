@@ -44,6 +44,23 @@ jobs:
           toolchain: ${{ matrix.config.rust-version }}
           targets: ${{ matrix.config.rust-target }}
 
+      # Add rust-cache for faster builds
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: ${{ matrix.config.os }}-${{ matrix.config.rust-version }}
+          cache-on-failure: true
+
+      # Add sccache for compilation caching
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - name: Configure sccache
+        shell: pwsh
+        run: |
+          echo "SCCACHE_GHA_ENABLED=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "RUSTC_WRAPPER=sccache" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - uses: baptiste0928/cargo-install@v3
         if: matrix.config.r == 'release'
         with:
@@ -63,3 +80,7 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           error-on: '"note"'
+
+      # Print sccache stats at the end
+      - name: Print sccache stats
+        run: sccache --show-stats
