@@ -96,12 +96,12 @@ get_rtools_home <- function(rtools_version, is_arm) {
 get_rtools_bin_path <- function(rtools_home, is_arm) {
   # c.f. https://github.com/wch/r-source/blob/f09d3d7fa4af446ad59a375d914a0daf3ffc4372/src/library/profile/Rprofile.windows#L70-L71 # nolint: line_length_linter
   subdir <- if (is_arm) {
-    c("aarch64-w64-mingw32.static.posix", "usr", "bin")
+    c("aarch64-w64-mingw32.static.posix", "usr")
   } else {
-    c("x86_64-w64-mingw32.static.posix", "usr", "bin")
+    c("x86_64-w64-mingw32.static.posix", "usr")
   }
 
-  normalizePath(file.path(rtools_home, subdir), mustWork = TRUE)
+  normalizePath(file.path(rtools_home, subdir, "bin"), mustWork = TRUE)
 }
 
 use_rtools <- function(.local_envir = parent.frame()) {
