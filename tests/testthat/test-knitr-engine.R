@@ -34,3 +34,15 @@ test_that("Snapshot test of knitr-engine", {
   knitr::knit(input, output)
   expect_snapshot(cat_file(output))
 })
+
+
+test_that("knitr-engine for #[extendr(default = )]", {
+  skip_if_cargo_unavailable()
+  skip_if_not_installed("knitr")
+  skip_on_cran()
+
+  input <- file.path("../data/test-default-arg.Rmd")
+  output <- withr::local_file("snapshot-extendr-default.md")
+  knitr::knit(input, output)
+  expect_true(check_default())
+})
