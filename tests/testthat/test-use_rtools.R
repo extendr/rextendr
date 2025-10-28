@@ -192,8 +192,8 @@ patrick::with_parameters_test_that("get_rtools_bin_path:",
     result <- get_rtools_bin_path(rtools_home, is_arm)
 
     expect_equal(result, expected_path)
-    expected_arg <- c(subdir, "usr", "bin")
-    mockery::expect_args(file_path_mock, 1, rtools_home, expected_arg)
+    expected_arg <- c(subdir, "usr")
+    mockery::expect_args(file_path_mock, 1, rtools_home, expected_arg, "bin")
     mockery::expect_args(normalize_path_mock, 1, file_path_result, mustWork = TRUE)
   },
   is_arm = c(TRUE, FALSE),
