@@ -8,6 +8,10 @@
   * Unknown macro options in dev and release now throw errors instead of warnings
 * `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` directory after creating the `vendor.tar.xz` file. (#479)
 * `Makevars`(.win) now uses the `vendor/`, if it exists, before unzipping the tarball. (#479)
+* Enhanced runtime compilation with `rust_source()` family of functions (#481)
+  * Dropped support for 32-bit Windows target
+  * Added support for ARM64 Windows target
+
 
 # rextendr 0.4.2
 
