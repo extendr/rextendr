@@ -1,5 +1,6 @@
 # rextendr (development version)
 
+* `use_extendr()` now generates `cleanup` and `cleanup.win`.
 * Refactor of `rust_source()` and `rust_function()` <(https://github.com/extendr/rextendr/pull/478)> 
   * Adds `opts = extendr_options()` to simplify `rust_source()` API with `...` to maintain backwards compatibility
   * Adds rlang standalone type checks to `rust_source()` and `rust_function()` 
