@@ -212,22 +212,24 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
-      # is unzipped and used for offline compilation.
+      # If a vendor directory exists, it is used for offline compilation. Otherwise if
+      # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -236,7 +238,7 @@
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
 
 ---
 
@@ -277,12 +279,17 @@
       	mkdir -p $(TARGET_DIR)/libgcc_mock
       	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
       
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+        # If a vendor directory exists, it is used for offline compilation. Otherwise if
+        # vendor.tar.xz exists, it is unzipped and used for offline compilation.
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	# Build the project using Cargo with additional flags
@@ -297,7 +304,7 @@
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
 
 ---
 
@@ -325,6 +332,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 ---
 
@@ -372,6 +383,7 @@
       > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
+      i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 # use_extendr() can overwrite files in non-interactive sessions
 
@@ -392,6 +404,7 @@
       v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
       * Please run `rextendr::document()` for changes to take effect.
+      i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 ---
 
@@ -411,6 +424,10 @@
       
       [dependencies]
       extendr-api = '*'
+      
+      [profile.release]
+      lto = true
+      codegen-units = 1
 
 # use_rextendr_template() can overwrite existing files
 
@@ -438,22 +455,24 @@
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
       #
-      # When the NOT_CRAN flag is *not* set, the vendor.tar.xz, if present,
-      # is unzipped and used for offline compilation.
+      # If a vendor directory exists, it is used for offline compilation. Otherwise if
+      # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       $(STATLIB):
       
-      	# Check if NOT_CRAN is false and unzip vendor.tar.xz if so
-      	if [ "$(NOT_CRAN)" != "true" ]; then \
-      		if [ -f ./rust/vendor.tar.xz ]; then \
-      			tar xf rust/vendor.tar.xz && \
-      			mkdir -p $(CARGOTMP) && \
-      			cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
-      		fi; \
+      	if [ -d ./vendor ]; then \
+      		echo "=== Using offline vendor directory ==="; \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      	elif [ -f ./rust/vendor.tar.xz ]; then \
+      		echo "=== Using offline vendor tarball ==="; \
+      		tar xf rust/vendor.tar.xz && \
+      		mkdir -p $(CARGOTMP) && \
+      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
       	fi
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -462,5 +481,5 @@
       	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
 

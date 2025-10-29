@@ -21,9 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu' }
-          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '43' }
+          - {os: windows-latest, r: 'release', rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
+          - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
+          - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '44' }
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
 
@@ -37,12 +37,19 @@ jobs:
       REXTENDR_SKIP_DEV_TESTS: TRUE # TODO: Remove this when extendr/libR-sys issue is resolved
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.config.rust-version }}
           targets: ${{ matrix.config.rust-target }}
+
+      # Add rust-cache for faster builds
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: ${{ matrix.config.os }}-${{ matrix.config.rust-version }}
+          cache-on-failure: true
 
       - uses: baptiste0928/cargo-install@v3
         if: matrix.config.r == 'release'

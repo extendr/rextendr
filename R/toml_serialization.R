@@ -41,7 +41,7 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(map2_lgl(names, args, ~ !nzchar(.x) && is.atomic(.y)))
+  invalid <- which(map2_lgl(names, args, \(.x, .y) !nzchar(.x) && is.atomic(.y)))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -97,13 +97,13 @@ get_toml_missing_msg <- function() {
 simplify_row <- function(row) {
   result <- map_if(
     row,
-    ~ is.list(.x) && all(!nzchar(names2(.x))),
-    ~ .x[1],
-    .else = ~.x
+    \(.x) is.list(.x) && all(!nzchar(names2(.x))),
+    \(.x) .x[1],
+    .else = identity
   )
   discard(
     result,
-    ~ is_na(.x) || is_null(unlist(.x))
+    \(.x) is_na(.x) || is_null(unlist(.x))
   )
 }
 
@@ -203,7 +203,7 @@ format_toml_atomic <- function(x,
     "[ ]"
   } else {
     formatter <- rlang::as_function(.formatter)
-    items <- glue_collapse(formatter(x, ...), ", ")
+    items <- glue_collapse(formatter(x), ", ")
     if (len > 1L || !is.null(dims)) {
       items <- glue("[ {items} ]")
     }
@@ -223,9 +223,9 @@ format_toml.character <- function(x,
                                   .str_as_literal = TRUE,
                                   .top_level = FALSE) {
   if (isTRUE(.str_as_literal)) {
-    .formatter <- ~ glue("'{.x}'")
+    .formatter <- \(.x) glue("'{.x}'")
   } else {
-    .formatter <- ~ glue("\"{escape_dbl_quotes(.x)}\"")
+    .formatter <- \(.x) glue("\"{escape_dbl_quotes(.x)}\"")
   }
   format_toml_atomic(
     x,
@@ -246,7 +246,7 @@ format_toml.integer <- function(x,
     ...,
     .format_int = .format_int,
     .top_level = FALSE,
-    .formatter = ~ sprintf(.format_int, .x)
+    .formatter = \(.x) sprintf(.format_int, .x)
   )
 }
 
@@ -260,7 +260,7 @@ format_toml.double <- function(x,
     ...,
     .format_dbl = .format_dbl,
     .top_level = FALSE,
-    .formatter = ~ sprintf(.format_dbl, .x)
+    .formatter = \(.x) sprintf(.format_dbl, .x)
   )
 }
 
@@ -272,7 +272,7 @@ format_toml.logical <- function(x,
     x,
     ...,
     .top_level = FALSE,
-    .formatter = ~ ifelse(.x, "true", "false")
+    .formatter = \(.x) ifelse(.x, "true", "false")
   )
 }
 

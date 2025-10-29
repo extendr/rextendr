@@ -4,7 +4,7 @@
 \alias{vendor_pkgs}
 \title{Vendor Rust dependencies}
 \usage{
-vendor_pkgs(path = ".", quiet = FALSE, overwrite = NULL)
+vendor_pkgs(path = ".", quiet = FALSE, overwrite = NULL, clean = FALSE)
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
@@ -17,6 +17,9 @@ If \code{NULL} (default), the function will ask the user whether each file shoul
 be overwritten in an interactive session or do nothing in a non-interactive session.
 If \code{FALSE} and each file already exists, the function will do nothing.
 If \code{TRUE}, all files will be overwritten.}
+
+\item{clean}{\code{logical(1)} indicating whether the \verb{vendor/} directory should be removed after
+creating the \code{vendor.tar.xz} file. Defaults to \code{FALSE}.}
 }
 \value{
 \itemize{

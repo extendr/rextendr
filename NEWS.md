@@ -1,6 +1,34 @@
 # rextendr (development version)
 
+* Refactor of `rust_source()` and `rust_function()` <(https://github.com/extendr/rextendr/pull/478)> 
+  * Adds `opts = extendr_options()` to simplify `rust_source()` API with `...` to maintain backwards compatibility
+  * Adds rlang standalone type checks to `rust_source()` and `rust_function()` 
+  * Replaces internal `invoke_cargo()` with `run_cargo()` in `rust_source()` 
+  * Simplifies handling of macro options in `rust_function(extendr_fn_options = list())` 
+  * Unknown macro options in dev and release now throw errors instead of warnings
+* `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` directory after creating the `vendor.tar.xz` file. (#479)
+* `Makevars`(.win) now uses the `vendor/`, if it exists, before unzipping the tarball. (#479)
+
+# rextendr 0.4.2
+
+* Sets the `extendr-api` version to the latest stable version instead of `"*"` when creating a new package. This is fetched from <https://crates.io/api/v1/crates/extendr-api> and will fall back to `"*"` if not available <https://github.com/extendr/rextendr/pull/467>
+* Adds `xz` to `SystemRequirements` to ensure extendr based packages build on Posit Package Manager <https://github.com/extendr/rextendr/pull/467>
+* Sets the release profile to use `lto=true` and `codegen-units=1` to ensure compatible builds with WebR as well as reduce the overall compiled package size <https://github.com/extendr/rextendr/pull/465>.
+* Fixes compatibility with WebR by adding `CARGO_PROFILE_DEV_PANIC="abort" CARGO_PROFILE_RELEASE_PANIC="abort"` when targeting `wasm32-unknown-emsacripten` target <https://github.com/extendr/rextendr/pull/461>
+
+# rextendr 0.4.1
+
+* Fix tests executed on CRAN (#449)
+
+* Added `use_vscode()` and its alias `use_positron()` to create `.vscode/settings.json`, enhancing the `rextendr` experience in VSCode/Positron.
+  Additionally, `use_extendr()` now automatically calls `use_vscode()` when VSCode or Positron is detected as the IDE (#441).
+
+# rextendr 0.4.0
+
+* Adds [WebR](https://docs.r-wasm.org/webr/latest/) support out of the box for all extendr packages.
+  * Note that not all Rust crates are wasm compatible. This change only enables the package to build in the `wasm32-unknown-emscripten` target. It does not guarantee all dependencies will compile.
 * Addresses new CRAN check in R 4.5+ adding warning for `_abort` usage
+* `use_extendr_badge()` has been added to add an extendr-specific badge to a `README.Rmd` via `usethis::use_badge()` <https://github.com/extendr/rextendr/pull/417>
 * Removes `Makevars.ucrt` as R versions < 4.1 are not supported by extendr <https://github.com/extendr/rextendr/pull/414> 
 * `purrr` has been replaced with [`R/standalone-purrr.R`](https://github.com/r-lib/rlang/blob/main/R/standalone-purrr.R) removing `purrr` from `Imports` <https://github.com/extendr/rextendr/pull/408>
 * `document()` will no longer try to save all open files using rstudioapi <https://github.com/extendr/rextendr/issues/404> <https://github.com/extendr/rextendr/issues/407>
@@ -26,6 +54,8 @@
 * Added `read_cargo_metadata()` to retrieve Cargo metadata for packages and
   workspaces. (#389)
 * `rustup_sitrep()` now checks if a default toolchain has been set. <https://github.com/extendr/rextendr/pull/416>
+* Minimum R version is set to `4.1` (#435)
+* `{tibble}` is no longer a dependency (#435)
 
 # rextend 0.3.1
 

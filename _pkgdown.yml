@@ -25,6 +25,7 @@ reference:
   - cran
   - vendor_pkgs
   - use_msrv
+  - use_vscode
 
 - title: Various utility functions
   contents:
@@ -32,3 +33,4 @@ reference:
   - make_module_macro
   - rust_sitrep
   - read_cargo_metadata
+  - use_extendr_badge

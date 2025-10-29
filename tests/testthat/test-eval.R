@@ -1,5 +1,6 @@
 test_that("`rust_eval()` works", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   expect_equal(rust_eval("2 + 2"), 4)
   expect_visible(rust_eval("2 + 2"))
@@ -18,14 +19,15 @@ test_that("`rust_eval()` works", {
 # Returned integer values should be identical to the input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   provided_values <- seq_len(5)
   deferred_handles <- map(
     provided_values,
-    ~ rust_eval_deferred(glue::glue("{.x}i32"))
+    \(.x) rust_eval_deferred(glue::glue("{.x}i32"))
   )
 
-  obtained_values <- map_int(deferred_handles, ~ (.x)())
+  obtained_values <- map_int(deferred_handles, rlang::exec)
 
   testthat::expect_equal(
     obtained_values,
@@ -45,17 +47,18 @@ test_that("multiple `rust_eval_deferred()` work correctly", {
 # Returned integer values should be identical to the reversed input sequence.
 test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   provided_values <- seq_len(5)
 
   deferred_handles <- map(
     provided_values,
-    ~ rust_eval_deferred(glue::glue("{.x}i32"))
+    \(.x) rust_eval_deferred(glue::glue("{.x}i32"))
   )
 
   deferred_handles <- rev(deferred_handles)
 
-  obtained_values <- map_int(deferred_handles, ~ (.x)())
+  obtained_values <- map_int(deferred_handles, rlang::exec)
 
   testthat::expect_equal(
     obtained_values,
@@ -73,6 +76,7 @@ test_that("multiple `rust_eval_deferred()` work correctly in reverse order", {
 # observe an error.
 test_that("`rust_eval_deferred()` disallows multiple executions of the same chunk", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   handle <- rust_eval_deferred("5i32 + 6i32")
 
@@ -93,19 +97,20 @@ test_that("`rust_eval_deferred()` disallows multiple executions of the same chun
 # Test if the wrapper has been removed and dll unloaded.
 test_that("`rust_eval_deferred()` environment cleanup", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   handle <- rust_eval_deferred("42i32")
   fn_name <- attr(handle, "function_name")
   dll_path <- attr(handle, "dll_path")
 
   testthat::expect_true(exists(fn_name))
-  dlls <- keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
+  dlls <- keep(getLoadedDLLs(), \(.x) .x[["path"]] == dll_path)
   testthat::expect_length(dlls, 1L)
 
   testthat::expect_equal(handle(), 42L)
 
   testthat::expect_false(exists(fn_name))
-  dlls <- keep(getLoadedDLLs(), ~ .x[["path"]] == dll_path)
+  dlls <- keep(getLoadedDLLs(), \(.x) .x[["path"]] == dll_path)
   testthat::expect_length(dlls, 0L)
 })
 
@@ -117,6 +122,7 @@ test_that("`rust_eval_deferred()` environment cleanup", {
 # Execute both chunks and test results (should be equal).
 test_that("`rust_eval_deferred()` generates unique function names", {
   skip_if_cargo_unavailable()
+  skip_on_cran()
 
   rust_code <- "42f64"
 

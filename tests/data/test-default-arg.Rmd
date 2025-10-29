@@ -1,0 +1,15 @@
+
+```{r, include = FALSE}
+library(rextendr)
+```
+
+
+```{extendrsrc engine.opts = list(use_dev_extendr=TRUE)}
+#[extendr]
+fn check_default(#[extendr(default = "NULL")] x: Robj) ->  bool {
+  x.is_null()
+}
+```
+```{r}
+testthat::expect_true(check_default())
+```

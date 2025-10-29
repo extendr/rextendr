@@ -16,8 +16,8 @@ validate_extendr_features <- function(features, suppress_warnings) {
 
   features <- unique(features)
 
-  unknown_features <- features %>%
-    setdiff(features_config$known_features) %>%
+  unknown_features <- features |>
+    setdiff(features_config$known_features) |>
     discard_empty()
 
   if (!isTRUE(suppress_warnings) && length(unknown_features) > 0) {

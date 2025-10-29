@@ -1,5 +1,6 @@
 test_that("use_extendr() sets up extendr files correctly", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   # capture setup messages
@@ -7,10 +8,19 @@ test_that("use_extendr() sets up extendr files correctly", {
   use_extendr()
 
   # DESCRITION file
-  version_in_desc <- stringi::stri_trim_both(desc::desc_get("Config/rextendr/version", path)[[1]])
-  sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get("SystemRequirements", path)[[1]])
+  version_in_desc <- stringi::stri_trim_both(desc::desc_get(
+    "Config/rextendr/version",
+    path
+  )[[1]])
+  sysreq_in_desc <- stringi::stri_trim_both(desc::desc_get(
+    "SystemRequirements",
+    path
+  )[[1]])
   expect_identical(version_in_desc, as.character(packageVersion("rextendr")))
-  expect_identical(sysreq_in_desc, "Cargo (Rust's package manager), rustc")
+  expect_identical(
+    sysreq_in_desc,
+    "Cargo (Rust's package manager), rustc >= 1.65.0, xz"
+  )
 
   # directory structure
   expect_true(dir.exists("src"))
@@ -36,6 +46,7 @@ test_that("use_extendr() sets up extendr files correctly", {
 
 test_that("use_extendr() quiet if quiet=TRUE", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("quiet")
   expect_snapshot(use_extendr(quiet = TRUE))
@@ -43,6 +54,7 @@ test_that("use_extendr() quiet if quiet=TRUE", {
 
 test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg.wrap")
   use_extendr(quiet = FALSE)
@@ -52,16 +64,22 @@ test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
 
 test_that("use_extendr() can overwrite files in non-interactive sessions", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   use_extendr()
   withr::local_options(usethis.quiet = FALSE)
-  expect_snapshot(use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE))
+  expect_snapshot(use_extendr(
+    crate_name = "foo",
+    lib_name = "bar",
+    overwrite = TRUE
+  ))
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
 })
 
 test_that("use_rextendr_template() works when usethis not available", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg.wrap")
   # mock that usethis installed
@@ -86,11 +104,15 @@ test_that("use_rextendr_template() works when usethis not available", {
     is_installed = function(...) FALSE
   )
 
-  expect_identical(brio::read_file(file.path("installed")), brio::read_file(file.path("not_installed")))
+  expect_identical(
+    brio::read_file(file.path("installed")),
+    brio::read_file(file.path("not_installed"))
+  )
 })
 
 test_that("use_rextendr_template() can overwrite existing files", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg.wrap")
   dir.create("src")
@@ -146,6 +168,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
 test_that("use_extendr() does not allow invalid rust names", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testPackage")
   expect_rextendr_error(use_extendr(crate_name = "22unsupported"))
@@ -154,6 +177,7 @@ test_that("use_extendr() does not allow invalid rust names", {
 
 test_that("R/ folder is created when not present", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_temp_dir("my.pkg")
   usethis::proj_set(path, force = TRUE)
@@ -167,6 +191,7 @@ test_that("R/ folder is created when not present", {
 
 test_that("Message if the SystemRequirements field is already set.", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   sys_req <- "testreq"
@@ -185,6 +210,8 @@ test_that("Message if the SystemRequirements field is already set.", {
 
 test_that("`use_extendr()` works correctly when path is specified explicitly", {
   skip_if_not_installed("usethis")
+  skip_on_cran()
+
   local_temp_dir("temp_dir")
   usethis::create_package("testpkg")
 
@@ -196,21 +223,23 @@ test_that("`use_extendr()` works correctly when path is specified explicitly", {
 test_that("`use_extendr()` passes R CMD check", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
+  skip_on_cran()
 
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
   usethis::use_mit_license()
+  usethis::use_test("dummy", FALSE)
   use_extendr()
+  vendor_pkgs()
   document()
 
   # store results
   res <- rcmdcheck::rcmdcheck(
-    args = "--no-manual",
+    args = c("--no-manual", "--no-tests"),
     libpath = rev(.libPaths())
   )
 
   # check the output
-  expect_true(
-    rlang::is_empty(res$errors) && rlang::is_empty(res$warnings)
-  )
+  expect_length(res$errors, 0)
+  expect_length(res$warnings, 0)
 })
