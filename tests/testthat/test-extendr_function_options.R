@@ -37,7 +37,10 @@ test_that("`r_name` option renames R function", {
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains `NULL` value", {
-  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use_rng" = NULL)))
+  expect_rextendr_error(rust_function(
+    "fn func() {}",
+    extendr_fn_options = list("use_rng" = NULL)
+  ))
   skip_on_cran()
 })
 
@@ -45,16 +48,20 @@ test_that("`rust_source()` errors if `extendr_fn_options` contains value of the 
   skip_if_cargo_unavailable()
   skip_on_cran()
 
-  # due to the use of purrr here, the error that is emitted is on of class `mutate_error`
-  # we cannot expect `rextendr_error` from this function.
-  expect_error(rust_function("fn func() {}", extendr_fn_options = list("use_rng" = 42L)))
+  expect_rextendr_error(rust_function(
+    "fn func() {}",
+    extendr_fn_options = list("use_rng" = 42L)
+  ))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains option with an invalid name", {
   skip_if_cargo_unavailable()
   skip_on_cran()
 
-  expect_rextendr_error(rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE)))
+  expect_rextendr_error(rust_function(
+    "fn func() {}",
+    extendr_fn_options = list("use try from" = TRUE)
+  ))
 })
 
 test_that("`rust_source()` errors if `extendr_fn_options` contains two invalid options", {
@@ -62,45 +69,46 @@ test_that("`rust_source()` errors if `extendr_fn_options` contains two invalid o
   skip_on_cran()
 
   expect_rextendr_error(
-    rust_function("fn func() {}", extendr_fn_options = list("use try from" = TRUE, "r_name" = NULL))
+    rust_function(
+      "fn func() {}",
+      extendr_fn_options = list("use try from" = TRUE, "r_name" = NULL)
+    )
   )
 })
 
-test_that("`rust_source()` warns if `extendr_fn_options` contains an unknown option", {
+test_that("`rust_function()` errors if `extendr_fn_options` contains an option not in dev or release", {
   skip_if_cargo_unavailable()
   skip_on_cran()
 
-  expect_warning( # Unknown option
-    expect_rextendr_error( # Failed compilation because of the unknonw option
-      rust_function("fn func() {}", extendr_fn_options = list("unknown_option" = 42L))
+  expect_rextendr_error(
+    # Failed compilation because of the unknonw option
+    rust_function(
+      "fn func() {}",
+      extendr_fn_options = list("unknown_option" = 42L),
+      use_dev_extendr = TRUE
     )
   )
 })
 
-test_that(
-  "`rust_source()` does not warn if `extendr_fn_options` contains an unknown option and `use_dev_extendr` is `TRUE`",
-  {
-    skip_if_cargo_unavailable()
-    skip_if_opted_out_of_dev_tests()
-    skip_on_cran()
+# nolint start: line_length_linter
+test_that("`rust_function()` errors if `extendr_fn_options` contains an option in dev but `use_dev_extendr` is `FALSE`", {
+  skip_if_cargo_unavailable()
+  skip_on_cran()
 
-    expect_rextendr_error( # Failed compilation because of the unknonw option
-      rust_function(
-        code = "fn func() {}",
-        extendr_fn_options = list("unknown_option" = 42L),
-        use_dev_extendr = TRUE
-      )
+  expect_rextendr_error(
+    # Failed compilation because of the unknonw option
+    rust_function(
+      "fn func() {}",
+      extendr_fn_options = list("invisible" = 42L),
+      use_dev_extendr = FALSE
     )
-  }
-)
+  )
+})
+# nolint end
 
+test_that("`rust_function()` does not emit any messages when `quiet = TRUE`", {
+  skip_if_cargo_unavailable()
+  skip_on_cran()
 
-test_that(
-  "`rust_function()` does not emit any messages when `quiet = TRUE`",
-  {
-    skip_if_cargo_unavailable()
-    skip_on_cran()
-
-    expect_no_message(rust_function(code = "fn func() {}", quiet = TRUE))
-  }
-)
+  expect_no_message(rust_function(code = "fn func() {}", quiet = TRUE))
+})
