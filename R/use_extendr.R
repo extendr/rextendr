@@ -326,7 +326,7 @@ as_valid_rust_name <- function(name) {
 #' @param call \[ env \] Environment of the caller, passed to `cli::cli_abort()`.
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
-  quo <- enquo(name) # nolint: object_usage_linter
+  quo <- rlang::enquo(name) # nolint: object_usage_linter
   if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
     cli::cli_abort(
       c(
