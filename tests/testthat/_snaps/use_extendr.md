@@ -185,6 +185,9 @@
       *.dll
       target
       .cargo
+      rust/vendor
+      Makevars
+      Makevars.win
 
 ---
 
