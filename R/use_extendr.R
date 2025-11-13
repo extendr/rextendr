@@ -121,14 +121,14 @@ use_extendr <- function(
 
   use_rextendr_template(
     "cleanup",
-    save_as = file.path("src", "cleanup"),
+    save_as = file.path("cleanup"),
     quiet = quiet,
     overwrite = overwrite
   )
 
   use_rextendr_template(
     "cleanup.win",
-    save_as = file.path("src", "cleanup.win"),
+    save_as = file.path("cleanup.win"),
     quiet = quiet,
     overwrite = overwrite
   )
