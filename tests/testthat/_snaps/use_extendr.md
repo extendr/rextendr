@@ -375,8 +375,8 @@
       > File 'src/entrypoint.c' already exists. Skip writing the file.
       > File 'src/Makevars.in' already exists. Skip writing the file.
       > File 'src/Makevars.win.in' already exists. Skip writing the file.
-      > File 'src/cleanup' already exists. Skip writing the file.
-      > File 'src/cleanup.win' already exists. Skip writing the file.
+      > File 'cleanup' already exists. Skip writing the file.
+      > File 'cleanup.win' already exists. Skip writing the file.
       > File 'src/.gitignore' already exists. Skip writing the file.
       > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
       > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
@@ -398,8 +398,8 @@
       v Writing 'src/entrypoint.c'
       v Writing 'src/Makevars.in'
       v Writing 'src/Makevars.win.in'
-      v Writing 'src/cleanup'
-      v Writing 'src/cleanup.win'
+      v Writing 'cleanup'
+      v Writing 'cleanup.win'
       v Writing 'src/.gitignore'
       v Writing 'src/rust/Cargo.toml'
       v Writing 'src/rust/src/lib.rs'
