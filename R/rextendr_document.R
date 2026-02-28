@@ -27,6 +27,7 @@ document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
 
   check_bool(
     roclets,
+    allow_null = TRUE,
     call = rlang::caller_call(),
     class = "rextendr_error"
   )
