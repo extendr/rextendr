@@ -34,9 +34,11 @@ document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
 
   withr::local_envvar(devtools::r_env_vars())
 
+  rextendr_setup(path = pkg)
+
   rlang::check_installed("devtools")
   devtools::document(pkg = pkg, roclets = roclets, quiet = quiet)
-  if (quiet) {
+  if (!quiet) {
     check_namespace_file(pkg)
   }
 }
