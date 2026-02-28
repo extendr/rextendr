@@ -155,7 +155,15 @@ use_extendr <- function(
       edition = edition,
       `rust-version` = "1.65"
     ),
-    lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
+    lib = list(
+      `crate-type` = array(c("rlib", "staticlib"), 2),
+      name = lib_name
+    ),
+    bin = data.frame(
+      name = "document",
+      path = "document.rs",
+      bench = FALSE
+    ),
     dependencies = list(
       `extendr-api` = extendr_api_version
     ),
