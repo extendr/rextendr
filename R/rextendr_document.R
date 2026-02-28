@@ -10,11 +10,29 @@
 #' @return No return value, called for side effects.
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
+  check_string(
+    pkg,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_bool(
+    quiet,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_bool(
+    roclets,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
   withr::local_envvar(devtools::r_env_vars())
 
   rlang::check_installed("devtools")
   devtools::document(pkg = pkg, roclets = roclets, quiet = quiet)
-  if (!isTRUE(quiet)) {
+  if (quiet) {
     check_namespace_file(pkg)
   }
 }
