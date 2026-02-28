@@ -233,7 +233,7 @@ use_extendr <- function(
     save_as = file.path("src", "rust", "document.rs"),
     quiet = quiet,
     overwrite = overwrite,
-    data = list(pkg_name = pkg_name)
+    data = list(lib_name = lib_name, mod_name = mod_name)
   )
 
   use_rextendr_template(
