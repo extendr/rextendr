@@ -30,7 +30,7 @@ use_extendr <- function(
   edition = c("2021", "2018")
 ) {
   check_string(
-    pkg,
+    path,
     call = rlang::caller_call(),
     class = "rextendr_error"
   )
