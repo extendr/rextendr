@@ -42,6 +42,7 @@ test_that("use_extendr() sets up extendr files correctly", {
   expect_snapshot(cat_file("src", "testpkg-win.def"))
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
   expect_snapshot(cat_file("src", "rust", "src", "lib.rs"))
+  expect_snapshot(cat_file("src", "rust", "document.rs"))
 })
 
 test_that("use_extendr() quiet if quiet=TRUE", {
