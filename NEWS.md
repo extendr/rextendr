@@ -9,6 +9,18 @@
   * Unknown macro options in dev and release now throw errors instead of warnings
 * `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` directory after creating the `vendor.tar.xz` file. (#479)
 * `Makevars`(.win) now uses the `vendor/`, if it exists, before unzipping the tarball. (#479)
+* Complete overhaul of wrapper-generation.
+  * `use_extendr()` now generates `src/rust/document.rs` and adds a `[[bin]]` 
+    target to `Cargo.toml` with `crate-type = ["rlib", "staticlib"]`. During 
+    `cargo build`, this binary runs automatically via `Makevars` and writes 
+    `R/extendr-wrappers.R` directly — eliminating the need for 
+    `rextendr::document()` to pre-compile the package before calling 
+    `devtools::document()`.
+  * `rextendr::document()` is now a thin wrapper around `devtools::document()`. 
+     Packages created with `use_extendr()` no longer require it; it is retained
+     for backwards compatibility.
+  * `register_extendr()` is no longer called in `rextendr::document()`. Its 
+    wrapper-generation role is now handled by the document binary at build time.
 
 # rextendr 0.4.2
 
