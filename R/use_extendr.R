@@ -29,9 +29,42 @@ use_extendr <- function(
   overwrite = NULL,
   edition = c("2021", "2018")
 ) {
-  # https://github.com/r-lib/cli/issues/434
+  check_string(
+    pkg,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_string(
+    crate_name,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_string(
+    lib_name,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_bool(
+    quiet,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
 
   local_quiet_cli(quiet)
+
+  check_bool(
+    overwrite,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  edition <- rlang::arg_match(edition, error_call = rlang::caller_call())
 
   if (!interactive()) {
     overwrite <- overwrite %||% FALSE
@@ -139,8 +172,6 @@ use_extendr <- function(
     quiet = quiet,
     overwrite = overwrite
   )
-
-  edition <- match.arg(edition, several.ok = FALSE)
 
   # fetch extendr-api version from options
   # this is defined in zzz.R
