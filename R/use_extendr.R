@@ -198,6 +198,14 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
+    "document.rs",
+    save_as = file.path("src", "rust", "document.rs"),
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(pkg_name = pkg_name)
+  )
+
+  use_rextendr_template(
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
