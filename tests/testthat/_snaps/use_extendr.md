@@ -307,7 +307,7 @@
       	# Generate wrappers
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	cargo run @CRAN_FLAGS@ --bin document --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
