@@ -3,7 +3,6 @@
     Code
       cat_file(".gitignore")
     Output
-      .Rproj.user
       src/rust/vendor
       src/Makevars
       src/Makevars.win
@@ -13,9 +12,6 @@
     Code
       cat_file(".Rbuildignore")
     Output
-      ^testpkg\.Rproj$
-      ^\.Rproj\.user$
-      ^\.vscode$
       ^src/\.cargo$
       ^src/rust/vendor$
       ^src/rust/target$
@@ -29,7 +25,7 @@
     Output
       #!/usr/bin/env sh
       : "${R_HOME=`R RHOME`}"
-      "${R_HOME}/bin/Rscript" tools/config.R 
+      "${R_HOME}/bin/Rscript" tools/config.R
 
 ---
 
@@ -240,7 +236,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	cargo run @CRAN_FLAGS@ --bin document --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -311,7 +307,7 @@
       	# Generate wrappers
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	cargo run @CRAN_FLAGS@ --bin document --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -406,7 +402,21 @@
     Code
       use_extendr()
     Message
+      > File 'src/entrypoint.c' already exists. Skip writing the file.
+      > File 'src/Makevars.in' already exists. Skip writing the file.
+      > File 'src/Makevars.win.in' already exists. Skip writing the file.
+      > File 'cleanup' already exists. Skip writing the file.
+      > File 'cleanup.win' already exists. Skip writing the file.
+      > File 'src/.gitignore' already exists. Skip writing the file.
+      > File 'src/rust/Cargo.toml' already exists. Skip writing the file.
+      > File 'src/rust/src/lib.rs' already exists. Skip writing the file.
+      > File 'src/testpkg.wrap-win.def' already exists. Skip writing the file.
+      > File 'src/rust/document.rs' already exists. Skip writing the file.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+      > File 'tools/msrv.R' already exists. Skip writing the file.
+      > File 'tools/config.R' already exists. Skip writing the file.
+      > File 'configure' already exists. Skip writing the file.
+      > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
       * Please run `rextendr::document()` for changes to take effect.
       i Call `use_extendr_badge()` to add an extendr badge to your 'README'
@@ -510,7 +520,7 @@
       
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	cargo run @CRAN_FLAGS@ --bin document --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
