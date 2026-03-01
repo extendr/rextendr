@@ -233,7 +233,7 @@ use_extendr <- function(
     save_as = file.path("src", "rust", "document.rs"),
     quiet = quiet,
     overwrite = overwrite,
-    data = list(lib_name = lib_name, mod_name = mod_name)
+    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
   )
 
   use_rextendr_template(
@@ -373,7 +373,11 @@ is_valid_rust_name <- function(name) {
 #' @return \[ character(n) \] Equivalent Rust name (if exists), otherwise `NA`.
 #' @noRd
 as_valid_rust_name <- function(name) {
-  rust_name <- stringi::stri_replace_all_regex(name, "[^\\w-]", "_")
+  # Insert underscores at camelCase boundaries before lowercasing,
+  # so e.g. "MyPackage" -> "my_package" rather than "mypackage".
+  rust_name <- stringi::stri_replace_all_regex(name, "([a-z])([A-Z])", "$1_$2")
+  rust_name <- stringi::stri_replace_all_regex(rust_name, "[^\\w-]", "_")
+  rust_name <- stringi::stri_trans_tolower(rust_name)
   if (stringi::stri_detect_regex(rust_name, "^\\d")) {
     rust_name <- paste0("_", rust_name)
   }
