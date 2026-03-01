@@ -335,7 +335,7 @@ use_extendr <- function(
     )
   }
 
-  return(invisible(TRUE))
+  invisible(TRUE)
 }
 
 try_get_normalized_path <- function(path_fn) {

@@ -87,9 +87,11 @@ check_namespace_file <- function(path = ".") {
       )
     )
 
+    # nolint start: object_usage_linter.
     use_dyn_lib_ref <- glue::glue(
       "useDynLib({package_name}, .registration = TRUE)"
-    ) # nolint: object_usage_linter.
+    )
+    # nolint end
 
     cli::cli_warn(
       c(
