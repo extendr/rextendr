@@ -144,6 +144,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   path <- local_package("a.b.c")
   use_extendr()
@@ -158,6 +159,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   path <- local_package("testPackage")
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
@@ -225,6 +227,7 @@ test_that("`use_extendr()` passes R CMD check", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
   skip_on_cran()
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   path <- local_package("testpkg")
   # write the license file to pass R CMD check

@@ -1,5 +1,8 @@
 #' Compile Rust code and generate package documentation.
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
 #' As of `rextendr` 0.4.0, this function is no longer strictly necessary.
 #' Packages created with [use_extendr()] now include a `document` binary that
 #' generates `R/extendr-wrappers.R` as part of the normal `cargo build` step,
@@ -13,6 +16,13 @@
 #' @return No return value, called for side effects.
 #' @export
 document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
+  lifecycle::deprecate_warn(
+    "0.4.0",
+    "rextendr::document()",
+    "devtools::document()",
+    details = "Call `use_extendr()` to update configs."
+  )
+
   check_string(
     pkg,
     call = rlang::caller_call(),

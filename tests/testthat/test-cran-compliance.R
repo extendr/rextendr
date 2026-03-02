@@ -21,6 +21,7 @@ test_that("rextendr passes CRAN checks", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
   skip_on_cran()
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   path <- local_package("testpkg")
   # write the license file to pass R CMD check
