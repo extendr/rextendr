@@ -418,7 +418,7 @@
       > File 'configure' already exists. Skip writing the file.
       > File 'configure.win' already exists. Skip writing the file.
       v Finished configuring extendr for package testpkg.wrap.
-      * Please run `rextendr::document()` for changes to take effect.
+      * Please run `devtools::document()` for changes to take effect.
       i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 # use_extendr() can overwrite files in non-interactive sessions
@@ -442,7 +442,7 @@
       v Writing 'configure'
       v Writing 'configure.win'
       v Finished configuring extendr for package testpkg.
-      * Please run `rextendr::document()` for changes to take effect.
+      * Please run `devtools::document()` for changes to take effect.
       i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 
 ---

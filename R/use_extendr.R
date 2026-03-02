@@ -326,7 +326,7 @@ use_extendr <- function(
     )
     cli::cli_ul(
       c(
-        "Please run {.fun rextendr::document} for changes to take effect."
+        "Please run {.fun devtools::document} for changes to take effect."
       )
     )
     # encourage use of use_extendr__badge
