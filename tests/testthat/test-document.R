@@ -92,3 +92,34 @@ test_that("register_extendr() is deprecated", {
   use_extendr()
   expect_warning(register_extendr(), class = "lifecycle_warning_deprecated")
 })
+
+test_that("devtools::document() builds lib", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_unavailable()
+
+  path <- local_package("testPackage")
+  use_extendr()
+  devtools::document()
+
+  lib_file <- file.path(
+    path,
+    "src",
+    paste0("testPackage", .Platform$dynlib.ext)
+  )
+
+  expect_true(file.exists(lib_file))
+})
+
+test_that("devtools::document() generates wrappers", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_unavailable()
+
+  path <- local_package("testPackage")
+  use_extendr()
+  devtools::document()
+  expect_snapshot(cat_file("R/extendr-wrappers.R"))
+})
