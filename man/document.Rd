@@ -20,14 +20,15 @@ which defaults to \code{c("collate", "namespace", "rd")}.}
 No return value, called for side effects.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 As of \code{rextendr} 0.4.0, this function is no longer strictly necessary.
 Packages created with \code{\link[=use_extendr]{use_extendr()}} now include a \code{document} binary that
 generates \code{R/extendr-wrappers.R} as part of the normal \verb{cargo build} step,
 so \code{\link[devtools:document]{devtools::document()}} works directly without any \code{rextendr}-specific
 pre-processing. \code{rextendr::document()} is retained for backwards
 compatibility.
-}
-\details{
+
 \code{rextendr::document()} updates the package documentation for an R package
 that uses \code{extendr} code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}.
 }
