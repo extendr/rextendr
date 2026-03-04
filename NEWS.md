@@ -16,11 +16,16 @@
     `R/extendr-wrappers.R` directly — eliminating the need for 
     `rextendr::document()` to pre-compile the package before calling 
     `devtools::document()`.
-  * `rextendr::document()` is now a thin wrapper around `devtools::document()`. 
-     Packages created with `use_extendr()` no longer require it; it is retained
-     for backwards compatibility.
-  * `register_extendr()` is no longer called in `rextendr::document()`. Its 
-    wrapper-generation role is now handled by the document binary at build time.
+  * `rextendr::document()` is now a thin wrapper around `devtools::document()` 
+    and is soft deprecated. Packages created with `use_extendr()` no longer 
+    require it; it is retained for backwards compatibility.
+  * `register_extendr()` is no longer called in `rextendr::document()` and is 
+    soft deprecated. Its wrapper-generation role is now handled by the document 
+    binary at build time. The function itself is no-op and now returns a 
+    lifecycle warning.
+  * Snapshot and other tests now reflect these changes.
+  * The header in `R/extendr-wrappers.R` has also been updated to reflect these
+    changes, which required a concurrent PR to extendr (extendr/extendr#1048).
 
 # rextendr 0.4.2
 
