@@ -192,8 +192,7 @@ use_extendr <- function(
     ),
     bin = data.frame(
       name = "document",
-      path = "document.rs",
-      bench = FALSE
+      path = "document.rs"
     ),
     dependencies = list(
       `extendr-api` = extendr_api_version
