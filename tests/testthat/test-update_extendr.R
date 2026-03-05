@@ -34,8 +34,8 @@ test_that("update_extendr() substitutes crate_name and lib_name correctly", {
   makevars <- brio::read_file(file.path("src", "Makevars.in"))
   expect_true(grepl("mylib", makevars))
 
-  configure <- brio::read_file("configure")
-  expect_true(grepl("mylib", configure))
+  makevars_win <- brio::read_file(file.path("src", "Makevars.win.in"))
+  expect_true(grepl("mylib", makevars_win))
 })
 
 test_that("update_extendr() revendor = FALSE leaves vendor files untouched", {
@@ -64,13 +64,14 @@ test_that("update_extendr() revendor = TRUE clears and recreates vendor files", 
   use_extendr(quiet = TRUE)
 
   src_rust <- file.path("src", "rust")
-  brio::write_lines("stale", file.path(src_rust, "vendor.tar.xz"))
+
+  # create an empty file to test whether revendor = TRUE clears vendor dir
+  vendor_dir <- file.path(src_rust, "vendor")
+  dir.create(vendor_dir, recursive = TRUE)
+  file.create(file.path(vendor_dir, "sentinel"))
 
   update_extendr(revendor = TRUE, quiet = TRUE)
 
+  expect_false(file.exists(file.path(vendor_dir, "sentinel")))
   expect_true(file.exists(file.path(src_rust, "vendor.tar.xz")))
-  expect_false(identical(
-    brio::read_file(file.path(src_rust, "vendor.tar.xz")),
-    "stale\n"
-  ))
 })
