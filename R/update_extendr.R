@@ -161,7 +161,7 @@ update_extendr <- function(
 
   if (revendor) {
     src_dir <- find_extendr_crate(path = path)
-    vendor_dir <- file.path(src_dir, "vendor")
+    vendor_dir <- file.path("src", "vendor")
     vendor_tar <- file.path(src_dir, "vendor.tar.xz")
     vendor_cfg <- file.path(src_dir, "vendor-config.toml")
 
