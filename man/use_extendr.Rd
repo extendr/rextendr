@@ -16,20 +16,23 @@ use_extendr(
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
 
-\item{crate_name}{String that is used as the name of the Rust crate.
-If \code{NULL}, sanitized R package name is used instead.}
+\item{crate_name}{String that is used as the name of the Rust crate,
+specifically \verb{[package] name} in \code{Cargon.toml}. If \code{NULL} (default),
+sanitized R package name is used instead.}
 
-\item{lib_name}{String that is used as the name of the Rust library.
-If \code{NULL}, sanitized R package name is used instead.}
+\item{lib_name}{String that is used as the name of the Rust library,
+specifically \verb{[lib] name} in \code{Cargo.toml}. If \code{NULL} (default), sanitized R
+package name is used instead.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
 
-\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the \code{path} should be overwritten.
-If \code{NULL} (default), the function will ask the user whether each file should
-be overwritten in an interactive session or do nothing in a non-interactive session.
-If \code{FALSE} and each file already exists, the function will do nothing.
-If \code{TRUE}, all files will be overwritten.}
+\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the
+\code{path} should be overwritten. If \code{NULL} (default), the function will ask
+the user whether each file should be overwritten in an interactive session
+or do nothing in a non-interactive session. If \code{FALSE} and each file
+already exists, the function will do nothing. If \code{TRUE}, all files will be
+overwritten.}
 
 \item{edition}{String indicating which Rust edition is used; Default \code{"2021"}.}
 }
@@ -38,8 +41,8 @@ A logical value (invisible) indicating whether any package files were
 generated or not.
 }
 \description{
-Create the scaffolding needed to add Rust extendr code to an R package. \code{use_extendr()}
-adds a small Rust library with a single Rust function that returns the string
-\code{"Hello world!"}. It also adds wrapper code so this Rust function can be called from
-R with \code{hello_world()}.
+Create the scaffolding needed to add Rust extendr code to an R package.
+\code{use_extendr()} adds a small Rust library with a single Rust function that
+returns the string \code{"Hello world!"}. It also adds wrapper code so this Rust
+function can be called from R with \code{hello_world()}.
 }
