@@ -272,16 +272,14 @@ use_extendr <- function(
     "configure",
     save_as = "configure",
     quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
+    overwrite = overwrite
   )
 
   use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
     quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
+    overwrite = overwrite
   )
 
   # create settings.json file

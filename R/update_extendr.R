@@ -149,16 +149,14 @@ update_extendr <- function(
     "configure",
     save_as = "configure",
     quiet = quiet,
-    overwrite = TRUE,
-    data = list(lib_name = lib_name)
+    overwrite = TRUE
   )
 
   use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
     quiet = quiet,
-    overwrite = TRUE,
-    data = list(lib_name = lib_name)
+    overwrite = TRUE
   )
 
   if (revendor) {
