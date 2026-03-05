@@ -1,25 +1,28 @@
 #' Set up a package for use with Rust extendr code
 #'
-#' Create the scaffolding needed to add Rust extendr code to an R package. `use_extendr()`
-#' adds a small Rust library with a single Rust function that returns the string
-#' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
-#' R with `hello_world()`.
+#' Create the scaffolding needed to add Rust extendr code to an R package.
+#' `use_extendr()` adds a small Rust library with a single Rust function that
+#' returns the string `"Hello world!"`. It also adds wrapper code so this Rust
+#' function can be called from R with `hello_world()`.
 #'
 #' @param path File path to the package for which to generate wrapper code.
-#' @param crate_name String that is used as the name of the Rust crate.
-#' If `NULL`, sanitized R package name is used instead.
-#' @param lib_name String that is used as the name of the Rust library.
-#' If `NULL`, sanitized R package name is used instead.
+#' @param crate_name String that is used as the name of the Rust crate,
+#'   specifically `[package] name` in `Cargon.toml`. If `NULL` (default),
+#'   sanitized R package name is used instead.
+#' @param lib_name String that is used as the name of the Rust library,
+#'   specifically `[lib] name` in `Cargo.toml`. If `NULL` (default), sanitized R
+#'   package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param overwrite Logical scalar or `NULL` indicating whether the files in the `path` should be overwritten.
-#' If `NULL` (default), the function will ask the user whether each file should
-#' be overwritten in an interactive session or do nothing in a non-interactive session.
-#' If `FALSE` and each file already exists, the function will do nothing.
-#' If `TRUE`, all files will be overwritten.
+#' @param overwrite Logical scalar or `NULL` indicating whether the files in the
+#'   `path` should be overwritten. If `NULL` (default), the function will ask
+#'   the user whether each file should be overwritten in an interactive session
+#'   or do nothing in a non-interactive session. If `FALSE` and each file
+#'   already exists, the function will do nothing. If `TRUE`, all files will be
+#'   overwritten.
 #' @param edition String indicating which Rust edition is used; Default `"2021"`.
 #' @return A logical value (invisible) indicating whether any package files were
-#' generated or not.
+#'   generated or not.
 #' @export
 use_extendr <- function(
   path = ".",
