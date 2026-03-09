@@ -16,20 +16,23 @@ use_extendr(
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
 
-\item{crate_name}{String that is used as the name of the Rust crate.
-If \code{NULL}, sanitized R package name is used instead.}
+\item{crate_name}{String that is used as the name of the Rust crate,
+specifically \verb{[package] name} in \code{Cargon.toml}. If \code{NULL} (default),
+sanitized R package name is used instead.}
 
-\item{lib_name}{String that is used as the name of the Rust library.
-If \code{NULL}, sanitized R package name is used instead.}
+\item{lib_name}{String that is used as the name of the Rust library,
+specifically \verb{[lib] name} in \code{Cargo.toml}. If \code{NULL} (default), sanitized R
+package name is used instead.}
 
 \item{quiet}{Logical indicating whether any progress messages should be
 generated or not.}
 
-\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the \code{path} should be overwritten.
-If \code{NULL} (default), the function will ask the user whether each file should
-be overwritten in an interactive session or do nothing in a non-interactive session.
-If \code{FALSE} and each file already exists, the function will do nothing.
-If \code{TRUE}, all files will be overwritten.}
+\item{overwrite}{Logical scalar or \code{NULL} indicating whether the files in the
+\code{path} should be overwritten. If \code{NULL} (default), the function will ask
+the user whether each file should be overwritten in an interactive session
+or do nothing in a non-interactive session. If \code{FALSE} and each file
+already exists, the function will do nothing. If \code{TRUE}, all files will be
+overwritten.}
 
 \item{edition}{String indicating which Rust edition is used; Default \code{"2021"}.}
 }
@@ -38,8 +41,36 @@ A logical value (invisible) indicating whether any package files were
 generated or not.
 }
 \description{
-Create the scaffolding needed to add Rust extendr code to an R package. \code{use_extendr()}
-adds a small Rust library with a single Rust function that returns the string
-\code{"Hello world!"}. It also adds wrapper code so this Rust function can be called from
-R with \code{hello_world()}.
+Create the scaffolding needed to add Rust extendr code to an R package.
+\code{use_extendr()} adds a small Rust library with a single Rust function that
+returns the string \code{"Hello world!"}. It also adds wrapper code so this Rust
+function can be called from R with \code{hello_world()}.
+}
+\details{
+\subsection{Generated files}{
+\itemize{
+\item \code{R/extendr-wrappers.R}: auto-generated R wrappers. Do not edit by hand.
+\item \code{src/entrypoint.c}: C entry point forwarding R's routine registration to
+the Rust library.
+\item \code{src/Makevars.in} / \code{src/Makevars.win.in}: Makefile templates compiled and
+employed at package build time.
+\item \verb{src/<pkg>-win.def}: Windows DLL export definitions.
+\item \code{src/.gitignore}: Ignores compiled artifacts, Cargo directories, and
+generated \code{Makevars} files.
+\item \code{src/rust/Cargo.toml}: Rust package manifest with crate name, edition,
+\code{extendr-api} dependency, and release profile settings.
+\item \code{src/rust/src/lib.rs}: Main Rust library with an example \code{hello_world()}
+function and the \verb{extendr_module!} macro.
+\item \code{src/rust/document.rs}: Rust binary that writes \code{R/extendr-wrappers.R}
+by introspecting exported function metadata at build time.
+\item \code{tools/msrv.R}: Verifies the installed Rust toolchain meets the MSRV in
+\code{DESCRIPTION}.
+\item \code{tools/config.R}: Reads \code{tools/msrv.R}, checks \code{DEBUG}/\code{NOT_CRAN} env
+vars, and writes the final \code{Makevars} file from the \code{.in} template.
+\item \code{configure} / \code{configure.win}: Shell scripts run before compilation that
+invoke \code{tools/config.R} via \code{Rscript}.
+\item \code{cleanup} / \code{cleanup.win}: Shell scripts that remove \code{src/Makevars} on
+package uninstall.
+}
+}
 }

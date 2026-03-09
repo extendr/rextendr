@@ -11,4 +11,5 @@
 #' @importFrom rlang   dots_list names2 as_function is_missing is_atomic is_null
 #' @importFrom rlang   is_na .data .env caller_env as_name as_label enquo %||%
 #' @importFrom stringi stri_replace_all_regex
+#' @importFrom lifecycle deprecated
 NULL

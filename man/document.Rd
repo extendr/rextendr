@@ -20,10 +20,15 @@ which defaults to \code{c("collate", "namespace", "rd")}.}
 No return value, called for side effects.
 }
 \description{
-The function \code{rextendr::document()} updates the package documentation for an
-R package that uses \code{extendr} code, taking into account any changes that were
-made in the Rust code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}, and it
-executes \code{extendr}-specific routines before calling \code{\link[devtools:document]{devtools::document()}}.
-Specifically, it ensures that Rust code is recompiled (when necessary) and that
-up-to-date R wrappers are generated before regenerating the package documentation.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+As of \code{rextendr} 0.4.0, this function is no longer strictly necessary.
+Packages created with \code{\link[=use_extendr]{use_extendr()}} now include a \code{document} binary that
+generates \code{R/extendr-wrappers.R} as part of the normal \verb{cargo build} step,
+so \code{\link[devtools:document]{devtools::document()}} works directly without any \code{rextendr}-specific
+pre-processing. \code{rextendr::document()} is retained for backwards
+compatibility.
+
+\code{rextendr::document()} updates the package documentation for an R package
+that uses \code{extendr} code. It is a wrapper for \code{\link[devtools:document]{devtools::document()}}.
 }

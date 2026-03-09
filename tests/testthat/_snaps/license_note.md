@@ -29,6 +29,13 @@
       
       -------------------------------------------------------------
       
+      Name:        lazy_static
+      Repository:  https://github.com/rust-lang-nursery/lazy-static.rs
+      Authors:     Marvin Löbel
+      License:     MIT OR Apache-2.0
+      
+      -------------------------------------------------------------
+      
       Name:        once_cell
       Repository:  https://github.com/matklad/once_cell
       Authors:     Aleksey Kladov
@@ -52,6 +59,13 @@
       
       Name:        quote
       Repository:  https://github.com/dtolnay/quote
+      Authors:     David Tolnay
+      License:     MIT OR Apache-2.0
+      
+      -------------------------------------------------------------
+      
+      Name:        readonly
+      Repository:  https://github.com/dtolnay/readonly
       Authors:     David Tolnay
       License:     MIT OR Apache-2.0
       

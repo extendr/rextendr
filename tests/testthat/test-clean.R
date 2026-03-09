@@ -4,6 +4,7 @@ test_that("rextendr::clean() removes cargo target directory & binaries", {
   skip_on_cran()
   skip_if_cargo_unavailable()
   skip_on_R42_win()
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   path <- local_package("testpkg")
   use_extendr()

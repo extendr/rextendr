@@ -9,6 +9,32 @@
   * Unknown macro options in dev and release now throw errors instead of warnings
 * `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` directory after creating the `vendor.tar.xz` file. (#479)
 * `Makevars`(.win) now uses the `vendor/`, if it exists, before unzipping the tarball. (#479)
+* Complete overhaul of wrapper-generation.
+  * `use_extendr()` now generates `src/rust/document.rs` and adds a `[[bin]]` 
+    target to `Cargo.toml` with `crate-type = ["rlib", "staticlib"]`. During 
+    `cargo build`, this binary runs automatically via `Makevars` and writes 
+    `R/extendr-wrappers.R` directly — eliminating the need for 
+    `rextendr::document()` to pre-compile the package before calling 
+    `devtools::document()`.
+  * `rextendr::document()` is now a thin wrapper around `devtools::document()` 
+    and is soft deprecated. Packages created with `use_extendr()` no longer 
+    require it; it is retained for backwards compatibility.
+  * `register_extendr()` is no longer called in `rextendr::document()` and is 
+    soft deprecated. Its wrapper-generation role is now handled by the document 
+    binary at build time. The function itself is no-op and now returns a 
+    lifecycle warning.
+  * Deprecating `register_extendr()` effectively nullifies the PkgGen CI tests,
+    so those have been removed.
+  * The header in `R/extendr-wrappers.R` has also been updated to reflect these
+    changes, which required a concurrent PR to extendr (extendr/extendr#1048).
+  * Added `update_extendr()` to overwrite scaffolding, making it easier to 
+    update packages to track developments in extendr and rextendr. This function
+    is basically `use_extendr()` without all the interactive business, i.e., 
+    `overwrite = TRUE` is hardcoded.
+  * CI now uses the development version of extendr-api on GitHub.
+  * `rust_eval()` now returns `extendr_api::error::Result<Robj>`.
+  * Snapshot and other tests now reflect these changes.
+  * Substantial updates to Roxygen documentation.
 
 # rextendr 0.4.2
 

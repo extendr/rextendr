@@ -61,7 +61,7 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
 
   # wrap code into Rust function
   code_wrapped <- glue(r"(
-fn {fn_name}() -> Result<Robj> {{
+fn {fn_name}() -> extendr_api::error::Result<Robj> {{
   let x = {{
     {code}
   }};

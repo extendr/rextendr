@@ -27,10 +27,12 @@
 #' # using explicitly set `dim`
 #' to_toml(lib = list(`crate-type` = array("cdylib", 1)))
 #' @export
-to_toml <- function(...,
-                    .str_as_literal = TRUE,
-                    .format_int = "%d",
-                    .format_dbl = "%g") {
+to_toml <- function(
+  ...,
+  .str_as_literal = TRUE,
+  .format_int = "%d",
+  .format_dbl = "%g"
+) {
   args <- dots_list(
     ...,
     .preserve_empty = TRUE,
@@ -41,7 +43,9 @@ to_toml <- function(...,
   names <- names2(args)
 
   # We disallow unnamed top-level atomic arguments
-  invalid <- which(map2_lgl(names, args, \(.x, .y) !nzchar(.x) && is.atomic(.y)))
+  invalid <- which(map2_lgl(names, args, \(.x, .y) {
+    !nzchar(.x) && is.atomic(.y)
+  }))
 
   # If such args found, display an error message
   if (length(invalid) > 0) {
@@ -111,17 +115,17 @@ format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 #' @export
 format_toml.default <- function(x, ..., .top_level = FALSE) {
-  cli::cli_abort(c(
-    get_toml_err_msg(),
-    "x" = "{.code {class(x)}} cannot be converted to toml."
-  ), class = "rextendr_error")
+  cli::cli_abort(
+    c(
+      get_toml_err_msg(),
+      "x" = "{.code {class(x)}} cannot be converted to toml."
+    ),
+    class = "rextendr_error"
+  )
 }
 
 #' @export
-format_toml.data.frame <- function(x,
-                                   ...,
-                                   .tbl_name,
-                                   .top_level = FALSE) {
+format_toml.data.frame <- function(x, ..., .tbl_name, .top_level = FALSE) {
   rows <- nrow(x)
   header <- glue("[[{.tbl_name}]]")
   if (rows == 0L) {
@@ -135,7 +139,6 @@ format_toml.data.frame <- function(x,
         if (length(item) == 0L) {
           result <- character(0)
         } else {
-
           result <- format_toml(
             as.list(item),
             ...,
@@ -159,7 +162,7 @@ format_toml.data.frame <- function(x,
 format_toml.name <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
     if (is_missing(x)) {
-      return(character(0))
+      character(0)
     } else {
       # This function errors and does not return
       format_toml.default(x, ..., .top_level = .top_level)
@@ -181,7 +184,7 @@ format_toml.name <- function(x, ..., .top_level = FALSE) {
 #' @export
 format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   if (isTRUE(.top_level)) {
-    return(character(0))
+    character(0)
   } else {
     cli::cli_abort(
       c(get_toml_err_msg(), "x" = get_toml_missing_msg()),
@@ -190,10 +193,7 @@ format_toml.NULL <- function(x, ..., .top_level = FALSE) {
   }
 }
 
-format_toml_atomic <- function(x,
-                               ...,
-                               .top_level = FALSE,
-                               .formatter) {
+format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
   # Cache dimensions because slicing drops attributes
   dims <- dim(x)
   x <- x[!is.na(x)]
@@ -218,10 +218,12 @@ escape_dbl_quotes <- function(x) {
 }
 
 #' @export
-format_toml.character <- function(x,
-                                  ...,
-                                  .str_as_literal = TRUE,
-                                  .top_level = FALSE) {
+format_toml.character <- function(
+  x,
+  ...,
+  .str_as_literal = TRUE,
+  .top_level = FALSE
+) {
   if (isTRUE(.str_as_literal)) {
     .formatter <- \(.x) glue("'{.x}'")
   } else {
@@ -237,10 +239,12 @@ format_toml.character <- function(x,
 }
 
 #' @export
-format_toml.integer <- function(x,
-                                ...,
-                                .format_int = "%d",
-                                .top_level = FALSE) {
+format_toml.integer <- function(
+  x,
+  ...,
+  .format_int = "%d",
+  .top_level = FALSE
+) {
   format_toml_atomic(
     x,
     ...,
@@ -251,10 +255,7 @@ format_toml.integer <- function(x,
 }
 
 #' @export
-format_toml.double <- function(x,
-                               ...,
-                               .format_dbl = "%g",
-                               .top_level = FALSE) {
+format_toml.double <- function(x, ..., .format_dbl = "%g", .top_level = FALSE) {
   format_toml_atomic(
     x,
     ...,
@@ -265,9 +266,7 @@ format_toml.double <- function(x,
 }
 
 #' @export
-format_toml.logical <- function(x,
-                                ...,
-                                .top_level = FALSE) {
+format_toml.logical <- function(x, ..., .top_level = FALSE) {
   format_toml_atomic(
     x,
     ...,

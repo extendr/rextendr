@@ -27,18 +27,10 @@ default, generation is skipped when it's newer than the DLL).}
 (Invisibly) Path to the file containing generated wrappers.
 }
 \description{
-This function generates wrapper code corresponding to the extendr module
-for an R package. This is useful in package development, where we generally
-want appropriate R code wrapping the Rust functions implemented via extendr.
-In most development settings, you will not want to call this function directly,
-but instead call \code{rextendr::document()}.
-}
-\details{
-The function \code{register_extendr()} compiles the package Rust code if
-required, and then the wrapper code is retrieved from the compiled
-Rust code and saved into \code{R/extendr-wrappers.R}. Afterwards, you will have
-to re-document and then re-install the package for the wrapper functions to
-take effect.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function is deprecated because we now rely on a small Rust binary to
+generate wrappers, which is called during the package build process.
 }
 \seealso{
 \code{\link[=document]{document()}}

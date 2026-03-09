@@ -1,16 +1,10 @@
 #' Register the extendr module of a package with R
 #'
-#' This function generates wrapper code corresponding to the extendr module
-#' for an R package. This is useful in package development, where we generally
-#' want appropriate R code wrapping the Rust functions implemented via extendr.
-#' In most development settings, you will not want to call this function directly,
-#' but instead call `rextendr::document()`.
+#' @description
+#' `r lifecycle::badge("deprecated")`
 #'
-#' The function `register_extendr()` compiles the package Rust code if
-#' required, and then the wrapper code is retrieved from the compiled
-#' Rust code and saved into `R/extendr-wrappers.R`. Afterwards, you will have
-#' to re-document and then re-install the package for the wrapper functions to
-#' take effect.
+#' This function is deprecated because we now rely on a small Rust binary to
+#' generate wrappers, which is called during the package build process.
 #'
 #' @param path Path from which package root is looked up.
 #' @param quiet Logical indicating whether any progress messages should be
@@ -27,90 +21,18 @@
 #' @return (Invisibly) Path to the file containing generated wrappers.
 #' @seealso [rextendr::document()]
 #' @export
-register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile = NA) {
-  local_quiet_cli(quiet)
-
-  rextendr_setup(path = path)
-
-  pkg_name <- pkg_name(path)
-
-  cli::cli_alert_info("Generating extendr wrapper functions for package: {.pkg {pkg_name}}.")
-
-  entrypoint_c_file <- rprojroot::find_package_root_file("src", "entrypoint.c", path = path)
-  if (!file.exists(entrypoint_c_file)) {
-    cli::cli_abort(
-      c(
-        "Unable to register the extendr module.",
-        "x" = "Could not find file {.file src/entrypoint.c}.",
-        "*" = "Are you sure this package is using extendr Rust code?"
-      ),
-      class = "rextendr_error"
-    )
-  }
-
-  outfile <- rprojroot::find_package_root_file("R", "extendr-wrappers.R", path = path)
-
-  path <- rprojroot::find_package_root_file(path = path)
-
-  if (!isFALSE(compile)) {
-    # As of version 1.4.0, pkgbuild can detect the changes in Rust code.
-    pkgbuild::compile_dll(path = path, quiet = quiet, force = compile)
-  }
-
-  library_path <- get_library_path(path)
-
-  if (!file.exists(library_path)) {
-    msg <- "{library_path} doesn't exist"
-    if (isTRUE(compile)) {
-      # If it doesn't exist even after compile, we have no idea what happened
-      cli::cli_abort(msg, class = "rextendr_error")
-    } else {
-      # If compile wasn't invoked, it might succeed with explicit "compile = TRUE"
-      cli::cli_abort(
-        c(
-          msg,
-          "i" = "You need to compile first, try {.code register_rextendr(compile = TRUE)}."
-        ),
-        class = "rextendr_error"
-      )
-    }
-  }
-
-  # If the wrapper file is newer than the DLL file, assume it's been generated
-  # by the latest DLL, which should mean it doesn't need to be regenerated.
-  # This isn't always the case (e.g. when the user accidentally edited the
-  # wrapper file by hand) so the user might need to run with `force = TRUE`.
-  if (!isTRUE(force) && isTRUE(file.info(outfile)[["mtime"]] > file.info(library_path)[["mtime"]])) {
-    rel_path <- pretty_rel_path(outfile, path) # nolint: object_usage_linter
-    cli::cli_alert_info("{.file {rel_path}} is up-to-date. Skip generating wrapper functions.")
-
-    return(invisible(character(0L)))
-  }
-
-  tryCatch(
-    # Call the wrapper generation in a separate R process to avoid the problem
-    # of loading and unloading the same name of a DLL (c.f. #64).
-    make_wrappers_externally(
-      module_name = as_valid_rust_name(pkg_name),
-      package_name = pkg_name,
-      outfile = outfile,
-      path = path,
-      use_symbols = TRUE,
-      quiet = quiet
-    ),
-    error = function(e) {
-      cli::cli_abort(
-        c("Failed to generate wrapper functions.",
-          x = e[["message"]],
-          y = e[["parent"]][["message"]]
-        ),
-        class = "rextendr_error"
-      )
-    }
+register_extendr <- function(
+  path = ".",
+  quiet = FALSE,
+  force = FALSE,
+  compile = NA
+) {
+  lifecycle::deprecate_warn(
+    "0.4.0",
+    "register_extendr()",
+    "devtools::document()",
+    details = "The current function is now no-op. Call `use_extendr()` to update configs."
   )
-
-  # Ensures path is absolute
-  invisible(normalizePath(outfile))
 }
 
 #' Creates R wrappers for Rust functions.
@@ -128,8 +50,14 @@ register_extendr <- function(path = ".", quiet = FALSE, force = FALSE, compile =
 #' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
 #'   or verbose (`FALSE`).
 #' @noRd
-make_wrappers <- function(module_name, package_name, outfile,
-                          path = ".", use_symbols = FALSE, quiet = FALSE) {
+make_wrappers <- function(
+  module_name,
+  package_name,
+  outfile,
+  path = ".",
+  use_symbols = FALSE,
+  quiet = FALSE
+) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
     wrapper_function,
@@ -162,12 +90,29 @@ make_wrappers <- function(module_name, package_name, outfile,
 #' Does the same as [`make_wrappers`], but out of process.
 #' @inheritParams make_wrappers
 #' @noRd
-make_wrappers_externally <- function(module_name, package_name, outfile,
-                                     path, use_symbols = FALSE, quiet = FALSE) {
-  func <- function(path, make_wrappers, quiet,
-                   module_name, package_name, outfile,
-                   use_symbols, ...) {
-    library_path <- file.path(path, "src", paste0(package_name, .Platform$dynlib.ext))
+make_wrappers_externally <- function(
+  module_name,
+  package_name,
+  outfile,
+  path,
+  use_symbols = FALSE,
+  quiet = FALSE
+) {
+  func <- function(
+    path,
+    make_wrappers,
+    quiet,
+    module_name,
+    package_name,
+    outfile,
+    use_symbols,
+    ...
+  ) {
+    library_path <- file.path(
+      path,
+      "src",
+      paste0(package_name, .Platform$dynlib.ext)
+    )
     # Loads native library
     lib <- dyn.load(library_path)
     # Registers library unloading to be invoked at the end of this function

@@ -1,25 +1,56 @@
 #' Set up a package for use with Rust extendr code
 #'
-#' Create the scaffolding needed to add Rust extendr code to an R package. `use_extendr()`
-#' adds a small Rust library with a single Rust function that returns the string
-#' `"Hello world!"`. It also adds wrapper code so this Rust function can be called from
-#' R with `hello_world()`.
+#' Create the scaffolding needed to add Rust extendr code to an R package.
+#' `use_extendr()` adds a small Rust library with a single Rust function that
+#' returns the string `"Hello world!"`. It also adds wrapper code so this Rust
+#' function can be called from R with `hello_world()`.
 #'
 #' @param path File path to the package for which to generate wrapper code.
-#' @param crate_name String that is used as the name of the Rust crate.
-#' If `NULL`, sanitized R package name is used instead.
-#' @param lib_name String that is used as the name of the Rust library.
-#' If `NULL`, sanitized R package name is used instead.
+#' @param crate_name String that is used as the name of the Rust crate,
+#'   specifically `[package] name` in `Cargon.toml`. If `NULL` (default),
+#'   sanitized R package name is used instead.
+#' @param lib_name String that is used as the name of the Rust library,
+#'   specifically `[lib] name` in `Cargo.toml`. If `NULL` (default), sanitized R
+#'   package name is used instead.
 #' @param quiet Logical indicating whether any progress messages should be
 #'   generated or not.
-#' @param overwrite Logical scalar or `NULL` indicating whether the files in the `path` should be overwritten.
-#' If `NULL` (default), the function will ask the user whether each file should
-#' be overwritten in an interactive session or do nothing in a non-interactive session.
-#' If `FALSE` and each file already exists, the function will do nothing.
-#' If `TRUE`, all files will be overwritten.
+#' @param overwrite Logical scalar or `NULL` indicating whether the files in the
+#'   `path` should be overwritten. If `NULL` (default), the function will ask
+#'   the user whether each file should be overwritten in an interactive session
+#'   or do nothing in a non-interactive session. If `FALSE` and each file
+#'   already exists, the function will do nothing. If `TRUE`, all files will be
+#'   overwritten.
 #' @param edition String indicating which Rust edition is used; Default `"2021"`.
+#'
 #' @return A logical value (invisible) indicating whether any package files were
-#' generated or not.
+#'   generated or not.
+#'
+#' @details
+#' ## Generated files
+#'
+#' - `R/extendr-wrappers.R`: auto-generated R wrappers. Do not edit by hand.
+#' - `src/entrypoint.c`: C entry point forwarding R's routine registration to
+#'   the Rust library.
+#' - `src/Makevars.in` / `src/Makevars.win.in`: Makefile templates compiled and
+#'    employed at package build time.
+#' - `src/<pkg>-win.def`: Windows DLL export definitions.
+#' - `src/.gitignore`: Ignores compiled artifacts, Cargo directories, and
+#'   generated `Makevars` files.
+#' - `src/rust/Cargo.toml`: Rust package manifest with crate name, edition,
+#'   `extendr-api` dependency, and release profile settings.
+#' - `src/rust/src/lib.rs`: Main Rust library with an example `hello_world()`
+#'   function and the `extendr_module!` macro.
+#' - `src/rust/document.rs`: Rust binary that writes `R/extendr-wrappers.R`
+#'   by introspecting exported function metadata at build time.
+#' - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV in
+#'   `DESCRIPTION`.
+#' - `tools/config.R`: Reads `tools/msrv.R`, checks `DEBUG`/`NOT_CRAN` env
+#'   vars, and writes the final `Makevars` file from the `.in` template.
+#' - `configure` / `configure.win`: Shell scripts run before compilation that
+#'   invoke `tools/config.R` via `Rscript`.
+#' - `cleanup` / `cleanup.win`: Shell scripts that remove `src/Makevars` on
+#'   package uninstall.
+#'
 #' @export
 use_extendr <- function(
   path = ".",
@@ -29,9 +60,42 @@ use_extendr <- function(
   overwrite = NULL,
   edition = c("2021", "2018")
 ) {
-  # https://github.com/r-lib/cli/issues/434
+  check_string(
+    path,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_string(
+    crate_name,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_string(
+    lib_name,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  check_bool(
+    quiet,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
 
   local_quiet_cli(quiet)
+
+  check_bool(
+    overwrite,
+    allow_null = TRUE,
+    call = rlang::caller_call(),
+    class = "rextendr_error"
+  )
+
+  edition <- rlang::arg_match(edition, error_call = rlang::caller_call())
 
   if (!interactive()) {
     overwrite <- overwrite %||% FALSE
@@ -140,8 +204,6 @@ use_extendr <- function(
     overwrite = overwrite
   )
 
-  edition <- match.arg(edition, several.ok = FALSE)
-
   # fetch extendr-api version from options
   # this is defined in zzz.R
   # defaults to latest stable version or falls back to "*"
@@ -155,7 +217,14 @@ use_extendr <- function(
       edition = edition,
       `rust-version` = "1.65"
     ),
-    lib = list(`crate-type` = array("staticlib", 1), name = lib_name),
+    lib = list(
+      `crate-type` = array(c("rlib", "staticlib"), 2),
+      name = lib_name
+    ),
+    bin = data.frame(
+      name = "document",
+      path = "document.rs"
+    ),
     dependencies = list(
       `extendr-api` = extendr_api_version
     ),
@@ -187,6 +256,14 @@ use_extendr <- function(
     quiet = quiet,
     overwrite = overwrite,
     data = list(mod_name = mod_name)
+  )
+
+  use_rextendr_template(
+    "document.rs",
+    save_as = file.path("src", "rust", "document.rs"),
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
   )
 
   use_rextendr_template(
@@ -223,16 +300,14 @@ use_extendr <- function(
     "configure",
     save_as = "configure",
     quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
+    overwrite = overwrite
   )
 
   use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
     quiet = quiet,
-    overwrite = overwrite,
-    data = list(lib_name = lib_name)
+    overwrite = overwrite
   )
 
   # create settings.json file
@@ -279,7 +354,7 @@ use_extendr <- function(
     )
     cli::cli_ul(
       c(
-        "Please run {.fun rextendr::document} for changes to take effect."
+        "Please run {.fun devtools::document} for changes to take effect."
       )
     )
     # encourage use of use_extendr__badge
@@ -288,7 +363,7 @@ use_extendr <- function(
     )
   }
 
-  return(invisible(TRUE))
+  invisible(TRUE)
 }
 
 try_get_normalized_path <- function(path_fn) {
@@ -326,7 +401,11 @@ is_valid_rust_name <- function(name) {
 #' @return \[ character(n) \] Equivalent Rust name (if exists), otherwise `NA`.
 #' @noRd
 as_valid_rust_name <- function(name) {
-  rust_name <- stringi::stri_replace_all_regex(name, "[^\\w-]", "_")
+  # Insert underscores at camelCase boundaries before lowercasing,
+  # so e.g. "MyPackage" -> "my_package" rather than "mypackage".
+  rust_name <- stringi::stri_replace_all_regex(name, "([a-z])([A-Z])", "$1_$2")
+  rust_name <- stringi::stri_replace_all_regex(rust_name, "[^\\w-]", "_")
+  rust_name <- stringi::stri_trans_tolower(rust_name)
   if (stringi::stri_detect_regex(rust_name, "^\\d")) {
     rust_name <- paste0("_", rust_name)
   }
