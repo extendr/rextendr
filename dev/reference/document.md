@@ -1,14 +1,19 @@
 # Compile Rust code and generate package documentation.
 
-The function `rextendr::document()` updates the package documentation
-for an R package that uses `extendr` code, taking into account any
-changes that were made in the Rust code. It is a wrapper for
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
-and it executes `extendr`-specific routines before calling
+**\[deprecated\]**
+
+As of `rextendr` 0.4.0, this function is no longer strictly necessary.
+Packages created with
+[`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
+now include a `document` binary that generates `R/extendr-wrappers.R` as
+part of the normal `cargo build` step, so
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+works directly without any `rextendr`-specific pre-processing.
+`rextendr::document()` is retained for backwards compatibility.
+
+`rextendr::document()` updates the package documentation for an R
+package that uses `extendr` code. It is a wrapper for
 [`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
-Specifically, it ensures that Rust code is recompiled (when necessary)
-and that up-to-date R wrappers are generated before regenerating the
-package documentation.
 
 ## Usage
 

@@ -1,53 +1,60 @@
 # Using Rust code in R packages
 
-The rextendr package provides two utility functions for developing R
-packages with Rust code using extendr:
+The `rextendr` package supports R package development by building the
+scaffolding necessary to use extendr. This is done by calling
+[`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md),
+which should feel familiar to anyone who has worked with
+[`usethis::use_cpp11()`](https://usethis.r-lib.org/reference/use_cpp11.html).
+As with `devtools`, it is not required to add `rextendr` to the
+`Depends` or `Imports` of the package `DESCRIPTION`.
 
-- [`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md):
-  create the scaffolding to use extendr, similar to
-  [`usethis::use_cpp11()`](https://usethis.r-lib.org/reference/use_cpp11.html).
-- [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md):
-  compile Rust code and generate package documentation, similar to
-  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
+The development workflow is designed to be as consistent with any R
+extension workflow using `devtools`. The whole process can be summarized
+this way:
 
-One thing we want to emphasize here is that these functions are needed
-solely for package development. An R package using extendr Rust code
-doesn’t have to depend on or import the rextendr package, just like R
-packages don’t usually add the devtools package to `Depends` or
-`Imports` no matter how often the package developers use the functions
-provided by devtools.
+1.  Initialize a package with
+    [`usethis::create_package()`](https://usethis.r-lib.org/reference/create_package.html)
+    and
+    [`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md).
+2.  Compile a package with
+    [`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
+3.  Load a package with
+    [`devtools::load_all()`](https://devtools.r-lib.org/reference/load_all.html).
 
-## Create a template package
+The following vignette walks through this workflow in more detail,
+highlighting important features of the r/extendr scaffolding and build
+process along the way.
 
-Creating an R package with extendr is very easy with the rextendr
-package.
+## Initialize a package
 
-First, create an empty R package. You can do this with
-[`usethis::create_package()`](https://usethis.r-lib.org/reference/create_package.html).
-Let’s pick `myextendr` as the package name.
-
-``` r
-usethis::create_package("path/to/myextendr")
-```
-
-Then, execute
+As an example workflow, let’s pick `myextendr` as the name of our
+extendr-powered R package. The first step in development is to create an
+empty R package directory with
+`usethis::create_package("path/to/myextendr")`. Then, we simply execute
 [`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
-inside the package directory to create the scaffolding to use extendr.
+inside that package directory to generate the required extendr
+scaffolding.
 
 ``` r
 rextendr::use_extendr()
-#> ✓ Creating src/rust/src.
-#> ✓ Setting active project to 'path/to/myextendr'
-#> ✓ Writing 'src/entrypoint.c'
-#> ✓ Writing 'src/Makevars'
-#> ✓ Writing 'src/Makevars.win'
-#> ✓ Writing 'src/.gitignore'
-#> ✓ Writing src/rust/Cargo.toml.
-#> ✓ Writing 'src/rust/src/lib.rs'
-#> ✓ Writing 'R/extendr-wrappers.R'
-#> ✓ Finished configuring extendr for package myextendr.
-#> • Please update the system requirement in DESCRIPTION file.
-#> • Please run `rextendr::document()` for changes to take effect.
+#> ✔ Writing 'src/entrypoint.c'
+#> ✔ Writing 'src/Makevars.in'
+#> ✔ Writing 'src/Makevars.win.in'
+#> ✔ Writing 'cleanup'
+#> ✔ Writing 'cleanup.win'
+#> ✔ Writing 'src/.gitignore'
+#> ✔ Writing 'src/rust/Cargo.toml'
+#> ✔ Writing 'src/rust/src/lib.rs'
+#> ✔ Writing 'src/testpkg-win.def'
+#> ✔ Writing 'src/rust/document.rs'
+#> ✔ File 'R/extendr-wrappers.R' already exists. Skip writing the file.
+#> ✔ Writing 'tools/msrv.R'
+#> ✔ Writing 'tools/config.R'
+#> ✔ Writing 'configure'
+#> ✔ Writing 'configure.win'
+#> ✔ Finished configuring extendr for package testpkg.
+#> * Please run `devtools::document()` for changes to take effect.
+#> i Call `use_extendr_badge()` to add an extendr badge to your 'README'
 ```
 
 For developers who use RStudio, we also provide a project template that
@@ -55,7 +62,7 @@ will call
 [`usethis::create_package()`](https://usethis.r-lib.org/reference/create_package.html)
 and
 [`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
-for you. This is done using RStudio’s **Create Project** command, which
+for you. This is done using RStudio’s *Create Project* command, which
 you can find on the global toolbar or in the File menu. Choose “New
 Directory” then select “R package with extendr.” You can then fill out
 the details to match your preferences.
@@ -70,13 +77,15 @@ address any issues that may arise.
 Assuming we have a proper installation of Rust, we are just one step
 away from calling Rust functions from R. As the message above says, we
 need to run
-[`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md).
-But, before moving forward, let’s look at the files added.
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
+Before doing that, however, let’s look at the scaffolding files that
+were added to our package directory.
 
-## Package structure
+### Package structure
 
-The following files have been added by
-[`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md):
+Calling
+[`rextendr::use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
+generates the following scaffolding:
 
     .
     ├── R
@@ -88,50 +97,66 @@ The following files have been added by
         ├── entrypoint.c
         └── rust
             ├── Cargo.toml
+            ├── document.rs
             └── src
                 └── lib.rs
 
 - **`R/extendr-wrappers.R`**: This file contains auto-generated R
   functions from Rust code. We don’t modify this file by hand.
-- **`src/Makevars`**, **`src/Makevars.win`**: These files hook
-  `cargo build` at the installation of the R package. In most cases, we
-  don’t edit these.
+- **`src/Makevars`**, **`src/Makevars.win`**: These files ensure that
+  `cargo build --lib` and `cargo run --bin document` get called during
+  the installation of the R package, ensuring that the crate library is
+  compiled and the R wrappers generated. In most cases, we don’t edit
+  these by hand.
 - **`src/entrypoint.c`**: This file is needed to avoid the linker
   removing the static library. In 99.9% of cases, we don’t edit this
   (except for changing the crate name).
 - **`src/rust/`**: Rust code of a crate using extendr-api. This is where
   we mainly write code.
 
-So, in short, what we should really look at is only these two files:
+Two files in `src/rust` deserve some further consideration:
 
-### `src/rust/Cargo.toml`
+`src/rust/Cargo.toml`
 
 ``` toml
 [package]
 name = 'myextendr'
+publish = false
 version = '0.1.0'
 edition = '2021'
+rust-version = '1.65'
 
 [lib]
-crate-type = [ 'staticlib' ]
+crate-type = [ 'rlib', 'staticlib' ]
+name = 'myextendr'
+
+[[bin]]
+name = 'document'
+path = 'document.rs'
+bench = false
 
 [dependencies]
 extendr-api = '*'
+
+[profile.release]
+lto = true
+codegen-units = 1
 ```
 
 The crate name is the same name as the R package’s name by default. You
 can change this, but it might be a bit cumbersome to tweak other files
-accordingly, so we recommend leaving this.
-
-You will probably want to specify a concrete extendr version, for
-example `extendr-api = '0.2'`. To try the development version of the
-extendr, you can modify the last line to read
+accordingly, so we recommend leaving it as is. You will also probably
+want to specify a concrete extendr version, for example
+`extendr-api = '0.2'`. To try the development version of the extendr,
+you can modify the dependency to read
 
 ``` toml
 extendr-api = { git = 'https://github.com/extendr/extendr' }
 ```
 
-### `src/rust/src/lib.rs`
+Now let us look at the main Rust library script.
+
+`src/rust/src/lib.rs`
 
 ``` rs
 use extendr_api::prelude::*;
@@ -152,112 +177,37 @@ extendr_module! {
 }
 ```
 
-Let’s explain this file line by line.
+There are a few things to note about this file. First, the `use`
+statement brings commonly used extendr API functions into the current
+scope. Second, the three forward slashes `///` indicate a Rust [document
+comment](https://doc.rust-lang.org/reference/comments.html#doc-comments),
+which is used to generate a crate’s documentation. In extendr, these
+lines are copied to the auto-generated R code as roxygen comments. This
+is analogous to Rcpp/cpp11’s `//'`. Finally, the `#[extendr]` and
+`extendr_module!` macros ensure that corresponding R functions are
+generated automatically, similar to how Rcpp’s `[[Rcpp::export]]` and
+cpp11’s `[[cpp11::register]]` work. Note that it is never sufficient to
+add the `#[extendr]` macro above a function definition. Those function
+names must also be collected in `extendr_module!` to generate the
+necessary wrappers.
 
-The first line, containing the `use` statement, declares the commonly
-used extendr API functions to the Rust compiler.
+## Compile a package
 
-``` rs
-use extendr_api::prelude::*;
-```
-
-Next, you may notice that `/` is repeated three times, while the usual
-Rust comments require only two slashes (i.e., `//`). This is one of
-Rust’s “[doc
-comment](https://doc.rust-lang.org/reference/comments.html#doc-comments)”
-notation to generate the crate’s documentation. In extendr, these lines
-are copied to the auto-generated R code as roxygen comments. This is
-analogous to Rcpp/cpp11’s `//'`.
-
-``` rs
-/// Return string `"Hello world!"` to R.
-/// @export
-```
-
-The next line is the core of extendr’s mechanism. If the function is
-marked with this macro, the corresponding R function will be generated
-automatically. This is analogous to Rcpp’s `[[Rcpp::export]]` and
-cpp11’s `[[cpp11::register]]`.
-
-``` r
-#[extendr]
-```
-
-The last 3 lines are the macro for generating exports, as the comment
-explains. If we implement another function than just `hello_world`, it
-needs to be listed here as well as marking it with `#[extendr]` macro.
-
-``` rs
-// Macro to generate exports.
-// This ensures exported functions are registered with R.
-// See corresponding C code in `entrypoint.c`.
-extendr_module! {
-    mod myextendr;
-    fn hello_world;
-}
-```
-
-## Compile and use the package
-
-### Compile
-
-Compiling Rust code into R functions is as easy as executing this one
-command:
-
-``` r
-rextendr::document()
-#> ✓ Saving changes in the open files.
-#> ℹ Generating extendr wrapper functions for package: myextendr.
-#> ! No library found at src/myextendr.so, recompilation is required.
-#> Re-compiling myextendr
-#> ─  installing *source* package ‘myextendr’ ... (347ms)
-#>    ** using staged installation
-#>    ** libs
-#>    rm -Rf myextendr.so ./rust/target/release/libmyextendr.a entrypoint.o
-#>    gcc -std=gnu99 -I"/usr/share/R/include" -DNDEBUG      -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-tbZjLv/r-base-4.1.0=. #> -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -UNDEBUG -Wall -pedantic -g -O0 #> -fdiagnostics-color=always -c entrypoint.c -o entrypoint.o
-#>    cargo build --lib --release --manifest-path=./rust/Cargo.toml
-#>        Updating crates.io index
-#>       Compiling proc-macro2 v1.0.27
-#>       Compiling unicode-xid v0.2.2
-#>       Compiling libR-sys v0.2.1
-#>       Compiling syn v1.0.72
-#>       Compiling extendr-engine v0.2.0
-#>       Compiling lazy_static v1.4.0
-#>       Compiling quote v1.0.9
-#>       Compiling extendr-macros v0.2.0
-#>       Compiling extendr-api v0.2.0
-#>       Compiling myextendr v0.1.0 (path/to/myextendr/src/rust)
-#>        Finished release [optimized] target(s) in 19.05s
-#>    gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o myextendr.so entrypoint.o -L./rust/target/release #> -lmyextendr -L/usr/lib/R/lib -lR
-#>    installing to /tmp/RtmpfMcL08/devtools_install_e2d6351b843c/00LOCK-myextendr/00new/myextendr/libs
-#>    ** checking absolute paths in shared objects and dynamic libraries
-#> ─  DONE (myextendr)
-#> ✓ Writing 'R/extendr-wrappers.R'.
-#> ℹ Updating myextendr documentation
-#> ℹ Loading myextendr
-#> Writing NAMESPACE
-#> Writing NAMESPACE
-#> Writing hello_world.Rd
-```
-
-You might wonder why compilation is triggered while the function name is
-just
-[`document()`](https://extendr.github.io/rextendr/dev/reference/document.md).
-Well, this is because the compilation is actually needed to generate
-documentation and R wrapper code from the Rust code. This is consistent
-with the behavior of
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-for packages using C or C++.
-
-By doing the above, the following files are updated or generated:
+Compiling Rust code into R functions is as easy as calling
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
+just as we would do if writing a package around C or C++. The
+documentation process first compiles the Rust library, then generates R
+wrappers along with their documentation if provided, and updates the
+NAMESPACE. The whole process thus leads to several files being either
+updated or generated from scratch:
 
     .
     ...
-    ├── NAMESPACE                       ----------(4)
+    ├── NAMESPACE                 ----------(4)
     ├── R
-    │   └── extendr-wrappers.R          ----------(3)
+    │   └── extendr-wrappers.R    ----------(3)
     ├── man
-    │   └── hello_world.Rd              ----------(4)
+    │   └── hello_world.Rd        ----------(4)
     └── src
         ├── myextendr.so          ----------(2)
         └── rust
@@ -277,38 +227,17 @@ By doing the above, the following files are updated or generated:
 4.  **`man/`**, **`NAMESPACE`**: These are generated from roxygen
     comments.
 
-### Load and use
+### Generated R code
 
-After running
-[`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md),
-we can just load the package with
-[`devtools::load_all()`](https://devtools.r-lib.org/reference/load_all.html)
-(or alternatively install it and call with
-[`library()`](https://rdrr.io/r/base/library.html)) and then call the
-function we have implemented in Rust.
-
-``` r
-devtools::load_all(".")
-
-hello_world()
-#> [1] "Hello world!"
-```
-
-## Rust code vs generated R code
-
-While we never edit the R wrapper code by hand, it might be good to know
-what R code is generated from the Rust code. Let’s look at
-`R/extendr-wrappers.R`:
+While we never edit the R code in `R/extendr-wrappers.R` by hand, it
+might be good to know what that file looks like. For our default
+hello-world library, it is this:
 
 ``` r
 # Generated by extendr: Do not edit by hand
 #
-# This file was created with the following call:
-#   .Call("wrap__make_myextendr_wrappers", use_symbols = TRUE, package_name = "myextendr")
-
-#' @docType package
 #' @usage NULL
-#' @useDynLib myextendr, .registration = TRUE
+#' @useDynLib testPackage, .registration = TRUE
 NULL
 
 #' Return string `"Hello world!"` to R.
@@ -316,49 +245,17 @@ NULL
 hello_world <- function() .Call(wrap__hello_world)
 ```
 
-Here, `.Call("wrap__make_myextendr_wrappers", use_symbols = ...` is a
-function call that was executed by
-[`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md).
+The Roxygen directive `@useDynLib testPackage, .registration = TRUE`
+ensures that `useDynLib(myextendr, .registration = TRUE)` is added to
+the `NAMESPACE`, which allows for calling the compiled Rust code in R.
+We also see that the roxygen comments from the Rust script are copied
+here.
 
-A section of `@docType package` is needed to generate the
-`useDynLib(myextendr, .registration = TRUE)` entry in `NAMESPACE`.
-
-The last section is for `hello_world()`. We can see the roxygen comments
-are copied to here. As the Rust function `hello_world()` has no
-arguments this R function also has no arguments. If the function had
-arguments, such as
-
-``` rs
-fn add(x: i32, y: i32) -> i32 {
-    x + y
-}
-```
-
-then the generated function wrapper also would have arguments:
-
-``` r
-add <- function(x, y) .Call(wrap__add, x, y)
-```
-
-## Implement a new Rust function
-
-Now that we have roughly figured out how extendr works, let’s implement
-a new Rust function. The development flow would be:
-
-1.  Modify `src/rust/src/lib.rs`
-2.  Run
-    [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
-3.  Run `devtools::load_all(".")` and test the function
-
-As an exercise, let’s add the `add(i32, i32)` function from the previous
-subsection.
-
-### 1. Modify `src/rust/src/lib.rs`
-
-Add the function with `@export`, so it will get exported from the
-generated R package. (Without this tag, the function would be available
-internally for package programming but not externally to users of the
-package.)
+To help clarify this compilation process, let’s implement a new Rust
+function. First, we add the function with `@export`, so it will get
+exported from the generated R package. This is followed by the
+`#[extendr]` macro above the function definition, with the function name
+then added to `extendr_module!`.
 
 ``` rs
 /// @export
@@ -366,11 +263,7 @@ package.)
 fn add(x: i32, y: i32) -> i32 {
     x + y
 }
-```
 
-Don’t forget to add the function to `extendr_module!`:
-
-``` rs
 extendr_module! {
     mod myextendr;
     fn hello_world;
@@ -378,21 +271,33 @@ extendr_module! {
 }
 ```
 
-### 2. Run `rextendr::document()`
-
-Just run this command:
+After we re-build the package with
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html),
+you should see the new `add` function in `R/extendr-wrappers.R`:
 
 ``` r
-rextendr::document()
+#' @export
+add <- function(x, y) .Call(wrap__add, x, y)
 ```
 
-### 3. Run `devtools::load_all(".")` and test the function
+## Load a package
 
-Now you can load the package and call `add()`:
+Currently, our R package has two Rust-powered functions, `hello_world()`
+and `add()`. In a development workflow, we would access these functions
+in the current R session by simply loading the package with
+[`devtools::load_all()`](https://devtools.r-lib.org/reference/load_all.html).
 
 ``` r
 devtools::load_all(".")
 
+hello_world()
+#> [1] "Hello world!"
+
 add(1L, 2L)
 #> [1] 3
 ```
+
+Alternatively, we could install the package with
+[`devtools::install()`](https://devtools.r-lib.org/reference/install.html),
+then attach it with [`library()`](https://rdrr.io/r/base/library.html).
+In either case, we are now free to test our functions interactively.

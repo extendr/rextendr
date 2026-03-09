@@ -27,14 +27,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/extendr/rextendr/blob/main/DESCRIPTION)
 
-Wilke C, Thomason A, Reimert M, Kosenkov I, Barrett M (2025). *rextendr:
+Wilke C, Thomason A, Reimert M, Kosenkov I, Barrett M (2026). *rextendr:
 Call Rust Code from R using the 'extendr' Crate*. R package version
 0.4.2.9000, <https://extendr.rs/rextendr/>.
 
     @Manual{,
       title = {rextendr: Call Rust Code from R using the 'extendr' Crate},
       author = {Claus O. Wilke and Andy Thomason and Mossa M. Reimert and Ilia Kosenkov and Malcolm Barrett},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.4.2.9000},
       url = {https://extendr.rs/rextendr/},
     }

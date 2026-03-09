@@ -196,9 +196,10 @@ By participating in this project you agree to abide by its terms.
 - [`use_crate()`](https://extendr.github.io/rextendr/dev/reference/use_crate.md)
   : Add dependencies to a Cargo.toml manifest file
 - [`document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
-  : Compile Rust code and generate package documentation.
+  **\[deprecated\]** : Compile Rust code and generate package
+  documentation.
 - [`register_extendr()`](https://extendr.github.io/rextendr/dev/reference/register_extendr.md)
-  : Register the extendr module of a package with R
+  **\[deprecated\]** : Register the extendr module of a package with R
 - [`write_license_note()`](https://extendr.github.io/rextendr/dev/reference/write_license_note.md)
   : Generate LICENSE.note file.
 - [`clean()`](https://extendr.github.io/rextendr/dev/reference/clean.md)
@@ -232,6 +233,9 @@ By participating in this project you agree to abide by its terms.
 
 - [`use_extendr_badge()`](https://extendr.github.io/rextendr/dev/reference/use_extendr_badge.md)
   : extendr README badge
+
+- [`update_extendr()`](https://extendr.github.io/rextendr/dev/reference/update_extendr.md)
+  : Update extendr scaffolding
 
 # Articles
 

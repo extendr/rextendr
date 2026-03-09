@@ -56,6 +56,22 @@
 <code><a href="../reference/vendor_pkgs.html">vendor_pkgs()</a></code> now has a <code>clean</code> argument to remove the <code>src/rust/vendor</code> directory after creating the <code>vendor.tar.xz</code> file. (<a href="https://github.com/extendr/rextendr/issues/479" class="external-link">#479</a>)</li>
 <li>
 <code>Makevars</code>(.win) now uses the <code>vendor/</code>, if it exists, before unzipping the tarball. (<a href="https://github.com/extendr/rextendr/issues/479" class="external-link">#479</a>)</li>
+<li>Complete overhaul of wrapper-generation.
+<ul><li>
+<code><a href="../reference/use_extendr.html">use_extendr()</a></code> now generates <code>src/rust/document.rs</code> and adds a <code>[[bin]]</code> target to <code>Cargo.toml</code> with <code>crate-type = ["rlib", "staticlib"]</code>. During <code>cargo build</code>, this binary runs automatically via <code>Makevars</code> and writes <code>R/extendr-wrappers.R</code> directly — eliminating the need for <code><a href="../reference/document.html">rextendr::document()</a></code> to pre-compile the package before calling <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code>.</li>
+<li>
+<code><a href="../reference/document.html">rextendr::document()</a></code> is now a thin wrapper around <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> and is soft deprecated. Packages created with <code><a href="../reference/use_extendr.html">use_extendr()</a></code> no longer require it; it is retained for backwards compatibility.</li>
+<li>
+<code><a href="../reference/register_extendr.html">register_extendr()</a></code> is no longer called in <code><a href="../reference/document.html">rextendr::document()</a></code> and is soft deprecated. Its wrapper-generation role is now handled by the document binary at build time. The function itself is no-op and now returns a lifecycle warning.</li>
+<li>Deprecating <code><a href="../reference/register_extendr.html">register_extendr()</a></code> effectively nullifies the PkgGen CI tests, so those have been removed.</li>
+<li>The header in <code>R/extendr-wrappers.R</code> has also been updated to reflect these changes, which required a concurrent PR to extendr (extendr/extendr#1048).</li>
+<li>Added <code><a href="../reference/update_extendr.html">update_extendr()</a></code> to overwrite scaffolding, making it easier to update packages to track developments in extendr and rextendr. This function is basically <code><a href="../reference/use_extendr.html">use_extendr()</a></code> without all the interactive business, i.e., <code>overwrite = TRUE</code> is hardcoded.</li>
+<li>CI now uses the development version of extendr-api on GitHub.</li>
+<li>
+<code><a href="../reference/rust_eval.html">rust_eval()</a></code> now returns <code>extendr_api::error::Result&lt;Robj&gt;</code>.</li>
+<li>Snapshot and other tests now reflect these changes.</li>
+<li>Substantial updates to Roxygen documentation.</li>
+</ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="rextendr-042">rextendr 0.4.2<a class="anchor" aria-label="anchor" href="#rextendr-042"></a></h2><p class="text-muted">CRAN release: 2025-08-26</p>
