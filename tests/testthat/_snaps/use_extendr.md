@@ -347,7 +347,7 @@
       path = 'document.rs'
       
       [dependencies]
-      extendr-api = '*'
+      extendr-api = { git = 'https://github.com/extendr/extendr' }
       
       [profile.release]
       lto = true
@@ -475,7 +475,7 @@
       path = 'document.rs'
       
       [dependencies]
-      extendr-api = '*'
+      extendr-api = { git = 'https://github.com/extendr/extendr' }
       
       [profile.release]
       lto = true
