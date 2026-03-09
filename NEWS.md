@@ -23,6 +23,8 @@
     soft deprecated. Its wrapper-generation role is now handled by the document 
     binary at build time. The function itself is no-op and now returns a 
     lifecycle warning.
+  * Deprecating `register_extendr()` effectively nullifies the PkgGen CI tests,
+    so those have been removed.
   * The header in `R/extendr-wrappers.R` has also been updated to reflect these
     changes, which required a concurrent PR to extendr (extendr/extendr#1048).
   * Added `update_extendr()` to overwrite scaffolding, making it easier to 
