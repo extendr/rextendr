@@ -43,13 +43,6 @@
       
       -------------------------------------------------------------
       
-      Name:        readonly
-      Repository:  https://github.com/dtolnay/readonly
-      Authors:     David Tolnay
-      License:     MIT OR Apache-2.0
-      
-      -------------------------------------------------------------
-      
       Name:        paste
       Repository:  https://github.com/dtolnay/paste
       Authors:     David Tolnay
@@ -66,6 +59,13 @@
       
       Name:        quote
       Repository:  https://github.com/dtolnay/quote
+      Authors:     David Tolnay
+      License:     MIT OR Apache-2.0
+      
+      -------------------------------------------------------------
+      
+      Name:        readonly
+      Repository:  https://github.com/dtolnay/readonly
       Authors:     David Tolnay
       License:     MIT OR Apache-2.0
       
