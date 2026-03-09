@@ -23,9 +23,16 @@
     soft deprecated. Its wrapper-generation role is now handled by the document 
     binary at build time. The function itself is no-op and now returns a 
     lifecycle warning.
-  * Snapshot and other tests now reflect these changes.
   * The header in `R/extendr-wrappers.R` has also been updated to reflect these
     changes, which required a concurrent PR to extendr (extendr/extendr#1048).
+  * Added `update_extendr()` to overwrite scaffolding, making it easier to 
+    update packages to track developments in extendr and rextendr. This function
+    is basically `use_extendr()` without all the interactive business, i.e., 
+    `overwrite = TRUE` is hardcoded.
+  * CI now uses the development version of extendr-api on GitHub.
+  * `rust_eval()` now returns `extendr_api::error::Result<Robj>`.
+  * Snapshot and other tests now reflect these changes.
+  * Substantial updates to Roxygen documentation.
 
 # rextendr 0.4.2
 
