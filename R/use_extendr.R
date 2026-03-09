@@ -21,8 +21,36 @@
 #'   already exists, the function will do nothing. If `TRUE`, all files will be
 #'   overwritten.
 #' @param edition String indicating which Rust edition is used; Default `"2021"`.
+#'
 #' @return A logical value (invisible) indicating whether any package files were
 #'   generated or not.
+#'
+#' @details
+#' ## Generated files
+#'
+#' - `R/extendr-wrappers.R`: auto-generated R wrappers. Do not edit by hand.
+#' - `src/entrypoint.c`: C entry point forwarding R's routine registration to
+#'   the Rust library.
+#' - `src/Makevars.in` / `src/Makevars.win.in`: Makefile templates compiled and
+#'    employed at package build time.
+#' - `src/<pkg>-win.def`: Windows DLL export definitions.
+#' - `src/.gitignore`: Ignores compiled artifacts, Cargo directories, and
+#'   generated `Makevars` files.
+#' - `src/rust/Cargo.toml`: Rust package manifest with crate name, edition,
+#'   `extendr-api` dependency, and release profile settings.
+#' - `src/rust/src/lib.rs`: Main Rust library with an example `hello_world()`
+#'   function and the `extendr_module!` macro.
+#' - `src/rust/document.rs`: Rust binary that writes `R/extendr-wrappers.R`
+#'   by introspecting exported function metadata at build time.
+#' - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV in
+#'   `DESCRIPTION`.
+#' - `tools/config.R`: Reads `tools/msrv.R`, checks `DEBUG`/`NOT_CRAN` env
+#'   vars, and writes the final `Makevars` file from the `.in` template.
+#' - `configure` / `configure.win`: Shell scripts run before compilation that
+#'   invoke `tools/config.R` via `Rscript`.
+#' - `cleanup` / `cleanup.win`: Shell scripts that remove `src/Makevars` on
+#'   package uninstall.
+#'
 #' @export
 use_extendr <- function(
   path = ".",
