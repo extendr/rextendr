@@ -34,4 +34,4 @@ reference:
   - rust_sitrep
   - read_cargo_metadata
   - use_extendr_badge
-  - update_extendr
+  - update_scaffold

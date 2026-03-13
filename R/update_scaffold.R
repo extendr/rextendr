@@ -1,20 +1,16 @@
 #' Update extendr scaffolding
 #'
-#' When a new extendr or rextendr release requires changes to scaffolding, this
-#' function helps update those files to the new specification.
+#' When a new version of extendr or rextendr is released, this function updates
+#' relevant scaffolding files to the new specification.
 #'
 #' @inheritParams use_extendr
-#' @param revendor boolean scalar, whether to clear vendor files and re-run
-#'   `rextendr::vendor_pkgs()` (default is `TRUE`).
 #'
-#' @return a logical scalar indicating whether updating was successful
+#' @return a logical scalar indicating whether scaffold updating was successful
 #'
-#' @details Unfortunately, this process cannot be fully automated, so
-#'   information is also printed to the console explaining what needs to be
-#'   updated by hand. Usually, this will be accompanied by a more detailed blog
-#'   post explaining changes.
+#' @details This function does not touch any build artifacts or files or folders
+#'   generated when vendoring cargo. Cargo.lock and Cargo.toml are also left
+#'   unchanged. Only the following files are re-written:
 #'
-#'   ## Current list of updated files:
 #'   - `src/entrypoint.c`
 #'   - `src/Makevars.in`
 #'   - `src/Makevars.win.in`
@@ -26,17 +22,19 @@
 #'   - `configure`
 #'   - `configure.win`
 #'
-#'   ## Additionally updated when `revendor = TRUE`:
-#'   - `src/rust/vendor/`
-#'   - `src/rust/vendor.tar.xz`
-#'   - `src/rust/vendor-config.toml`
+#'   After updating these files, `update_scaffold()` will print a message that
+#'   explains what to do next to get your package up-to-date with the latest
+#'   versions of extendr and rextendr (provided `quiet = FALSE`, anyway). That
+#'   will typically include handling dependency resolution, updating Cargo.toml
+#'   and Cargo.lock, and vendoring crates for CRAN compliance. Usually, this
+#'   will be accompanied by a more detailed blog post explaining the update
+#'   process.
 #'
 #' @export
-update_extendr <- function(
+update_scaffold <- function(
   path = ".",
   crate_name = NULL,
   lib_name = NULL,
-  revendor = TRUE,
   quiet = FALSE
 ) {
   check_string(
@@ -67,18 +65,16 @@ update_extendr <- function(
 
   local_quiet_cli(quiet)
 
-  update_message()
-
   pkg_name <- pkg_name()
   mod_name <- as_valid_rust_name(pkg_name)
 
-  if (is.null(crate_name)) {
+  if (rlang::is_null(crate_name)) {
     crate_name <- mod_name
   } else {
     throw_if_invalid_rust_name(crate_name)
   }
 
-  if (is.null(lib_name)) {
+  if (rlang::is_null(lib_name)) {
     lib_name <- mod_name
   } else {
     throw_if_invalid_rust_name(lib_name)
@@ -159,55 +155,47 @@ update_extendr <- function(
     overwrite = TRUE
   )
 
-  if (revendor) {
-    src_dir <- find_extendr_crate(path = path)
-    vendor_dir <- file.path("src", "vendor")
-    vendor_tar <- file.path(src_dir, "vendor.tar.xz")
-    vendor_cfg <- file.path(src_dir, "vendor-config.toml")
-
-    if (file.exists(vendor_tar)) {
-      cli::cli_alert_danger("Removing {.file src/rust/vendor.tar.xz}")
-      file.remove(vendor_tar)
-    }
-
-    if (file.exists(vendor_cfg)) {
-      cli::cli_alert_danger("Removing {.file src/rust/vendor-config.toml}")
-      file.remove(vendor_cfg)
-    }
-
-    if (dir.exists(vendor_dir)) {
-      cli::cli_alert_danger("Removing {.path src/rust/vendor}")
-      unlink(vendor_dir, recursive = TRUE)
-    }
-
-    vendor_pkgs(path = path, quiet = quiet)
-  }
-
-  cli::cli_alert_info("Update complete. Be sure to run `devtools::document()`.")
-
+  update_message()
   invisible(TRUE)
 }
 
 update_message <- function() {
-  cli::cli_h3("Updating extendr scaffolding")
-  txt <- paste(
-    "If `crate_name` and `lib_name` differ from the R package name,",
-    "those will need to be specified explicitly.",
-    "Please re-run `update_extendr()`."
+  extendr_version <- getOption("rextendr.extendr_deps")[["extendr-api"]]
+  toml_dependency <- sprintf('extendr-api = "%s"', extendr_version)
+  use_crate_call <- sprintf(
+    'rextendr::use_crate("extendr-api", version = "%s")',
+    extendr_version
   )
-  cli::cli_alert_warning(txt)
-  cli::cli_alert_warning("Please add the below to your `Cargo.toml`:")
-  cli::cli_text("")
-  cli::cli_div(theme = list(".code" = list("margin-left" = 2)))
-  cli::cli_code(c(
-    "[lib]",
-    'crate-type = [ "rlib", "staticlib" ]'
+
+  cli::cli_text()
+  cli::cli_bullets(c(
+    "v" = "Scaffolding updated successfully.",
+    " " = "",
+    "!" = "If your crate or library name differs from the R package name, please",
+    " " = "re-run {.fn update_extendr} with explicit {.arg lib_name} and {.arg crate_name}.",
+    "!" = "You will also need to update `Cargo.toml` to include the following:"
   ))
-  cli::cli_text("")
+  cli::cli_div(theme = list(".code" = list("margin-left" = 4)))
   cli::cli_code(c(
+    " ",
+    "[lib]",
+    'crate-type = [ "rlib", "staticlib" ]',
+    " ",
     "[[bin]]",
     "name = 'document'",
-    "path = 'document.rs'"
+    "path = 'document.rs'",
+    " ",
+    "[dependencies]",
+    toml_dependency,
+    " "
+  ))
+  cli::cli_end()
+  cli::cli_alert_info("You should now call the following in order:")
+  cli::cli_div(theme = list("ul" = list("margin-left" = 4)))
+  cli::cli_ul(c(
+    use_crate_call,
+    "rextendr::vendor_pkgs()",
+    "devtools::document()"
   ))
   cli::cli_end()
 }
