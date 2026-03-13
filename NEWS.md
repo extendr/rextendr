@@ -27,15 +27,14 @@
     so those have been removed.
   * The header in `R/extendr-wrappers.R` has also been updated to reflect these
     changes, which required a concurrent PR to extendr (extendr/extendr#1048).
-  * Added `update_extendr()` to overwrite scaffolding, making it easier to 
-    update packages to track developments in extendr and rextendr. This function
-    is basically `use_extendr()` without all the interactive business, i.e., 
-    `overwrite = TRUE` is hardcoded.
   * CI now uses the development version of extendr-api on GitHub.
   * `rust_eval()` now returns `extendr_api::error::Result<Robj>`.
   * Snapshot and other tests now reflect these changes.
   * Substantial updates to Roxygen documentation.
-* Change `update_extendr()` to `update_scaffold()` and update tests. (#493)
+* Added `update_scaffold()` to overwrite scaffolding, making it easier to update 
+  packages to track developments in extendr and rextendr. This function is 
+  basically `use_extendr()` without all the interactive business, i.e., 
+  `overwrite = TRUE` is hardcoded. (#493)
 
 # rextendr 0.4.2
 
