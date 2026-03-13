@@ -35,6 +35,7 @@
   * `rust_eval()` now returns `extendr_api::error::Result<Robj>`.
   * Snapshot and other tests now reflect these changes.
   * Substantial updates to Roxygen documentation.
+* Change `update_extendr()` to `update_scaffold()` and update tests. (#493)
 
 # rextendr 0.4.2
 
