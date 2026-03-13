@@ -1,21 +1,15 @@
 #' Update extendr scaffolding
 #'
 #' When a new version of extendr or rextendr is released, this function updates
-#' relevant scaffolding files to the new specification and removes any artifacts
-#' that may affect dependency resolution, with the important exception of
-#' Cargo.lock and Cargo.toml, which are left as is.
+#' relevant scaffolding files to the new specification.
 #'
 #' @inheritParams use_extendr
 #'
 #' @return a logical scalar indicating whether scaffold updating was successful
 #'
-#' @details This is only *part* of the update process! In fact, this just does
-#'   some basic file housekeeping, so that the developer can focus on the
-#'   important part, namely updating Cargo.lock and Cargo.toml to use the newest
-#'   version of extendr-api. Note that updating to the newest extendr version
-#'   may require some manual dependency resolution.
-#'
-#'   The following files are rewritten to the current specification:
+#' @details This function does not touch any build artifacts or files or folders
+#'   generated when vendoring cargo. Cargo.lock and Cargo.toml are also left
+#'   unchanged. Only the following files are re-written:
 #'
 #'   - `src/entrypoint.c`
 #'   - `src/Makevars.in`
@@ -28,17 +22,12 @@
 #'   - `configure`
 #'   - `configure.win`
 #'
-#'   The following build artifacts and vendoring files are removed if present:
-#'
-#'   - `src/rust/vendor/`
-#'   - `src/rust/vendor.tar.xz`
-#'   - `src/rust/vendor-config.toml`
-#'   - `src/rust/.cargo/`
-#'   - `src/rust/target/`
-#'
-#'   After clearing these files and folders, `update_scaffold()` will print a
-#'   message that explains what to do next (provided `quiet = FALSE`). Usually,
-#'   this will be accompanied by a more detailed blog post explaining the update
+#'   After updating these files, `update_scaffold()` will print a message that
+#'   explains what to do next to get your package up-to-date with the latest
+#'   versions of extendr and rextendr (provided `quiet = FALSE`, anyway). That
+#'   will typically include handling dependency resolution, updating Cargo.toml
+#'   and Cargo.lock, and vendoring crates for CRAN compliance. Usually, this
+#'   will be accompanied by a more detailed blog post explaining the update
 #'   process.
 #'
 #' @export
@@ -165,39 +154,6 @@ update_scaffold <- function(
     quiet = quiet,
     overwrite = TRUE
   )
-
-  # wipe all dependency-related files and folders to ensure a clean update
-  src_dir <- find_extendr_crate(path = path)
-  vendor_dir <- file.path(src_dir, "vendor")
-  vendor_tar <- file.path(src_dir, "vendor.tar.xz")
-  vendor_cfg <- file.path(src_dir, "vendor-config.toml")
-  cargo_cfg_dir <- file.path("src", ".cargo")
-  target_dir <- file.path(src_dir, "target")
-
-  if (file.exists(vendor_tar)) {
-    cli::cli_alert_danger("Removing {.file src/rust/vendor.tar.xz}")
-    file.remove(vendor_tar)
-  }
-
-  if (file.exists(vendor_cfg)) {
-    cli::cli_alert_danger("Removing {.file src/rust/vendor-config.toml}")
-    file.remove(vendor_cfg)
-  }
-
-  if (dir.exists(vendor_dir)) {
-    cli::cli_alert_danger("Removing {.path src/rust/vendor}")
-    unlink(vendor_dir, recursive = TRUE)
-  }
-
-  if (dir.exists(cargo_cfg_dir)) {
-    cli::cli_alert_danger("Removing {.path src/rust/.cargo}")
-    unlink(cargo_cfg_dir, recursive = TRUE)
-  }
-
-  if (dir.exists(target_dir)) {
-    cli::cli_alert_danger("Removing {.path src/rust/target}")
-    unlink(target_dir, recursive = TRUE)
-  }
 
   update_message()
   invisible(TRUE)

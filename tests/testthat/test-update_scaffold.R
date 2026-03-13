@@ -22,33 +22,6 @@ test_that("update_scaffold() rewrites scaffolding files", {
   expect_true(file.exists("configure.win"))
 })
 
-test_that("update_scaffold() removes dependency-related files and folders", {
-  skip_if_not_installed("usethis")
-  skip_on_cran()
-
-  withr::local_options(
-    rextendr.extendr_deps = list(`extendr-api` = "*")
-  )
-
-  path <- local_package("testpkg")
-  use_extendr(quiet = TRUE)
-
-  src_dir <- file.path("src", "rust")
-  dir.create(file.path(src_dir, "vendor"), recursive = TRUE)
-  dir.create(file.path(src_dir, "target"), recursive = TRUE)
-  dir.create(file.path("src", ".cargo"), recursive = TRUE)
-  file.create(file.path(src_dir, "vendor.tar.xz"))
-  file.create(file.path(src_dir, "vendor-config.toml"))
-
-  update_scaffold(quiet = TRUE)
-
-  expect_false(dir.exists(file.path(src_dir, "vendor")))
-  expect_false(dir.exists(file.path(src_dir, "target")))
-  expect_false(dir.exists(file.path("src", ".cargo")))
-  expect_false(file.exists(file.path(src_dir, "vendor.tar.xz")))
-  expect_false(file.exists(file.path(src_dir, "vendor-config.toml")))
-})
-
 test_that("update_scaffold() substitutes crate_name and lib_name correctly", {
   skip_if_not_installed("usethis")
   skip_on_cran()

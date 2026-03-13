@@ -25,18 +25,12 @@ a logical scalar indicating whether scaffold updating was successful
 }
 \description{
 When a new version of extendr or rextendr is released, this function updates
-relevant scaffolding files to the new specification and removes any artifacts
-that may affect dependency resolution, with the important exception of
-Cargo.lock and Cargo.toml, which are left as is.
+relevant scaffolding files to the new specification.
 }
 \details{
-This is only \emph{part} of the update process! In fact, this just does
-some basic file housekeeping, so that the developer can focus on the
-important part, namely updating Cargo.lock and Cargo.toml to use the newest
-version of extendr-api. Note that updating to the newest extendr version
-may require some manual dependency resolution.
-
-The following files are rewritten to the current specification:
+This function does not touch any build artifacts or files or folders
+generated when vendoring cargo. Cargo.lock and Cargo.toml are also left
+unchanged. Only the following files are re-written:
 \itemize{
 \item \code{src/entrypoint.c}
 \item \code{src/Makevars.in}
@@ -50,17 +44,11 @@ The following files are rewritten to the current specification:
 \item \code{configure.win}
 }
 
-The following build artifacts and vendoring files are removed if present:
-\itemize{
-\item \verb{src/rust/vendor/}
-\item \code{src/rust/vendor.tar.xz}
-\item \code{src/rust/vendor-config.toml}
-\item \verb{src/rust/.cargo/}
-\item \verb{src/rust/target/}
-}
-
-After clearing these files and folders, \code{update_scaffold()} will print a
-message that explains what to do next (provided \code{quiet = FALSE}). Usually,
-this will be accompanied by a more detailed blog post explaining the update
+After updating these files, \code{update_scaffold()} will print a message that
+explains what to do next to get your package up-to-date with the latest
+versions of extendr and rextendr (provided \code{quiet = FALSE}, anyway). That
+will typically include handling dependency resolution, updating Cargo.toml
+and Cargo.lock, and vendoring crates for CRAN compliance. Usually, this
+will be accompanied by a more detailed blog post explaining the update
 process.
 }
