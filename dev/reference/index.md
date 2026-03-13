@@ -58,5 +58,5 @@
 - [`use_extendr_badge()`](https://extendr.github.io/rextendr/dev/reference/use_extendr_badge.md)
   : extendr README badge
 
-- [`update_extendr()`](https://extendr.github.io/rextendr/dev/reference/update_extendr.md)
+- [`update_scaffold()`](https://extendr.github.io/rextendr/dev/reference/update_scaffold.md)
   : Update extendr scaffolding

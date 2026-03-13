@@ -65,13 +65,13 @@
 <code><a href="../reference/register_extendr.html">register_extendr()</a></code> is no longer called in <code><a href="../reference/document.html">rextendr::document()</a></code> and is soft deprecated. Its wrapper-generation role is now handled by the document binary at build time. The function itself is no-op and now returns a lifecycle warning.</li>
 <li>Deprecating <code><a href="../reference/register_extendr.html">register_extendr()</a></code> effectively nullifies the PkgGen CI tests, so those have been removed.</li>
 <li>The header in <code>R/extendr-wrappers.R</code> has also been updated to reflect these changes, which required a concurrent PR to extendr (extendr/extendr#1048).</li>
-<li>Added <code><a href="../reference/update_extendr.html">update_extendr()</a></code> to overwrite scaffolding, making it easier to update packages to track developments in extendr and rextendr. This function is basically <code><a href="../reference/use_extendr.html">use_extendr()</a></code> without all the interactive business, i.e., <code>overwrite = TRUE</code> is hardcoded.</li>
 <li>CI now uses the development version of extendr-api on GitHub.</li>
 <li>
 <code><a href="../reference/rust_eval.html">rust_eval()</a></code> now returns <code>extendr_api::error::Result&lt;Robj&gt;</code>.</li>
 <li>Snapshot and other tests now reflect these changes.</li>
 <li>Substantial updates to Roxygen documentation.</li>
 </ul></li>
+<li>Added <code><a href="../reference/update_scaffold.html">update_scaffold()</a></code> to overwrite scaffolding, making it easier to update packages to track developments in extendr and rextendr. This function is basically <code><a href="../reference/use_extendr.html">use_extendr()</a></code> without all the interactive business, i.e., <code>overwrite = TRUE</code> is hardcoded. (<a href="https://github.com/extendr/rextendr/issues/493" class="external-link">#493</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="rextendr-042">rextendr 0.4.2<a class="anchor" aria-label="anchor" href="#rextendr-042"></a></h2><p class="text-muted">CRAN release: 2025-08-26</p>
