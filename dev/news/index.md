@@ -2,13 +2,16 @@
 
 ## rextendr (development version)
 
+### Added
+
 - [`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
   now generates `cleanup` and `cleanup.win`.
+  ([\#473](https://github.com/extendr/rextendr/issues/473))
 - Refactor of
   [`rust_source()`](https://extendr.github.io/rextendr/dev/reference/rust_source.md)
   and
   [`rust_function()`](https://extendr.github.io/rextendr/dev/reference/rust_source.md)
-  \<(<https://github.com/extendr/rextendr/pull/478>)\>
+  ([\#478](https://github.com/extendr/rextendr/issues/478))
   - Adds `opts = extendr_options()` to simplify
     [`rust_source()`](https://extendr.github.io/rextendr/dev/reference/rust_source.md)
     API with `...` to maintain backwards compatibility
@@ -26,49 +29,53 @@
   now has a `clean` argument to remove the `src/rust/vendor` directory
   after creating the `vendor.tar.xz` file.
   ([\#479](https://github.com/extendr/rextendr/issues/479))
-- `Makevars`(.win) now uses the `vendor/`, if it exists, before
-  unzipping the tarball.
-  ([\#479](https://github.com/extendr/rextendr/issues/479))
+- Added
+  [`update_scaffold()`](https://extendr.github.io/rextendr/dev/reference/update_scaffold.md)
+  to overwrite scaffolding, making it easier to update packages to track
+  developments in extendr and rextendr.
+  ([\#493](https://github.com/extendr/rextendr/issues/493))
+
+### Deprecated
+
 - Complete overhaul of wrapper-generation.
-  - [`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
-    now generates `src/rust/document.rs` and adds a `[[bin]]` target to
-    `Cargo.toml` with `crate-type = ["rlib", "staticlib"]`. During
-    `cargo build`, this binary runs automatically via `Makevars` and
-    writes `R/extendr-wrappers.R` directly — eliminating the need for
-    [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
-    to pre-compile the package before calling
-    [`devtools::document()`](https://devtools.r-lib.org/reference/document.html).
+  ([\#491](https://github.com/extendr/rextendr/issues/491))
   - [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
     is now a thin wrapper around
     [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
     and is soft deprecated. Packages created with
     [`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
-    no longer require it; it is retained for backwards compatibility.
+    no longer require it. It is retained for backwards compatibility.
   - [`register_extendr()`](https://extendr.github.io/rextendr/dev/reference/register_extendr.md)
     is no longer called in
     [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
-    and is soft deprecated. Its wrapper-generation role is now handled
-    by the document binary at build time. The function itself is no-op
-    and now returns a lifecycle warning.
+    and is soft deprecated. The function itself is no-op and now returns
+    a lifecycle warning.
   - Deprecating
     [`register_extendr()`](https://extendr.github.io/rextendr/dev/reference/register_extendr.md)
     effectively nullifies the PkgGen CI tests, so those have been
     removed.
+
+### Breaking
+
+- Complete overhaul of wrapper-generation.
+  ([\#491](https://github.com/extendr/rextendr/issues/491))
+  - [`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
+    now generates `src/rust/document.rs` and adds a `[[bin]]` target to
+    `Cargo.toml` with `crate-type = ["rlib", "staticlib"]`.
+  - [`rust_eval()`](https://extendr.github.io/rextendr/dev/reference/rust_eval.md)
+    now returns `extendr_api::error::Result<Robj>`.
   - The header in `R/extendr-wrappers.R` has also been updated to
     reflect these changes, which required a concurrent PR to extendr
     (extendr/extendr#1048).
   - CI now uses the development version of extendr-api on GitHub.
-  - [`rust_eval()`](https://extendr.github.io/rextendr/dev/reference/rust_eval.md)
-    now returns `extendr_api::error::Result<Robj>`.
   - Snapshot and other tests now reflect these changes.
   - Substantial updates to Roxygen documentation.
-- Added
-  [`update_scaffold()`](https://extendr.github.io/rextendr/dev/reference/update_scaffold.md)
-  to overwrite scaffolding, making it easier to update packages to track
-  developments in extendr and rextendr. This function is basically
-  [`use_extendr()`](https://extendr.github.io/rextendr/dev/reference/use_extendr.md)
-  without all the interactive business, i.e., `overwrite = TRUE` is
-  hardcoded. ([\#493](https://github.com/extendr/rextendr/issues/493))
+
+### Fixed
+
+- `Makevars`(.win) now uses the `vendor/`, if it exists, before
+  unzipping the tarball.
+  ([\#479](https://github.com/extendr/rextendr/issues/479))
 
 ## rextendr 0.4.2
 
