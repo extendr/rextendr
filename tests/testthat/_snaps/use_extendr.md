@@ -256,8 +256,10 @@
       // to avoid the linker removing the static library.
       
       void R_init_testpkg_extendr(void *dll);
+      void register_extendr_panic_hook(void);
       
       void R_init_testpkg(void *dll) {
+          register_extendr_panic_hook();
           R_init_testpkg_extendr(dll);
       }
 
