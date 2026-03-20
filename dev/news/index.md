@@ -76,6 +76,8 @@
 - `Makevars`(.win) now uses the `vendor/`, if it exists, before
   unzipping the tarball.
   ([\#479](https://github.com/extendr/rextendr/issues/479))
+- `entrypoint.c` now registers extendr’s panic handler.
+  ([\#499](https://github.com/extendr/rextendr/issues/499))
 
 ## rextendr 0.4.2
 
