@@ -13,6 +13,9 @@ update-snaps:
 lint: 
   jarl check R/
 
+lint-fix: 
+  jarl check R/ -f
+
 fmt:
   air format R/
 
