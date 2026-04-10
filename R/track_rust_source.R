@@ -89,11 +89,3 @@ pretty_rel_single_path <- function(path, search_from = ".") {
 pretty_rel_path <- function(path, search_from = ".") {
   map_chr(path, pretty_rel_single_path, search_from = search_from)
 }
-
-get_library_path <- function(path = ".") {
-  # Constructs path to the library file (e.g., package_name.dll)
-  file.path(
-    rprojroot::find_package_root_file("src", path = path),
-    glue::glue("{pkg_name(path)}{.Platform$dynlib.ext}")
-  )
-}

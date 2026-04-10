@@ -194,7 +194,7 @@ update_message <- function() {
   cli::cli_div(theme = list("ul" = list("margin-left" = 4)))
   cli::cli_ul(c(
     use_crate_call,
-    "rextendr::vendor_pkgs()",
+    "rextendr::vendor_crates()",
     "devtools::document()"
   ))
   cli::cli_end()

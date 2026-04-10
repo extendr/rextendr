@@ -10,21 +10,21 @@
       
       Name:        extendr-api
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+      Authors:     
       License:     MIT
       
       -------------------------------------------------------------
       
       Name:        extendr-ffi
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+      Authors:     
       License:     MIT
       
       -------------------------------------------------------------
       
       Name:        extendr-macros
       Repository:  https://github.com/extendr/extendr
-      Authors:     andy-thomason, Thomas Down, Mossa Merhi Reimert, Josiah Parry, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+      Authors:     
       License:     MIT
       
       -------------------------------------------------------------

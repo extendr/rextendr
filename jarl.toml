@@ -1,0 +1,3 @@
+[lint]
+default-exclude = true
+exclude = ["R/standalone-purrr.R"]

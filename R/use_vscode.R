@@ -35,23 +35,29 @@ use_vscode <- function(quiet = FALSE, overwrite = NULL) {
     if (!quiet) message("Updating existing .vscode/settings.json")
 
     # settings.json accepts trailing commas before braces and brackets and {jsonlite} doesn't dig that
-    tryCatch({
-      settings <- jsonlite::read_json(settings_path)
-    }, error = function(e) {
-      if (grepl("parse error", e$message)) {
-        stop(
-          "Could not parse .vscode/settings.json. Do you have a trailing comma before braces or brackets?\n",
-          "Original error: : ", e$message
-        )
-      } else {
-        stop(e$message)
+    tryCatch(
+      {
+        settings <- jsonlite::read_json(settings_path)
+      },
+      error = function(e) {
+        if (grepl("parse error", e$message)) {
+          stop(
+            "Could not parse .vscode/settings.json. Do you have a trailing comma before braces or brackets?\n",
+            "Original error: : ",
+            e$message
+          )
+        } else {
+          stop(e$message)
+        }
       }
-    })
+    )
 
     # checking and updating cargo.toml path for Rust-Analyzer
     if (!"rust-analyzer.linkedProjects" %in% names(settings)) {
       settings[["rust-analyzer.linkedProjects"]] <- list(rust_analyzer_path)
-    } else if (!rust_analyzer_path %in% settings[["rust-analyzer.linkedProjects"]]) {
+    } else if (
+      !rust_analyzer_path %in% settings[["rust-analyzer.linkedProjects"]]
+    ) {
       settings[["rust-analyzer.linkedProjects"]] <- c(
         settings[["rust-analyzer.linkedProjects"]],
         rust_analyzer_path

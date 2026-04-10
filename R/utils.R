@@ -4,7 +4,9 @@
 #' See `validate_extendr_features()` for an example.
 #'
 #' @keywords internal
-inf_dev_extendr_used <- function() "Are you using a development version of {.code extendr}?"
+inf_dev_extendr_used <- function() {
+  "Are you using a development version of {.code extendr}?"
+}
 
 
 #' Silence `{cli}` output
@@ -26,8 +28,7 @@ inf_dev_extendr_used <- function() "Are you using a development version of {.cod
 local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   if (quiet) {
     withr::local_options(
-      list("cli.default_handler" = function(...) {
-      }),
+      list("cli.default_handler" = function(...) {}),
       .local_envir = env
     )
   }
@@ -70,7 +71,10 @@ try_exec_cmd <- function(cmd, args = character()) {
 replace_na <- function(data, replace = NA, ...) {
   if (vctrs::vec_any_missing(data)) {
     missing <- vctrs::vec_detect_missing(data)
-    data <- vctrs::vec_assign(data, missing, replace,
+    data <- vctrs::vec_assign(
+      data,
+      missing,
+      replace,
       x_arg = "data",
       value_arg = "replace"
     )
@@ -78,25 +82,39 @@ replace_na <- function(data, replace = NA, ...) {
   data
 }
 
-is_osx <- function() {
-  sysinf <- Sys.info()
-  if (!is.null(sysinf)) {
-    return(identical(sysinf["sysname"], c(sysname = "Darwin")))
-  }
-  grepl("^darwin", R.version$os, ignore.case = TRUE)
-}
-
 is_vscode <- function() {
-  e <- Sys.getenv(c("VSCODE_PID", "VSCODE_CWD", "VSCODE_IPC_HOOK_CLI", "TERM_PROGRAM"))
-  if (nzchar(e["VSCODE_PID"]) || nzchar(e["VSCODE_CWD"]) || nzchar(e["VSCODE_IPC_HOOK_CLI"]) || tolower(e["TERM_PROGRAM"]) == "vscode") { # nolint
+  e <- Sys.getenv(c(
+    "VSCODE_PID",
+    "VSCODE_CWD",
+    "VSCODE_IPC_HOOK_CLI",
+    "TERM_PROGRAM"
+  ))
+  if (
+    nzchar(e["VSCODE_PID"]) ||
+      nzchar(e["VSCODE_CWD"]) ||
+      nzchar(e["VSCODE_IPC_HOOK_CLI"]) ||
+      tolower(e["TERM_PROGRAM"]) == "vscode"
+  ) {
+    # nolint
     return(TRUE)
   }
   FALSE
 }
 
 is_positron <- function() {
-  e <- Sys.getenv(c("POSITRON", "POSITRON_LONG_VERSION", "POSITRON_MODE", "POSITRON_VERSION"))
-  if (nzchar(e["POSITRON"]) || nzchar(e["POSITRON_LONG_VERSION"]) || nzchar(e["POSITRON_MODE"]) || nzchar(e["POSITRON_VERSION"])) { # nolint
+  e <- Sys.getenv(c(
+    "POSITRON",
+    "POSITRON_LONG_VERSION",
+    "POSITRON_MODE",
+    "POSITRON_VERSION"
+  ))
+  if (
+    nzchar(e["POSITRON"]) ||
+      nzchar(e["POSITRON_LONG_VERSION"]) ||
+      nzchar(e["POSITRON_MODE"]) ||
+      nzchar(e["POSITRON_VERSION"])
+  ) {
+    # nolint
     return(TRUE)
   }
   FALSE

@@ -101,7 +101,7 @@ get_toml_missing_msg <- function() {
 simplify_row <- function(row) {
   result <- map_if(
     row,
-    \(.x) is.list(.x) && all(!nzchar(names2(.x))),
+    \(.x) is.list(.x) && !any(nzchar(names2(.x))),
     \(.x) .x[1],
     .else = identity
   )

@@ -62,8 +62,21 @@ In general, we follow the [GitHub flow](https://guides.github.com/introduction/f
 
 *  We use [roxygen2](https://cran.r-project.org/package=roxygen2), with [Markdown syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html), for documentation.  
 
-*  We use [testthat](https://cran.r-project.org/package=testthat) for unit tests. 
-   Contributions with test cases included are easier to accept.  
+*  We use [testthat](https://cran.r-project.org/package=testthat) for unit tests.
+   Contributions with test cases included are easier to accept.
+
+*  **Always run tests from the command line**, not from an IDE. Running tests
+   inside an IDE (e.g. RStudio, Positron, VS Code) may create IDE-specific files
+   (such as `.vscode/`) inside test package fixtures, which will cause snapshot
+   mismatches and break CI.
+
+   This project uses [`just`](https://github.com/casey/just) to provide
+   convenient commands:
+
+   ```sh
+   just test          # run all tests
+   just update-snaps  # accept updated snapshots
+   ```
    
 ## Getting Help
 

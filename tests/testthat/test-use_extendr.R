@@ -234,7 +234,7 @@ test_that("`use_extendr()` passes R CMD check", {
   usethis::use_mit_license()
   usethis::use_test("dummy", FALSE)
   use_extendr()
-  vendor_pkgs()
+  vendor_crates()
   document()
 
   # store results

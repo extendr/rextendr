@@ -1,9 +1,10 @@
-generate_cargo.toml <- function(libname = "rextendr",
-                                dependencies = NULL,
-                                patch.crates_io = NULL,
-                                extendr_deps = NULL,
-                                features = character(0)) {
-
+generate_cargo.toml <- function(
+  libname = "rextendr",
+  dependencies = NULL,
+  patch.crates_io = NULL,
+  extendr_deps = NULL,
+  features = character(0)
+) {
   # create an empty list if no dependencies are provided
   deps <- dependencies %||% list()
   # enabled extendr features that we need to impute into all of the

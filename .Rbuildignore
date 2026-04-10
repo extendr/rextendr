@@ -18,3 +18,5 @@
 ^inst/libgcc_mock/libgcc_eh.a$
 ^CRAN-SUBMISSION$
 ^vignettes/articles$
+^jarl\.toml$
+^justfile$

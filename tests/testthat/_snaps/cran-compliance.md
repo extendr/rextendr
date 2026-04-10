@@ -1,4 +1,4 @@
-# vendor_pkgs() vendors dependencies
+# vendor_crates() vendors dependencies
 
     Code
       cat_file("src", "rust", "vendor-config.toml")

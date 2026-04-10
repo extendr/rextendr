@@ -1,16 +1,16 @@
-test_that("vendor_pkgs() vendors dependencies", {
+test_that("vendor_crates() vendors dependencies", {
   skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
 
-  expect_error(vendor_pkgs(path))
+  expect_error(vendor_crates(path))
 
   # capture setup messages
   withr::local_options(usethis.quiet = FALSE)
   use_extendr(path, quiet = TRUE)
 
-  package_versions <- vendor_pkgs(path, quiet = TRUE)
+  package_versions <- vendor_crates(path, quiet = TRUE)
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
   expect_snapshot(package_versions, transform = mask_any_version)
   expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
@@ -28,7 +28,7 @@ test_that("rextendr passes CRAN checks", {
   usethis::use_mit_license()
   usethis::use_test("dummy", FALSE)
   use_extendr()
-  vendor_pkgs()
+  vendor_crates()
   document()
 
   res <- rcmdcheck::rcmdcheck(

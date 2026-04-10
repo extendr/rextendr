@@ -1,10 +1,10 @@
 #' Vendor Rust dependencies
 #'
-#' `vendor_pkgs()` is used to package the dependencies as required by CRAN.
+#' `vendor_crates()` is used to package the dependencies as required by CRAN.
 #' It executes `cargo vendor` on your behalf creating a `vendor/` directory and a
 #' compressed `vendor.tar.xz` which will be shipped with package itself.
 #' If you have modified your dependencies, you will need need to repackage
-#  the vendored dependencies using [`vendor_pkgs()`].
+#' the vendored dependencies using [`vendor_crates()`].
 #'
 #' @inheritParams use_extendr
 #'
@@ -13,14 +13,19 @@
 #'
 #' @returns
 #'
-#' - `vendor_pkgs()` returns a data.frame with two columns `crate` and `version`
+#' - `vendor_crates()` returns a data.frame with two columns `crate` and `version`
 #'
 #' @examples
 #' \dontrun{
-#' vendor_pkgs()
+#' vendor_crates()
 #' }
 #' @export
-vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FALSE) {
+vendor_crates <- function(
+  path = ".",
+  quiet = FALSE,
+  overwrite = NULL,
+  clean = FALSE
+) {
   stderr_line_callback <- function(x, proc) {
     if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
       cli::cat_bullet(stringi::stri_trim_left(x))
@@ -89,7 +94,10 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FAL
     cli::ansi_strip() |>
     stringi::stri_split_lines1()
 
-  res <- stringi::stri_match_first_regex(vendored, "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)") |>
+  res <- stringi::stri_match_first_regex(
+    vendored,
+    "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)"
+  ) |>
     as.data.frame() |>
     rlang::set_names(c("source", "crate", "version")) |>
     dplyr::filter(!is.na(source)) |>
@@ -109,8 +117,13 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FAL
   # compress to vendor.tar.xz
   compress_res <- withr::with_dir(src_dir, {
     processx::run(
-      "tar", c(
-        "-cJ", "--no-xattrs", "-f", "vendor.tar.xz", "vendor"
+      "tar",
+      c(
+        "-cJ",
+        "--no-xattrs",
+        "-f",
+        "vendor.tar.xz",
+        "vendor"
       )
     )
   })
@@ -132,6 +145,31 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FAL
   invisible(res)
 }
 
+#' @rdname vendor_crates
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `vendor_pkgs()` was renamed to `vendor_crates()`.
+#' @export
+vendor_pkgs <- function(
+  path = ".",
+  quiet = FALSE,
+  overwrite = NULL,
+  clean = FALSE
+) {
+  lifecycle::deprecate_warn(
+    "0.4.0",
+    "rextendr::vendor_pkgs()",
+    "rextendr::vendor_crates()"
+  )
+  vendor_crates(
+    path = path,
+    quiet = quiet,
+    overwrite = overwrite,
+    clean = clean
+  )
+}
+
 
 #' CRAN compliant extendr packages
 #'
@@ -149,7 +187,7 @@ vendor_pkgs <- function(path = ".", quiet = FALSE, overwrite = NULL, clean = FAL
 #' - the `DESCRIPTION` file's `SystemRequirements` field contains `Cargo (Rust's package manager), rustc`
 #'
 #' The extendr templates handle all of this _except_ vendoring dependencies.
-#' This must be done prior to publication using [`vendor_pkgs()`].
+#' This must be done prior to publication using [`vendor_crates()`].
 #'
 #' In addition, it is important to make sure that CRAN maintainers
 #' are aware that the package they are checking contains Rust code.

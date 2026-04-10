@@ -40,13 +40,14 @@
 #' use_crate("serde", optional = TRUE)
 #' }
 use_crate <- function(
-    crate,
-    features = NULL,
-    git = NULL,
-    version = NULL,
-    optional = FALSE,
-    path = ".",
-    echo = TRUE) {
+  crate,
+  features = NULL,
+  git = NULL,
+  version = NULL,
+  optional = FALSE,
+  path = ".",
+  echo = TRUE
+) {
   check_string(crate, class = "rextendr_error")
   check_character(features, allow_null = TRUE, class = "rextendr_error")
   check_string(git, allow_null = TRUE, class = "rextendr_error")
