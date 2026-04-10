@@ -31,9 +31,10 @@
 #' }
 #'
 read_cargo_metadata <- function(
-    path = ".",
-    dependencies = FALSE,
-    echo = FALSE) {
+  path = ".",
+  dependencies = FALSE,
+  echo = FALSE
+) {
   check_string(path, class = "rextendr_error")
   check_bool(dependencies, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")

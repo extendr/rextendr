@@ -15,9 +15,17 @@
 #' If `FALSE` and the file already exists, the function will do nothing.
 #' @return The output of [`brio::write_lines()`] (invisibly).
 #' @noRd
-write_file <- function(text, path, search_root_from = ".", quiet = FALSE, overwrite = TRUE) {
+write_file <- function(
+  text,
+  path,
+  search_root_from = ".",
+  quiet = FALSE,
+  overwrite = TRUE
+) {
   if (isFALSE(overwrite) && file.exists(path)) {
-    cli::cli_alert("File {.path {save_as}} already exists. Skip writing the file.")
+    cli::cli_alert(
+      "File {.path {save_as}} already exists. Skip writing the file."
+    )
     return(invisible(NULL))
   }
 

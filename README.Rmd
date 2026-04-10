@@ -50,7 +50,7 @@ Latest development version can be installed from GitHub:
 remotes::install_github("extendr/rextendr")
 ```
 
-To execute Rust code, you will also need to set up a working Rust toolchain. See the [installation instructions for libR-sys](https://github.com/extendr/libR-sys) for help. If you can successfully build libR-sys you're good.
+To execute Rust code, you will also need to set up a working Rust toolchain. See the [installation guide](https://extendr.rs/get-started.html) for help.
 
 ## Usage
 

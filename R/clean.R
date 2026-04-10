@@ -25,7 +25,9 @@ clean <- function(path = ".", echo = TRUE) {
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
   target_dir <- rprojroot::find_package_root_file(
-    "src", "rust", "target",
+    "src",
+    "rust",
+    "target",
     path = path
   )
 

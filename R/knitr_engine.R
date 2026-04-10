@@ -17,7 +17,6 @@ eng_extendrsrc <- function(options) {
 }
 
 
-
 eng_impl <- function(options, extendr_engine) {
   if (!requireNamespace("knitr", quietly = TRUE)) {
     cli::cli_abort(

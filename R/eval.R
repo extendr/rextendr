@@ -60,14 +60,16 @@ rust_eval_deferred <- function(code, env = parent.frame(), ...) {
   fn_name <- glue("rextendr_rust_eval_fun_{snippet_hash}")
 
   # wrap code into Rust function
-  code_wrapped <- glue(r"(
+  code_wrapped <- glue(
+    r"(
 fn {fn_name}() -> extendr_api::error::Result<Robj> {{
   let x = {{
     {code}
   }};
   Ok(x.into())
 }}
-)")
+)"
+  )
 
   # Attempt to figure out whether the Rust code returns a result or not,
   # and make the result invisible or not accordingly. This regex approach

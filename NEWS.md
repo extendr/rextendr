@@ -9,12 +9,15 @@
   * Replaces internal `invoke_cargo()` with `run_cargo()` in `rust_source()` 
   * Simplifies handling of macro options in `rust_function(extendr_fn_options = list())` 
   * Unknown macro options in dev and release now throw errors instead of warnings
-* `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor` 
+* `vendor_pkgs()` now has a `clean` argument to remove the `src/rust/vendor`
   directory after creating the `vendor.tar.xz` file. (#479)
-* Added `update_scaffold()` to overwrite scaffolding, making it easier to update 
+* Added `update_scaffold()` to overwrite scaffolding, making it easier to update
   packages to track developments in extendr and rextendr. (#493)
 
 ## Deprecated
+* `vendor_pkgs()` has been renamed to `vendor_crates()` to better reflect that
+  it vendors Rust crates. `vendor_pkgs()` is soft-deprecated and will be removed
+  in a future release.
 * Complete overhaul of wrapper-generation. (#491)
   * `rextendr::document()` is now a thin wrapper around `devtools::document()` 
     and is soft deprecated. Packages created with `use_extendr()` no longer 

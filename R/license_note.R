@@ -18,9 +18,10 @@
 #' write_license_note()
 #' }
 write_license_note <- function(
-    path = ".",
-    quiet = FALSE,
-    force = TRUE) {
+  path = ".",
+  quiet = FALSE,
+  force = TRUE
+) {
   check_string(path, class = "rextendr_error")
   check_bool(quiet, class = "rextendr_error")
   check_bool(force, class = "rextendr_error")
@@ -110,10 +111,18 @@ write_license_note <- function(
 
   note_body <- paste0(
     "\n",
-    "Name:        ", packages[["name"]], "\n",
-    "Repository:  ", packages[["repository"]], "\n",
-    "Authors:     ", packages[["authors"]], "\n",
-    "License:     ", packages[["license"]], "\n",
+    "Name:        ",
+    packages[["name"]],
+    "\n",
+    "Repository:  ",
+    packages[["repository"]],
+    "\n",
+    "Authors:     ",
+    packages[["authors"]],
+    "\n",
+    "License:     ",
+    packages[["license"]],
+    "\n",
     "\n",
     separator
   )
