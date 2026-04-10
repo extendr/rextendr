@@ -60,7 +60,7 @@ requirements. These are:</p><ul><li><p>Rust dependencies are vendored</p></li>
 <li><p>The package is compiled offline</p></li>
 <li><p>the <code>DESCRIPTION</code> file's <code>SystemRequirements</code> field contains <code>Cargo (Rust's package manager), rustc</code></p></li>
 </ul><p>The extendr templates handle all of this <em>except</em> vendoring dependencies.
-This must be done prior to publication using <code><a href="vendor_pkgs.html">vendor_pkgs()</a></code>.</p>
+This must be done prior to publication using <code><a href="vendor_crates.html">vendor_crates()</a></code>.</p>
 <p>In addition, it is important to make sure that CRAN maintainers
 are aware that the package they are checking contains Rust code.
 Depending on which and how many crates are used as a dependencies

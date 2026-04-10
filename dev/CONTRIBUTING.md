@@ -111,6 +111,19 @@ development model:
   unit tests. Contributions with test cases included are easier to
   accept.
 
+- **Always run tests from the command line**, not from an IDE. Running
+  tests inside an IDE (e.g. RStudio, Positron, VS Code) may create
+  IDE-specific files (such as `.vscode/`) inside test package fixtures,
+  which will cause snapshot mismatches and break CI.
+
+  This project uses [`just`](https://github.com/casey/just) to provide
+  convenient commands:
+
+  ``` sh
+  just test          # run all tests
+  just update-snaps  # accept updated snapshots
+  ```
+
 ## Getting Help
 
 Please join us on our [Discord server](https://discord.gg/7hmApuc) for

@@ -25,7 +25,7 @@
     `rust_function(extendr_fn_options = list())`
   - Unknown macro options in dev and release now throw errors instead of
     warnings
-- [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_pkgs.md)
+- [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
   now has a `clean` argument to remove the `src/rust/vendor` directory
   after creating the `vendor.tar.xz` file.
   ([\#479](https://github.com/extendr/rextendr/issues/479))
@@ -34,9 +34,20 @@
   to overwrite scaffolding, making it easier to update packages to track
   developments in extendr and rextendr.
   ([\#493](https://github.com/extendr/rextendr/issues/493))
+- [`write_license_note()`](https://extendr.github.io/rextendr/dev/reference/write_license_note.md)
+  is now marked as experimental. The `authors` field in Cargo metadata
+  is deprecated upstream
+  (<https://github.com/rust-lang/cargo/issues/16458>) and crates may
+  stop populating it, leading to incomplete author information.
 
 ### Deprecated
 
+- [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
+  has been renamed to
+  [`vendor_crates()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
+  to better reflect that it vendors Rust crates.
+  [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
+  is soft-deprecated and will be removed in a future release.
 - Complete overhaul of wrapper-generation.
   ([\#491](https://github.com/extendr/rextendr/issues/491))
   - [`rextendr::document()`](https://extendr.github.io/rextendr/dev/reference/document.md)
@@ -78,6 +89,10 @@
   ([\#479](https://github.com/extendr/rextendr/issues/479))
 - `entrypoint.c` now registers extendr’s panic handler.
   ([\#499](https://github.com/extendr/rextendr/issues/499))
+
+### Changed
+
+- `callr` has been removed as a dependency.
 
 ## rextendr 0.4.2
 
@@ -155,7 +170,7 @@ CRAN release: 2025-05-02
   policy to `Cargo (Rust's package manager), rustc`
   ([\#329](https://github.com/extendr/rextendr/issues/329))
 - Introduces new functions `use_cran_defaults()` and
-  [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_pkgs.md)
+  [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
   to ease the publication of extendr-powered packages on CRAN. See the
   new article *CRAN compliant extendr packages* on how to use these
   ([\#320](https://github.com/extendr/rextendr/issues/320)).

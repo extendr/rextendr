@@ -25,13 +25,14 @@
 - [`register_extendr()`](https://extendr.github.io/rextendr/dev/reference/register_extendr.md)
   **\[deprecated\]** : Register the extendr module of a package with R
 - [`write_license_note()`](https://extendr.github.io/rextendr/dev/reference/write_license_note.md)
-  : Generate LICENSE.note file.
+  **\[experimental\]** : Generate LICENSE.note file.
 - [`clean()`](https://extendr.github.io/rextendr/dev/reference/clean.md)
   : Clean Rust binaries and package cache.
 - [`cran`](https://extendr.github.io/rextendr/dev/reference/cran.md) :
   CRAN compliant extendr packages
-- [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_pkgs.md)
-  : Vendor Rust dependencies
+- [`vendor_crates()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
+  [`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md)
+  **\[deprecated\]** : Vendor Rust dependencies
 - [`use_msrv()`](https://extendr.github.io/rextendr/dev/reference/use_msrv.md)
   : Set the minimum supported rust version (MSRV)
 - [`use_vscode()`](https://extendr.github.io/rextendr/dev/reference/use_vscode.md)

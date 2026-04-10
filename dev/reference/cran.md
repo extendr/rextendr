@@ -18,7 +18,7 @@ requirements. These are:
 
 The extendr templates handle all of this *except* vendoring
 dependencies. This must be done prior to publication using
-[`vendor_pkgs()`](https://extendr.github.io/rextendr/dev/reference/vendor_pkgs.md).
+[`vendor_crates()`](https://extendr.github.io/rextendr/dev/reference/vendor_crates.md).
 
 In addition, it is important to make sure that CRAN maintainers are
 aware that the package they are checking contains Rust code. Depending
