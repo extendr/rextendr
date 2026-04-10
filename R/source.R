@@ -707,7 +707,7 @@ check_extendr_fn_options <- function(
 
   message <- "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:"
 
-  if (any(!valid_names)) {
+  if (!all(valid_names)) {
     invalid_names <- nms[which(!valid_names)] # nolint: object_usage_linter
     message <- c(
       message,
@@ -725,7 +725,7 @@ check_extendr_fn_options <- function(
     )
   }
 
-  if (any(!scalar)) {
+  if (!all(scalar)) {
     vector_values <- nms[which(!scalar)] # nolint: object_usage_linter
     message <- c(
       message,

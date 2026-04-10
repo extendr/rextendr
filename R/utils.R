@@ -4,8 +4,9 @@
 #' See `validate_extendr_features()` for an example.
 #'
 #' @keywords internal
-inf_dev_extendr_used <- function()
+inf_dev_extendr_used <- function() {
   "Are you using a development version of {.code extendr}?"
+}
 
 
 #' Silence `{cli}` output
@@ -27,8 +28,7 @@ inf_dev_extendr_used <- function()
 local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   if (quiet) {
     withr::local_options(
-      list("cli.default_handler" = function(...) {
-      }),
+      list("cli.default_handler" = function(...) {}),
       .local_envir = env
     )
   }
@@ -80,14 +80,6 @@ replace_na <- function(data, replace = NA, ...) {
     )
   }
   data
-}
-
-is_osx <- function() {
-  sysinf <- Sys.info()
-  if (!is.null(sysinf)) {
-    return(identical(sysinf["sysname"], c(sysname = "Darwin")))
-  }
-  grepl("^darwin", R.version$os, ignore.case = TRUE)
 }
 
 is_vscode <- function() {

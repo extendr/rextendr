@@ -11,10 +11,10 @@ update-snaps:
   R --quiet -e "testthat::snapshot_accept()"
 
 lint: 
-  jarl check R/
+  jarl check R/ 
 
 lint-fix: 
-  jarl check R/ -f
+  jarl check R/ -f 
 
 fmt:
   air format R/
