@@ -15,3 +15,6 @@ lint:
 
 fmt:
   air format R/
+
+doc:
+  R --quiet -e "devtools::document()"

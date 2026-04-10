@@ -20,7 +20,7 @@ requirements. These are:
 }
 
 The extendr templates handle all of this \emph{except} vendoring dependencies.
-This must be done prior to publication using \code{\link[=vendor_pkgs]{vendor_pkgs()}}.
+This must be done prior to publication using \code{\link[=vendor_crates]{vendor_crates()}}.
 
 In addition, it is important to make sure that CRAN maintainers
 are aware that the package they are checking contains Rust code.

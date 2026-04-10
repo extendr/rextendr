@@ -13,6 +13,9 @@
   directory after creating the `vendor.tar.xz` file. (#479)
 * Added `update_scaffold()` to overwrite scaffolding, making it easier to update
   packages to track developments in extendr and rextendr. (#493)
+* `write_license_note()` is now marked as experimental. The `authors` field in
+  Cargo metadata is deprecated upstream (<https://github.com/rust-lang/cargo/issues/16458>)
+  and crates may stop populating it, leading to incomplete author information.
 
 ## Deprecated
 * `vendor_pkgs()` has been renamed to `vendor_crates()` to better reflect that
