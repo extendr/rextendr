@@ -51,7 +51,6 @@ Depends:
     R (>= 4.1)
 Imports:
     brio,
-    callr,
     cli,
     desc,
     dplyr,

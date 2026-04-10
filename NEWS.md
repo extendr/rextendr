@@ -47,6 +47,10 @@
   tarball. (#479)
 * `entrypoint.c` now registers extendr's panic handler. (#499)
 
+## Changed
+
+* `callr` has been removed as a dependency.
+
 # rextendr 0.4.2
 
 * Sets the `extendr-api` version to the latest stable version instead of `"*"` when creating a new package. This is fetched from <https://crates.io/api/v1/crates/extendr-api> and will fall back to `"*"` if not available <https://github.com/extendr/rextendr/pull/467>
