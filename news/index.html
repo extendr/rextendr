@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,9 +35,69 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/extendr/rextendr/blob/v0.4.2/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/extendr/rextendr/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="rextendr-050">rextendr 0.5.0<a class="anchor" aria-label="anchor" href="#rextendr-050"></a></h2>
+<div class="section level3">
+<h3 id="added-0-5-0">Added<a class="anchor" aria-label="anchor" href="#added-0-5-0"></a></h3>
+<ul><li>
+<code><a href="../reference/use_extendr.html">use_extendr()</a></code> now generates <code>cleanup</code> and <code>cleanup.win</code>. (<a href="https://github.com/extendr/rextendr/issues/473" class="external-link">#473</a>)</li>
+<li>Refactor of <code><a href="../reference/rust_source.html">rust_source()</a></code> and <code><a href="../reference/rust_source.html">rust_function()</a></code> (<a href="https://github.com/extendr/rextendr/issues/478" class="external-link">#478</a>)
+<ul><li>Adds <code>opts = extendr_options()</code> to simplify <code><a href="../reference/rust_source.html">rust_source()</a></code> API with <code>...</code> to maintain backwards compatibility</li>
+<li>Adds rlang standalone type checks to <code><a href="../reference/rust_source.html">rust_source()</a></code> and <code><a href="../reference/rust_source.html">rust_function()</a></code>
+</li>
+<li>Replaces internal <code>invoke_cargo()</code> with <code>run_cargo()</code> in <code><a href="../reference/rust_source.html">rust_source()</a></code>
+</li>
+<li>Simplifies handling of macro options in <code>rust_function(extendr_fn_options = list())</code>
+</li>
+<li>Unknown macro options in dev and release now throw errors instead of warnings</li>
+</ul></li>
+<li>
+<code><a href="../reference/vendor_crates.html">vendor_pkgs()</a></code> now has a <code>clean</code> argument to remove the <code>src/rust/vendor</code> directory after creating the <code>vendor.tar.xz</code> file. (<a href="https://github.com/extendr/rextendr/issues/479" class="external-link">#479</a>)</li>
+<li>Added <code><a href="../reference/update_scaffold.html">update_scaffold()</a></code> to overwrite scaffolding, making it easier to update packages to track developments in extendr and rextendr. (<a href="https://github.com/extendr/rextendr/issues/493" class="external-link">#493</a>)</li>
+<li>
+<code><a href="../reference/write_license_note.html">write_license_note()</a></code> is now marked as experimental. The <code>authors</code> field in Cargo metadata is deprecated upstream (<a href="https://github.com/rust-lang/cargo/issues/16458" class="external-link uri">https://github.com/rust-lang/cargo/issues/16458</a>) and crates may stop populating it, leading to incomplete author information.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecated-0-5-0">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated-0-5-0"></a></h3>
+<ul><li>
+<code><a href="../reference/vendor_crates.html">vendor_pkgs()</a></code> has been renamed to <code><a href="../reference/vendor_crates.html">vendor_crates()</a></code> to better reflect that it vendors Rust crates. <code><a href="../reference/vendor_crates.html">vendor_pkgs()</a></code> is soft-deprecated and will be removed in a future release.</li>
+<li>Complete overhaul of wrapper-generation. (<a href="https://github.com/extendr/rextendr/issues/491" class="external-link">#491</a>)
+<ul><li>
+<code><a href="../reference/document.html">rextendr::document()</a></code> is now a thin wrapper around <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> and is soft deprecated. Packages created with <code><a href="../reference/use_extendr.html">use_extendr()</a></code> no longer require it. It is retained for backwards compatibility.</li>
+<li>
+<code><a href="../reference/register_extendr.html">register_extendr()</a></code> is no longer called in <code><a href="../reference/document.html">rextendr::document()</a></code> and is soft deprecated. The function itself is no-op and now returns a lifecycle warning.</li>
+<li>Deprecating <code><a href="../reference/register_extendr.html">register_extendr()</a></code> effectively nullifies the PkgGen CI tests, so those have been removed.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="breaking-0-5-0">Breaking<a class="anchor" aria-label="anchor" href="#breaking-0-5-0"></a></h3>
+<ul><li>Complete overhaul of wrapper-generation. (<a href="https://github.com/extendr/rextendr/issues/491" class="external-link">#491</a>)
+<ul><li>
+<code><a href="../reference/use_extendr.html">use_extendr()</a></code> now generates <code>src/rust/document.rs</code> and adds a <code>[[bin]]</code> target to <code>Cargo.toml</code> with <code>crate-type = ["rlib", "staticlib"]</code>.</li>
+<li>
+<code><a href="../reference/rust_eval.html">rust_eval()</a></code> now returns <code>extendr_api::error::Result&lt;Robj&gt;</code>.</li>
+<li>The header in <code>R/extendr-wrappers.R</code> has also been updated to reflect these changes, which required a concurrent PR to extendr (extendr/extendr#1048).</li>
+<li>CI now uses the development version of extendr-api on GitHub.</li>
+<li>Snapshot and other tests now reflect these changes.</li>
+<li>Substantial updates to Roxygen documentation.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-0-5-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-5-0"></a></h3>
+<ul><li>
+<code>Makevars</code>(.win) now uses the <code>vendor/</code>, if it exists, before unzipping the tarball. (<a href="https://github.com/extendr/rextendr/issues/479" class="external-link">#479</a>)</li>
+<li>
+<code>entrypoint.c</code> now registers extendr’s panic handler. (<a href="https://github.com/extendr/rextendr/issues/499" class="external-link">#499</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-5-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-5-0"></a></h3>
+<ul><li>
+<code>callr</code> has been removed as a dependency.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="rextendr-042">rextendr 0.4.2<a class="anchor" aria-label="anchor" href="#rextendr-042"></a></h2><p class="text-muted">CRAN release: 2025-08-26</p>
 <ul><li>Sets the <code>extendr-api</code> version to the latest stable version instead of <code>"*"</code> when creating a new package. This is fetched from <a href="https://crates.io/api/v1/crates/extendr-api" class="external-link uri">https://crates.io/api/v1/crates/extendr-api</a> and will fall back to <code>"*"</code> if not available <a href="https://github.com/extendr/rextendr/pull/467" class="external-link uri">https://github.com/extendr/rextendr/pull/467</a>
@@ -81,7 +141,7 @@
 </li>
 <li>
 <code><a href="../reference/use_extendr.html">use_extendr()</a></code> sets the <code>DESCRIPTION</code>’s <code>SystemRequirements</code> field according to CRAN policy to <code>Cargo (Rust's package manager), rustc</code> (<a href="https://github.com/extendr/rextendr/issues/329" class="external-link">#329</a>)</li>
-<li>Introduces new functions <code>use_cran_defaults()</code> and <code><a href="../reference/vendor_pkgs.html">vendor_pkgs()</a></code> to ease the publication of extendr-powered packages on CRAN. See the new article <em>CRAN compliant extendr packages</em> on how to use these (<a href="https://github.com/extendr/rextendr/issues/320" class="external-link">#320</a>).</li>
+<li>Introduces new functions <code>use_cran_defaults()</code> and <code><a href="../reference/vendor_crates.html">vendor_pkgs()</a></code> to ease the publication of extendr-powered packages on CRAN. See the new article <em>CRAN compliant extendr packages</em> on how to use these (<a href="https://github.com/extendr/rextendr/issues/320" class="external-link">#320</a>).</li>
 <li>
 <code><a href="../reference/rust_sitrep.html">rust_sitrep()</a></code> now better communicates the status of the Rust toolchain and available targets. It also guides the user through necessary installation steps to fix Rust setup (<a href="https://github.com/extendr/rextendr/issues/318" class="external-link">#318</a>).</li>
 <li>
@@ -139,11 +199,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov, Malcolm Barrett.</p>
+  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov, Malcolm Barrett, Josiah Parry, Kenneth Vernon.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

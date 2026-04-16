@@ -1,0 +1,38 @@
+# Setting up a Rust build environment
+
+Regardless of which operating system you use, we recommend using
+[rustup](https://rustup.rs/) to install and maintain your Rust
+toolchain. On Linux and OS X, you simply run the following command in a
+shell:
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+No further action should be needed.
+
+On Windows, things are a little more involved. First download
+`rustup‑init.exe` from the [rustup site](https://rustup.rs/) and run it,
+following the on-screen instructions. Rust may require installation of
+[VC++ build
+tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (more
+instructions can be found
+[here](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup)).
+Once installed, execute the following rustup commands:
+
+    rustup default stable-x86_64-pc-windows-msvc
+    rustup target add x86_64-pc-windows-gnu
+    rustup target add i686-pc-windows-gnu
+
+Second, install Rtools. The latest installer is available on
+[CRAN](https://cran.r-project.org/bin/windows/Rtools/). Alternatively,
+Rtools can be installed using chocolatey:
+
+    choco install rtools -y
+
+Finally, make sure that environment variables are set up correctly.
+`R_HOME` should point to the R folder, e.g. `C:\Program Files\R\R-4.1.0`
+(be careful with spaces in the path). `RTOOLS40_HOME` should point to
+the Rtools folder (usually set up automatically by the installer), which
+is `C:\rtools40` by default. `PATH` should contain paths to
+`%R_HOME%\bin` and `%RTOOLS40_HOME%\usr\bin`, as well as cargo, which is
+found at `%USERPROFILE%\.cargo\bin` if installed using
+`rustup-init.exe`.

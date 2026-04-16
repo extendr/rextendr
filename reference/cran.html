@@ -11,7 +11,7 @@ CRAN publication is (farily) painless."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rextendr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@ CRAN publication is (farily) painless."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>CRAN compliant extendr packages</h1>
-      <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/v0.4.2/R/cran-compliance.R" class="external-link"><code>R/cran-compliance.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/main/R/cran-compliance.R" class="external-link"><code>R/cran-compliance.R</code></a></small>
       <div class="d-none name"><code>cran.Rd</code></div>
     </div>
 
@@ -60,7 +60,7 @@ requirements. These are:</p><ul><li><p>Rust dependencies are vendored</p></li>
 <li><p>The package is compiled offline</p></li>
 <li><p>the <code>DESCRIPTION</code> file's <code>SystemRequirements</code> field contains <code>Cargo (Rust's package manager), rustc</code></p></li>
 </ul><p>The extendr templates handle all of this <em>except</em> vendoring dependencies.
-This must be done prior to publication using <code><a href="vendor_pkgs.html">vendor_pkgs()</a></code>.</p>
+This must be done prior to publication using <code><a href="vendor_crates.html">vendor_crates()</a></code>.</p>
 <p>In addition, it is important to make sure that CRAN maintainers
 are aware that the package they are checking contains Rust code.
 Depending on which and how many crates are used as a dependencies
@@ -75,11 +75,11 @@ built package is larger than 5mbs CRAN may reject the submission.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov, Malcolm Barrett.</p>
+  <p>Developed by Claus O. Wilke, Andy Thomason, Mossa M. Reimert, Ilia Kosenkov, Malcolm Barrett, Josiah Parry, Kenneth Vernon.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
