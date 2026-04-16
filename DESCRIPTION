@@ -1,54 +1,35 @@
 Package: rextendr
-Title: Call Rust Code from R using the 'extendr' Crate
-Version: 0.4.2.9000
-Authors@R:
-    c(person(given = "Claus O.",
-             family = "Wilke",
-             role = "aut",
-             email = "wilke@austin.utexas.edu",
-             comment = c(ORCID = "0000-0002-7470-9261")),
-      person(given = "Andy",
-             family = "Thomason",
-             role = "aut",
-             email = "andy@andythomason.com"),
-      person(given = "Mossa M.",
-             family = "Reimert",
-             role = "aut",
-             email = "mossa@sund.ku.dk"),
-      person(given = "Ilia",
-             family = "Kosenkov",
-             role = c("aut", "cre"),
-             email = "ilia.kosenkov@outlook.com",
-             comment = c(ORCID = "0000-0001-5563-7840")),
-      person(given = "Malcolm",
-             family = "Barrett",
-             role = "aut",
-             email = "malcolmbarrett@gmail.com",
-             comment = c(ORCID = "0000-0003-0299-5825")),
-      person(given = "Josiah",
-             family = "Parry",
-             role = "ctb",
-             email = "josiah.parry@gmail.con",
-             comment = c(ORCID = "0000-0001-9910-865X")),
-      person(given = "Kenneth",
-             family = "Vernon",
-             role = "ctb",
-             email = "kenneth.b.vernon@gmail.com",
-             comment = c(ORCID = "0000-0003-0098-5092")),
-      person(given = "Alberson",
-             family = "Miranda",
-             role = "ctb",
-             email = "albersonmiranda@hotmail.com",
-             comment = c(ORCID = "0000-0001-9252-4175")))
-Description: Provides functions to compile and load Rust code from R, similar
-    to how 'Rcpp' or 'cpp11' allow easy interfacing with C++ code. Also provides
-    helper functions to create R packages that use Rust code. Under the hood,
-    the Rust crate 'extendr' is used to do all the heavy lifting.
+Title: Build 'Rust' Powered 'R' Packages
+Version: 0.5.0
+Authors@R: c(
+    person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", role = "aut",
+           comment = c(ORCID = "0000-0002-7470-9261")),
+    person("Andy", "Thomason", , "andy@andythomason.com", role = "aut"),
+    person("Mossa M.", "Reimert", , "mossa@sund.ku.dk", role = "aut"),
+    person("Ilia", "Kosenkov", , "ilia.kosenkov@outlook.com", role = "aut",
+           comment = c(ORCID = "0000-0001-5563-7840")),
+    person("Malcolm", "Barrett", , "malcolmbarrett@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0003-0299-5825")),
+    person("Josiah", "Parry", , "josiah.parry@gmail.con", role = "aut",
+           comment = c(ORCID = "0000-0001-9910-865X")),
+    person("Kenneth", "Vernon", , "kenneth.b.vernon@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0098-5092")),
+    person("Alberson", "Miranda", , "albersonmiranda@hotmail.com", role = "ctb",
+           comment = c(ORCID = "0000-0001-9252-4175"))
+  )
+Description: Provides a framework for creating high-performance 'R'
+    packages powered by the 'Rust' programming language using the
+    'extendr' Rust crate.  It offers 'usethis'-like functions to scaffold
+    and develop 'Rust' powered 'R' packages, including utilities for
+    publishing to CRAN, managing dependencies, configuring development
+    environments, and rendering 'Rust' code in 'knitr' documents.
+    Additionally, it provides functions to compile and evaluate 'Rust'
+    code directly from 'R' for interactive development.
 License: MIT + file LICENSE
 URL: https://extendr.rs/rextendr/, https://github.com/extendr/rextendr
 BugReports: https://github.com/extendr/rextendr/issues
 Depends:
-    R (>= 4.1)
+    R (>= 4.2)
 Imports:
     brio,
     cli,
@@ -66,9 +47,9 @@ Imports:
     withr
 Suggests:
     devtools,
-    rcmdcheck,
     knitr,
     lintr,
+    rcmdcheck,
     rmarkdown,
     testthat (>= 3.1.7),
     usethis
