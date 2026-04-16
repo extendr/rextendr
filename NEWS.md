@@ -1,4 +1,4 @@
-# rextendr (development version)
+# rextendr 0.5.0
 
 ## Added
 * `use_extendr()` now generates `cleanup` and `cleanup.win`. (#473)
