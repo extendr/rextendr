@@ -241,6 +241,8 @@ foo(out, nchar(out))
 
     ## Data sent to Rust: Hello from Rust!, 16
 
+    ## NULL
+
 ``` r
 x <- Counter$new()
 x$get()
@@ -250,7 +252,17 @@ x$get()
 
 ``` r
 x$increment()
+```
+
+    ## NULL
+
+``` r
 x$increment()
+```
+
+    ## NULL
+
+``` r
 x$get()
 ```
 

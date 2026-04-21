@@ -62,9 +62,9 @@
                         <h4 data-toc-skip class="author">Claus O.
 Wilke</h4>
             
-            <h4 data-toc-skip class="date">2026-04-16</h4>
+            <h4 data-toc-skip class="date">2026-04-21</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/main/vignettes/rmarkdown.Rmd" class="external-link"><code>vignettes/rmarkdown.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/extendr/rextendr/blob/v0.5.0/vignettes/rmarkdown.Rmd" class="external-link"><code>vignettes/rmarkdown.Rmd</code></a></small>
       <div class="d-none name"><code>rmarkdown.Rmd</code></div>
     </div>
 
@@ -263,44 +263,49 @@ and <code>foo()</code>, as well as a class called
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">foo</span><span class="op">(</span><span class="va">out</span>, <span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Data sent to Rust: Hello from Rust!, 16</span></span></code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## NULL</span></span></code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Counter</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0</span></span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## NULL</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">increment</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## NULL</span></span></code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 2</span></span></code></pre>
 <p>If your code requires external crates, you can set dependencies via
 the <code>engine.opts</code> chunk option, like so:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>``<span class="in">`{extendrsrc engine.opts = list(dependencies = list(`</span>pulldown-cmark` = "0.8"))}</span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>use pulldown_cmark::{Parser, Options, html};</span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>#<span class="co">[</span><span class="ot">extendr</span><span class="co">]</span></span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>fn md_to_html(input: &amp;str) -&gt; String {</span>
-<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    let mut options = Options::empty();</span>
-<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    options.insert(Options::ENABLE_TABLES);</span>
-<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>    let parser = Parser::new_ext(input, options);</span>
-<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>    let mut output = String::new();</span>
-<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>    html::push_html(&amp;mut output, parser);</span>
-<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a>    output</span>
-<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>}</span>
-<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>``<span class="in">`{extendrsrc engine.opts = list(dependencies = list(`</span>pulldown-cmark` = "0.8"))}</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>use pulldown_cmark::{Parser, Options, html};</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>#<span class="co">[</span><span class="ot">extendr</span><span class="co">]</span></span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>fn md_to_html(input: &amp;str) -&gt; String {</span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>    let mut options = Options::empty();</span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>    options.insert(Options::ENABLE_TABLES);</span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>    let parser = Parser::new_ext(input, options);</span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>    let mut output = String::new();</span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a>    html::push_html(&amp;mut output, parser);</span>
+<span id="cb30-11"><a href="#cb30-11" tabindex="-1"></a>    output</span>
+<span id="cb30-12"><a href="#cb30-12" tabindex="-1"></a>}</span>
+<span id="cb30-13"><a href="#cb30-13" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>As before, the Rust code chunk just outputs the source:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="kw">use</span> <span class="pp">pulldown_cmark::</span><span class="op">{</span>Parser<span class="op">,</span> Options<span class="op">,</span> html<span class="op">};</span></span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="kw">fn</span> md_to_html(input<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">String</span> <span class="op">{</span></span>
-<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> options <span class="op">=</span> <span class="pp">Options::</span>empty()<span class="op">;</span></span>
-<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>    options<span class="op">.</span>insert(<span class="pp">Options::</span>ENABLE_TABLES)<span class="op">;</span></span>
-<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="kw">let</span> parser <span class="op">=</span> <span class="pp">Parser::</span>new_ext(input<span class="op">,</span> options)<span class="op">;</span></span>
-<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>new()<span class="op">;</span></span>
-<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>    <span class="pp">html::</span>push_html(<span class="op">&amp;</span><span class="kw">mut</span> output<span class="op">,</span> parser)<span class="op">;</span></span>
-<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>    output</span>
-<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="kw">use</span> <span class="pp">pulldown_cmark::</span><span class="op">{</span>Parser<span class="op">,</span> Options<span class="op">,</span> html<span class="op">};</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="at">#[</span>extendr<span class="at">]</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="kw">fn</span> md_to_html(input<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> options <span class="op">=</span> <span class="pp">Options::</span>empty()<span class="op">;</span></span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    options<span class="op">.</span>insert(<span class="pp">Options::</span>ENABLE_TABLES)<span class="op">;</span></span>
+<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>    <span class="kw">let</span> parser <span class="op">=</span> <span class="pp">Parser::</span>new_ext(input<span class="op">,</span> options)<span class="op">;</span></span>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>new()<span class="op">;</span></span>
+<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>    <span class="pp">html::</span>push_html(<span class="op">&amp;</span><span class="kw">mut</span> output<span class="op">,</span> parser)<span class="op">;</span></span>
+<span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a>    output</span>
+<span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>And the generated functions can be used from R:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">md_text</span> <span class="op">&lt;-</span> <span class="st">"# The story of the fox</span></span>
 <span><span class="st">The quick brown fox **jumps over** the lazy dog.</span></span>
 <span><span class="st">The quick *brown fox* jumps over the lazy dog."</span></span>

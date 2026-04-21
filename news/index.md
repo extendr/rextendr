@@ -2,6 +2,8 @@
 
 ## rextendr 0.5.0
 
+CRAN release: 2026-04-18
+
 ### Added
 
 - [`use_extendr()`](https://extendr.github.io/rextendr/reference/use_extendr.md)
