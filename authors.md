@@ -23,7 +23,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/extendr/rextendr/blob/v0.5.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/extendr/rextendr/blob/main/DESCRIPTION)
 
 Wilke C, Thomason A, Reimert M, Kosenkov I, Barrett M, Parry J, Vernon K
 (2026). *rextendr: Build 'Rust' Powered 'R' Packages*. R package version
