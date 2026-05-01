@@ -1,7 +1,4 @@
-comment:
-  layout: "header, reach, files"
-  require_changes: true
-  behavior: "new" # Only post on new commits
+comment: false
 coverage:
   status:
     project:
