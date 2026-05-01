@@ -396,12 +396,21 @@ rust_source <- function(
   # generate R bindings for shared library
   wrapper_file <- file.path(the$build_dir, "target", "extendr_wrappers.R")
 
-  make_wrappers(
-    module_name = as_valid_rust_name(opts[["module_name"]]),
-    package_name = dll_info[["name"]],
-    outfile = wrapper_file,
-    use_symbols = FALSE,
-    quiet = quiet
+  rlang::try_fetch(
+    make_wrappers(
+      module_name = as_valid_rust_name(opts[["module_name"]]),
+      package_name = dll_info[["name"]],
+      outfile = wrapper_file,
+      use_symbols = FALSE,
+      quiet = quiet
+    ),
+    error = function(cnd) {
+      cli::cli_abort(
+        "Failed to generate wrapper functions.",
+        parent = cnd,
+        class = "rextendr_error"
+      )
+    }
   )
 
   source(wrapper_file, local = env)
