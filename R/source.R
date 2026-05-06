@@ -350,26 +350,11 @@ rust_source <- function(
     sprintf("--target=%s", specific_target),
     sprintf("--manifest-path=%s", file.path(the$build_dir, "Cargo.toml")),
     sprintf("--target-dir=%s", file.path(the$build_dir, "target")),
-    sprintf("--profile=%s", opts[["profile"]]),
-    "--message-format=json-diagnostic-rendered-ansi",
-    if (tty_has_colors()) {
-      "--color=always"
-    } else {
-      "--color=never"
-    }
+    sprintf("--profile=%s", opts[["profile"]])
   )
 
   # try running cargo command
-  rlang::try_fetch(
-    run_cargo(args, echo = echo, wd = NULL),
-    error = function(cnd) {
-      cli::cli_abort(
-        "Rust code could not be compiled successfully. Aborting.",
-        parent = cnd,
-        class = "rextendr_error"
-      )
-    }
-  )
+  run_cargo(args, echo = echo, wd = NULL)
 
   # load shared library
   libfilename <- as_rust_lib_file_name(paste0(
@@ -667,20 +652,13 @@ check_extendr_fn_options <- function(
   valid_names <- is_valid_rust_name(nms)
 
   # is known name?
-  unknown_names <- setdiff(
-    nms,
-    c("r_name", "mod_name", "use_rng")
-  )
-
-  unknown_dev_names <- setdiff(
-    unknown_names,
-    "invisible"
-  )
+  unknown_names <- setdiff(nms, c("r_name", "mod_name", "use_rng"))
+  unknown_dev_names <- setdiff(unknown_names, "invisible")
 
   if (length(unknown_dev_names) > 0L) {
     cli::cli_abort(
       c(
-        "Found unknown {.code extendr} function option{?s}: {.val {unknown_names}}.",
+        "Found unknown {.code extendr} function option{?s}: {.val {unknown_dev_names}}.",
         "i" = "These are not available on release or development versions of extendr."
       ),
       call = call,
@@ -697,66 +675,55 @@ check_extendr_fn_options <- function(
     )
   }
 
-  # check values
-  empty <- vector(mode = "logical", length = length(extendr_fn_options))
-  scalar <- vector(mode = "logical", length = length(extendr_fn_options))
-
-  for (i in seq_along(extendr_fn_options)) {
-    value <- extendr_fn_options[[i]]
-
-    # is substantive?
-    empty[i] <- rlang::is_na(value) ||
-      rlang::is_null(value) ||
-      rlang::is_empty(value) ||
-      !nzchar(value)
-
-    # is scalar?
-    scalar[i] <- length(value) == 1L
-  }
-
-  message <- "Found {.val {n_invalid_opts}} invalid {.code extendr} function option{?s}:"
-
-  if (!all(valid_names)) {
-    invalid_names <- nms[which(!valid_names)] # nolint: object_usage_linter
-    message <- c(
-      message,
-      x = "Unsupported name{?s}: {.val {invalid_names}}.",
-      i = "Option names should be valid rust names."
-    )
-  }
+  # is empty
+  empty <- vapply(
+    extendr_fn_options,
+    FUN = function(.x) {
+      rlang::is_na(.x) ||
+        rlang::is_null(.x) ||
+        rlang::is_empty(.x) ||
+        !nzchar(.x)
+    },
+    FUN.VALUE = logical(1)
+  )
 
   if (any(empty)) {
     null_values <- nms[which(empty)] # nolint: object_usage_linter
-    message <- c(
-      message,
-      x = "Null value{?s}: {.val {null_values}}.",
-      i = "{.code NULL} values are disallowed."
-    )
-  }
-
-  if (!all(scalar)) {
-    vector_values <- nms[which(!scalar)] # nolint: object_usage_linter
-    message <- c(
-      message,
-      x = "Vector value{?s}: {.val {vector_values}}.",
-      i = "Only scalars are allowed as option values."
-    )
-  }
-
-  n_invalid_opts <- sum(c(!valid_names, empty, !scalar))
-
-  if (n_invalid_opts > 0L) {
-    # sort to maintain order with previous version of rextendr
-    x_idx <- which(names(message) == "x")
-    i_idx <- which(names(message) == "i")
-    message <- message[c(1, x_idx, i_idx)]
-
     cli::cli_abort(
-      message,
+      c(
+        x = "Null value{?s}: {.val {null_values}}.",
+        i = "{.code NULL} values are disallowed."
+      ),
       call = call,
       class = "rextendr_error"
     )
   }
+
+  # check values
+  check_string(
+    extendr_fn_options[["r_name"]],
+    allow_null = TRUE,
+    call = call,
+    class = "rextendr_error"
+  )
+  check_string(
+    extendr_fn_options[["mod_name"]],
+    allow_null = TRUE,
+    call = call,
+    class = "rextendr_error"
+  )
+  check_bool(
+    extendr_fn_options[["use_rng"]],
+    allow_null = TRUE,
+    call = call,
+    class = "rextendr_error"
+  )
+  check_bool(
+    extendr_fn_options[["invisible"]],
+    allow_null = TRUE,
+    call = call,
+    class = "rextendr_error"
+  )
 
   invisible(extendr_fn_options)
 }
