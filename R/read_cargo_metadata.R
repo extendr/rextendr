@@ -44,11 +44,6 @@ read_cargo_metadata <- function(
     "--format-version=1",
     if (!dependencies) {
       "--no-deps"
-    },
-    if (tty_has_colors()) {
-      "--color=always"
-    } else {
-      "--color=never"
     }
   )
 

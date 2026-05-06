@@ -46,6 +46,12 @@ run_cargo <- function(
   check_character(env, call = error_call, class = "rextendr_error")
   check_bool(parse_json, call = error_call, class = "rextendr_error")
 
+  if (isTRUE(cli::num_ansi_colors() > 1L)) {
+    args <- c(args, "--color=always")
+  } else {
+    args <- c(args, "--color=never")
+  }
+
   out <- processx::run(
     command = "cargo",
     args = args,
@@ -72,7 +78,7 @@ run_cargo <- function(
       jsonlite::parse_json(stdout, simplifyDataFrame = TRUE),
       error = function(cnd) {
         cli::cli_abort(
-          c("Failed to {.code stdout} as json:", " " = "{stdout}"),
+          c("Failed to parse {.code stdout} as json:", " " = "{stdout}"),
           parent = cnd,
           class = "rextendr_error"
         )
