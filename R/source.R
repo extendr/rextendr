@@ -648,9 +648,6 @@ check_extendr_fn_options <- function(
 
   nms <- names(extendr_fn_options)
 
-  # is valid name?
-  valid_names <- is_valid_rust_name(nms)
-
   # is known name?
   unknown_names <- setdiff(nms, c("r_name", "mod_name", "use_rng"))
   unknown_dev_names <- setdiff(unknown_names, "invisible")
