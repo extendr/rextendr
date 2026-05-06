@@ -1,5 +1,3 @@
-tty_has_colors <- function() isTRUE(cli::num_ansi_colors() > 1L)
-
 get_cargo_envvars <- function() {
   if (identical(.Platform$OS.type, "windows")) {
     # On Windows, PATH to Rust toolchain should be set by the installer.

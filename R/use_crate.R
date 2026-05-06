@@ -89,12 +89,7 @@ use_crate <- function(
     crate,
     features,
     git,
-    optional,
-    if (tty_has_colors()) {
-      "--color=always"
-    } else {
-      "--color=never"
-    }
+    optional
   )
 
   run_cargo(
