@@ -1,3 +1,13 @@
+# rextendr (development version)
+
+## Fixed
+* The `Makevars.in` / `Makevars.win.in` templates installed by `use_extendr()`
+  now pass identical `RUSTFLAGS`, `@PANIC_EXPORTS@` (Unix), and `@PROFILE@`
+  to both the `cargo build --lib` and `cargo run --bin document` invocations.
+  Previously the second invocation ran with neither, which gave it a different
+  fingerprint and caused `cargo` to rebuild every dependency from scratch on
+  package install. ([extendr/extendr#1087](https://github.com/extendr/extendr/issues/1087))
+
 # rextendr 0.5.0
 
 ## Added
