@@ -239,7 +239,7 @@
       	# fresh fingerprint and rebuilds every dependency from scratch (#1087).
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -315,7 +315,7 @@
       	# dependency from scratch (#1087).
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
@@ -539,7 +539,7 @@
       	# fresh fingerprint and rebuilds every dependency from scratch (#1087).
       	export CARGO_HOME=$(CARGOTMP) && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
       
       	# Always clean up CARGOTMP
       	rm -Rf $(CARGOTMP);
