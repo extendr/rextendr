@@ -16,7 +16,8 @@
 #'   - `src/Makevars.win.in`
 #'   - `cleanup`
 #'   - `cleanup.win`
-#'   - `src/rust/document.rs`
+#'   - `src/rust/document.c`
+#'   - `src/rust/document.R`
 #'   - `tools/msrv.R`
 #'   - `tools/config.R`
 #'   - `configure`
@@ -119,11 +120,19 @@ update_scaffold <- function(
   )
 
   use_rextendr_template(
-    "document.rs",
-    save_as = file.path("src", "rust", "document.rs"),
+    "document.c",
+    save_as = file.path("src", "rust", "document.c"),
     quiet = quiet,
     overwrite = TRUE,
-    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
+  )
+
+  use_rextendr_template(
+    "document.R",
+    save_as = file.path("src", "rust", "document.R"),
+    quiet = quiet,
+    overwrite = TRUE,
+    data = list(pkg_name = pkg_name)
   )
 
   use_rextendr_template(
@@ -179,11 +188,7 @@ update_message <- function() {
   cli::cli_code(c(
     " ",
     "[lib]",
-    'crate-type = [ "rlib", "staticlib" ]',
-    " ",
-    "[[bin]]",
-    "name = 'document'",
-    "path = 'document.rs'",
+    'crate-type = [ "staticlib" ]',
     " ",
     "[dependencies]",
     toml_dependency,

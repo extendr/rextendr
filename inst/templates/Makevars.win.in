@@ -3,7 +3,9 @@ TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
 TARGET_DIR = ./rust/target
 LIBDIR = $(TARGET_DIR)/$(TARGET)/@LIBDIR@
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
-PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+PKG_LIBS = -L$(CURDIR)/$(LIBDIR) -l{{{lib_name}}} -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+DOCUMENT_SHLIB = rust/document.dll
+DOCUMENT_OBJ = rust/document.o
 
 all: $(SHLIB) rust_clean
 
@@ -36,13 +38,10 @@ $(STATLIB):
 	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
 	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
 
-	# Generate wrappers.
-	# NOTE: RUSTFLAGS and @PROFILE@ must match the `cargo build --lib` invocation
-	# above; otherwise cargo treats this as a fresh fingerprint and rebuilds every
-	# dependency from scratch (#1087).
-	export CARGO_HOME=$(CARGOTMP) && \
-	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-	RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+	# Generate R wrappers: cd rust/ so R CMD SHLIB doesn't see THIS Makevars.win and recurse.
+	cd rust && "$(R_HOME)/bin$(R_ARCH_BIN)/R" CMD SHLIB -o document.dll document.c $(PKG_LIBS)
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" rust/document.R
+	rm -f $(DOCUMENT_SHLIB) $(DOCUMENT_OBJ)
 
 	# Always clean up CARGOTMP
 	rm -Rf $(CARGOTMP);
@@ -51,4 +50,4 @@ rust_clean: $(SHLIB)
 	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR) $(DOCUMENT_SHLIB) $(DOCUMENT_OBJ)

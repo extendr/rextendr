@@ -1,12 +1,20 @@
 # rextendr (development version)
 
-## Fixed
-* The `Makevars.in` / `Makevars.win.in` templates installed by `use_extendr()`
-  now pass identical `RUSTFLAGS`, `@PANIC_EXPORTS@` (Unix), and `@PROFILE@`
-  to both the `cargo build --lib` and `cargo run --bin document` invocations.
-  Previously the second invocation ran with neither, which gave it a different
-  fingerprint and caused `cargo` to rebuild every dependency from scratch on
-  package install. ([extendr/extendr#1087](https://github.com/extendr/extendr/issues/1087))
+## Changed
+* `use_extendr()` now scaffolds wrapper generation via a transient C SHLIB
+  loaded from R, rather than a separate `[[bin]]` target in `Cargo.toml`.
+  The Rust crate goes back to `crate-type = ["staticlib"]`, restoring
+  link-time optimization on the package's compiled artifact. `document.rs`
+  is gone entirely; `extendr_module!` already emits the wrapper-generation
+  function as `wrap__make_<modname>_wrappers`, so a new minimal
+  `src/rust/document.c` exposes it under the name `write_wrappers` for R,
+  and `src/rust/document.R` calls it and writes `R/extendr-wrappers.R`.
+  Existing packages can adopt the new layout by re-running
+  `use_extendr(overwrite = TRUE)`. This also obsoletes the second
+  `cargo run --bin document` invocation that previously caused full
+  dependency rebuilds when its RUSTFLAGS/profile did not match the
+  preceding `cargo build --lib`
+  ([extendr/extendr#1087](https://github.com/extendr/extendr/issues/1087)).
 
 # rextendr 0.5.0
 

@@ -40,8 +40,12 @@
 #'   `extendr-api` dependency, and release profile settings.
 #' - `src/rust/src/lib.rs`: Main Rust library with an example `hello_world()`
 #'   function and the `extendr_module!` macro.
-#' - `src/rust/document.rs`: Rust binary that writes `R/extendr-wrappers.R`
-#'   by introspecting exported function metadata at build time.
+#' - `src/rust/document.c`: Tiny C glue that `R CMD SHLIB` builds into a
+#'   transient SHLIB linked against the Rust staticlib. It exposes
+#'   `wrap__make_<modname>_wrappers` (already emitted by `extendr_module!`)
+#'   under the name `write_wrappers` so R can call it during the build.
+#' - `src/rust/document.R`: Rscript helper that `dyn.load()`s the transient
+#'   SHLIB, calls `write_wrappers`, and writes `R/extendr-wrappers.R`.
 #' - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV in
 #'   `DESCRIPTION`.
 #' - `tools/config.R`: Reads `tools/msrv.R`, checks `DEBUG`/`NOT_CRAN` env
@@ -218,12 +222,8 @@ use_extendr <- function(
       `rust-version` = "1.65"
     ),
     lib = list(
-      `crate-type` = array(c("rlib", "staticlib"), 2),
+      `crate-type` = array("staticlib", 1),
       name = lib_name
-    ),
-    bin = data.frame(
-      name = "document",
-      path = "document.rs"
     ),
     dependencies = list(
       `extendr-api` = extendr_api_version
@@ -259,11 +259,19 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
-    "document.rs",
-    save_as = file.path("src", "rust", "document.rs"),
+    "document.c",
+    save_as = file.path("src", "rust", "document.c"),
     quiet = quiet,
     overwrite = overwrite,
-    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
+  )
+
+  use_rextendr_template(
+    "document.R",
+    save_as = file.path("src", "rust", "document.R"),
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(pkg_name = pkg_name)
   )
 
   use_rextendr_template(
