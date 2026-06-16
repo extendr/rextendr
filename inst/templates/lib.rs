@@ -1,10 +1,11 @@
 use extendr_api::prelude::*;
 
 /// Return string `"Hello world!"` to R.
+/// @param name A name to greet.
 /// @export
 #[extendr]
-fn hello_world() -> &'static str {
-    "Hello world!"
+fn hello(name: String) -> String {
+    format!("Hello {name}!")
 }
 
 // Macro to generate exports.
@@ -12,5 +13,5 @@ fn hello_world() -> &'static str {
 // See corresponding C code in `entrypoint.c`.
 extendr_module! {
     mod {{{mod_name}}};
-    fn hello_world;
+    fn hello;
 }

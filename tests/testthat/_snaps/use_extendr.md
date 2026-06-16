@@ -170,8 +170,9 @@
       NULL
       
       #' Return string `"Hello world!"` to R.
+      #' @param name A name to greet.
       #' @export
-      hello_world <- function() .Call(wrap__hello_world)
+      hello <- function(name) .Call(wrap__hello, name)
       
       # nolint end
 
@@ -369,10 +370,11 @@
       use extendr_api::prelude::*;
       
       /// Return string `"Hello world!"` to R.
+      /// @param name A name to greet.
       /// @export
       #[extendr]
-      fn hello_world() -> &'static str {
-          "Hello world!"
+      fn hello(name: String) -> String {
+          format!("Hello {name}!")
       }
       
       // Macro to generate exports.
@@ -380,7 +382,7 @@
       // See corresponding C code in `entrypoint.c`.
       extendr_module! {
           mod testpkg;
-          fn hello_world;
+          fn hello;
       }
 
 ---
