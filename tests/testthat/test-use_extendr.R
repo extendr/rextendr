@@ -138,7 +138,7 @@ test_that("use_rextendr_template() can overwrite existing files", {
 
 # Check that {rextendr} works in packages containing dots in their names.
 # The check is performed by compiling the sample package and checking that
-# `hello_world()` template function is available and works.
+# `hello("world")` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
@@ -150,7 +150,7 @@ test_that("use_extendr() handles R packages with dots in the name", {
   use_extendr()
   document()
   devtools::load_all()
-  expect_identical(hello_world(), "Hello world!")
+  expect_identical(hello("world"), "Hello world!")
 })
 
 # Specify crate name and library names explicitly
@@ -165,7 +165,7 @@ test_that("use_extendr() handles R package name, crate name and library name sep
   use_extendr(crate_name = "crate_name", lib_name = "lib_name")
   document()
   devtools::load_all()
-  expect_identical(hello_world(), "Hello world!")
+  expect_identical(hello("world"), "Hello world!")
 })
 
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.

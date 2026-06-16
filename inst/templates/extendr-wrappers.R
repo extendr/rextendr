@@ -6,7 +6,8 @@
 NULL
 
 #' Return string `"Hello world!"` to R.
+#' @param name A name to greet.
 #' @export
-hello_world <- function() .Call(wrap__hello_world)
+hello <- function(name) .Call(wrap__hello, name)
 
 # nolint end
