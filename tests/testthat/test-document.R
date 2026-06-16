@@ -123,3 +123,22 @@ test_that("devtools::document() generates wrappers", {
   devtools::document()
   expect_snapshot(cat_file("R/extendr-wrappers.R"))
 })
+
+test_that("devtools::document() works for paths with spaces", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_unavailable()
+
+  path <- local_package("with spaces/testPackage")
+  use_extendr()
+  devtools::document()
+
+  lib_file <- file.path(
+    path,
+    "src",
+    paste0("testPackage", .Platform$dynlib.ext)
+  )
+
+  expect_true(file.exists(lib_file))
+})
