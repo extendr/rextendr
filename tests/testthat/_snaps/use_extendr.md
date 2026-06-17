@@ -222,34 +222,34 @@
       
       	if [ -d ./vendor ]; then \
       		echo "=== Using offline vendor directory ==="; \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	elif [ -f ./rust/vendor.tar.xz ]; then \
       		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	fi
       
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
       	# NOTE: env (RUSTFLAGS, @PANIC_EXPORTS@) and @PROFILE@ must match the
       	# `cargo build --lib` invocation above; otherwise cargo treats this as a
       	# fresh fingerprint and rebuilds every dependency from scratch (#1087).
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
       	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP);
+      	rm -Rf "$(CARGOTMP)";
       
       rust_clean: $(SHLIB)
-      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
+      	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)"
 
 ---
 
@@ -289,43 +289,43 @@
       VENDOR_DIR = vendor
       
       $(STATLIB):
-      	mkdir -p $(TARGET_DIR)/libgcc_mock
-      	touch $(TARGET_DIR)/libgcc_mock/libgcc_eh.a
+      	mkdir -p "$(TARGET_DIR)/libgcc_mock"
+      	touch "$(TARGET_DIR)/libgcc_mock/libgcc_eh.a"
       
         # If a vendor directory exists, it is used for offline compilation. Otherwise if
         # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       	if [ -d ./vendor ]; then \
       		echo "=== Using offline vendor directory ==="; \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	elif [ -f ./rust/vendor.tar.xz ]; then \
       		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	fi
       
       	# Build the project using Cargo with additional flags
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
-      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir="$(TARGET_DIR)"
       
       	# Generate wrappers.
       	# NOTE: RUSTFLAGS and @PROFILE@ must match the `cargo build --lib` invocation
       	# above; otherwise cargo treats this as a fresh fingerprint and rebuilds every
       	# dependency from scratch (#1087).
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+      	RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document --target $(TARGET) @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir "$(TARGET_DIR)"
       
       	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP);
+      	rm -Rf "$(CARGOTMP)";
       
       rust_clean: $(SHLIB)
-      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
+      	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)"
 
 ---
 
@@ -523,32 +523,32 @@
       
       	if [ -d ./vendor ]; then \
       		echo "=== Using offline vendor directory ==="; \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	elif [ -f ./rust/vendor.tar.xz ]; then \
       		echo "=== Using offline vendor tarball ==="; \
       		tar xf rust/vendor.tar.xz && \
-      		mkdir -p $(CARGOTMP) && \
-      		cp rust/vendor-config.toml $(CARGOTMP)/config.toml; \
+      		mkdir -p "$(CARGOTMP)" && \
+      		cp rust/vendor-config.toml "$(CARGOTMP)/config.toml"; \
       	fi
       
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
       	# NOTE: env (RUSTFLAGS, @PANIC_EXPORTS@) and @PROFILE@ must match the
       	# `cargo build --lib` invocation above; otherwise cargo treats this as a
       	# fresh fingerprint and rebuilds every dependency from scratch (#1087).
-      	export CARGO_HOME=$(CARGOTMP) && \
+      	export CARGO_HOME="$(CARGOTMP)" && \
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
-      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
+      	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS)" cargo run @CRAN_FLAGS@ --bin document @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
       	# Always clean up CARGOTMP
-      	rm -Rf $(CARGOTMP);
+      	rm -Rf "$(CARGOTMP)";
       
       rust_clean: $(SHLIB)
-      	rm -Rf $(CARGOTMP) $(VENDOR_DIR) @CLEAN_TARGET@
+      	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR) $(VENDOR_DIR)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)"
 

@@ -16,14 +16,21 @@ expect_rextendr_error <- function(...) {
 #' `withr::defer()`. This clean-up happens at the end of the local scope,
 #' usually the end of a `test_that()` call.
 #'
-#' @param nm The name of the temporary package
+#' @param path The path to the temporary package, with `dirname(path)` being the
+#'   parent directory and `basename(path)` being the name of the package to
+#'   create.
 #' @param envir An environment where `withr::defer()`'s exit handler is
 #'   attached, usually the `parent.frame()` to exist locally
 #'
 #' @return A path to the root package directory
-local_package <- function(nm, envir = parent.frame()) {
-  local_temp_dir(envir = envir)
-  dir <- usethis::create_package(nm)
+local_package <- function(path, envir = parent.frame()) {
+  parent <- dirname(path)
+  if (parent == ".") {
+    local_temp_dir(envir = envir)
+  } else {
+    local_temp_dir(parent, envir = envir)
+  }
+  dir <- usethis::create_package(basename(path))
   setwd(dir)
   local_proj_set(envir = envir)
 
@@ -89,7 +96,11 @@ skip_if_cargo_unavailable <- function(args = "--help") {
       processx::run("cargo", args, error_on_status = TRUE)
     },
     error = function(e) {
-      message <- paste0("`cargo ", paste0(args, collapse = " "), "` is not available.")
+      message <- paste0(
+        "`cargo ",
+        paste0(args, collapse = " "),
+        "` is not available."
+      )
       testthat::skip(message)
     }
   )
