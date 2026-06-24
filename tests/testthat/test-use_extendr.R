@@ -153,6 +153,20 @@ test_that("use_extendr() handles R packages with dots in the name", {
   expect_identical(hello("world"), "Hello world!")
 })
 
+test_that("use_extendr() handles R packages with capital letters in the name", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_unavailable()
+  withr::local_options(lifecycle_verbosity = "quiet")
+
+  path <- local_package("TestPackage")
+  use_extendr()
+  document()
+  devtools::load_all()
+  expect_identical(hello("world"), "Hello world!")
+})
+
 # Specify crate name and library names explicitly
 test_that("use_extendr() handles R package name, crate name and library name separately", {
   skip_if_not_installed("usethis")
