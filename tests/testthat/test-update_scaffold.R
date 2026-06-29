@@ -15,7 +15,7 @@ test_that("update_scaffold() rewrites scaffolding files", {
   expect_true(file.exists(file.path("src", "Makevars.win.in")))
   expect_true(file.exists("cleanup"))
   expect_true(file.exists("cleanup.win"))
-  expect_true(file.exists(file.path("src", "rust", "document.rs")))
+  expect_true(file.exists(file.path("src", "rust", "document.c")))
   expect_true(file.exists(file.path("tools", "msrv.R")))
   expect_true(file.exists(file.path("tools", "config.R")))
   expect_true(file.exists("configure"))
