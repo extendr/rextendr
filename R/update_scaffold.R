@@ -174,8 +174,19 @@ update_message <- function() {
     "!" = "If your crate or library name differs from the R package name, please",
     " " = "re-run {.fn update_scaffold} with explicit {.arg lib_name} and {.arg crate_name}.",
     "!" = "Also make sure crate type is set to 'staticlib' in `Cargo.toml`, no 'rlib'.",
-    " " = ""
+    " " = "It should look like this:"
   ))
+  cli::cli_div(theme = list(".code" = list("margin-left" = 4)))
+  cli::cli_code(c(
+    " ",
+    "[lib]",
+    'crate-type = [ "staticlib" ]',
+    " ",
+    "[dependencies]",
+    toml_dependency,
+    " "
+  ))
+  cli::cli_end()
   cli::cli_alert_info("You should now call the following in order:")
   cli::cli_div(theme = list("ul" = list("margin-left" = 4)))
   cli::cli_ul(c(
