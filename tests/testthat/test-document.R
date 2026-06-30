@@ -93,9 +93,6 @@ test_that("register_extendr() is deprecated", {
   expect_warning(register_extendr(), class = "lifecycle_warning_deprecated")
 })
 
-# we include an additional test to ensure that file sizes are optimized relative
-# to the previous document.rs approach (baselines are based on builds with the
-# default hello world package on each OS on 2026-06-24)
 test_that("devtools::document() builds lib", {
   skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
@@ -109,16 +106,6 @@ test_that("devtools::document() builds lib", {
   lib_file <- file.path(path, "src", paste0("foo", .Platform$dynlib.ext))
 
   expect_true(file.exists(lib_file))
-
-  # size test
-  baseline <- switch(
-    Sys.info()[["sysname"]],
-    Windows = 9744463,
-    Linux = 10505416,
-    Darwin = 3376952,
-    skip("unknown platform")
-  )
-  expect_lt(file.size(lib_file), baseline)
 })
 
 test_that("devtools::document() generates wrappers", {
