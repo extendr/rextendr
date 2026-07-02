@@ -19,20 +19,20 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ilia Kosenkov \email{ilia.kosenkov@outlook.com} (\href{https://orcid.org/0000-0001-5563-7840}{ORCID})
+\strong{Maintainer}: Kenneth Vernon \email{kenneth.b.vernon@gmail.com} (\href{https://orcid.org/0000-0003-0098-5092}{ORCID})
 
 Authors:
 \itemize{
   \item Claus O. Wilke \email{wilke@austin.utexas.edu} (\href{https://orcid.org/0000-0002-7470-9261}{ORCID})
   \item Andy Thomason \email{andy@andythomason.com}
   \item Mossa M. Reimert \email{mossa@sund.ku.dk}
+  \item Ilia Kosenkov \email{ilia.kosenkov@outlook.com} (\href{https://orcid.org/0000-0001-5563-7840}{ORCID})
   \item Malcolm Barrett \email{malcolmbarrett@gmail.com} (\href{https://orcid.org/0000-0003-0299-5825}{ORCID})
+  \item Josiah Parry \email{josiah.parry@gmail.con} (\href{https://orcid.org/0000-0001-9910-865X}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Josiah Parry \email{josiah.parry@gmail.con} (\href{https://orcid.org/0000-0001-9910-865X}{ORCID}) [contributor]
-  \item Kenneth Vernon \email{kenneth.b.vernon@gmail.com} (\href{https://orcid.org/0000-0003-0098-5092}{ORCID}) [contributor]
   \item Alberson Miranda \email{albersonmiranda@hotmail.com} (\href{https://orcid.org/0000-0001-9252-4175}{ORCID}) [contributor]
 }
 

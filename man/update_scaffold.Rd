@@ -37,7 +37,7 @@ unchanged. Only the following files are re-written:
 \item \code{src/Makevars.win.in}
 \item \code{cleanup}
 \item \code{cleanup.win}
-\item \code{src/rust/document.rs}
+\item \code{src/rust/document.c}
 \item \code{tools/msrv.R}
 \item \code{tools/config.R}
 \item \code{configure}

@@ -43,8 +43,8 @@ generated or not.
 \description{
 Create the scaffolding needed to add Rust extendr code to an R package.
 \code{use_extendr()} adds a small Rust library with a single Rust function that
-returns the string \code{"Hello world!"}. It also adds wrapper code so this Rust
-function can be called from R with \code{hello_world()}.
+returns the string \code{"Hello {name}!"}. It also adds wrapper code so this Rust
+function can be called from R with \code{hello(name = "world")}.
 }
 \details{
 \subsection{Generated files}{
@@ -59,9 +59,9 @@ employed at package build time.
 generated \code{Makevars} files.
 \item \code{src/rust/Cargo.toml}: Rust package manifest with crate name, edition,
 \code{extendr-api} dependency, and release profile settings.
-\item \code{src/rust/src/lib.rs}: Main Rust library with an example \code{hello_world()}
+\item \code{src/rust/src/lib.rs}: Main Rust library with an example \code{hello("world")}
 function and the \verb{extendr_module!} macro.
-\item \code{src/rust/document.rs}: Rust binary that writes \code{R/extendr-wrappers.R}
+\item \code{src/rust/document.c}: a C binary that writes \code{R/extendr-wrappers.R}
 by introspecting exported function metadata at build time.
 \item \code{tools/msrv.R}: Verifies the installed Rust toolchain meets the MSRV in
 \code{DESCRIPTION}.
