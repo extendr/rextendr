@@ -200,7 +200,6 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg
       DOCUMENT = rust/document
-      DOCUMENT_OBJ = rust/document.o
       
       all: $(SHLIB) rust_clean
       
@@ -239,7 +238,7 @@
       
       	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR
       	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -f $(DOCUMENT)
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
@@ -248,7 +247,7 @@
       	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT)
 
 ---
 
@@ -278,7 +277,6 @@
       STATLIB = $(LIBDIR)/libtestpkg.a
       PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
       DOCUMENT = rust/document.exe
-      DOCUMENT_OBJ = rust/document.o
       
       all: $(SHLIB) rust_clean
       
@@ -314,7 +312,7 @@
       	# Generate wrappers using linked C executable
       	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/bin$(R_ARCH)" -lR
       	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -f $(DOCUMENT)
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
@@ -323,7 +321,7 @@
       	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT)
 
 ---
 
@@ -483,7 +481,6 @@
       STATLIB = $(LIBDIR)/libbar.a
       PKG_LIBS = -L$(LIBDIR) -lbar
       DOCUMENT = rust/document
-      DOCUMENT_OBJ = rust/document.o
       
       all: $(SHLIB) rust_clean
       
@@ -522,7 +519,7 @@
       
       	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR
       	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -f $(DOCUMENT)
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
@@ -531,5 +528,5 @@
       	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
       
       clean:
-      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT) $(DOCUMENT_OBJ)
+      	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT)
 

@@ -3,7 +3,6 @@ LIBDIR = $(TARGET_DIR)/@LIBDIR@
 STATLIB = $(LIBDIR)/lib{{{lib_name}}}.a
 PKG_LIBS = -L$(LIBDIR) -l{{{lib_name}}}
 DOCUMENT = rust/document
-DOCUMENT_OBJ = rust/document.o
 
 all: $(SHLIB) rust_clean
 
@@ -42,7 +41,7 @@ $(STATLIB):
 
 	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR
 	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-	rm -f $(DOCUMENT) $(DOCUMENT_OBJ)
+	rm -f $(DOCUMENT)
 
 	# Always clean up CARGOTMP
 	rm -Rf "$(CARGOTMP)";
@@ -51,4 +50,4 @@ rust_clean: $(SHLIB)
 	rm -Rf "$(CARGOTMP)" "$(VENDOR_DIR)" @CLEAN_TARGET@
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT) $(DOCUMENT_OBJ)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) "$(TARGET_DIR)" "$(VENDOR_DIR)" $(DOCUMENT)
