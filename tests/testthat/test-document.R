@@ -99,11 +99,15 @@ test_that("devtools::document() builds lib", {
   skip_on_cran()
   skip_if_cargo_unavailable()
 
-  path <- local_package("foo")
+  path <- local_package("testPackage")
   use_extendr()
   devtools::document()
 
-  lib_file <- file.path(path, "src", paste0("foo", .Platform$dynlib.ext))
+  lib_file <- file.path(
+    path,
+    "src",
+    paste0("testPackage", .Platform$dynlib.ext)
+  )
 
   expect_true(file.exists(lib_file))
 })
