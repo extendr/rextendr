@@ -32,8 +32,8 @@ remove_block_comments <- function(lns) {
   depth <- cumsum(ifelse(type == "/*", 1L, -1L))
 
   if (depth[length(depth)] != 0L) {
-    n_open <- sum(type == "/*")
-    n_close <- sum(type == "*/")
+    n_open <- sum(type == "/*") # nolint
+    n_close <- sum(type == "*/") # nolint
     cli::cli_abort(
       c(
         "Malformed comments.",
