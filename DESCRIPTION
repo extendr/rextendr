@@ -34,7 +34,6 @@ Imports:
     brio,
     cli,
     desc,
-    dplyr,
     glue (>= 1.7.0),
     jsonlite,
     lifecycle,

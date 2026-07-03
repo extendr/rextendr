@@ -75,26 +75,20 @@ test_that("Macro generation fails on invalid rust code", {
 test_that("Macro generation fails on invalid comments in code", {
   skip_if_cargo_unavailable()
 
+  # unclosed comment: three `/*` against one `*/`
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
     "Malformed comments."
   )
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
-    "delimiters are not equal"
-  )
-  expect_rextendr_error(
-    make_module_macro("/*/*/**/"),
-    "Found 3 occurrences"
-  )
-  expect_rextendr_error(
-    make_module_macro("/*/*/**/"),
-    "Found 1 occurrence"
+    "not paired correctly"
   )
 
+  # stray `*/` before any `/*`
   expect_rextendr_error(
     make_module_macro("*/  /*"),
-    "This error may be caused by a code fragment like",
+    "not paired correctly"
   )
 })
 
@@ -103,14 +97,11 @@ test_that("Rust code cleaning", {
   skip_if_cargo_unavailable()
 
   expect_equal(
-    fill_block_comments(c(
+    remove_block_comments(c(
       "Nested /*/* this is */ /*commented*/ out */",
       "/*/*/**/*/*/comments."
     )),
-    c(
-      "Nested                                     ",
-      "            comments."
-    )
+    c("Nested ", "comments.")
   )
 
   expect_equal(

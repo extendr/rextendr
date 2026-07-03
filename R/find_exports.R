@@ -1,9 +1,9 @@
 find_exports <- function(clean_lns) {
   ids <- find_extendr_attrs_ids(clean_lns)
   start <- ids
-  end <- dplyr::lead(ids, default = length(clean_lns) + 1L) - 1L
+  end <- c(ids[-1], length(clean_lns) + 1L) - 1L
 
-  # start and end may empty
+  # start and end may be empty
   if (rlang::is_empty(start) || rlang::is_empty(end)) {
     return(data.frame(
       name = character(0),
@@ -12,11 +12,20 @@ find_exports <- function(clean_lns) {
     ))
   }
 
-  map2(start, end, \(.x, .y) extract_meta(clean_lns[.x:.y])) |>
-    discard(\(.x) is.na(.x["impl"]) & is.na(.x["fn"])) |>
-    dplyr::bind_rows() |>
-    dplyr::mutate(type = dplyr::coalesce(.data$impl, .data$fn)) |>
-    dplyr::select(dplyr::all_of(c("name", "type", "lifetime")))
+  lns <- Map(
+    function(.x, .y) extract_meta(clean_lns[.x:.y]),
+    .x = start,
+    .y = end
+  )
+
+  lns <- Filter(
+    function(.x) !is.na(.x[["impl"]]) || !is.na(.x[["fn"]]),
+    lns
+  )
+
+  lns <- do.call(rbind, lns)
+  lns[["type"]] <- ifelse(is.na(lns[["impl"]]), lns[["fn"]], lns[["impl"]])
+  lns[c("name", "type", "lifetime")]
 }
 
 # Finds lines which contain #[extendr] (allowing additional spaces)
@@ -45,8 +54,9 @@ extract_meta <- function(lns) {
       "impl",
       "lifetime",
       "name"
-    )) |>
-    dplyr::filter(!is.na(.data$match))
+    ))
+
+  result <- result[!is.na(result[["match"]]), ]
 
   # If no matches have been found, then the attribute is misplaced
   if (nrow(result) == 0L) {
