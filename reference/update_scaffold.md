@@ -52,7 +52,7 @@ unchanged. Only the following files are re-written:
 
 - `cleanup.win`
 
-- `src/rust/document.rs`
+- `src/rust/document.c`
 
 - `tools/msrv.R`
 

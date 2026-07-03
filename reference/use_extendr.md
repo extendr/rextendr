@@ -2,8 +2,8 @@
 
 Create the scaffolding needed to add Rust extendr code to an R package.
 `use_extendr()` adds a small Rust library with a single Rust function
-that returns the string `"Hello world!"`. It also adds wrapper code so
-this Rust function can be called from R with `hello_world()`.
+that returns the string `"Hello {name}!"`. It also adds wrapper code so
+this Rust function can be called from R with `hello(name = "world")`.
 
 ## Usage
 
@@ -81,9 +81,9 @@ generated or not.
   `extendr-api` dependency, and release profile settings.
 
 - `src/rust/src/lib.rs`: Main Rust library with an example
-  `hello_world()` function and the `extendr_module!` macro.
+  `hello("world")` function and the `extendr_module!` macro.
 
-- `src/rust/document.rs`: Rust binary that writes `R/extendr-wrappers.R`
+- `src/rust/document.c`: a C binary that writes `R/extendr-wrappers.R`
   by introspecting exported function metadata at build time.
 
 - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV

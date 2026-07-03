@@ -17,8 +17,8 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Ilia Kosenkov <ilia.kosenkov@outlook.com>
-([ORCID](https://orcid.org/0000-0001-5563-7840))
+**Maintainer**: Kenneth Vernon <kenneth.b.vernon@gmail.com>
+([ORCID](https://orcid.org/0000-0003-0098-5092))
 
 Authors:
 
@@ -29,16 +29,16 @@ Authors:
 
 - Mossa M. Reimert <mossa@sund.ku.dk>
 
+- Ilia Kosenkov <ilia.kosenkov@outlook.com>
+  ([ORCID](https://orcid.org/0000-0001-5563-7840))
+
 - Malcolm Barrett <malcolmbarrett@gmail.com>
   ([ORCID](https://orcid.org/0000-0003-0299-5825))
 
-Other contributors:
-
 - Josiah Parry <josiah.parry@gmail.con>
-  ([ORCID](https://orcid.org/0000-0001-9910-865X)) \[contributor\]
+  ([ORCID](https://orcid.org/0000-0001-9910-865X))
 
-- Kenneth Vernon <kenneth.b.vernon@gmail.com>
-  ([ORCID](https://orcid.org/0000-0003-0098-5092)) \[contributor\]
+Other contributors:
 
 - Alberson Miranda <albersonmiranda@hotmail.com>
   ([ORCID](https://orcid.org/0000-0001-9252-4175)) \[contributor\]
