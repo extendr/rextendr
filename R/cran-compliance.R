@@ -99,10 +99,11 @@ vendor_crates <- function(
     "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)"
   )
 
-  res <- setNames(as.data.frame(res), c("source", "crate", "version"))
+  res <- rlang::set_names(as.data.frame(res), c("source", "crate", "version"))
   res <- res[!is.na(res[["source"]]), ]
   res[["source"]] <- NULL
   res <- res[order(res[["crate"]]), ]
+  rownames(res) <- NULL
 
   # capture vendor-config.toml content
   config_toml <- vendor_res[["stdout"]] |>
