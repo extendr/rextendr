@@ -2,8 +2,8 @@
 #'
 #' Create the scaffolding needed to add Rust extendr code to an R package.
 #' `use_extendr()` adds a small Rust library with a single Rust function that
-#' returns the string `"Hello world!"`. It also adds wrapper code so this Rust
-#' function can be called from R with `hello_world()`.
+#' returns the string `"Hello {name}!"`. It also adds wrapper code so this Rust
+#' function can be called from R with `hello(name = "world")`.
 #'
 #' @param path File path to the package for which to generate wrapper code.
 #' @param crate_name String that is used as the name of the Rust crate,
@@ -38,9 +38,9 @@
 #'   generated `Makevars` files.
 #' - `src/rust/Cargo.toml`: Rust package manifest with crate name, edition,
 #'   `extendr-api` dependency, and release profile settings.
-#' - `src/rust/src/lib.rs`: Main Rust library with an example `hello_world()`
+#' - `src/rust/src/lib.rs`: Main Rust library with an example `hello("world")`
 #'   function and the `extendr_module!` macro.
-#' - `src/rust/document.rs`: Rust binary that writes `R/extendr-wrappers.R`
+#' - `src/rust/document.c`: a C binary that writes `R/extendr-wrappers.R`
 #'   by introspecting exported function metadata at build time.
 #' - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV in
 #'   `DESCRIPTION`.
@@ -218,12 +218,8 @@ use_extendr <- function(
       `rust-version` = "1.65"
     ),
     lib = list(
-      `crate-type` = array(c("rlib", "staticlib"), 2),
+      `crate-type` = array("staticlib", 1),
       name = lib_name
-    ),
-    bin = data.frame(
-      name = "document",
-      path = "document.rs"
     ),
     dependencies = list(
       `extendr-api` = extendr_api_version
@@ -259,11 +255,11 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
-    "document.rs",
-    save_as = file.path("src", "rust", "document.rs"),
+    "document.c",
+    save_as = file.path("src", "rust", "document.c"),
     quiet = quiet,
     overwrite = overwrite,
-    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(

@@ -7,6 +7,10 @@
   Previously the second invocation ran with neither, which gave it a different
   fingerprint and caused `cargo` to rebuild every dependency from scratch on
   package install. ([extendr/extendr#1087](https://github.com/extendr/extendr/issues/1087))
+* Moved from document.rs to document.c to avoid inflating package SHLIB size 
+  with linked dead code. ([extendr/rextendr#529](https://github.com/extendr/rextendr/pull/529))
+  See also [extendr/extendr#1101](https://github.com/extendr/extendr/pull/1101)
+  and [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
 
 # rextendr 0.5.0
 

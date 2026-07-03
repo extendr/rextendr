@@ -16,7 +16,7 @@
 #'   - `src/Makevars.win.in`
 #'   - `cleanup`
 #'   - `cleanup.win`
-#'   - `src/rust/document.rs`
+#'   - `src/rust/document.c`
 #'   - `tools/msrv.R`
 #'   - `tools/config.R`
 #'   - `configure`
@@ -119,11 +119,11 @@ update_scaffold <- function(
   )
 
   use_rextendr_template(
-    "document.rs",
-    save_as = file.path("src", "rust", "document.rs"),
+    "document.c",
+    save_as = file.path("src", "rust", "document.c"),
     quiet = quiet,
     overwrite = TRUE,
-    data = list(lib_name = lib_name, mod_name = mod_name, pkg_name = pkg_name)
+    data = list(mod_name = mod_name)
   )
 
   use_rextendr_template(
@@ -172,18 +172,15 @@ update_message <- function() {
     "v" = "Scaffolding updated successfully.",
     " " = "",
     "!" = "If your crate or library name differs from the R package name, please",
-    " " = "re-run {.fn update_extendr} with explicit {.arg lib_name} and {.arg crate_name}.",
-    "!" = "You will also need to update `Cargo.toml` to include the following:"
+    " " = "re-run {.fn update_scaffold} with explicit {.arg lib_name} and {.arg crate_name}.",
+    "!" = "Also make sure crate type is set to 'staticlib' in `Cargo.toml`, no 'rlib'.",
+    " " = "It should look like this:"
   ))
   cli::cli_div(theme = list(".code" = list("margin-left" = 4)))
   cli::cli_code(c(
     " ",
     "[lib]",
-    'crate-type = [ "rlib", "staticlib" ]',
-    " ",
-    "[[bin]]",
-    "name = 'document'",
-    "path = 'document.rs'",
+    'crate-type = [ "staticlib" ]',
     " ",
     "[dependencies]",
     toml_dependency,
@@ -198,4 +195,5 @@ update_message <- function() {
     "devtools::document()"
   ))
   cli::cli_end()
+  cli::cli_text()
 }
