@@ -31,13 +31,28 @@ remove_block_comments <- function(lns) {
   type <- stringi::stri_sub(txt, pos[, "start"], pos[, "end"])
   depth <- cumsum(ifelse(type == "/*", 1L, -1L))
 
-  # Well-formed iff depth never dips below 0 (no stray `*/`) and
-  # ends at 0 (no unclosed `/*`).
-  if (any(depth < 0L) || depth[length(depth)] != 0L) {
+  if (depth[length(depth)] != 0L) {
+    n_open <- sum(type == "/*")
+    n_close <- sum(type == "*/")
     cli::cli_abort(
       c(
         "Malformed comments.",
-        "x" = "{.code /*} and {.code */} are not paired correctly."
+        "x" = "Number of start {.code /*} and end {.code */} \\
+               delimiters are not equal.",
+        "i" = "Found {n_open} occurrence{?s} of {.code /*}.",
+        "i" = "Found {n_close} occurrence{?s} of {.code */}."
+      ),
+      class = "rextendr_error"
+    )
+  }
+
+  if (any(depth < 0L)) {
+    cli::cli_abort(
+      c(
+        "Malformed comments.",
+        "x" = "{.code /*} and {.code */} are not paired correctly.",
+        "i" = "This error may be caused by a code fragment like \\
+               {.code */ ... /*}."
       ),
       class = "rextendr_error"
     )

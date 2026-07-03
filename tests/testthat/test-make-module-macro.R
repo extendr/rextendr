@@ -75,20 +75,26 @@ test_that("Macro generation fails on invalid rust code", {
 test_that("Macro generation fails on invalid comments in code", {
   skip_if_cargo_unavailable()
 
-  # unclosed comment: three `/*` against one `*/`
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
     "Malformed comments."
   )
   expect_rextendr_error(
     make_module_macro("/*/*/**/"),
-    "not paired correctly"
+    "delimiters are not equal"
+  )
+  expect_rextendr_error(
+    make_module_macro("/*/*/**/"),
+    "Found 3 occurrences"
+  )
+  expect_rextendr_error(
+    make_module_macro("/*/*/**/"),
+    "Found 1 occurrence"
   )
 
-  # stray `*/` before any `/*`
   expect_rextendr_error(
     make_module_macro("*/  /*"),
-    "not paired correctly"
+    "This error may be caused by a code fragment like",
   )
 })
 
