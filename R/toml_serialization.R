@@ -123,7 +123,7 @@ format_toml.data.frame <- function(x, ..., .tbl_name, .top_level = FALSE) {
   for (i in seq_len(rows)) {
     item <- discard(
       as.list(x[i, , drop = FALSE]),
-      function(.x) is_na(.x) || is_null(unlist(.x))
+      \(.x) is_na(.x) || is_null(unlist(.x))
     )
     if (length(item) == 0L) {
       result[[i]] <- header

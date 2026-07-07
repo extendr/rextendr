@@ -12,18 +12,10 @@ find_exports <- function(clean_lns) {
     ))
   }
 
-  lns <- Map(
-    function(.x, .y) extract_meta(clean_lns[.x:.y]),
-    .x = start,
-    .y = end
-  )
+  lns <- map2(start, end, \(.x, .y) extract_meta(clean_lns[.x:.y])) |>
+    discard(\(.x) is.na(.x["impl"]) & is.na(.x["fn"])) |>
+    do.call(rbind, args = _)
 
-  lns <- Filter(
-    function(.x) !is.na(.x[["impl"]]) || !is.na(.x[["fn"]]),
-    lns
-  )
-
-  lns <- do.call(rbind, lns)
   lns[["type"]] <- ifelse(is.na(lns[["impl"]]), lns[["fn"]], lns[["impl"]])
   lns[c("name", "type", "lifetime")]
 }
