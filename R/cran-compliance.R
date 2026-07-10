@@ -97,12 +97,13 @@ vendor_crates <- function(
   res <- stringi::stri_match_first_regex(
     vendored,
     "Vendoring\\s([A-z0-9_][A-z0-9_-]*?)\\s[vV](.+?)(?=\\s)"
-  ) |>
-    as.data.frame() |>
-    rlang::set_names(c("source", "crate", "version")) |>
-    dplyr::filter(!is.na(source)) |>
-    dplyr::select(-source) |>
-    dplyr::arrange(.data$crate)
+  )
+
+  res <- rlang::set_names(as.data.frame(res), c("source", "crate", "version"))
+  res <- res[!is.na(res[["source"]]), ]
+  res[["source"]] <- NULL
+  res <- res[order(res[["crate"]]), ]
+  rownames(res) <- NULL
 
   # capture vendor-config.toml content
   config_toml <- vendor_res[["stdout"]] |>

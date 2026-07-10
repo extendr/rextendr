@@ -98,19 +98,6 @@ get_toml_missing_msg <- function() {
   "Missing arument and `NULL` are only allowed at the top level."
 }
 
-simplify_row <- function(row) {
-  result <- map_if(
-    row,
-    \(.x) is.list(.x) && !any(nzchar(names2(.x))),
-    \(.x) .x[1],
-    .else = identity
-  )
-  discard(
-    result,
-    \(.x) is_na(.x) || is_null(unlist(.x))
-  )
-}
-
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")
 
 #' @export
@@ -131,27 +118,24 @@ format_toml.data.frame <- function(x, ..., .tbl_name, .top_level = FALSE) {
   if (rows == 0L) {
     return(as.character(header))
   }
-  result <-
-    map(
-      seq_len(rows),
-      function(idx) {
-        item <- simplify_row(dplyr::slice(x, idx))
-        if (length(item) == 0L) {
-          result <- character(0)
-        } else {
-          result <- format_toml(
-            as.list(item),
-            ...,
-            .top_level = TRUE
-          )
-        }
-        if (!is_atomic(result)) {
-          result <- list_c(result)
-        }
 
-        c(header, result)
-      }
+  result <- vector("list", rows)
+  for (i in seq_len(rows)) {
+    item <- discard(
+      as.list(x[i, , drop = FALSE]),
+      \(.x) is_na(.x) || is_null(unlist(.x))
     )
+    if (length(item) == 0L) {
+      result[[i]] <- header
+    } else {
+      body <- format_toml(item, ..., .top_level = TRUE)
+      if (!is_atomic(body)) {
+        body <- list_c(body)
+      }
+      result[[i]] <- c(header, body)
+    }
+  }
+
   list_c(result)
 }
 

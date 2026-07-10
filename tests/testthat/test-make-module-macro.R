@@ -103,14 +103,11 @@ test_that("Rust code cleaning", {
   skip_if_cargo_unavailable()
 
   expect_equal(
-    fill_block_comments(c(
+    remove_block_comments(c(
       "Nested /*/* this is */ /*commented*/ out */",
       "/*/*/**/*/*/comments."
     )),
-    c(
-      "Nested                                     ",
-      "            comments."
-    )
+    c("Nested ", "comments.")
   )
 
   expect_equal(
