@@ -45,6 +45,11 @@
 <ul><li>The <code>Makevars.in</code> / <code>Makevars.win.in</code> templates installed by <code><a href="../reference/use_extendr.html">use_extendr()</a></code> now pass identical <code>RUSTFLAGS</code>, <code>@PANIC_EXPORTS@</code> (Unix), and <code>@PROFILE@</code> to both the <code>cargo build --lib</code> and <code>cargo run --bin document</code> invocations. Previously the second invocation ran with neither, which gave it a different fingerprint and caused <code>cargo</code> to rebuild every dependency from scratch on package install. (<a href="https://github.com/extendr/extendr/issues/1087" class="external-link">extendr/extendr#1087</a>)</li>
 <li>Moved from document.rs to document.c to avoid inflating package SHLIB size with linked dead code. (<a href="https://github.com/extendr/rextendr/pull/529" class="external-link">extendr/rextendr#529</a>) See also <a href="https://github.com/extendr/extendr/pull/1101" class="external-link">extendr/extendr#1101</a> and <a href="https://github.com/extendr/extendr/pull/1102" class="external-link">extendr/extendr#1102</a>.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
+<ul><li>
+<code>dplyr</code> has been removed as a dependency (<a href="https://github.com/extendr/rextendr/pull/530" class="external-link">#530</a>).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="rextendr-050">rextendr 0.5.0<a class="anchor" aria-label="anchor" href="#rextendr-050"></a></h2><p class="text-muted">CRAN release: 2026-04-18</p>
@@ -211,7 +216,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

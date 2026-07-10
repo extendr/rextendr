@@ -21,6 +21,11 @@
   and
   [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
 
+### Changed
+
+- `dplyr` has been removed as a dependency
+  ([\#530](https://github.com/extendr/rextendr/pull/530)).
+
 ## rextendr 0.5.0
 
 CRAN release: 2026-04-18
