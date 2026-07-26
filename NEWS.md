@@ -1,6 +1,11 @@
 # rextendr (development version)
 
 ## Fixed
+* The `Makevars.win.in` template now writes a `CACHEDIR.TAG` file into the
+  cargo target directory it creates. Because the directory was created before
+  cargo ran, cargo never wrote the tag itself, and recent cargo versions
+  refuse to `cargo clean` an untagged directory, which broke `rextendr::clean()`
+  on Windows.
 * The `Makevars.in` / `Makevars.win.in` templates installed by `use_extendr()`
   now pass identical `RUSTFLAGS`, `@PANIC_EXPORTS@` (Unix), and `@PROFILE@`
   to both the `cargo build --lib` and `cargo run --bin document` invocations.

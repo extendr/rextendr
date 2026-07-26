@@ -291,6 +291,10 @@
       	mkdir -p "$(TARGET_DIR)/libgcc_mock"
       	touch "$(TARGET_DIR)/libgcc_mock/libgcc_eh.a"
       
+        # Creating the target directory here means cargo skips writing CACHEDIR.TAG,
+        # without which `cargo clean` refuses to touch the directory.
+      	[ -f "$(TARGET_DIR)/CACHEDIR.TAG" ] || echo "Signature: 8a477f597d28d172789f06886806bc55" > "$(TARGET_DIR)/CACHEDIR.TAG"
+      
         # If a vendor directory exists, it is used for offline compilation. Otherwise if
         # vendor.tar.xz exists, it is unzipped and used for offline compilation.
       	if [ -d ./vendor ]; then \
