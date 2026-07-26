@@ -16,8 +16,11 @@ CARGOTMP = $(CURDIR)/.cargo
 VENDOR_DIR = vendor
 
 $(STATLIB):
-	mkdir -p "$(TARGET_DIR)/libgcc_mock"
-	touch "$(TARGET_DIR)/libgcc_mock/libgcc_eh.a"
+  # The mock lives outside the target directory: pre-creating $(TARGET_DIR)
+  # would keep cargo from writing its CACHEDIR.TAG marker there, and recent
+  # cargo versions refuse to `cargo clean` an untagged target directory.
+	mkdir -p "$(CARGOTMP)/libgcc_mock"
+	touch "$(CARGOTMP)/libgcc_mock/libgcc_eh.a"
 
   # If a vendor directory exists, it is used for offline compilation. Otherwise if
   # vendor.tar.xz exists, it is unzipped and used for offline compilation.
@@ -34,7 +37,7 @@ $(STATLIB):
 
 	# Build the project using Cargo with additional flags
 	export CARGO_HOME="$(CARGOTMP)" && \
-	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(TARGET_DIR)/libgcc_mock" && \
+	export LIBRARY_PATH="$(LIBRARY_PATH);$(CARGOTMP)/libgcc_mock" && \
 	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir="$(TARGET_DIR)"
 
 	# Generate wrappers using linked C executable

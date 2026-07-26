@@ -1,6 +1,11 @@
 # rextendr (development version)
 
 ## Fixed
+* The `libgcc_eh` mock in the `Makevars.win.in` template moved from the cargo
+  target directory to the temporary `.cargo` directory. Pre-creating the
+  target directory kept cargo from writing its `CACHEDIR.TAG` marker there,
+  and recent cargo versions refuse to `cargo clean` an untagged directory,
+  which broke `rextendr::clean()` on Windows.
 * The `Makevars.in` / `Makevars.win.in` templates installed by `use_extendr()`
   now pass identical `RUSTFLAGS`, `@PANIC_EXPORTS@` (Unix), and `@PROFILE@`
   to both the `cargo build --lib` and `cargo run --bin document` invocations.
