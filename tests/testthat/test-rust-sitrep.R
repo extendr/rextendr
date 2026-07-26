@@ -135,9 +135,9 @@ test_that("Detects host when default toolchain is not set", {
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
     if (cmd == "cargo") {
       NA_character_
-    } else if (cmd == "rustup" & all(args %in% "--version")) {
+    } else if (cmd == "rustup" && all(args %in% "--version")) {
       "rustup 1.0.0 (0000000 0000-00-00)"
-    } else if (cmd == "rustup" & all(args %in% "show")) {
+    } else if (cmd == "rustup" && all(args %in% "show")) {
       "Default host: arch-pc-os-tool"
     } else if (cmd == "rustc") {
       NA_character_

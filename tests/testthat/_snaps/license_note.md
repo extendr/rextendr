@@ -78,6 +78,13 @@
       
       -------------------------------------------------------------
       
+      Name:        syn
+      Repository:  https://github.com/dtolnay/syn
+      Authors:     David Tolnay
+      License:     MIT OR Apache-2.0
+      
+      -------------------------------------------------------------
+      
       Name:        unicode-ident
       Repository:  https://github.com/dtolnay/unicode-ident
       Authors:     David Tolnay

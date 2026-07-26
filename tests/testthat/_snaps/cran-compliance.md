@@ -29,5 +29,6 @@
       8           quote  *.*.*
       9        readonly  *.*.*
       10            syn *.*.*
-      11  unicode-ident  *.*.*
+      11            syn   *.*.*
+      12  unicode-ident  *.*.*
 
