@@ -288,9 +288,6 @@
       VENDOR_DIR = vendor
       
       $(STATLIB):
-        # The mock lives outside the target directory: pre-creating $(TARGET_DIR)
-        # would keep cargo from writing its CACHEDIR.TAG marker there, and recent
-        # cargo versions refuse to `cargo clean` an untagged target directory.
       	mkdir -p "$(CARGOTMP)/libgcc_mock"
       	touch "$(CARGOTMP)/libgcc_mock/libgcc_eh.a"
       
