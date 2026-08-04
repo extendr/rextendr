@@ -22,6 +22,9 @@ Useful links:
 
 Authors:
 
+- Kenneth Vernon <kenneth.b.vernon@gmail.com>
+  ([ORCID](https://orcid.org/0000-0003-0098-5092))
+
 - Claus O. Wilke <wilke@austin.utexas.edu>
   ([ORCID](https://orcid.org/0000-0002-7470-9261))
 
