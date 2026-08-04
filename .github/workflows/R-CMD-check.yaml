@@ -25,6 +25,9 @@ jobs:
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
           - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '44' }
 
+          - {os: windows-11-arm, r: 'release', rust-version: 'stable-msvc', rust-target: 'aarch64-pc-windows-gnullvm', rtools-version: '45' }
+
+
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
 
           - {os: ubuntu-latest,  r: 'release', rust-version: 'stable' }

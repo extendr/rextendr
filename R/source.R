@@ -769,6 +769,10 @@ get_specific_target_name <- function() {
   sysinf <- Sys.info()
 
   if (!rlang::is_null(sysinf) && sysinf["sysname"] == "Windows") {
+    if (R.version$arch == "aarch64") {
+      return("aarch64-pc-windows-gnullvm")
+    }
+
     if (R.version$arch == "x86_64") {
       return("x86_64-pc-windows-gnu")
     }

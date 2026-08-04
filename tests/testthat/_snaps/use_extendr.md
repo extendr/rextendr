@@ -270,7 +270,7 @@
     Code
       cat_file("src", "Makevars.win.in")
     Output
-      TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+      TARGET = @WINDOWS_TARGET@
       
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/$(TARGET)/@LIBDIR@
