@@ -95,7 +95,7 @@ make_header <- function(nm, arg) {
 
 get_toml_err_msg <- function() "Object cannot be serialized."
 get_toml_missing_msg <- function() {
-  "Missing arument and `NULL` are only allowed at the top level."
+  "Missing argument and `NULL` are only allowed at the top level."
 }
 
 format_toml <- function(x, ..., .top_level = FALSE) UseMethod("format_toml")

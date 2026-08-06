@@ -43,7 +43,7 @@ register_extendr <- function(
 #' @param package_name The name of the package.
 #' @param outfile Determines where to write wrapper code.
 #' @param path Path from which package root is looked up. Used for message formatting.
-#' @param use_symbols Logical, indicating wether to add additional symbol information to
+#' @param use_symbols Logical, indicating whether to add additional symbol information to
 #' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
 #' while `TRUE` is used to make wrappers for dynamically generated libraries using
 #' [`rust_source`], [`rust_function`], etc.

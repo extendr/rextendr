@@ -151,7 +151,7 @@ rustup_toolchain_target <- function() {
 #'
 #' If a toolchain with architecture matching host's is default, color it green.
 #' If a default toolchain does not match host's architecture, color it red.
-#' Color yellow all toolchains that match hots's architecutre and return then as \code{$candidate_toolchains}.
+#' Color yellow all toolchains that match hots's architecture and return then as \code{$candidate_toolchains}.
 #' If not matching toolchain is found, determine the best candidate using host's architecture
 #' and return it as \code{$missing_toolchain}.#'
 #' @param toolchains A character vector of toolchains

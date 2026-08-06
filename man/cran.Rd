@@ -6,7 +6,7 @@
 \description{
 R packages developed using extendr are not immediately ready to
 be published to CRAN. The extendr package template ensures that
-CRAN publication is (farily) painless.
+CRAN publication is (fairly) painless.
 }
 \section{CRAN requirements}{
 
