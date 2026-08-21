@@ -236,9 +236,11 @@
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
-      	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR
-      	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT)
+      	if [ -n "$$ROXYGEN_PKG" ]; then \
+      		$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR && \
+      		./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R && \
+      		rm -f $(DOCUMENT); \
+      	fi
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
@@ -310,9 +312,11 @@
       	RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir="$(TARGET_DIR)"
       
       	# Generate wrappers using linked C executable
-      	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/bin$(R_ARCH)" -lR
-      	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT)
+      	if [ -n "$$ROXYGEN_PKG" ]; then \
+      		$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/bin$(R_ARCH)" -lR && \
+      		./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R && \
+      		rm -f $(DOCUMENT); \
+      	fi
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
@@ -517,9 +521,11 @@
       	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
       	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir="$(TARGET_DIR)" @TARGET@
       
-      	$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR
-      	./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R
-      	rm -f $(DOCUMENT)
+      	if [ -n "$$ROXYGEN_PKG" ]; then \
+      		$(CC) -o $(DOCUMENT) rust/document.c $(PKG_LIBS) -L"$(R_HOME)/lib$(R_ARCH)" -lR && \
+      		./$(DOCUMENT) $(R_PACKAGE_NAME) ../R/extendr-wrappers.R && \
+      		rm -f $(DOCUMENT); \
+      	fi
       
       	# Always clean up CARGOTMP
       	rm -Rf "$(CARGOTMP)";
