@@ -32,7 +32,9 @@ use_vscode <- function(quiet = FALSE, overwrite = NULL) {
   )
 
   if (file.exists(settings_path) && isFALSE(overwrite)) {
-    if (!quiet) message("Updating existing .vscode/settings.json")
+    if (!quiet) {
+      message("Updating existing .vscode/settings.json")
+    }
 
     # settings.json accepts trailing commas before braces and brackets and {jsonlite} doesn't dig that
     tryCatch(

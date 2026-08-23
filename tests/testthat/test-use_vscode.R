@@ -35,7 +35,11 @@ test_that("overwrite = TRUE replaces existing settings.json", {
 
   use_vscode(quiet = TRUE, overwrite = TRUE)
   # corrupt the file
-  jsonlite::write_json(list(foo = "bar"), file.path(".vscode", "settings.json"), auto_unbox = TRUE)
+  jsonlite::write_json(
+    list(foo = "bar"),
+    file.path(".vscode", "settings.json"),
+    auto_unbox = TRUE
+  )
   use_vscode(quiet = TRUE, overwrite = TRUE)
 
   settings2 <- jsonlite::read_json(file.path(".vscode", "settings.json"))

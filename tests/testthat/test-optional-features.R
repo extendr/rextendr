@@ -25,7 +25,9 @@ test_that("Feature 'ndarray' is enabled when 'extendr-api' has features enabled"
   rust_source(
     file = input,
     features = "ndarray",
-    extendr_deps = list(`extendr-api` = list(version = "*", features = array("serde")))
+    extendr_deps = list(
+      `extendr-api` = list(version = "*", features = array("serde"))
+    )
   )
 
   data <- matrix(runif(100L), 25)
@@ -39,7 +41,10 @@ test_that("Enable multiple features simultaneously", {
   skip_if_cargo_unavailable()
   skip_on_cran()
 
-  rust_function("fn test_multiple_features() {}", features = c("ndarray", "serde", "graphics"))
+  rust_function(
+    "fn test_multiple_features() {}",
+    features = c("ndarray", "serde", "graphics")
+  )
   expect_no_error(test_multiple_features())
 })
 

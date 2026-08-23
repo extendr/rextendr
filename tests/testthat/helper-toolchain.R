@@ -17,7 +17,8 @@ if (!is.null(toolchain) && nzchar(toolchain)) {
 patch <- Sys.getenv("REXTENDR_PATCH_CRATES_IO")
 if (!is.null(patch) && nzchar(patch)) {
   patch_val <- gsub(
-    "([a-zA-Z0-9_\\-\\.]+)(?=\\s*=)", "`\\1`",
+    "([a-zA-Z0-9_\\-\\.]+)(?=\\s*=)",
+    "`\\1`",
     patch,
     perl = TRUE
   )
