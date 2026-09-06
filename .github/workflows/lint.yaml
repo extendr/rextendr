@@ -23,7 +23,7 @@ jobs:
 
       - uses: etiennebacher/setup-jarl@v0.1.1
         with:
-          src: "./R"
+          src: "R/* tests/testthat/*"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
 # Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
@@ -36,4 +36,4 @@ jobs:
         uses: posit-dev/setup-air@v1
 
       - name: Check
-        run: air format R/ --check
+        run: air format --check R/* tests/*
