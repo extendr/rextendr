@@ -1,3 +1,7 @@
 [lint]
 default-exclude = true
-exclude = ["R/standalone-purrr.R"]
+exclude = [
+  "R/import-standalone-obj-type.R",
+  "R/import-standalone-types-check.R",
+  "R/standalone-purrr.R",
+]
