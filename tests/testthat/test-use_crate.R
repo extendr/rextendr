@@ -24,7 +24,6 @@ test_that("use_crate() adds dependency to package or workspace", {
   expect_equal(dependency[["name"]], "serde")
   expect_equal(dependency[["features"]][[1]], "derive")
   expect_equal(dependency[["req"]], "^1.0.1")
-
 })
 
 test_that("use_crate() errors when user passes git and version arguments", {

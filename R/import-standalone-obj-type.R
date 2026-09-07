@@ -133,7 +133,8 @@ vec_or_scalar_type_friendly <- function(x, value) {
     return(paste(what, number))
   }
 
-  switch(typeof(x),
+  switch(
+    typeof(x),
     logical = if (x) "`TRUE`" else "`FALSE`",
     character = {
       what <- if (nzchar(x)) "the string" else "the empty string"
@@ -145,7 +146,8 @@ vec_or_scalar_type_friendly <- function(x, value) {
 }
 
 .match_default_scalar <- function(x) {
-  switch(typeof(x),
+  switch(
+    typeof(x),
     logical = "a logical value",
     integer = "an integer",
     double = if (is.infinite(x)) .show_infinities(x) else "a number",
@@ -157,15 +159,15 @@ vec_or_scalar_type_friendly <- function(x, value) {
 }
 
 .match_na_scalar <- function(x) {
-  switch(typeof(x),
+  switch(
+    typeof(x),
     logical = "`NA`",
     integer = "an integer `NA`",
-    double =
-      if (is.nan(x)) {
-        "`NaN`"
-      } else {
-        "a numeric `NA`"
-      },
+    double = if (is.nan(x)) {
+      "`NaN`"
+    } else {
+      "a numeric `NA`"
+    },
     complex = "a complex `NA`",
     character = "a character `NA`",
     .rlang_stop_unexpected_typeof(x)
@@ -173,7 +175,8 @@ vec_or_scalar_type_friendly <- function(x, value) {
 }
 
 .match_empty_object <- function(x) {
-  switch(typeof(x),
+  switch(
+    typeof(x),
     logical = "an empty logical vector",
     integer = "an empty integer vector",
     double = "an empty numeric vector",
@@ -235,7 +238,8 @@ vec_type_friendly <- function(x, length = FALSE) {
 }
 
 .get_message_pattern <- function(type) {
-  switch(type,
+  switch(
+    type,
     logical = "a logical %s",
     integer = "an integer %s",
     numeric = ,
@@ -248,7 +252,8 @@ vec_type_friendly <- function(x, length = FALSE) {
 }
 
 .rlang_as_friendly_type <- function(type) {
-  switch(type,
+  switch(
+    type,
     list = "a list",
     NULL = "`NULL`",
     environment = "an environment",
@@ -312,14 +317,16 @@ obj_type_oo <- function(x) {
 #' @param ... Arguments passed to [abort()].
 #' @inheritParams args_error_context
 #' @noRd
-stop_input_type <- function(x,
-                            what,
-                            ...,
-                            allow_na = FALSE,
-                            allow_null = FALSE,
-                            show_value = TRUE,
-                            arg = rlang::caller_arg(x),
-                            call = rlang::caller_env()) {
+stop_input_type <- function(
+  x,
+  what,
+  ...,
+  allow_na = FALSE,
+  allow_null = FALSE,
+  show_value = TRUE,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
   # From standalone-cli.R
   cli <- rlang::env_get_list(
     nms = c("format_arg", "format_code"),

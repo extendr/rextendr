@@ -1,3 +1,5 @@
+set default-list
+
 export TERM_PROGRAM := ""
 export VSCODE_PID := ""
 export VSCODE_CWD := ""
@@ -14,26 +16,26 @@ export POSITRON_LONG_VERSION := ""
 export POSITRON_MODE := ""
 export POSITRON_VERSION := ""
 
-default:
-  just --list
+check:
+    R --quiet -e "devtools::check()"
 
-check: 
-  R --quiet -e "devtools::check()"
-
-test: 
-  R --quiet -e "devtools::test()"
+test:
+    R --quiet -e "devtools::test()"
 
 update-snaps:
-  R --quiet -e "testthat::snapshot_accept()"
+    R --quiet -e "testthat::snapshot_accept()"
 
-lint: 
-  jarl check R/ 
+lint:
+    jarl check R/* tests/testthat/*
+    air format --check R/* tests/*
 
-lint-fix: 
-  jarl check R/ -f 
+lint-fix:
+    jarl check R/* -f 
 
-fmt:
-  air format R/
+alias fmt := format
+format:
+    air format R/* tests/*
 
-doc:
-  R --quiet -e "devtools::document()"
+alias doc := document
+document:
+    R --quiet -e "devtools::document()"

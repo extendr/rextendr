@@ -131,7 +131,6 @@ test_that("Required target is not available", {
 })
 
 test_that("Detects host when default toolchain is not set", {
-
   local_mocked_bindings(try_exec_cmd = function(cmd, args) {
     if (cmd == "cargo") {
       NA_character_
