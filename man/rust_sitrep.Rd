@@ -7,7 +7,7 @@
 rust_sitrep()
 }
 \value{
-Nothing
+NULL (invisibly)
 }
 \description{
 Prints out a detailed report on the state of Rust infrastructure on the host machine.

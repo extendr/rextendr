@@ -2,7 +2,7 @@
 #'
 #' Prints out a detailed report on the state of Rust infrastructure on the host machine.
 #' @export
-#' @return Nothing
+#' @return NULL (invisibly)
 rust_sitrep <- function() {
   cargo_v <- get_version("cargo")
   cargo_msg <- if (is.na(cargo_v)) {
@@ -82,8 +82,6 @@ rust_sitrep <- function() {
   }
 
   cli::cli_inform(msgs)
-
-  invisible(NULL)
 }
 
 get_version <- function(cmd) {
