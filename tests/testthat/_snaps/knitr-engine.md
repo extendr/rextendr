@@ -103,7 +103,7 @@
           x + 1.0
       }
       #> error[E0369]: cannot add `{float}` to `&str`
-      #>  --> src\lib.rs:4:7
+      #>  --> src/lib.rs:4:7
       #>   |
       #> 4 |     x + 1.0
       #>   |     - ^ --- {float}

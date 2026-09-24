@@ -34,7 +34,9 @@ test_that("Snapshot test of knitr-engine", {
   knitr::knit(input, output)
   expect_snapshot(
     cat_file(output),
-    transform = \(x) gsub("rextendr\\d+", "rextendr", x)
+    transform = \(x) {
+      gsub("rextendr\\d+", "rextendr", sub("(--> src)\\\\", "\\1/", x))
+    }
   )
 })
 
