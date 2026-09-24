@@ -1,5 +1,8 @@
 # rextendr (development version)
 
+## Added
+* knitr engines now print compile errors if chunk option `error = TRUE` ([#546](https://github.com/extendr/rextendr/pull/546))
+
 ## Fixed
 * The `libgcc_eh` mock in the `Makevars.win.in` template moved from the cargo
   target directory to the temporary `.cargo` directory. Pre-creating the
@@ -18,7 +21,6 @@
   and [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
 
 ## Changed
-
 * `dplyr` has been removed as a dependency ([#530](https://github.com/extendr/rextendr/pull/530)).
 
 # rextendr 0.5.0
