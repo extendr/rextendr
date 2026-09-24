@@ -82,3 +82,16 @@ The quick *brown fox* jumps over the lazy dog."
 
 md_to_html(md_text)
 ```
+
+Print compilation errors if chunk option `error = TRUE`.
+
+```{extendrsrc error = TRUE}
+#[extendr]
+fn add_one(x: &str) -> f64 {
+    x + 1.0
+}
+```
+
+```{r error = TRUE}
+add_one(2.3)
+```
