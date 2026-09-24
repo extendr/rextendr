@@ -48,8 +48,19 @@ eng_impl <- function(options, extendr_engine) {
   }
 
   cli::cli_alert_success("Compiling Rust extendr code chunk...")
-  compiled_code <- do.call(extendr_engine, c(list(code = code), opts))
+  compiled_code <- rlang::try_fetch(
+    do.call(extendr_engine, c(list(code = code), opts)),
+    system_command_status_error = function(cnd) {
+      if (!isTRUE(options$error)) {
+        rlang::cnd_signal(cnd)
+      }
+      cnd
+    }
+  )
 
+  out <- ""
+
+  # if compilation succeeded (and code should be evaluated)
   if (isTRUE(options$eval) && rlang::is_function(compiled_code)) {
     cli::cli_alert_success("Evaluating Rust extendr code chunk...")
 
@@ -61,8 +72,11 @@ eng_impl <- function(options, extendr_engine) {
         print(result$value)
       }
     })
-  } else {
-    out <- ""
+  }
+
+  # if compilation failed (and error message should be printed)
+  if (rlang::inherits_any(compiled_code, "system_command_status_error")) {
+    out <- cli::ansi_strip(compiled_code$stderr)
   }
 
   options$engine <- "rust" # wrap up source code in rust syntax
