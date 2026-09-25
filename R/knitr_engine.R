@@ -27,7 +27,7 @@ eng_impl <- function(options, extendr_engine) {
 
   # default chunk output
   out <- ""
-
+  # skip compilation when eval is false
   if (isFALSE(options$eval)) {
     return(knitr::engine_output(options, code_out, out))
   }
