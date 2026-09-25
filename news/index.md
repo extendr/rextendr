@@ -6,6 +6,8 @@
 
 - knitr engines now print compile errors if chunk option `error = TRUE`
   ([\#546](https://github.com/extendr/rextendr/pull/546))
+- knitr engines now return early rather than compiling when
+  `eval = FALSE` ([\#548](https://github.com/extendr/rextendr/pull/548))
 
 ### Fixed
 
