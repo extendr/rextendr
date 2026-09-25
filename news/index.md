@@ -2,6 +2,11 @@
 
 ## rextendr (development version)
 
+### Added
+
+- knitr engines now print compile errors if chunk option `error = TRUE`
+  ([\#546](https://github.com/extendr/rextendr/pull/546))
+
 ### Fixed
 
 - The `libgcc_eh` mock in the `Makevars.win.in` template moved from the
