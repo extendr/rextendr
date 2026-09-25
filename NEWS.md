@@ -3,6 +3,7 @@
 ## Added
 * knitr engines now print compile errors if chunk option `error = TRUE` ([#546](https://github.com/extendr/rextendr/pull/546))
 * knitr engines now return early rather than compiling when `eval = FALSE` ([#548](https://github.com/extendr/rextendr/pull/548))
+* improved documentation for the knitr engine ([#549](https://github.com/extendr/rextendr/pull/549))
 
 ## Fixed
 * The `libgcc_eh` mock in the `Makevars.win.in` template moved from the cargo

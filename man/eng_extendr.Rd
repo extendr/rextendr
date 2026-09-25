@@ -20,3 +20,24 @@ Two knitr engines that enable code chunks of type \code{extendr} (individual Rus
 statements to be evaluated via \code{\link[=rust_eval]{rust_eval()}}) and \code{extendrsrc} (Rust functions
 or classes that will be exported to R via \code{\link[=rust_source]{rust_source()}}).
 }
+\details{
+Both engines support the following chunk options:
+\itemize{
+\item \code{preamble}: A character vector of chunk labels. The code from those chunks
+is placed before the current chunk's code, in the order given, and the
+combined code is compiled as a single unit. Only the current chunk's code
+is shown in the output. This is useful for splitting Rust code across
+several chunks, for example defining helper functions in one chunk
+(typically with \code{eval = FALSE}) and calling them in another. Unlike
+knitr's \code{ref.label} option, which shows the reused code in the rendered
+document, \code{preamble} adds the code to the compile unit without displaying
+it. See \code{vignette("rmarkdown", package = "rextendr")} for an example.
+\item \code{engine.opts}: A list of arguments passed to \code{\link[=rust_eval]{rust_eval()}} (for \code{extendr})
+or \code{\link[=rust_source]{rust_source()}} (for \code{extendrsrc}), e.g.
+\code{engine.opts = list(dependencies = list(rand = "0.8"))}. The \code{env} argument
+defaults to \code{\link[knitr:knit_global]{knitr::knit_global()}}.
+\item \code{eval}: If \code{FALSE}, the code is displayed but not compiled.
+\item \code{error}: If \code{TRUE}, a compilation error is shown in the document instead of
+stopping the render.
+}
+}
