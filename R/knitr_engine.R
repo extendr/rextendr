@@ -16,37 +16,40 @@ eng_extendrsrc <- function(options) {
   eng_impl(options, rust_source)
 }
 
-
 eng_impl <- function(options, extendr_engine) {
-  if (!requireNamespace("knitr", quietly = TRUE)) {
-    cli::cli_abort(
-      "The {.pkg knitr} package is required to run the extendr chunk engine.",
-      class = "rextendr_error"
-    )
+  rlang::check_installed("knitr")
+
+  # code to output to html
+  code_out <- glue_collapse(options$code, sep = "\n")
+
+  # wrap up source code in rust syntax
+  options$engine <- "rust"
+
+  # default chunk output
+  out <- ""
+  # skip compilation when eval is false
+  if (isFALSE(options$eval)) {
+    return(knitr::engine_output(options, code_out, out))
   }
 
-  if (!is.null(options$preamble)) {
-    code <- c(
-      lapply(options$preamble, function(x) knitr::knit_code$get(x)),
-      recursive = TRUE
-    )
-    code <- c(code, options$code)
+  # code to compile
+  if (!rlang::is_null(options$preamble)) {
+    code <- c(unlist(knitr::knit_code$get(options$preamble)), options$code)
   } else {
     code <- options$code
   }
-
-  code <- glue_collapse(code, sep = "\n") # code to compile
-  code_out <- glue_collapse(options$code, sep = "\n") # code to output to html
+  code <- glue_collapse(code, sep = "\n")
 
   # engine.opts is a list of arguments to be passed to rust_eval, e.g.
   # engine.opts = list(dependencies = list(`pulldown-cmark` = "0.8"))
   opts <- options$engine.opts
 
-  if (!is.environment(opts$env)) {
-    # default env is knit_global()
+  # default env is knit_global()
+  if (!rlang::is_environment(opts$env)) {
     opts$env <- knitr::knit_global()
   }
 
+  # try to compile
   cli::cli_alert_success("Compiling Rust extendr code chunk...")
   compiled_code <- rlang::try_fetch(
     do.call(extendr_engine, c(list(code = code), opts)),
@@ -58,12 +61,9 @@ eng_impl <- function(options, extendr_engine) {
     }
   )
 
-  out <- ""
-
   # if compilation succeeded (and code should be evaluated)
-  if (isTRUE(options$eval) && rlang::is_function(compiled_code)) {
+  if (rlang::is_function(compiled_code)) {
     cli::cli_alert_success("Evaluating Rust extendr code chunk...")
-
     out <- utils::capture.output({
       result <- withVisible(
         compiled_code()
@@ -79,6 +79,5 @@ eng_impl <- function(options, extendr_engine) {
     out <- cli::ansi_strip(compiled_code$stderr)
   }
 
-  options$engine <- "rust" # wrap up source code in rust syntax
   knitr::engine_output(options, code_out, out)
 }

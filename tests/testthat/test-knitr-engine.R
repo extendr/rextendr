@@ -66,3 +66,15 @@ test_that("knitr-engine surfaces cargo errors", {
   options$error <- FALSE
   expect_error(eng_extendrsrc(options), class = "system_command_status_error")
 })
+
+test_that("knitr-engine does not compile when eval = FALSE", {
+  skip_if_not_installed("knitr")
+
+  options <- knitr::opts_chunk$merge(list(
+    code = "not valid rust",
+    eval = FALSE
+  ))
+
+  expect_equal(eng_extendr(options), "not valid rust")
+  expect_equal(eng_extendrsrc(options), "not valid rust")
+})
