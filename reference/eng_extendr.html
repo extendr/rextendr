@@ -68,6 +68,25 @@ or classes that will be exported to R via <code><a href="rust_source.html">rust_
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A character string representing the engine output.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Both engines support the following chunk options:</p><ul><li><p><code>preamble</code>: A character vector of chunk labels. The code from those chunks
+is placed before the current chunk's code, in the order given, and the
+combined code is compiled as a single unit. Only the current chunk's code
+is shown in the output. This is useful for splitting Rust code across
+several chunks, for example defining helper functions in one chunk
+(typically with <code>eval = FALSE</code>) and calling them in another. Unlike
+knitr's <code>ref.label</code> option, which shows the reused code in the rendered
+document, <code>preamble</code> adds the code to the compile unit without displaying
+it. See <code><a href="../articles/rmarkdown.html">vignette("rmarkdown", package = "rextendr")</a></code> for an example.</p></li>
+<li><p><code>engine.opts</code>: A list of arguments passed to <code><a href="rust_eval.html">rust_eval()</a></code> (for <code>extendr</code>)
+or <code><a href="rust_source.html">rust_source()</a></code> (for <code>extendrsrc</code>), e.g.
+<code>engine.opts = list(dependencies = list(rand = "0.8"))</code>. The <code>env</code> argument
+defaults to <code><a href="https://rdrr.io/pkg/knitr/man/knit_global.html" class="external-link">knitr::knit_global()</a></code>.</p></li>
+<li><p><code>eval</code>: If <code>FALSE</code>, the code is displayed but not compiled.</p></li>
+<li><p><code>error</code>: If <code>TRUE</code>, a compilation error is shown in the document instead of
+stopping the render.</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -8,6 +8,8 @@
   ([\#546](https://github.com/extendr/rextendr/pull/546))
 - knitr engines now return early rather than compiling when
   `eval = FALSE` ([\#548](https://github.com/extendr/rextendr/pull/548))
+- improved documentation for the knitr engine
+  ([\#549](https://github.com/extendr/rextendr/pull/549))
 
 ### Fixed
 
