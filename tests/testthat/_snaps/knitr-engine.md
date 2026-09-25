@@ -93,4 +93,31 @@
       md_to_html(md_text)
       #> [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog.\nThe quick <em>brown fox</em> jumps over the lazy dog.</p>\n"
       ```
+      
+      Print compilation errors if chunk option `error = TRUE`.
+      
+      
+      ``` rust
+      #[extendr]
+      fn add_one(x: &str) -> f64 {
+          x + 1.0
+      }
+      #> error[E0369]: cannot add `{float}` to `&str`
+      #>  --> src/lib.rs:4:7
+      #>   |
+      #> 4 |     x + 1.0
+      #>   |     - ^ --- {float}
+      #>   |     |
+      #>   |     &str
+      #> 
+      #> For more information about this error, try `rustc --explain E0369`.
+      #> error: could not compile `rextendr` (lib) due to 1 previous error
+      ```
+      
+      
+      ``` r
+      add_one(2.3)
+      #> Error in `add_one()`:
+      #> ! could not find function "add_one"
+      ```
 

@@ -347,6 +347,7 @@ rust_source <- function(
     sprintf("+%s", opts[["toolchain"]]),
     "build",
     "--lib",
+    if (!echo) "--quiet",
     sprintf("--target=%s", specific_target),
     sprintf("--manifest-path=%s", file.path(the$build_dir, "Cargo.toml")),
     sprintf("--target-dir=%s", file.path(the$build_dir, "target")),
