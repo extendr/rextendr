@@ -1,19 +1,24 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<!-- README.md is generated from README.qmd. Please edit that file -->
 
 # Call Rust code from R <img width="120px" alt="rextendr logo" align="right" src="man/figures/rextendr-logo.png">
 
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
+status](https://www.r-pkg.org/badges/version/rextendr.png)](https://CRAN.R-project.org/package=rextendr)
 [![rextendr status
-badge](https://extendr.r-universe.dev/badges/rextendr)](https://extendr.r-universe.dev/rextendr)
+badge](https://extendr.r-universe.dev/badges/rextendr.png)](https://extendr.r-universe.dev/rextendr)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R build
 status](https://github.com/extendr/rextendr/workflows/R-CMD-check/badge.svg)](https://github.com/extendr/rextendr/actions)
 <!-- badges: end -->
+
+The `rextendr` package supports developers who want to build R packages
+that call Rust code with [extendr](https://github.com/extendr/extendr).
+See the [documentation](https://extendr.rs/) for more details.
 
 ## Installation
 
@@ -33,7 +38,10 @@ You can also install `{rextendr}` from
 [r-universe](https://extendr.r-universe.dev/rextendr):
 
 ``` r
-install.packages("rextendr", repos = c("https://extendr.r-universe.dev", "https://cloud.r-project.org"))
+install.packages(
+  "rextendr",
+  repos = c("https://extendr.r-universe.dev", "https://cloud.r-project.org")
+)
 ```
 
 Latest development version can be installed from GitHub:
@@ -43,11 +51,14 @@ remotes::install_github("extendr/rextendr")
 ```
 
 To execute Rust code, you will also need to set up a working Rust
-toolchain. See the [installation instructions for
-libR-sys](https://github.com/extendr/libR-sys) for help. If you can
-successfully build libR-sys you’re good.
+toolchain. See the [installation
+guide](https://extendr.rs/get-started.html) for help.
 
 ## Usage
+
+``` r
+library(rextendr)
+```
 
 ### Sitrep
 
@@ -100,8 +111,6 @@ rust_sitrep()
 Basic use example:
 
 ``` r
-library(rextendr)
-
 # create a Rust function
 rust_function("fn add(a:f64, b:f64) -> f64 { a + b }")
 
@@ -113,10 +122,7 @@ add(2.5, 4.7)
 Something more sophisticated:
 
 ``` r
-library(rextendr)
-
 # Rust function that computes a sum of integer or double vectors, preserving the type
-
 rust_function(
   "fn get_sum(x : Either<Integers, Doubles>) -> Either<Rint, Rfloat> {
       match x {
@@ -125,7 +131,7 @@ rust_function(
       }
   }",
   use_dev_extendr = TRUE, # Use development version of extendr from GitHub
-  features = "either", # Enable support for Either crate
+  features = "either" # Enable support for Either crate
 )
 
 x <- 1:5
@@ -174,6 +180,66 @@ let z = x*y;
 z
 #> Hello from Rust!
 #> [1] 35
+```
+
+### Project scaffolding
+
+To setup a project with extendr scaffolding, first initialize an R
+package directory with `usethis::create_package()`. Then navigate to
+that directory and call `rextendr::use_extendr()`.
+
+``` r
+usethis::create_package("helloextendr")
+
+rextendr::use_extendr()
+# ✔ Setting active project to "./helloextendr".
+# ℹ First time using rextendr. Upgrading automatically...
+# ℹ Setting `Config/rextendr/version` to "0.5.0" in the DESCRIPTION file.
+# ℹ Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc >= 1.65.0, xz" in the DESCRIPTION file.
+# ✔ Creating src/rust/src.
+# ✔ Writing src/entrypoint.c.
+# ✔ Writing src/Makevars.in.
+# ✔ Writing src/Makevars.win.in.
+# ✔ Writing cleanup.
+# ✔ Writing cleanup.win.
+# ✔ Writing src/.gitignore.
+# ✔ Writing src/rust/Cargo.toml.
+# ✔ Writing src/rust/src/lib.rs.
+# ✔ Writing src/hellowworld-win.def.
+# ✔ Writing R/extendr-wrappers.R
+# ✔ Writing tools/document.R.
+# ✔ Writing tools/msrv.R.
+# ✔ Writing tools/config.R.
+# ✔ Writing configure.
+# ✔ Writing configure.win.
+# ✔ Adding "^\\.vscode$" to .Rbuildignore.
+# ✔ Writing .vscode/settings.json.
+# ✔ Adding R to Depends field in DESCRIPTION.
+# ✔ Adding "^src/\\.cargo$" to .Rbuildignore.
+# ✔ Adding "^src/rust/vendor$" to .Rbuildignore.
+# ✔ Adding "src/rust/vendor" to .gitignore.
+# ✔ Adding "^src/rust/target$" to .Rbuildignore.
+# ✔ Adding "^src/Makevars$" to .Rbuildignore.
+# ✔ Adding "src/Makevars" to .gitignore.
+# ✔ Adding "^src/Makevars\\.win$" to .Rbuildignore.
+# ✔ Adding "src/Makevars.win" to .gitignore.
+# ✔ Finished configuring extendr for package hellowworld.
+# • Please run `devtools::document()` for changes to take effect.
+# ℹ Call `use_extendr_badge()` to add an extendr badge to your README
+```
+
+The content of the output is pretty lengthy, showing all the scaffolding
+files that are generated, along with the initiated Rust project in
+`src/rust/`. Some of this may change as we update and improve extendr
+tools, but the main thing to here is that `devtools::document()` is
+sufficient to compile the hello-world example that `lib.rs` contains by
+default, generate the necessary wrappers, and build the R package. Then
+`devtools::load_all()` will make them available in your current R
+session.
+
+``` r
+hello("world")
+# [1] "Hello world!"
 ```
 
 ## See also
