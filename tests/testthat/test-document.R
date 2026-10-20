@@ -142,3 +142,31 @@ test_that("devtools::document() works for paths with spaces", {
 
   expect_true(file.exists(lib_file))
 })
+
+test_that("devtools::document() does not re-compile an unchanged crate", {
+  skip_if_not_installed("usethis")
+  skip_if_not_installed("devtools")
+  skip_on_cran()
+  skip_if_cargo_unavailable()
+
+  path <- local_package("testPackage")
+  use_extendr()
+  devtools::document()
+
+  static_lib <- list.files(
+    file.path(path, "src", "rust", "target"),
+    pattern = "^libtestPackage\\.a$",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+  expect_gt(length(static_lib), 0)
+  before <- file.mtime(static_lib)
+
+  # trick pkgbuild into thinking everything was updated since last build
+  dll <- file.path(path, "src", paste0("testPackage", .Platform$dynlib.ext))
+  Sys.setFileTime(dll, Sys.time() - 3600)
+
+  # now check to see if cargo re-compiles
+  devtools::document()
+  expect_equal(file.mtime(static_lib), before)
+})
