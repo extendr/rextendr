@@ -36,6 +36,8 @@
   [extendr/extendr#1101](https://github.com/extendr/extendr/pull/1101)
   and
   [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
+- Moved from document.c to document.R to avoid having to compile C
+  executable. [\#552](https://github.com/extendr/rextendr/pull/552)
 
 ### Changed
 
