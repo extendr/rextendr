@@ -40,7 +40,7 @@
 #'   `extendr-api` dependency, and release profile settings.
 #' - `src/rust/src/lib.rs`: Main Rust library with an example `hello("world")`
 #'   function and the `extendr_module!` macro.
-#' - `src/rust/document.c`: a C binary that writes `R/extendr-wrappers.R`
+#' - `tools/document.R`: an R script that writes `R/extendr-wrappers.R`
 #'   by introspecting exported function metadata at build time.
 #' - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV in
 #'   `DESCRIPTION`.
@@ -255,14 +255,6 @@ use_extendr <- function(
   )
 
   use_rextendr_template(
-    "document.c",
-    save_as = file.path("src", "rust", "document.c"),
-    quiet = quiet,
-    overwrite = overwrite,
-    data = list(mod_name = mod_name)
-  )
-
-  use_rextendr_template(
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
     quiet = quiet,
@@ -274,6 +266,14 @@ use_extendr <- function(
   if (!dir.exists("tools")) {
     dir.create("tools")
   }
+
+  use_rextendr_template(
+    "document.R",
+    save_as = file.path("tools", "document.R"),
+    quiet = quiet,
+    overwrite = overwrite,
+    data = list(mod_name = mod_name)
+  )
 
   # add msrv.R template
   use_rextendr_template(

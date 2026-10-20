@@ -16,7 +16,7 @@
 #'   - `src/Makevars.win.in`
 #'   - `cleanup`
 #'   - `cleanup.win`
-#'   - `src/rust/document.c`
+#'   - `tools/document.R`
 #'   - `tools/msrv.R`
 #'   - `tools/config.R`
 #'   - `configure`
@@ -119,8 +119,8 @@ update_scaffold <- function(
   )
 
   use_rextendr_template(
-    "document.c",
-    save_as = file.path("src", "rust", "document.c"),
+    "document.R",
+    save_as = file.path("tools", "document.R"),
     quiet = quiet,
     overwrite = TRUE,
     data = list(mod_name = mod_name)
