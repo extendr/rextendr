@@ -22,6 +22,8 @@
 #'   - `configure`
 #'   - `configure.win`
 #'
+#'   Note that deprecated scaffolding files are also deleted.
+#'
 #'   After updating these files, `update_scaffold()` will print a message that
 #'   explains what to do next to get your package up-to-date with the latest
 #'   versions of extendr and rextendr (provided `quiet = FALSE`, anyway). That
@@ -154,6 +156,9 @@ update_scaffold <- function(
     quiet = quiet,
     overwrite = TRUE
   )
+
+  # remove deprecated scaffolding
+  unlink(file.path("src", "rust", c("document.c", "document.rs")))
 
   update_message()
   invisible(TRUE)
