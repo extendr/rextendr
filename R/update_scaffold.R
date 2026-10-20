@@ -16,11 +16,13 @@
 #'   - `src/Makevars.win.in`
 #'   - `cleanup`
 #'   - `cleanup.win`
-#'   - `src/rust/document.c`
+#'   - `tools/document.R`
 #'   - `tools/msrv.R`
 #'   - `tools/config.R`
 #'   - `configure`
 #'   - `configure.win`
+#'
+#'   Note that deprecated scaffolding files are also deleted.
 #'
 #'   After updating these files, `update_scaffold()` will print a message that
 #'   explains what to do next to get your package up-to-date with the latest
@@ -119,8 +121,8 @@ update_scaffold <- function(
   )
 
   use_rextendr_template(
-    "document.c",
-    save_as = file.path("src", "rust", "document.c"),
+    "document.R",
+    save_as = file.path("tools", "document.R"),
     quiet = quiet,
     overwrite = TRUE,
     data = list(mod_name = mod_name)
@@ -154,6 +156,9 @@ update_scaffold <- function(
     quiet = quiet,
     overwrite = TRUE
   )
+
+  # remove deprecated scaffolding
+  unlink(file.path("src", "rust", c("document.c", "document.rs")))
 
   update_message()
   invisible(TRUE)
