@@ -59,6 +59,7 @@
 </h1></div>
 <!-- badges: start -->
 
+<p>The <code>rextendr</code> package supports developers who want to build R packages that call Rust code with <a href="https://github.com/extendr/extendr" class="external-link">extendr</a>. See the <a href="https://extendr.rs/" class="external-link">documentation</a> for more details.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -70,20 +71,25 @@
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_cran</span><span class="op">(</span><span class="st">"rextendr"</span><span class="op">)</span></span></code></pre></div>
 <p>You can also install <a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a> from <a href="https://extendr.r-universe.dev/rextendr" class="external-link">r-universe</a>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rextendr"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://extendr.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
+<span>  <span class="st">"rextendr"</span>,</span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://extendr.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Latest development version can be installed from GitHub:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"extendr/rextendr"</span><span class="op">)</span></span></code></pre></div>
-<p>To execute Rust code, you will also need to set up a working Rust toolchain. See the <a href="https://github.com/extendr/libR-sys" class="external-link">installation instructions for libR-sys</a> for help. If you can successfully build libR-sys you’re good.</p>
+<p>To execute Rust code, you will also need to set up a working Rust toolchain. See the <a href="https://extendr.rs/get-started.html" class="external-link">installation guide</a> for help.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="sitrep">Sitrep<a class="anchor" aria-label="anchor" href="#sitrep"></a>
 </h3>
 <p>A good first step is to check the status of Rust toolchain and available targets using <code><a href="reference/rust_sitrep.html">rust_sitrep()</a></code>. If everything is OK, you should see something like this:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Rust infrastructure sitrep:</span></span>
 <span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
@@ -92,7 +98,7 @@
 <span><span class="co"># ℹ toolchain: stable-x86_64-pc-windows-msvc (default)</span></span>
 <span><span class="co"># ℹ target: x86_64-pc-windows-gnu</span></span></code></pre></div>
 <p>If, for instance, no toolchain is found, you will see something like this:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Rust infrastructure sitrep:</span></span>
 <span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
@@ -102,7 +108,7 @@
 <span><span class="co"># ℹ Run `rustup toolchain install stable-x86_64-pc-windows-msvc` to install it</span></span>
 <span><span class="co"># ℹ Run `rustup default stable-x86_64-pc-windows-msvc` to make it default</span></span></code></pre></div>
 <p>Finally, if you are missing the required target (on all platforms but Windows <a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a> uses default target), the report will resemble the following:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/rust_sitrep.html">rust_sitrep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Rust infrastructure sitrep:</span></span>
 <span><span class="co"># ✔ "rustup": 1.26.0 (5af9b9484 2023-04-05)</span></span>
@@ -117,21 +123,16 @@
 <h3 id="code-examples">Code examples<a class="anchor" aria-label="anchor" href="#code-examples"></a>
 </h3>
 <p>Basic use example:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># create a Rust function</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create a Rust function</span></span>
 <span><span class="fu"><a href="reference/rust_source.html">rust_function</a></span><span class="op">(</span><span class="st">"fn add(a:f64, b:f64) -&gt; f64 { a + b }"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># call it from R</span></span>
 <span><span class="fu">add</span><span class="op">(</span><span class="fl">2.5</span>, <span class="fl">4.7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7.2</span></span></code></pre></div>
 <p>Something more sophisticated:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://extendr.rs/rextendr/" class="external-link">rextendr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Rust function that computes a sum of integer or double vectors, preserving the type</span></span>
-<span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Rust function that computes a sum of integer or double vectors, preserving the type</span></span>
 <span><span class="fu"><a href="reference/rust_source.html">rust_function</a></span><span class="op">(</span></span>
 <span>  <span class="st">"fn get_sum(x : Either&lt;Integers, Doubles&gt;) -&gt; Either&lt;Rint, Rfloat&gt; {</span></span>
 <span><span class="st">      match x {</span></span>
@@ -140,7 +141,7 @@
 <span><span class="st">      }</span></span>
 <span><span class="st">  }"</span>,</span>
 <span>  use_dev_extendr <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Use development version of extendr from GitHub</span></span>
-<span>  features <span class="op">=</span> <span class="st">"either"</span>, <span class="co"># Enable support for Either crate</span></span>
+<span>  features <span class="op">=</span> <span class="st">"either"</span> <span class="co"># Enable support for Either crate</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span></span>
@@ -160,25 +161,72 @@
 <span><span class="co">#&gt; 1 x     &lt;int [5]&gt; integer &lt;int [1]&gt;     15 integer   </span></span>
 <span><span class="co">#&gt; 2 y     &lt;dbl [5]&gt; double  &lt;dbl [1]&gt;     15 double</span></span></code></pre></div>
 <p>The package also enables a new chunk type for knitr, <code>extendr</code>, which compiles and evaluates Rust code. For example, a code chunk such as this one:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="in">```{extendr}</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="in">let x = 5;</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="in">let y = 7;</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="in">z</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="in">```{extendr}</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="in">rprintln!("Hello from Rust!");</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="in">let x = 5;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="in">let y = 7;</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="in">let z = x*y;</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="in">z</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>would create the following output in the knitted document:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>z</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="pp">rprintln!</span>(<span class="st">"Hello from Rust!"</span>)<span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="kw">let</span> x <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="kw">let</span> y <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="kw">let</span> z <span class="op">=</span> x<span class="op">*</span>y<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>z</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>#<span class="op">&gt;</span> Hello from <span class="pp">Rust!</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>#<span class="op">&gt;</span> [<span class="dv">1</span>] <span class="dv">35</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="project-scaffolding">Project scaffolding<a class="anchor" aria-label="anchor" href="#project-scaffolding"></a>
+</h3>
+<p>To setup a project with extendr scaffolding, first initialize an R package directory with <code><a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">usethis::create_package()</a></code>. Then navigate to that directory and call <code><a href="reference/use_extendr.html">rextendr::use_extendr()</a></code>.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">create_package</a></span><span class="op">(</span><span class="st">"helloextendr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">rextendr</span><span class="fu">::</span><span class="fu"><a href="reference/use_extendr.html">use_extendr</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># ✔ Setting active project to "./helloextendr".</span></span>
+<span><span class="co"># ℹ First time using rextendr. Upgrading automatically...</span></span>
+<span><span class="co"># ℹ Setting `Config/rextendr/version` to "0.5.0" in the DESCRIPTION file.</span></span>
+<span><span class="co"># ℹ Setting `SystemRequirements` to "Cargo (Rust's package manager), rustc &gt;= 1.65.0, xz" in the DESCRIPTION file.</span></span>
+<span><span class="co"># ✔ Creating src/rust/src.</span></span>
+<span><span class="co"># ✔ Writing src/entrypoint.c.</span></span>
+<span><span class="co"># ✔ Writing src/Makevars.in.</span></span>
+<span><span class="co"># ✔ Writing src/Makevars.win.in.</span></span>
+<span><span class="co"># ✔ Writing cleanup.</span></span>
+<span><span class="co"># ✔ Writing cleanup.win.</span></span>
+<span><span class="co"># ✔ Writing src/.gitignore.</span></span>
+<span><span class="co"># ✔ Writing src/rust/Cargo.toml.</span></span>
+<span><span class="co"># ✔ Writing src/rust/src/lib.rs.</span></span>
+<span><span class="co"># ✔ Writing src/hellowworld-win.def.</span></span>
+<span><span class="co"># ✔ Writing R/extendr-wrappers.R</span></span>
+<span><span class="co"># ✔ Writing tools/document.R.</span></span>
+<span><span class="co"># ✔ Writing tools/msrv.R.</span></span>
+<span><span class="co"># ✔ Writing tools/config.R.</span></span>
+<span><span class="co"># ✔ Writing configure.</span></span>
+<span><span class="co"># ✔ Writing configure.win.</span></span>
+<span><span class="co"># ✔ Adding "^\\.vscode$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Writing .vscode/settings.json.</span></span>
+<span><span class="co"># ✔ Adding R to Depends field in DESCRIPTION.</span></span>
+<span><span class="co"># ✔ Adding "^src/\\.cargo$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Adding "^src/rust/vendor$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Adding "src/rust/vendor" to .gitignore.</span></span>
+<span><span class="co"># ✔ Adding "^src/rust/target$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Adding "^src/Makevars$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Adding "src/Makevars" to .gitignore.</span></span>
+<span><span class="co"># ✔ Adding "^src/Makevars\\.win$" to .Rbuildignore.</span></span>
+<span><span class="co"># ✔ Adding "src/Makevars.win" to .gitignore.</span></span>
+<span><span class="co"># ✔ Finished configuring extendr for package hellowworld.</span></span>
+<span><span class="co"># • Please run `devtools::document()` for changes to take effect.</span></span>
+<span><span class="co"># ℹ Call `use_extendr_badge()` to add an extendr badge to your README</span></span></code></pre></div>
+<p>The content of the output is pretty lengthy, showing all the scaffolding files that are generated, along with the initiated Rust project in <code>src/rust/</code>. Some of this may change as we update and improve extendr tools, but the main thing to note here is that <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> is sufficient to compile the hello-world example that <code>lib.rs</code> contains by default, generate the necessary wrappers, and build the R package. Then <code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code> will make them available in your current R session.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">hello</span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
+<span><span class="co"># [1] "Hello world!"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
