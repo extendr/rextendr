@@ -10,7 +10,9 @@ the$count <- 1L
 #' options when sourcing Rust code. It also proivdes defaults for each option
 #' and does additional type checking.
 #'
-#' @param file character scalar, input rust file to source.
+#' @param file character scalar, input rust file to source. The file must
+#'   contain its own `use extendr_api::prelude::*;` and `extendr_module!` call,
+#'   as these are not generated like they are for `code`.
 #' @param code character scalar, input rust code to be used instead of `file`.
 #' @param env environment, the R environment in which the wrapping functions
 #'   will be defined. Default is `parent.frame()`.
@@ -44,8 +46,11 @@ the$count <- 1L
 #' @param module_name character scalar, name of the module defined in the Rust source via
 #'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
 #'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
-#' @param patch.crates_io character vector, patch statements for crates.io to
-#'   be added to `Cargo.toml`.
+#' @param patch.crates_io named list, source overrides for crates.io crates,
+#'   written to the `[patch.crates-io]` section of `Cargo.toml`. Each name is a
+#'   crate and each value is a list of source fields (e.g. `git`, `branch`,
+#'   `path`). Unlike `dependencies`, a patch applies to every crate in the
+#'   dependency graph, including transitive dependencies.
 #' @param profile character scalar, Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
 #'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain character scalar, Rust toolchain. The default, `NULL`, compiles with the
@@ -120,6 +125,16 @@ the$count <- 1L
 #' The quick *brown fox* jumps over the lazy dog."
 #'
 #' md_to_html(md_text)
+#'
+#' # use the development version of `extendr-api` from GitHub
+#' rust_function(
+#'   "fn add(a: f64, b: f64) -> f64 { a + b }",
+#'   opts = extendr_options(
+#'     patch.crates_io = list(
+#'       `extendr-api` = list(git = "https://github.com/extendr/extendr")
+#'     )
+#'   )
+#' )
 #'
 #' # see default options
 #' extendr_options()
