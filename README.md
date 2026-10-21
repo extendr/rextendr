@@ -231,7 +231,7 @@ rextendr::use_extendr()
 The content of the output is pretty lengthy, showing all the scaffolding
 files that are generated, along with the initiated Rust project in
 `src/rust/`. Some of this may change as we update and improve extendr
-tools, but the main thing to here is that `devtools::document()` is
+tools, but the main thing to note here is that `devtools::document()` is
 sufficient to compile the hello-world example that `lib.rs` contains by
 default, generate the necessary wrappers, and build the R package. Then
 `devtools::load_all()` will make them available in your current R
