@@ -223,9 +223,12 @@
 <span><span class="co"># ✔ Finished configuring extendr for package hellowworld.</span></span>
 <span><span class="co"># • Please run `devtools::document()` for changes to take effect.</span></span>
 <span><span class="co"># ℹ Call `use_extendr_badge()` to add an extendr badge to your README</span></span></code></pre></div>
-<p>The content of the output is pretty lengthy, showing all the scaffolding files that are generated, along with the initiated Rust project in <code>src/rust/</code>. Some of this may change as we update and improve extendr tools, but the main thing to note here is that <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> is sufficient to compile the hello-world example that <code>lib.rs</code> contains by default, generate the necessary wrappers, and build the R package. Then <code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code> will make them available in your current R session.</p>
+<p>The output is pretty lengthy, showing all the scaffolding files that are generated, along with the initiated Rust project in <code>src/rust/</code>. Some of this may change as we update and improve extendr tools, but the main thing to note here is that <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> is sufficient to compile the hello-world example that <code>lib.rs</code> contains by default, generate the necessary wrappers, and build the R package. Then <code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code> will make them available in your current R session.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">hello</span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">hello</span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
 <span><span class="co"># [1] "Hello world!"</span></span></code></pre></div>
 </div>
 </div>

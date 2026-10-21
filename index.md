@@ -215,10 +215,10 @@ rextendr::use_extendr()
 # ℹ Call `use_extendr_badge()` to add an extendr badge to your README
 ```
 
-The content of the output is pretty lengthy, showing all the scaffolding
-files that are generated, along with the initiated Rust project in
-`src/rust/`. Some of this may change as we update and improve extendr
-tools, but the main thing to note here is that
+The output is pretty lengthy, showing all the scaffolding files that are
+generated, along with the initiated Rust project in `src/rust/`. Some of
+this may change as we update and improve extendr tools, but the main
+thing to note here is that
 [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
 is sufficient to compile the hello-world example that `lib.rs` contains
 by default, generate the necessary wrappers, and build the R package.
@@ -227,6 +227,9 @@ Then
 will make them available in your current R session.
 
 ``` r
+devtools::document()
+devtools::load_all()
+
 hello("world")
 # [1] "Hello world!"
 ```
