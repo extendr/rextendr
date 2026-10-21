@@ -7,9 +7,9 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/rextendr.png)](https://CRAN.R-project.org/package=rextendr)
+status](https://www.r-pkg.org/badges/version/rextendr)](https://CRAN.R-project.org/package=rextendr)
 [![rextendr status
-badge](https://extendr.r-universe.dev/badges/rextendr.png)](https://extendr.r-universe.dev/rextendr)
+badge](https://extendr.r-universe.dev/badges/rextendr)](https://extendr.r-universe.dev/rextendr)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R build
@@ -228,16 +228,19 @@ rextendr::use_extendr()
 # ℹ Call `use_extendr_badge()` to add an extendr badge to your README
 ```
 
-The content of the output is pretty lengthy, showing all the scaffolding
-files that are generated, along with the initiated Rust project in
-`src/rust/`. Some of this may change as we update and improve extendr
-tools, but the main thing to note here is that `devtools::document()` is
-sufficient to compile the hello-world example that `lib.rs` contains by
-default, generate the necessary wrappers, and build the R package. Then
+The output is pretty lengthy, showing all the scaffolding files that are
+generated, along with the initiated Rust project in `src/rust/`. Some of
+this may change as we update and improve extendr tools, but the main
+thing to note here is that `devtools::document()` is sufficient to
+compile the hello-world example that `lib.rs` contains by default,
+generate the necessary wrappers, and build the R package. Then
 `devtools::load_all()` will make them available in your current R
 session.
 
 ``` r
+devtools::document()
+devtools::load_all()
+
 hello("world")
 # [1] "Hello world!"
 ```
