@@ -25,7 +25,7 @@ jobs:
           - {os: windows-latest, r: 'devel',   rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '45' }
           - {os: windows-latest, r: 'oldrel',  rust-version: 'stable-msvc', rust-target: 'x86_64-pc-windows-gnu', rtools-version: '44' }
 
-          - {os: windows-11-arm, r: 'release', rust-version: 'stable-msvc', rust-target: 'aarch64-pc-windows-gnullvm', rtools-version: '45' }
+          - {os: windows-11-arm, r: 'release', rust-version: 'stable-msvc', rust-target: 'aarch64-pc-windows-gnullvm', rtools-version: '45', extra-repos: 'https://cran.r-universe.dev' }
 
 
           - {os: macOS-latest,   r: 'release', rust-version: 'stable' }
@@ -64,11 +64,13 @@ jobs:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools-version }}
           use-public-rspm: true
+          extra-repositories: ${{ matrix.config.extra-repos }}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 2
+          cache-version: 3
           extra-packages: rcmdcheck
+          pak-version: devel
 
       - uses: r-lib/actions/check-r-package@v2
         with:
