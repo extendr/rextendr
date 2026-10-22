@@ -46,11 +46,7 @@ the$count <- 1L
 #' @param module_name character scalar, name of the module defined in the Rust source via
 #'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
 #'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
-#' @param patch.crates_io named list, source overrides for crates.io crates,
-#'   written to the `[patch.crates-io]` section of `Cargo.toml`. Each name is a
-#'   crate and each value is a list of source fields (e.g. `git`, `branch`,
-#'   `path`). Unlike `dependencies`, a patch applies to every crate in the
-#'   dependency graph, including transitive dependencies.
+#' @param patch.crates_io a named list where the name corresponds with the dependency to be patched and the values are a named list of dependency values—e.g. `git = "https://github.com/org/repo`. 
 #' @param profile character scalar, Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
 #'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain character scalar, Rust toolchain. The default, `NULL`, compiles with the
