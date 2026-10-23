@@ -85,7 +85,6 @@ update_scaffold <- function(
   use_rextendr_template(
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
-    quiet = quiet,
     overwrite = TRUE,
     data = list(mod_name = mod_name)
   )
@@ -93,7 +92,6 @@ update_scaffold <- function(
   use_rextendr_template(
     "Makevars.in",
     save_as = file.path("src", "Makevars.in"),
-    quiet = quiet,
     overwrite = TRUE,
     data = list(lib_name = lib_name)
   )
@@ -101,7 +99,6 @@ update_scaffold <- function(
   use_rextendr_template(
     "Makevars.win.in",
     save_as = file.path("src", "Makevars.win.in"),
-    quiet = quiet,
     overwrite = TRUE,
     data = list(lib_name = lib_name)
   )
@@ -109,21 +106,18 @@ update_scaffold <- function(
   use_rextendr_template(
     "cleanup",
     save_as = file.path("cleanup"),
-    quiet = quiet,
     overwrite = TRUE
   )
 
   use_rextendr_template(
     "cleanup.win",
     save_as = file.path("cleanup.win"),
-    quiet = quiet,
     overwrite = TRUE
   )
 
   use_rextendr_template(
     "document.R",
     save_as = file.path("tools", "document.R"),
-    quiet = quiet,
     overwrite = TRUE,
     data = list(mod_name = mod_name)
   )
@@ -131,14 +125,12 @@ update_scaffold <- function(
   use_rextendr_template(
     "msrv.R",
     save_as = file.path("tools", "msrv.R"),
-    quiet = quiet,
     overwrite = TRUE
   )
 
   use_rextendr_template(
     "config.R",
     save_as = file.path("tools", "config.R"),
-    quiet = quiet,
     overwrite = TRUE
   )
 
@@ -146,14 +138,12 @@ update_scaffold <- function(
   use_rextendr_template(
     "configure",
     save_as = "configure",
-    quiet = quiet,
     overwrite = TRUE
   )
 
   use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
-    quiet = quiet,
     overwrite = TRUE
   )
 

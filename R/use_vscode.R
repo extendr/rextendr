@@ -14,6 +14,8 @@
 #' @return `TRUE` (invisibly) if the settings file was created or updated.
 #' @export
 use_vscode <- function(quiet = FALSE, overwrite = NULL) {
+  local_quiet_cli(quiet)
+
   if (!dir.exists(".vscode")) {
     dir.create(".vscode")
   }
@@ -32,9 +34,7 @@ use_vscode <- function(quiet = FALSE, overwrite = NULL) {
   )
 
   if (file.exists(settings_path) && isFALSE(overwrite)) {
-    if (!quiet) {
-      message("Updating existing .vscode/settings.json")
-    }
+    cli::cli_alert_info("Updating existing .vscode/settings.json")
 
     # settings.json accepts trailing commas before braces and brackets and {jsonlite} doesn't dig that
     tryCatch(
@@ -87,7 +87,6 @@ use_vscode <- function(quiet = FALSE, overwrite = NULL) {
     use_rextendr_template(
       "settings.json",
       save_as = settings_path,
-      quiet = quiet,
       overwrite = overwrite
     )
   }

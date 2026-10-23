@@ -411,8 +411,7 @@ rust_source <- function(
       module_name = as_valid_rust_name(opts[["module_name"]]),
       package_name = dll_info[["name"]],
       outfile = wrapper_file,
-      use_symbols = FALSE,
-      quiet = quiet
+      use_symbols = FALSE
     ),
     error = function(cnd) {
       cli::cli_abort(

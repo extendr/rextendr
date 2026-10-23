@@ -34,6 +34,8 @@ write_license_note <- function(
   check_bool(quiet, class = "rextendr_error")
   check_bool(force, class = "rextendr_error")
 
+  local_quiet_cli(quiet)
+
   outfile <- rprojroot::find_package_root_file(
     "LICENSE.note",
     path = path
@@ -139,7 +141,6 @@ write_license_note <- function(
     text = c(note_header, note_body),
     path = outfile,
     search_root_from = path,
-    quiet = quiet,
     overwrite = force
   )
 }

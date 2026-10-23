@@ -47,16 +47,13 @@ register_extendr <- function(
 #' the generated wrappers. Default (`FALSE`) is used when making wrappers for the package,
 #' while `TRUE` is used to make wrappers for dynamically generated libraries using
 #' [`rust_source`], [`rust_function`], etc.
-#' @param quiet Logical scalar indicating whether the output should be quiet (`TRUE`)
-#'   or verbose (`FALSE`).
 #' @noRd
 make_wrappers <- function(
   module_name,
   package_name,
   outfile,
   path = ".",
-  use_symbols = FALSE,
-  quiet = FALSE
+  use_symbols = FALSE
 ) {
   wrapper_function <- glue("wrap__make_{module_name}_wrappers")
   x <- .Call(
@@ -80,7 +77,6 @@ make_wrappers <- function(
   write_file(
     text = generated_wrappers,
     path = outfile,
-    search_root_from = path,
-    quiet = quiet
+    search_root_from = path
   )
 }
