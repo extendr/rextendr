@@ -24,8 +24,7 @@ function can be called from R with hello(name = "world").'></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/package.html">Using Rust code in R packages</a></li>
-    <li><a class="dropdown-item" href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a></li>
     <li><a class="dropdown-item" href="../articles/setting_up_rust.html">Setting up a Rust build environment</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -125,7 +124,7 @@ generated <code>Makevars</code> files.</p></li>
 <code>extendr-api</code> dependency, and release profile settings.</p></li>
 <li><p><code>src/rust/src/lib.rs</code>: Main Rust library with an example <code>hello("world")</code>
 function and the <code>extendr_module!</code> macro.</p></li>
-<li><p><code>src/rust/document.c</code>: a C binary that writes <code>R/extendr-wrappers.R</code>
+<li><p><code>tools/document.R</code>: an R script that writes <code>R/extendr-wrappers.R</code>
 by introspecting exported function metadata at build time.</p></li>
 <li><p><code>tools/msrv.R</code>: Verifies the installed Rust toolchain meets the MSRV in
 <code>DESCRIPTION</code>.</p></li>

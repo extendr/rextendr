@@ -52,7 +52,10 @@ print(x, ...)
 
 - file:
 
-  character scalar, input rust file to source.
+  character scalar, input rust file to source. The file must contain its
+  own `use extendr_api::prelude::*;` and `extendr_module!` call, as
+  these are not generated like they are for `code`. See Details for more
+  information.
 
 - code:
 
@@ -132,8 +135,9 @@ print(x, ...)
 
 - patch.crates_io:
 
-  character vector, patch statements for crates.io to be added to
-  `Cargo.toml`.
+  a named list where the name corresponds with the dependency to be
+  patched and the values are a named list of dependency values—e.g.
+  `git = "https://github.com/org/repo`.
 
 - profile:
 
@@ -176,6 +180,21 @@ For `rust_source()` and `rust_function()`, the result from
 of class `DLLInfo`. See
 [`getLoadedDLLs()`](https://rdrr.io/r/base/getLoadedDLLs.html) for more
 details. For `extendr_options()`, an `extendr_opts` list.
+
+## Details
+
+The extendr crate requires that all functions be registered with
+`extendr_module!` so that R
+[`.Call()`](https://rdrr.io/r/base/CallExternal.html) wrappers can be
+generated and the Rust code can be called in R. When you pass a string
+of Rust code to `code`, rextendr will scan your code for the
+`#[extendr]` macro, collect functions and impls, and generate the
+`extendr_module!` for you. When you pass a path to `file`, you must
+manually insert `extendr_module!` in `file` yourself, just as you would
+when developing an R package with Rust code. If you pass a string to
+`code` and set `generate_module_macro = FALSE`, that is basically
+equivalent to using `file`, but with a string, meaning you will have to
+insert the module yourself in that case, too.
 
 ## Examples
 
@@ -230,6 +249,16 @@ The quick brown fox **jumps over** the lazy dog.
 The quick *brown fox* jumps over the lazy dog."
 
 md_to_html(md_text)
+
+# use the development version of `extendr-api` from GitHub
+rust_function(
+  "fn add(a: f64, b: f64) -> f64 { a + b }",
+  opts = extendr_options(
+    patch.crates_io = list(
+      `extendr-api` = list(git = "https://github.com/extendr/extendr")
+    )
+  )
+)
 
 # see default options
 extendr_options()

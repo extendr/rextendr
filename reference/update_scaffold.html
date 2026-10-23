@@ -20,8 +20,7 @@ relevant scaffolding files to the new specification."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/package.html">Using Rust code in R packages</a></li>
-    <li><a class="dropdown-item" href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/rmarkdown.html">Using Rust code in R Markdown documents</a></li>
     <li><a class="dropdown-item" href="../articles/setting_up_rust.html">Setting up a Rust build environment</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -89,12 +88,13 @@ unchanged. Only the following files are re-written:</p><ul><li><p><code>src/entr
 <li><p><code>src/Makevars.win.in</code></p></li>
 <li><p><code>cleanup</code></p></li>
 <li><p><code>cleanup.win</code></p></li>
-<li><p><code>src/rust/document.c</code></p></li>
+<li><p><code>tools/document.R</code></p></li>
 <li><p><code>tools/msrv.R</code></p></li>
 <li><p><code>tools/config.R</code></p></li>
 <li><p><code>configure</code></p></li>
 <li><p><code>configure.win</code></p></li>
-</ul><p>After updating these files, <code>update_scaffold()</code> will print a message that
+</ul><p>Note that deprecated scaffolding files are also deleted.</p>
+<p>After updating these files, <code>update_scaffold()</code> will print a message that
 explains what to do next to get your package up-to-date with the latest
 versions of extendr and rextendr (provided <code>quiet = FALSE</code>, anyway). That
 will typically include handling dependency resolution, updating Cargo.toml

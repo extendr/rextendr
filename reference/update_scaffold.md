@@ -52,7 +52,7 @@ unchanged. Only the following files are re-written:
 
 - `cleanup.win`
 
-- `src/rust/document.c`
+- `tools/document.R`
 
 - `tools/msrv.R`
 
@@ -61,6 +61,8 @@ unchanged. Only the following files are re-written:
 - `configure`
 
 - `configure.win`
+
+Note that deprecated scaffolding files are also deleted.
 
 After updating these files, `update_scaffold()` will print a message
 that explains what to do next to get your package up-to-date with the

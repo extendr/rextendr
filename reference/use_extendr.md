@@ -83,8 +83,8 @@ generated or not.
 - `src/rust/src/lib.rs`: Main Rust library with an example
   `hello("world")` function and the `extendr_module!` macro.
 
-- `src/rust/document.c`: a C binary that writes `R/extendr-wrappers.R`
-  by introspecting exported function metadata at build time.
+- `tools/document.R`: an R script that writes `R/extendr-wrappers.R` by
+  introspecting exported function metadata at build time.
 
 - `tools/msrv.R`: Verifies the installed Rust toolchain meets the MSRV
   in `DESCRIPTION`.
