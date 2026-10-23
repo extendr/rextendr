@@ -5,7 +5,7 @@
 ## Usage
 
 ``` r
-use_msrv(version, path = ".", overwrite = FALSE)
+use_msrv(version, path = ".", overwrite = FALSE, quiet = FALSE)
 ```
 
 ## Arguments
@@ -22,6 +22,11 @@ use_msrv(version, path = ".", overwrite = FALSE)
 
   default `FALSE`. Overwrites the `SystemRequirements` field if already
   set when `TRUE`.
+
+- quiet:
+
+  Logical indicating whether any progress messages should be generated
+  or not.
 
 ## Value
 
