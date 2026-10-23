@@ -37,12 +37,14 @@ unchanged. Only the following files are re-written:
 \item \code{src/Makevars.win.in}
 \item \code{cleanup}
 \item \code{cleanup.win}
-\item \code{src/rust/document.c}
+\item \code{tools/document.R}
 \item \code{tools/msrv.R}
 \item \code{tools/config.R}
 \item \code{configure}
 \item \code{configure.win}
 }
+
+Note that deprecated scaffolding files are also deleted.
 
 After updating these files, \code{update_scaffold()} will print a message that
 explains what to do next to get your package up-to-date with the latest
