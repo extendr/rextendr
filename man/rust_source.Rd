@@ -45,7 +45,10 @@ extendr_options(
 \method{print}{extendr_opts}(x, ...)
 }
 \arguments{
-\item{file}{character scalar, input rust file to source.}
+\item{file}{character scalar, input rust file to source. The file must
+contain its own \verb{use extendr_api::prelude::*;} and \verb{extendr_module!} call,
+as these are not generated like they are for \code{code}. See Details for more
+information.}
 
 \item{code}{character scalar, input rust code to be used instead of \code{file}.}
 
@@ -93,8 +96,7 @@ the generated macro code has issues.}
 \verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
 or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
 
-\item{patch.crates_io}{character vector, patch statements for crates.io to
-be added to \code{Cargo.toml}.}
+\item{patch.crates_io}{a named list where the name corresponds with the dependency to be patched and the values are a named list of dependency values—e.g. \verb{git = "https://github.com/org/repo}.}
 
 \item{profile}{character scalar, Rust profile. Can be either \code{"dev"}, \code{"release"} or \code{"perf"}.
 The default, \code{"dev"}, compiles faster but produces slower code.}
@@ -128,6 +130,18 @@ for more details. For \code{extendr_options()}, an \code{extendr_opts} list.
 \code{\link[=extendr_options]{extendr_options()}} is a helper function to make it easier to pass additional
 options when sourcing Rust code. It also proivdes defaults for each option
 and does additional type checking.
+}
+\details{
+The extendr crate requires that all functions be registered with
+\verb{extendr_module!} so that R \code{.Call()} wrappers can be generated and the Rust
+code can be called in R. When you pass a string of Rust code to \code{code},
+rextendr will scan your code for the \verb{#[extendr]} macro, collect functions
+and impls, and generate the \verb{extendr_module!} for you. When you pass a path
+to \code{file}, you must manually insert \verb{extendr_module!} in \code{file} yourself,
+just as you would when developing an R package with Rust code. If you pass a
+string to \code{code} and set \code{generate_module_macro = FALSE}, that is basically
+equivalent to using \code{file}, but with a string, meaning you will have to
+insert the module yourself in that case, too.
 }
 \examples{
 \dontrun{
@@ -180,6 +194,16 @@ The quick brown fox **jumps over** the lazy dog.
 The quick *brown fox* jumps over the lazy dog."
 
 md_to_html(md_text)
+
+# use the development version of `extendr-api` from GitHub
+rust_function(
+  "fn add(a: f64, b: f64) -> f64 { a + b }",
+  opts = extendr_options(
+    patch.crates_io = list(
+      `extendr-api` = list(git = "https://github.com/extendr/extendr")
+    )
+  )
+)
 
 # see default options
 extendr_options()

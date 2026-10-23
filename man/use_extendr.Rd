@@ -61,7 +61,7 @@ generated \code{Makevars} files.
 \code{extendr-api} dependency, and release profile settings.
 \item \code{src/rust/src/lib.rs}: Main Rust library with an example \code{hello("world")}
 function and the \verb{extendr_module!} macro.
-\item \code{src/rust/document.c}: a C binary that writes \code{R/extendr-wrappers.R}
+\item \code{tools/document.R}: an R script that writes \code{R/extendr-wrappers.R}
 by introspecting exported function metadata at build time.
 \item \code{tools/msrv.R}: Verifies the installed Rust toolchain meets the MSRV in
 \code{DESCRIPTION}.
