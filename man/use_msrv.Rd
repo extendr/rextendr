@@ -4,7 +4,7 @@
 \alias{use_msrv}
 \title{Set the minimum supported rust version (MSRV)}
 \usage{
-use_msrv(version, path = ".", overwrite = FALSE)
+use_msrv(version, path = ".", overwrite = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{version}{character scalar, the minimum supported Rust version.}
@@ -12,6 +12,9 @@ use_msrv(version, path = ".", overwrite = FALSE)
 \item{path}{character scalar, path to folder containing DESCRIPTION file.}
 
 \item{overwrite}{default \code{FALSE}. Overwrites the \code{SystemRequirements} field if already set when \code{TRUE}.}
+
+\item{quiet}{Logical indicating whether any progress messages should be
+generated or not.}
 }
 \value{
 \code{version}
