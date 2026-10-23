@@ -10,7 +10,10 @@ the$count <- 1L
 #' options when sourcing Rust code. It also proivdes defaults for each option
 #' and does additional type checking.
 #'
-#' @param file character scalar, input rust file to source.
+#' @param file character scalar, input rust file to source. The file must
+#'   contain its own `use extendr_api::prelude::*;` and `extendr_module!` call,
+#'   as these are not generated like they are for `code`. See Details for more
+#'   information.
 #' @param code character scalar, input rust code to be used instead of `file`.
 #' @param env environment, the R environment in which the wrapping functions
 #'   will be defined. Default is `parent.frame()`.
@@ -44,8 +47,7 @@ the$count <- 1L
 #' @param module_name character scalar, name of the module defined in the Rust source via
 #'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
 #'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
-#' @param patch.crates_io character vector, patch statements for crates.io to
-#'   be added to `Cargo.toml`.
+#' @param patch.crates_io a named list where the name corresponds with the dependency to be patched and the values are a named list of dependency values—e.g. `git = "https://github.com/org/repo`.
 #' @param profile character scalar, Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
 #'  The default, `"dev"`, compiles faster but produces slower code.
 #' @param toolchain character scalar, Rust toolchain. The default, `NULL`, compiles with the
@@ -65,6 +67,18 @@ the$count <- 1L
 #' @return For `rust_source()` and `rust_function()`, the result from
 #'   [dyn.load()], which is an object of class `DLLInfo`. See [getLoadedDLLs()]
 #'   for more details. For `extendr_options()`, an `extendr_opts` list.
+#'
+#' @details
+#' The extendr crate requires that all functions be registered with
+#' `extendr_module!` so that R `.Call()` wrappers can be generated and the Rust
+#' code can be called in R. When you pass a string of Rust code to `code`,
+#' rextendr will scan your code for the `#[extendr]` macro, collect functions
+#' and impls, and generate the `extendr_module!` for you. When you pass a path
+#' to `file`, you must manually insert `extendr_module!` in `file` yourself,
+#' just as you would when developing an R package with Rust code. If you pass a
+#' string to `code` and set `generate_module_macro = FALSE`, that is basically
+#' equivalent to using `file`, but with a string, meaning you will have to
+#' insert the module yourself in that case, too.
 #'
 #' @name rust_source
 #' @export
@@ -120,6 +134,16 @@ the$count <- 1L
 #' The quick *brown fox* jumps over the lazy dog."
 #'
 #' md_to_html(md_text)
+#'
+#' # use the development version of `extendr-api` from GitHub
+#' rust_function(
+#'   "fn add(a: f64, b: f64) -> f64 { a + b }",
+#'   opts = extendr_options(
+#'     patch.crates_io = list(
+#'       `extendr-api` = list(git = "https://github.com/extendr/extendr")
+#'     )
+#'   )
+#' )
 #'
 #' # see default options
 #' extendr_options()
