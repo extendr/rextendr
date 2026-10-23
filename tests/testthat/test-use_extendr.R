@@ -119,16 +119,16 @@ test_that("use_rextendr_template() can overwrite existing files", {
   dir.create("src")
   file_path <- file.path("src", "Makevars.in")
 
+  local_quiet_cli(TRUE)
+
   use_rextendr_template(
     "Makevars.in",
     save_as = file_path,
-    quiet = TRUE,
     data = list(lib_name = "foo")
   )
   use_rextendr_template(
     "Makevars.in",
     save_as = file_path,
-    quiet = TRUE,
     overwrite = TRUE,
     data = list(lib_name = "bar")
   )
