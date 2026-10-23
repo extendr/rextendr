@@ -162,7 +162,6 @@ use_extendr <- function(
   use_rextendr_template(
     "entrypoint.c",
     save_as = file.path("src", "entrypoint.c"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
@@ -170,7 +169,6 @@ use_extendr <- function(
   use_rextendr_template(
     "Makevars.in",
     save_as = file.path("src", "Makevars.in"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
@@ -178,7 +176,6 @@ use_extendr <- function(
   use_rextendr_template(
     "Makevars.win.in",
     save_as = file.path("src", "Makevars.win.in"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(lib_name = lib_name)
   )
@@ -186,21 +183,18 @@ use_extendr <- function(
   use_rextendr_template(
     "cleanup",
     save_as = file.path("cleanup"),
-    quiet = quiet,
     overwrite = overwrite
   )
 
   use_rextendr_template(
     "cleanup.win",
     save_as = file.path("cleanup.win"),
-    quiet = quiet,
     overwrite = overwrite
   )
 
   use_rextendr_template(
     "_gitignore",
     save_as = file.path("src", ".gitignore"),
-    quiet = quiet,
     overwrite = overwrite
   )
 
@@ -233,7 +227,6 @@ use_extendr <- function(
   use_rextendr_template(
     "Cargo.toml",
     save_as = file.path("src", "rust", "Cargo.toml"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(cargo_toml_content = cargo_toml_content)
   )
@@ -241,7 +234,6 @@ use_extendr <- function(
   use_rextendr_template(
     "lib.rs",
     save_as = file.path("src", "rust", "src", "lib.rs"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
@@ -249,7 +241,6 @@ use_extendr <- function(
   use_rextendr_template(
     "win.def",
     save_as = file.path("src", paste0(pkg_name, "-win.def")),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
@@ -257,7 +248,6 @@ use_extendr <- function(
   use_rextendr_template(
     "extendr-wrappers.R",
     save_as = file.path("R", "extendr-wrappers.R"),
-    quiet = quiet,
     overwrite = FALSE,
     data = list(pkg_name = pkg_name)
   )
@@ -270,7 +260,6 @@ use_extendr <- function(
   use_rextendr_template(
     "document.R",
     save_as = file.path("tools", "document.R"),
-    quiet = quiet,
     overwrite = overwrite,
     data = list(mod_name = mod_name)
   )
@@ -279,7 +268,6 @@ use_extendr <- function(
   use_rextendr_template(
     "msrv.R",
     save_as = file.path("tools", "msrv.R"),
-    quiet = quiet,
     overwrite = overwrite
   )
 
@@ -287,7 +275,6 @@ use_extendr <- function(
   use_rextendr_template(
     "config.R",
     save_as = file.path("tools", "config.R"),
-    quiet = quiet,
     overwrite = overwrite
   )
 
@@ -295,14 +282,12 @@ use_extendr <- function(
   use_rextendr_template(
     "configure",
     save_as = "configure",
-    quiet = quiet,
     overwrite = overwrite
   )
 
   use_rextendr_template(
     "configure.win",
     save_as = "configure.win",
-    quiet = quiet,
     overwrite = overwrite
   )
 
@@ -344,20 +329,18 @@ use_extendr <- function(
   usethis::use_build_ignore("src/Makevars.win")
   usethis::use_git_ignore("src/Makevars.win")
 
-  if (!isTRUE(quiet)) {
-    cli::cli_alert_success(
-      "Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}."
+  cli::cli_alert_success(
+    "Finished configuring {.pkg extendr} for package {.pkg {pkg_name}}."
+  )
+  cli::cli_ul(
+    c(
+      "Please run {.fun devtools::document} for changes to take effect."
     )
-    cli::cli_ul(
-      c(
-        "Please run {.fun devtools::document} for changes to take effect."
-      )
-    )
-    # encourage use of use_extendr__badge
-    cli::cli_alert_info(
-      "Call {.fn use_extendr_badge} to add an extendr badge to your {.file README}"
-    )
-  }
+  )
+  # encourage use of use_extendr__badge
+  cli::cli_alert_info(
+    "Call {.fn use_extendr_badge} to add an extendr badge to your {.file README}"
+  )
 
   invisible(TRUE)
 }
@@ -440,11 +423,8 @@ use_rextendr_template <- function(
   template,
   save_as = template,
   data = list(),
-  quiet = FALSE,
   overwrite = NULL
 ) {
-  local_quiet_cli(quiet)
-
   if (isFALSE(overwrite) && file.exists(save_as)) {
     cli::cli_alert(
       "File {.path {save_as}} already exists. Skip writing the file."
@@ -485,7 +465,6 @@ use_rextendr_template <- function(
     stringi::stri_trim(template_content),
     path = save_as,
     search_root_from = rprojroot::find_package_root_file(),
-    quiet = quiet,
     overwrite = overwrite
   )
 

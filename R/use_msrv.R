@@ -5,6 +5,9 @@
 #' @param version character scalar, the minimum supported Rust version.
 #' @param path character scalar, path to folder containing DESCRIPTION file.
 #' @param overwrite default `FALSE`. Overwrites the `SystemRequirements` field if already set when `TRUE`.
+#' @param quiet Logical indicating whether any progress messages should be
+#'   generated or not.
+#'
 #' @details
 #'
 #' The minimum supported rust version (MSRV) is determined by the
@@ -38,10 +41,13 @@
 #' use_msrv("1.67.1")
 #' }
 #'
-use_msrv <- function(version, path = ".", overwrite = FALSE) {
+use_msrv <- function(version, path = ".", overwrite = FALSE, quiet = FALSE) {
   check_string(version, class = "rextendr_error")
   check_string(path, class = "rextendr_error")
   check_bool(overwrite, class = "rextendr_error")
+  check_bool(quiet, class = "rextendr_error")
+
+  local_quiet_cli(quiet)
 
   msrv_call <- rlang::caller_call()
   version <- tryCatch(numeric_version(version), error = function(e) {
