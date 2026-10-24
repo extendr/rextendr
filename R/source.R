@@ -157,36 +157,14 @@ rust_source <- function(
   opts = NULL,
   ...
 ) {
-  check_bool(
-    quiet,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_bool(quiet, class = "rextendr_error")
 
   local_quiet_cli(quiet)
 
-  check_string(
-    file,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_string(
-    code,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_environment(
-    env,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    echo,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(file, allow_null = TRUE, class = "rextendr_error")
+  check_string(code, allow_null = TRUE, class = "rextendr_error")
+  check_environment(env, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
   if (rlang::is_null(file) && rlang::is_null(code)) {
     cli::cli_abort(
@@ -439,30 +417,13 @@ rust_function <- function(
   opts = NULL,
   ...
 ) {
-  check_bool(
-    quiet,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_bool(quiet, class = "rextendr_error")
 
   local_quiet_cli(quiet)
 
-  check_string(
-    code,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_environment(
-    env,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    echo,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(code, class = "rextendr_error")
+  check_environment(env, class = "rextendr_error")
+  check_bool(echo, class = "rextendr_error")
 
   # replace any extendr_opts defaults with user-supplied values
   user_opts <- rlang::list2(...)
@@ -547,48 +508,19 @@ extendr_options <- function(
   use_extendr_api = TRUE,
   use_rtools = TRUE
 ) {
-  check_bool(
-    cache_build,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    generate_module_macro,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_string(
-    module_name,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_bool(cache_build, class = "rextendr_error")
+  check_bool(generate_module_macro, class = "rextendr_error")
+  check_string(module_name, class = "rextendr_error")
   # check patch.crates_io list?
   profile <- rlang::arg_match(
     profile,
     values = c("dev", "release", "perf"),
     multiple = FALSE
   )
-  check_string(
-    toolchain,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    use_dev_extendr,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    use_extendr_api,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-  check_bool(
-    use_rtools,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(toolchain, allow_null = TRUE, class = "rextendr_error")
+  check_bool(use_dev_extendr, class = "rextendr_error")
+  check_bool(use_extendr_api, class = "rextendr_error")
+  check_bool(use_rtools, class = "rextendr_error")
 
   features <- validate_extendr_features(
     features,

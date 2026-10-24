@@ -22,25 +22,9 @@ document <- function(pkg = ".", quiet = FALSE, roclets = NULL) {
     "devtools::document()",
     details = "Call `use_extendr()` to update configs."
   )
-
-  check_string(
-    pkg,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-
-  check_bool(
-    quiet,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
-
-  check_bool(
-    roclets,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(pkg, class = "rextendr_error")
+  check_bool(quiet, class = "rextendr_error")
+  check_character(roclets, allow_null = TRUE, class = "rextendr_error")
 
   withr::local_envvar(devtools::r_env_vars())
 

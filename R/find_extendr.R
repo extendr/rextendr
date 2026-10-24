@@ -12,7 +12,7 @@ find_extendr_crate <- function(
   path = ".",
   error_call = rlang::caller_call()
 ) {
-  check_character(path, call = error_call, class = "rextendr_error")
+  check_string(path, call = error_call, class = "rextendr_error")
 
   rust_folder <- rprojroot::find_package_root_file(
     "src",
@@ -45,7 +45,7 @@ find_extendr_manifest <- function(
   path = ".",
   error_call = rlang::caller_call()
 ) {
-  check_character(path, call = error_call, class = "rextendr_error")
+  check_string(path, call = error_call, class = "rextendr_error")
 
   manifest_path <- rprojroot::find_package_root_file(
     "src",

@@ -13,6 +13,9 @@
 #' @keywords internal
 #' @export
 make_module_macro <- function(code, module_name = "rextendr") {
+  check_character(code, class = "rextendr_error")
+  check_string(module_name, class = "rextendr_error")
+
   # make sure we have cleanly separated lines
   lines <- stringi::stri_split_lines(
     glue_collapse(code, sep = "\n"),
