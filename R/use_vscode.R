@@ -14,6 +14,9 @@
 #' @return `TRUE` (invisibly) if the settings file was created or updated.
 #' @export
 use_vscode <- function(quiet = FALSE, overwrite = NULL) {
+  check_bool(quiet, class = "rextendr_error")
+  check_bool(overwrite, allow_null = TRUE, class = "rextendr_error")
+
   local_quiet_cli(quiet)
 
   if (!dir.exists(".vscode")) {

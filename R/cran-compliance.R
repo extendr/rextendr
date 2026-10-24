@@ -26,6 +26,11 @@ vendor_crates <- function(
   overwrite = NULL,
   clean = FALSE
 ) {
+  check_string(path, class = "rextendr_error")
+  check_bool(quiet, class = "rextendr_error")
+  check_bool(overwrite, allow_null = TRUE, class = "rextendr_error")
+  check_bool(clean, class = "rextendr_error")
+
   stderr_line_callback <- function(x, proc) {
     if (!cli::ansi_grepl("To use vendored sources", x) && cli::ansi_nzchar(x)) {
       cli::cat_bullet(stringi::stri_trim_left(x))

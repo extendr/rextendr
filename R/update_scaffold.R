@@ -39,31 +39,13 @@ update_scaffold <- function(
   lib_name = NULL,
   quiet = FALSE
 ) {
-  check_string(
-    path,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(path, class = "rextendr_error")
 
-  check_string(
-    crate_name,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(crate_name, allow_null = TRUE, class = "rextendr_error")
 
-  check_string(
-    lib_name,
-    allow_null = TRUE,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_string(lib_name, allow_null = TRUE, class = "rextendr_error")
 
-  check_bool(
-    quiet,
-    call = rlang::caller_call(),
-    class = "rextendr_error"
-  )
+  check_bool(quiet, class = "rextendr_error")
 
   local_quiet_cli(quiet)
 

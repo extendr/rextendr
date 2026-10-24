@@ -29,6 +29,8 @@
 #' }
 #' @export
 rust_eval <- function(code, env = parent.frame(), ...) {
+  check_character(code, class = "rextendr_error")
+  check_environment(env, class = "rextendr_error")
   rust_eval_deferred(code = code, env = env, ...)()
 }
 

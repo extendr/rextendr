@@ -33,6 +33,10 @@ to_toml <- function(
   .format_int = "%d",
   .format_dbl = "%g"
 ) {
+  check_bool(.str_as_literal, class = "rextendr_error")
+  check_string(.format_int, class = "rextendr_error")
+  check_string(.format_dbl, class = "rextendr_error")
+
   args <- dots_list(
     ...,
     .preserve_empty = TRUE,

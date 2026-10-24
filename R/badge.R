@@ -12,6 +12,7 @@
 #' @inheritParams use_extendr
 #' @export
 use_extendr_badge <- function(path = ".") {
+  check_string(path, class = "rextendr_error")
   rlang::check_installed("usethis")
   meta <- read_cargo_metadata(path)
   deps <- meta[[c("packages", "dependencies")]][[1]]
