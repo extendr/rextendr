@@ -10,8 +10,8 @@
 #' @param code Character vector containing Rust code.
 #' @param module_name Module name
 #' @return Character vector holding the contents of the generated macro statement.
-#' @keywords internal
-#' @export
+#'
+#' @noRd
 make_module_macro <- function(code, module_name = "rextendr") {
   check_character(code, class = "rextendr_error")
   check_string(module_name, class = "rextendr_error")
