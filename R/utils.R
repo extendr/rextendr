@@ -3,7 +3,7 @@
 #' This function returns a string that should be used inside of a `cli` function.
 #' See `validate_extendr_features()` for an example.
 #'
-#' @keywords internal
+#' @noRd
 inf_dev_extendr_used <- function() {
   "Are you using a development version of {.code extendr}?"
 }
@@ -13,18 +13,15 @@ inf_dev_extendr_used <- function() {
 #'
 #' Use for functions that use cli output that should optionally be suppressed.
 #'
+#' @noRd
 #' @examples
-#'
-#' if (interactive()) {
-#'   hello_rust <- function(..., quiet = FALSE) {
-#'     local_quiet_cli(quiet)
-#'     cli::cli_alert_info("This should be silenced when {.code quiet = TRUE}")
-#'   }
-#'
-#'   hello_rust()
-#'   hello_rust(quiet = TRUE)
+#' hello_rust <- function(..., quiet = FALSE) {
+#'   local_quiet_cli(quiet)
+#'   cli::cli_alert_info("This should be silenced when {.code quiet = TRUE}")
 #' }
-#' @keywords internal
+#'
+#' hello_rust()
+#' hello_rust(quiet = TRUE)
 local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   if (quiet) {
     withr::local_options(
@@ -35,17 +32,21 @@ local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
 }
 
 #' Helper function for checking cargo sub-commands.
+#'
 #' @param args Character vector, arguments to the `cargo` command. Passed to [processx::run()]'s args param.
 #' @return Logical scalar indicating if the command was available.
+#'
 #' @noRd
 cargo_command_available <- function(args = "--help") {
   !anyNA(try_exec_cmd("cargo", args))
 }
 
 #' Helper function for executing commands.
+#'
 #' @param cmd Character scalar, command to execute.
 #' @param args Character vector, arguments passed to the command.
 #' @return Character vector containing the stdout of the command or `NA_character_` if the command failed.
+#'
 #' @noRd
 try_exec_cmd <- function(cmd, args = character()) {
   result <- tryCatch(
@@ -65,9 +66,7 @@ try_exec_cmd <- function(cmd, args = character()) {
 #' @param replace scalar, value to substitute for missing values in data
 #' @param ... currently ignored
 #'
-#' @keywords internal
 #' @noRd
-#'
 replace_na <- function(data, replace = NA, ...) {
   if (vctrs::vec_any_missing(data)) {
     missing <- vctrs::vec_detect_missing(data)

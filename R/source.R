@@ -567,7 +567,6 @@ print.extendr_opts <- function(x, ...) {
 
 #' Check For `extendr_opts` List
 #'
-#' @keywords internal
 #' @noRd
 check_extendr_opts <- function(opts, call = rlang::caller_call()) {
   if (!rlang::inherits_all(opts, c("extendr_opts", "list"))) {
@@ -584,7 +583,6 @@ check_extendr_opts <- function(opts, call = rlang::caller_call()) {
 
 #' Check For `extendr_fn_options` List
 #'
-#' @keywords internal
 #' @noRd
 check_extendr_fn_options <- function(
   extendr_fn_options,

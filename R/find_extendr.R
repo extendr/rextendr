@@ -6,7 +6,6 @@
 #'
 #' @return character scalar, path to Rust crate
 #'
-#' @keywords internal
 #' @noRd
 find_extendr_crate <- function(
   path = ".",
@@ -39,7 +38,6 @@ find_extendr_crate <- function(
 #'
 #' @return character scalar, path to Cargo manifest
 #'
-#' @keywords internal
 #' @noRd
 find_extendr_manifest <- function(
   path = ".",
