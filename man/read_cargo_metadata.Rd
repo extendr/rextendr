@@ -9,8 +9,8 @@ read_cargo_metadata(path = ".", dependencies = FALSE, echo = FALSE)
 \arguments{
 \item{path}{character scalar, the R package directory}
 
-\item{dependencies}{Default \code{FALSE}. A logical scalar, whether to include all
-recursive dependencies in stdout.}
+\item{dependencies}{Default \code{FALSE}. A logical scalar, whether to include
+all recursive dependencies in stdout.}
 
 \item{echo}{Default \code{FALSE}. A logical scalar, should cargo command and
 outputs be printed to the console.}

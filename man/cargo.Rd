@@ -50,6 +50,6 @@ This internal function allows us to maintain consistent specifications for
 \examples{
 \dontrun{
 # run cargo test from package root
-run_cargo("test")
+cargo("test")
 }
 }

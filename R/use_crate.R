@@ -4,14 +4,14 @@
 #'
 #' @param crate character scalar, the name of the crate to add
 #' @param features character vector, a list of features to include from the
-#'   crate
+#' crate
 #' @param git character scalar, the full URL of the remote Git repository
 #' @param version character scalar, the version of the crate to add
 #' @param optional boolean scalar, whether to mark the dependency as optional
-#'   (FALSE by default)
+#' (FALSE by default)
 #' @param path character scalar, the package directory
 #' @param echo logical scalar, should cargo command and outputs be printed to
-#'   console (default is TRUE)
+#' console (default is TRUE)
 #'
 #' @details
 #' For more details regarding these and other options, see the
@@ -84,9 +84,19 @@ use_crate <- function(
     optional <- NULL
   }
 
-  args <- c("add", crate, features, git, optional)
+  args <- c(
+    "add",
+    crate,
+    features,
+    git,
+    optional
+  )
 
-  cargo(args, wd = find_extendr_crate(path = path), echo = echo)
+  cargo(
+    args,
+    wd = find_extendr_crate(path = path),
+    echo = echo
+  )
 
   invisible()
 }

@@ -29,34 +29,28 @@ the$count <- 1L
 #'   inserted into the `#[extendr(...)]` attribute
 #' @param cache_build logical scalar, whether builds should be cached between
 #'   calls to [rust_source()].
-#' @param dependencies character vector, dependencies to be added to
-#'   `Cargo.toml`.
+#' @param dependencies character vector, dependencies to be added to `Cargo.toml`.
 #' @param extendr_deps named list, versions of `extendr-*` crates. Defaults to
 #'   `rextendr.extendr_deps` option (\code{list(`extendr-api` = "*")}) if
 #'   `use_dev_extendr` is not `TRUE`, otherwise, uses
-#'   `rextendr.extendr_dev_deps` option
-#'   (\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).
-#' @param features character vector, `extendr-api` features that should be
-#'   enabled. Supported values are `"ndarray"`, `"faer"`, `"either"`,
-#'   `"num-complex"`, `"serde"`, and `"graphics"`. Unknown features will produce
-#'   a warning if `quiet` is not `TRUE`.
-#' @param generate_module_macro logical scalar, whether the Rust module macro
-#'   should be automatically generated from the code. Default is `TRUE`. Ignored
-#'   for Rust source provided via `file`. Note that macro generation may fail in
-#'   complex cases.
-#' @param module_name character scalar, name of the module defined in the Rust
-#'   source via `extendr_module!`. Default is `"rextendr"`. If
-#'   `generate_module_macro` is `FALSE` or if `file` is specified, should
-#'   *match exactly* the name of the module defined in the source.
-#' @param patch.crates_io a named list where the name corresponds with the
-#'   dependency to be patched and the values are a named list of dependency
-#'   values—e.g. `git = "https://github.com/org/repo`.
-#' @param profile character scalar, Rust profile. Can be either `"dev"`,
-#'   `"release"` or `"perf"`. The default, `"dev"`, compiles faster but produces
-#'   slower code.
-#' @param toolchain character scalar, Rust toolchain. The default, `NULL`,
-#'   compiles with the system default toolchain. Accepts valid Rust toolchain
-#'   qualifiers, such as `"nightly"`, or (on Windows) `"stable-msvc"`.
+#'   `rextendr.extendr_dev_deps` option (\code{list(`extendr-api` = list(git =
+#'   "https://github.com/extendr/extendr")}).
+#' @param features character vector, `extendr-api` features that should be enabled.
+#'  Supported values are `"ndarray"`, `"faer"`, `"either"`, `"num-complex"`, `"serde"`, and `"graphics"`.
+#'  Unknown features will produce a warning if `quiet` is not `TRUE`.
+#' @param generate_module_macro logical scalar, whether the Rust module
+#'   macro should be automatically generated from the code. Default is `TRUE`.
+#'   Ignored for Rust source provided via `file`. Note that macro generation may
+#'   fail in complex cases.
+#' @param module_name character scalar, name of the module defined in the Rust source via
+#'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
+#'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
+#' @param patch.crates_io a named list where the name corresponds with the dependency to be patched and the values are a named list of dependency values—e.g. `git = "https://github.com/org/repo`.
+#' @param profile character scalar, Rust profile. Can be either `"dev"`, `"release"` or `"perf"`.
+#'  The default, `"dev"`, compiles faster but produces slower code.
+#' @param toolchain character scalar, Rust toolchain. The default, `NULL`, compiles with the
+#'  system default toolchain. Accepts valid Rust toolchain qualifiers,
+#'  such as `"nightly"`, or (on Windows) `"stable-msvc"`.
 #' @param use_dev_extendr logical scalar, whether to use development version of
 #'   `extendr`. Has no effect if `extendr_deps` are set.
 #' @param use_extendr_api logical scalar, whether `use extendr_api::prelude::*;`
@@ -68,10 +62,9 @@ the$count <- 1L
 #'   nothing on other platforms.
 #' @param x an `extendr_opts` list
 #'
-#' @return
-#' For `rust_source()` and `rust_function()`, the result from [dyn.load()],
-#' which is an object of class `DLLInfo`. See [getLoadedDLLs()] for more
-#' details. For `extendr_options()`, an `extendr_opts` list.
+#' @return For `rust_source()` and `rust_function()`, the result from
+#'   [dyn.load()], which is an object of class `DLLInfo`. See [getLoadedDLLs()]
+#'   for more details. For `extendr_options()`, an `extendr_opts` list.
 #'
 #' @details
 #' The extendr crate requires that all functions be registered with
@@ -98,12 +91,12 @@ the$count <- 1L
 #' code <- r"(
 #' #[extendr]
 #' fn hello() -> &'static str {
-#' "Hello, world!"
+#'     "Hello, world!"
 #' }
 #'
 #' #[extendr]
 #' fn test( a: &str, b: i64) {
-#' rprintln!("Data sent to Rust: {}, {}", a, b);
+#'     rprintln!("Data sent to Rust: {}, {}", a, b);
 #' }
 #' )"
 #'
@@ -114,24 +107,24 @@ the$count <- 1L
 #' # use case with an external dependency: a function that converts
 #' # markdown text to html, using the `pulldown_cmark` crate.
 #' code <- r"(
-#' use pulldown_cmark::{Parser, Options, html};
+#'   use pulldown_cmark::{Parser, Options, html};
 #'
-#' #[extendr]
-#' fn md_to_html(input: &str) -> String {
-#' let mut options = Options::empty();
-#' options.insert(Options::ENABLE_TABLES);
-#' let parser = Parser::new_ext(input, options);
-#' let mut output = String::new();
-#' html::push_html(&mut output, parser);
-#' output
-#' }
+#'   #[extendr]
+#'   fn md_to_html(input: &str) -> String {
+#'     let mut options = Options::empty();
+#'     options.insert(Options::ENABLE_TABLES);
+#'     let parser = Parser::new_ext(input, options);
+#'     let mut output = String::new();
+#'     html::push_html(&mut output, parser);
+#'     output
+#'   }
 #' )"
 #'
 #' rust_source(
-#' code = code,
-#' opts = extendr_options(
-#' dependencies = list(`pulldown-cmark` = "0.8")
-#' )
+#'   code = code,
+#'   opts = extendr_options(
+#'     dependencies = list(`pulldown-cmark` = "0.8")
+#'   )
 #' )
 #'
 #' md_text <- "# The story of the fox
@@ -142,12 +135,12 @@ the$count <- 1L
 #'
 #' # use the development version of `extendr-api` from GitHub
 #' rust_function(
-#' "fn add(a: f64, b: f64) -> f64 { a + b }",
-#' opts = extendr_options(
-#' patch.crates_io = list(
-#' `extendr-api` = list(git = "https://github.com/extendr/extendr")
-#' )
-#' )
+#'   "fn add(a: f64, b: f64) -> f64 { a + b }",
+#'   opts = extendr_options(
+#'     patch.crates_io = list(
+#'       `extendr-api` = list(git = "https://github.com/extendr/extendr")
+#'     )
+#'   )
 #' )
 #'
 #' # see default options
@@ -270,7 +263,10 @@ rust_source <- function(
     features = opts[["features"]]
   )
 
-  brio::write_lines(cargo.toml_content, file.path(the$build_dir, "Cargo.toml"))
+  brio::write_lines(
+    cargo.toml_content,
+    file.path(the$build_dir, "Cargo.toml")
+  )
 
   # add cargo configuration file to the package
   cargo_config.toml_content <- generate_cargo_config.toml()
@@ -449,7 +445,10 @@ rust_function <- function(
   # the macro call added before the function definition
   # note: only accepted values are logical and character
   if (!rlang::is_null(extendr_fn_options)) {
-    check_extendr_fn_options(extendr_fn_options, opts[["use_dev_extendr"]])
+    check_extendr_fn_options(
+      extendr_fn_options,
+      opts[["use_dev_extendr"]]
+    )
 
     # get names and values
     nms <- names(extendr_fn_options)
@@ -476,9 +475,19 @@ rust_function <- function(
     extendr_macro <- "#[extendr]"
   }
 
-  code <- paste(extendr_macro, stringi::stri_trim(code), sep = "\n")
+  code <- paste(
+    extendr_macro,
+    stringi::stri_trim(code),
+    sep = "\n"
+  )
 
-  rust_source(code = code, echo = echo, env = env, quiet = quiet, opts = opts)
+  rust_source(
+    code = code,
+    echo = echo,
+    env = env,
+    quiet = quiet,
+    opts = opts
+  )
 }
 
 #' @rdname rust_source
@@ -670,8 +679,7 @@ check_extendr_fn_options <- function(
 
 #' Generates valid rust library path given file_name.
 #'
-#' Internally calls [as_valid_rust_name()], but also replaces `-` with `_`, as
-#' Rust does.
+#' Internally calls [as_valid_rust_name()], but also replaces `-` with `_`, as Rust does.
 #'
 #' @param file_name_no_parent \[string\] File name, no parent.
 #' @returns Sanitized and corrected name.
@@ -725,7 +733,10 @@ get_specific_target_name <- function() {
       return("i686-pc-windows-gnu")
     }
 
-    cli::cli_abort("Unknown Windows architecture", class = "rextendr_error")
+    cli::cli_abort(
+      "Unknown Windows architecture",
+      class = "rextendr_error"
+    )
   }
 
   NULL

@@ -7,31 +7,31 @@ development:
 destination: docs
 
 reference:
-  - title: Compiling and running Rust code
-    contents:
-      - rust_source
-      - rust_function
-      - rust_eval
-      - eng_extendr
+- title: Compiling and running Rust code
+  contents:
+  - rust_source
+  - rust_function
+  - rust_eval
+  - eng_extendr
 
-  - title: Package development
-    contents:
-      - use_extendr
-      - use_crate
-      - document
-      - register_extendr
-      - write_license_note
-      - clean
-      - cran
-      - vendor_crates
-      - use_msrv
-      - use_vscode
+- title: Package development
+  contents:
+  - use_extendr
+  - use_crate
+  - document
+  - register_extendr
+  - write_license_note
+  - clean
+  - cran
+  - vendor_crates
+  - use_msrv
+  - use_vscode
 
-  - title: Various utility functions
-    contents:
-      - to_toml
-      - rust_sitrep
-      - read_cargo_metadata
-      - use_extendr_badge
-      - update_scaffold
-      - run_cargo
+- title: Various utility functions
+  contents:
+  - to_toml
+  - rust_sitrep
+  - read_cargo_metadata
+  - use_extendr_badge
+  - update_scaffold
+  - cargo

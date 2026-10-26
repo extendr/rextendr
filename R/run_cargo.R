@@ -26,7 +26,7 @@
 #' @examples
 #' \dontrun{
 #' # run cargo test from package root
-#' run_cargo("test")
+#' cargo("test")
 #' }
 cargo <- function(
   args,
