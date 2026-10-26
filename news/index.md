@@ -297,9 +297,8 @@ CRAN release: 2023-05-30
 - `rextendr` has migrated to the use of `cli` for raising errors and
   warnings.
 
-- Developer note: new helper function
-  [`local_quiet_cli()`](https://extendr.github.io/rextendr/reference/local_quiet_cli.md)
-  introduced in `R/utils.R` to simplify silencing cli output.
+- Developer note: new helper function `local_quiet_cli()` introduced in
+  `R/utils.R` to simplify silencing cli output.
 
 ### New features
 
