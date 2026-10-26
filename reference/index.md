@@ -47,9 +47,6 @@
   Convert R [`list()`](https://rdrr.io/r/base/list.html) into
   toml-compatible format.
 
-- [`make_module_macro()`](https://extendr.github.io/rextendr/reference/make_module_macro.md)
-  : Generate extendr module macro for Rust source
-
 - [`rust_sitrep()`](https://extendr.github.io/rextendr/reference/rust_sitrep.md)
   : Report on Rust infrastructure
 

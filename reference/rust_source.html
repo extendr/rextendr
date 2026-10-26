@@ -166,10 +166,8 @@ Unknown features will produce a warning if <code>quiet</code> is not <code>TRUE<
 <dt id="arg-generate-module-macro">generate_module_macro<a class="anchor" aria-label="anchor" href="#arg-generate-module-macro"></a></dt>
 <dd><p>logical scalar, whether the Rust module
 macro should be automatically generated from the code. Default is <code>TRUE</code>.
-Ignored for Rust source provided via <code>file</code>. The macro generation is done
-with <code><a href="make_module_macro.html">make_module_macro()</a></code> and it may fail in complex cases. If something
-doesn't work, try calling <code><a href="make_module_macro.html">make_module_macro()</a></code> on your code to see whether
-the generated macro code has issues.</p></dd>
+Ignored for Rust source provided via <code>file</code>. Note that macro generation may
+fail in complex cases.</p></dd>
 
 
 <dt id="arg-module-name">module_name<a class="anchor" aria-label="anchor" href="#arg-module-name"></a></dt>

@@ -38,6 +38,8 @@
   [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
 - Moved from document.c to document.R to avoid having to compile C
   executable. [\#552](https://github.com/extendr/rextendr/pull/552)
+- Unexported `make_module_macro()`
+  (\[#562\]\[<https://github.com/extendr/rextendr/pull/562>\])
 
 ### Changed
 

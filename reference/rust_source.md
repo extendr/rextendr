@@ -119,12 +119,8 @@ print(x, ...)
 
   logical scalar, whether the Rust module macro should be automatically
   generated from the code. Default is `TRUE`. Ignored for Rust source
-  provided via `file`. The macro generation is done with
-  [`make_module_macro()`](https://extendr.github.io/rextendr/reference/make_module_macro.md)
-  and it may fail in complex cases. If something doesn't work, try
-  calling
-  [`make_module_macro()`](https://extendr.github.io/rextendr/reference/make_module_macro.md)
-  on your code to see whether the generated macro code has issues.
+  provided via `file`. Note that macro generation may fail in complex
+  cases.
 
 - module_name:
 
