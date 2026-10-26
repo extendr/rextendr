@@ -10,17 +10,27 @@ S3method(format_toml,list)
 S3method(format_toml,logical)
 S3method(format_toml,name)
 S3method(print,extendr_opts)
+export("#")
+export("\\dontrun{")
+export("run_cargo(\"test\")")
+export("}")
+export(cargo)
 export(clean)
 export(document)
 export(eng_extendr)
 export(eng_extendrsrc)
 export(extendr_options)
+export(from)
+export(package)
 export(read_cargo_metadata)
 export(register_extendr)
+export(root)
+export(run)
 export(rust_eval)
 export(rust_function)
 export(rust_sitrep)
 export(rust_source)
+export(test)
 export(to_toml)
 export(update_scaffold)
 export(use_crate)
@@ -32,21 +42,25 @@ export(use_vscode)
 export(vendor_crates)
 export(vendor_pkgs)
 export(write_license_note)
-importFrom(glue,glue)
-importFrom(glue,glue_collapse)
+importFrom(glue,
+  glue,
+  glue_collapse
+)
 importFrom(lifecycle,deprecated)
-importFrom(rlang,"%||%")
-importFrom(rlang,.data)
-importFrom(rlang,.env)
-importFrom(rlang,as_function)
-importFrom(rlang,as_label)
-importFrom(rlang,as_name)
-importFrom(rlang,caller_env)
-importFrom(rlang,dots_list)
-importFrom(rlang,enquo)
-importFrom(rlang,is_atomic)
-importFrom(rlang,is_missing)
-importFrom(rlang,is_na)
-importFrom(rlang,is_null)
-importFrom(rlang,names2)
+importFrom(rlang,
+  "%||%",
+  .data,
+  .env,
+  as_function,
+  as_label,
+  as_name,
+  caller_env,
+  dots_list,
+  enquo,
+  is_atomic,
+  is_missing,
+  is_na,
+  is_null,
+  names2
+)
 importFrom(stringi,stri_replace_all_regex)
