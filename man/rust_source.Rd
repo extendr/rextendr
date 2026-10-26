@@ -87,10 +87,8 @@ Unknown features will produce a warning if \code{quiet} is not \code{TRUE}.}
 
 \item{generate_module_macro}{logical scalar, whether the Rust module
 macro should be automatically generated from the code. Default is \code{TRUE}.
-Ignored for Rust source provided via \code{file}. The macro generation is done
-with \code{\link[=make_module_macro]{make_module_macro()}} and it may fail in complex cases. If something
-doesn't work, try calling \code{\link[=make_module_macro]{make_module_macro()}} on your code to see whether
-the generated macro code has issues.}
+Ignored for Rust source provided via \code{file}. Note that macro generation may
+fail in complex cases.}
 
 \item{module_name}{character scalar, name of the module defined in the Rust source via
 \verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
