@@ -23,6 +23,7 @@
 #' JSON-structured standard output.
 #'
 #' @export
+#' @examples
 #' \dontrun{
 #' # run cargo test from package root
 #' run_cargo("test")

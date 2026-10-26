@@ -47,3 +47,9 @@ JSON-structured standard output.
 This internal function allows us to maintain consistent specifications for
 \code{processx::run()} everywhere it uses.
 }
+\examples{
+\dontrun{
+# run cargo test from package root
+run_cargo("test")
+}
+}
