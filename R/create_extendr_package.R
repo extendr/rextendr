@@ -9,7 +9,6 @@
 #' `rextendr::use_extendr()`
 #'
 #' @return Path to the newly created project or package, invisibly.
-#' @keywords internal
 #'
 #' @noRd
 create_extendr_package <- function(path, ...) {

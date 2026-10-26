@@ -22,7 +22,6 @@
 #' See [`processx::run()`]. If `parse_json = TRUE`, result of parsing
 #' JSON-structured standard output.
 #'
-#' @keywords internal
 #' @noRd
 run_cargo <- function(
   args,
