@@ -43,8 +43,9 @@ cargo <- function(
   }
 
   if (rlang::is_null(wd)) {
-    wd <- find_extendr_crate(error_call = error_call)
+    wd <- find_extendr_crate(getwd(), error_call = error_call)
   }
+
   check_character(args, call = error_call, class = "rextendr_error")
   check_string(
     wd,
