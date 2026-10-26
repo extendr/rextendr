@@ -6,10 +6,10 @@
 \usage{
 cargo(
   args,
-  wd = find_extendr_crate(),
-  error_on_status = TRUE,
   echo = TRUE,
-  env = get_cargo_envvars(),
+  error_on_status = TRUE,
+  wd = NULL,
+  env = NULL,
   parse_json = FALSE,
   error_call = rlang::caller_call(),
   ...
@@ -18,14 +18,14 @@ cargo(
 \arguments{
 \item{args}{character vector, the Cargo subcommand and flags to be executed.}
 
-\item{wd}{character scalar, location of the Rust crate, (default is
-\code{find_extendr_crate()}).}
+\item{echo}{Default \code{TRUE}. Alogical scalar, whether to print standard output
+and error to the console.}
 
 \item{error_on_status}{Default \code{TRUE}. A logical scalar, whether to error on
 a non-zero exist status.}
 
-\item{echo}{Default \code{TRUE}. Alogical scalar, whether to print standard output
-and error to the console.}
+\item{wd}{character scalar, location of the Rust crate, (default is
+\code{find_extendr_crate()}).}
 
 \item{env}{character vector, environment variables of the child process.}
 

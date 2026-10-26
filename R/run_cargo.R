@@ -30,14 +30,21 @@
 #' }
 cargo <- function(
   args,
-  wd = find_extendr_crate(),
-  error_on_status = TRUE,
   echo = TRUE,
-  env = get_cargo_envvars(),
+  error_on_status = TRUE,
+  wd = NULL,
+  env = NULL,
   parse_json = FALSE,
   error_call = rlang::caller_call(),
   ...
 ) {
+  if (rlang::is_null(env)) {
+    env <- get_cargo_envvars()
+  }
+
+  if (rlang::is_null(wd)) {
+    wd <- find_extendr_crate(error_call = error_call)
+  }
   check_character(args, call = error_call, class = "rextendr_error")
   check_string(
     wd,
