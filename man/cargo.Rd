@@ -39,8 +39,8 @@ which the function running in the frame was invoked.}
 \item{...}{additional arguments passed to \code{\link[processx:run]{processx::run()}}.}
 }
 \value{
-A list with elements \code{status}, \code{stdout}, \code{stderr}, and \code{timeout}. See
-\code{\link[processx:run]{processx::run()}}. If \code{parse_json = TRUE}, result of parsing
+Invisibly, a list with elements \code{status}, \code{stdout}, \code{stderr}, and \code{timeout}.
+See \code{\link[processx:run]{processx::run()}}. If \code{parse_json = TRUE}, result of parsing
 JSON-structured standard output.
 }
 \description{

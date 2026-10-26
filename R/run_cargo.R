@@ -18,8 +18,8 @@
 #'   which the function running in the frame was invoked.
 #' @param ... additional arguments passed to [`processx::run()`].
 #' @returns
-#' A list with elements `status`, `stdout`, `stderr`, and `timeout`. See
-#' [`processx::run()`]. If `parse_json = TRUE`, result of parsing
+#' Invisibly, a list with elements `status`, `stdout`, `stderr`, and `timeout`.
+#' See [`processx::run()`]. If `parse_json = TRUE`, result of parsing
 #' JSON-structured standard output.
 #'
 #' @export
@@ -91,5 +91,5 @@ cargo <- function(
     return(res)
   }
 
-  out
+  invisible(out)
 }
