@@ -1,7 +1,12 @@
 #' Run Cargo subcommands
 #'
-#' This internal function allows us to maintain consistent specifications for
-#' `processx::run()` everywhere it uses.
+#' Call the `cargo` command line tool from R. This function delegates to
+#' `processx::run("cargo")` enabling calls such as `cargo("test")` or
+#' `cargo("check")`.
+#'
+#' When `wd = NULL` (the default), the `cargo` command is called from the
+#' package's Rust crate's source. Otherwise, when `wd = "/my/path"`, `cargo`
+#' will be run there.
 #'
 #' @param args character vector, the Cargo subcommand and flags to be executed.
 #' @param wd character scalar, location of the Rust crate, (default is
