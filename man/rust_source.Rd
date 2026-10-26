@@ -73,35 +73,41 @@ inserted into the \verb{#[extendr(...)]} attribute}
 \item{cache_build}{logical scalar, whether builds should be cached between
 calls to \code{\link[=rust_source]{rust_source()}}.}
 
-\item{dependencies}{character vector, dependencies to be added to \code{Cargo.toml}.}
+\item{dependencies}{character vector, dependencies to be added to
+\code{Cargo.toml}.}
 
 \item{extendr_deps}{named list, versions of \verb{extendr-*} crates. Defaults to
 \code{rextendr.extendr_deps} option (\code{list(`extendr-api` = "*")}) if
 \code{use_dev_extendr} is not \code{TRUE}, otherwise, uses
-\code{rextendr.extendr_dev_deps} option (\code{list(`extendr-api` = list(git =
-"https://github.com/extendr/extendr")}).}
+\code{rextendr.extendr_dev_deps} option
+(\code{list(`extendr-api` = list(git = "https://github.com/extendr/extendr")}).}
 
-\item{features}{character vector, \code{extendr-api} features that should be enabled.
-Supported values are \code{"ndarray"}, \code{"faer"}, \code{"either"}, \code{"num-complex"}, \code{"serde"}, and \code{"graphics"}.
-Unknown features will produce a warning if \code{quiet} is not \code{TRUE}.}
+\item{features}{character vector, \code{extendr-api} features that should be
+enabled. Supported values are \code{"ndarray"}, \code{"faer"}, \code{"either"},
+\code{"num-complex"}, \code{"serde"}, and \code{"graphics"}. Unknown features will produce
+a warning if \code{quiet} is not \code{TRUE}.}
 
-\item{generate_module_macro}{logical scalar, whether the Rust module
-macro should be automatically generated from the code. Default is \code{TRUE}.
-Ignored for Rust source provided via \code{file}. Note that macro generation may
-fail in complex cases.}
+\item{generate_module_macro}{logical scalar, whether the Rust module macro
+should be automatically generated from the code. Default is \code{TRUE}. Ignored
+for Rust source provided via \code{file}. Note that macro generation may fail in
+complex cases.}
 
-\item{module_name}{character scalar, name of the module defined in the Rust source via
-\verb{extendr_module!}. Default is \code{"rextendr"}. If \code{generate_module_macro} is \code{FALSE}
-or if \code{file} is specified, should \emph{match exactly} the name of the module defined in the source.}
+\item{module_name}{character scalar, name of the module defined in the Rust
+source via \verb{extendr_module!}. Default is \code{"rextendr"}. If
+\code{generate_module_macro} is \code{FALSE} or if \code{file} is specified, should
+\emph{match exactly} the name of the module defined in the source.}
 
-\item{patch.crates_io}{a named list where the name corresponds with the dependency to be patched and the values are a named list of dependency values—e.g. \verb{git = "https://github.com/org/repo}.}
+\item{patch.crates_io}{a named list where the name corresponds with the
+dependency to be patched and the values are a named list of dependency
+values—e.g. \verb{git = "https://github.com/org/repo}.}
 
-\item{profile}{character scalar, Rust profile. Can be either \code{"dev"}, \code{"release"} or \code{"perf"}.
-The default, \code{"dev"}, compiles faster but produces slower code.}
+\item{profile}{character scalar, Rust profile. Can be either \code{"dev"},
+\code{"release"} or \code{"perf"}. The default, \code{"dev"}, compiles faster but produces
+slower code.}
 
-\item{toolchain}{character scalar, Rust toolchain. The default, \code{NULL}, compiles with the
-system default toolchain. Accepts valid Rust toolchain qualifiers,
-such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
+\item{toolchain}{character scalar, Rust toolchain. The default, \code{NULL},
+compiles with the system default toolchain. Accepts valid Rust toolchain
+qualifiers, such as \code{"nightly"}, or (on Windows) \code{"stable-msvc"}.}
 
 \item{use_dev_extendr}{logical scalar, whether to use development version of
 \code{extendr}. Has no effect if \code{extendr_deps} are set.}
@@ -118,9 +124,9 @@ nothing on other platforms.}
 \item{x}{an \code{extendr_opts} list}
 }
 \value{
-For \code{rust_source()} and \code{rust_function()}, the result from
-\code{\link[=dyn.load]{dyn.load()}}, which is an object of class \code{DLLInfo}. See \code{\link[=getLoadedDLLs]{getLoadedDLLs()}}
-for more details. For \code{extendr_options()}, an \code{extendr_opts} list.
+For \code{rust_source()} and \code{rust_function()}, the result from \code{\link[=dyn.load]{dyn.load()}},
+which is an object of class \code{DLLInfo}. See \code{\link[=getLoadedDLLs]{getLoadedDLLs()}} for more
+details. For \code{extendr_options()}, an \code{extendr_opts} list.
 }
 \description{
 \code{\link[=rust_source]{rust_source()}} compiles and loads a single Rust file for use in R.
@@ -151,12 +157,12 @@ add(2.5, 4.7)
 code <- r"(
 #[extendr]
 fn hello() -> &'static str {
-    "Hello, world!"
+"Hello, world!"
 }
 
 #[extendr]
 fn test( a: &str, b: i64) {
-    rprintln!("Data sent to Rust: {}, {}", a, b);
+rprintln!("Data sent to Rust: {}, {}", a, b);
 }
 )"
 
@@ -167,24 +173,24 @@ test("a string", 42)
 # use case with an external dependency: a function that converts
 # markdown text to html, using the `pulldown_cmark` crate.
 code <- r"(
-  use pulldown_cmark::{Parser, Options, html};
+use pulldown_cmark::{Parser, Options, html};
 
-  #[extendr]
-  fn md_to_html(input: &str) -> String {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_TABLES);
-    let parser = Parser::new_ext(input, options);
-    let mut output = String::new();
-    html::push_html(&mut output, parser);
-    output
-  }
+#[extendr]
+fn md_to_html(input: &str) -> String {
+let mut options = Options::empty();
+options.insert(Options::ENABLE_TABLES);
+let parser = Parser::new_ext(input, options);
+let mut output = String::new();
+html::push_html(&mut output, parser);
+output
+}
 )"
 
 rust_source(
-  code = code,
-  opts = extendr_options(
-    dependencies = list(`pulldown-cmark` = "0.8")
-  )
+code = code,
+opts = extendr_options(
+dependencies = list(`pulldown-cmark` = "0.8")
+)
 )
 
 md_text <- "# The story of the fox
@@ -195,12 +201,12 @@ md_to_html(md_text)
 
 # use the development version of `extendr-api` from GitHub
 rust_function(
-  "fn add(a: f64, b: f64) -> f64 { a + b }",
-  opts = extendr_options(
-    patch.crates_io = list(
-      `extendr-api` = list(git = "https://github.com/extendr/extendr")
-    )
-  )
+"fn add(a: f64, b: f64) -> f64 { a + b }",
+opts = extendr_options(
+patch.crates_io = list(
+`extendr-api` = list(git = "https://github.com/extendr/extendr")
+)
+)
 )
 
 # see default options

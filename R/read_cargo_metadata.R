@@ -1,10 +1,10 @@
 #' Retrieve metadata for packages and workspaces
 #'
 #' @param path character scalar, the R package directory
-#' @param dependencies Default `FALSE`. A logical scalar, whether to include
-#' all recursive dependencies in stdout.
+#' @param dependencies Default `FALSE`. A logical scalar, whether to include all
+#'   recursive dependencies in stdout.
 #' @param echo Default `FALSE`. A logical scalar, should cargo command and
-#'  outputs be printed to the console.
+#'   outputs be printed to the console.
 #'
 #' @details
 #' For more details, see
@@ -47,7 +47,7 @@ read_cargo_metadata <- function(
     }
   )
 
-  run_cargo(
+  cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = echo,

@@ -1,13 +1,13 @@
 #' Clean Rust binaries and package cache.
 #'
-#' Removes Rust binaries (such as `.dll`/`.so` libraries), C wrapper object files,
-#' invokes `cargo clean` to reset cargo target directory
-#' (found by default at `pkg_root/src/rust/target/`).
-#' Useful when Rust code should be recompiled from scratch.
+#' Removes Rust binaries (such as `.dll`/`.so` libraries), C wrapper object
+#' files, invokes `cargo clean` to reset cargo target directory (found by
+#' default at `pkg_root/src/rust/target/`). Useful when Rust code should be
+#' recompiled from scratch.
 #'
 #' @param path character scalar, path to R package root.
 #' @param echo logical scalar, should cargo command and outputs be printed to
-#' console (default is `TRUE`)
+#'   console (default is `TRUE`)
 #'
 #' @return character vector with names of all deleted files (invisibly).
 #'
@@ -48,11 +48,7 @@ clean <- function(path = ".", echo = TRUE) {
     glue::glue("--target-dir={target_dir}")
   )
 
-  run_cargo(
-    args,
-    wd = find_extendr_crate(path = path),
-    echo = echo
-  )
+  cargo(args, wd = find_extendr_crate(path = path), echo = echo)
 
   root <- rprojroot::find_package_root_file(path = path)
 

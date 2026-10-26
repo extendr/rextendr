@@ -6,16 +6,16 @@
 #' recursive dependencies in Rust crate.
 #'
 #' @details
-#' The `authors` field in Cargo metadata is deprecated upstream
-#' (see <https://github.com/rust-lang/cargo/issues/16458>). This function
-#' relies on that field and may produce incomplete or missing author
-#' information as crates stop populating or removes the field entirely.
+#' The `authors` field in Cargo metadata is deprecated upstream (see
+#' <https://github.com/rust-lang/cargo/issues/16458>). This function relies on
+#' that field and may produce incomplete or missing author information as crates
+#' stop populating or removes the field entirely.
 #'
 #' @param path character scalar, the R package directory
 #' @param quiet logical scalar, whether to signal successful writing of
-#' LICENSE.note (default is `FALSE`)
+#'   LICENSE.note (default is `FALSE`)
 #' @param force logical scalar, whether to regenerate LICENSE.note if
-#' LICENSE.note already exists (default is `TRUE`)
+#'   LICENSE.note already exists (default is `TRUE`)
 #'
 #' @return text printed to LICENSE.note (invisibly).
 #'
@@ -25,28 +25,18 @@
 #' \dontrun{
 #' write_license_note()
 #' }
-write_license_note <- function(
-  path = ".",
-  quiet = FALSE,
-  force = TRUE
-) {
+write_license_note <- function(path = ".", quiet = FALSE, force = TRUE) {
   check_string(path, class = "rextendr_error")
   check_bool(quiet, class = "rextendr_error")
   check_bool(force, class = "rextendr_error")
 
   local_quiet_cli(quiet)
 
-  outfile <- rprojroot::find_package_root_file(
-    "LICENSE.note",
-    path = path
-  )
+  outfile <- rprojroot::find_package_root_file("LICENSE.note", path = path)
 
-  args <- c(
-    "metadata",
-    "--format-version=1"
-  )
+  args <- c("metadata", "--format-version=1")
 
-  metadata <- run_cargo(
+  metadata <- cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = FALSE,
@@ -91,15 +81,9 @@ write_license_note <- function(
   packages <- packages[packages[["id"]] != current_package, ]
 
   # replace missing values
-  packages[["respository"]] <- replace_na(
-    packages[["repository"]],
-    "unknown"
-  )
+  packages[["respository"]] <- replace_na(packages[["repository"]], "unknown")
 
-  packages[["licenses"]] <- replace_na(
-    packages[["repository"]],
-    "not provided"
-  )
+  packages[["licenses"]] <- replace_na(packages[["repository"]], "not provided")
 
   # remove email addresses and special characters and combine all authors
   # of a crate into a single character scalar
@@ -146,11 +130,7 @@ write_license_note <- function(
 }
 
 prep_authors <- function(authors, package) {
-  authors <- ifelse(
-    is.na(authors),
-    paste0(package, " authors"),
-    authors
-  )
+  authors <- ifelse(is.na(authors), paste0(package, " authors"), authors)
 
   authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
 

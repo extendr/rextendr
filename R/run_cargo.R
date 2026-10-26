@@ -28,7 +28,7 @@
 #' # run cargo test from package root
 #' run_cargo("test")
 #' }
-run_cargo <- function(
+cargo <- function(
   args,
   wd = find_extendr_crate(),
   error_on_status = TRUE,

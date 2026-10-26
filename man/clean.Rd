@@ -16,10 +16,10 @@ console (default is \code{TRUE})}
 character vector with names of all deleted files (invisibly).
 }
 \description{
-Removes Rust binaries (such as \code{.dll}/\code{.so} libraries), C wrapper object files,
-invokes \verb{cargo clean} to reset cargo target directory
-(found by default at \verb{pkg_root/src/rust/target/}).
-Useful when Rust code should be recompiled from scratch.
+Removes Rust binaries (such as \code{.dll}/\code{.so} libraries), C wrapper object
+files, invokes \verb{cargo clean} to reset cargo target directory (found by
+default at \verb{pkg_root/src/rust/target/}). Useful when Rust code should be
+recompiled from scratch.
 }
 \examples{
 \dontrun{
