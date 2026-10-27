@@ -132,11 +132,6 @@ update_scaffold <- function(
   # remove deprecated scaffolding
   unlink(file.path("src", "rust", c("document.c", "document.rs")))
 
-  update_message()
-  invisible(TRUE)
-}
-
-update_message <- function() {
   extendr_version <- getOption("rextendr.extendr_deps")[["extendr-api"]]
   toml_dependency <- sprintf('extendr-api = "%s"', extendr_version)
   use_crate_call <- sprintf(
@@ -173,4 +168,6 @@ update_message <- function() {
   ))
   cli::cli_end()
   cli::cli_text()
+
+  invisible(TRUE)
 }

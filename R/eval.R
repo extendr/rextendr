@@ -84,10 +84,10 @@ fn {fn_name}() -> extendr_api::error::Result<Robj> {{
 
   generated_fn <- function() {
     fn_handle <- get0(fn_name, envir = env, ifnotfound = NULL)
-    dll_handle <- find_loaded_dll(out[["name"]])
+    dll_handle <- keep(getLoadedDLLs(), \(.x) .x[["name"]] == out[["name"]])
     if (
       rlang::is_null(fn_handle) ||
-        rlang::is_null(dll_handle)
+        rlang::is_empty(dll_handle)
     ) {
       cli::cli_abort(
         c(
@@ -114,19 +114,4 @@ fn {fn_name}() -> extendr_api::error::Result<Robj> {{
   attr(generated_fn, "dll_path") <- out[["path"]]
 
   generated_fn
-}
-
-
-#' Find loaded dll by name
-#' @param name \[`string`\] Name of the dll (as returned by `dyn.load(...)[["name"]]`).
-#' @return \[`DllInfo`|`NULL`\] An object representing a loaded dll or
-#'   `NULL` if no such dll is loaded.
-#' @noRd
-find_loaded_dll <- function(name) {
-  dlls <- keep(getLoadedDLLs(), \(.x) .x[["name"]] == name)
-  if (rlang::is_empty(dlls)) {
-    NULL
-  } else {
-    dlls[[1]]
-  }
 }

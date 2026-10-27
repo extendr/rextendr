@@ -64,7 +64,13 @@ to_toml <- function(
   }
 
   tables <- map2(names, args, function(nm, a) {
-    header <- make_header(nm, a)
+    # For future support of array-of-table
+    # https://toml.io/en/v1.0.0-rc.3#array-of-tables
+    if (nzchar(nm) && !is.data.frame(a)) {
+      header <- as.character(glue("[{nm}]"))
+    } else {
+      header <- character(0)
+    }
     body <- format_toml(
       a,
       .top_level = TRUE,
@@ -85,16 +91,6 @@ to_toml <- function(
   })
 
   glue_collapse(tables, "\n\n")
-}
-
-make_header <- function(nm, arg) {
-  # For future support of array-of-table
-  # https://toml.io/en/v1.0.0-rc.3#array-of-tables
-  if (nzchar(nm) && !is.data.frame(arg)) {
-    as.character(glue("[{nm}]"))
-  } else {
-    character(0)
-  }
 }
 
 get_toml_err_msg <- function() "Object cannot be serialized."
@@ -200,11 +196,6 @@ format_toml_atomic <- function(x, ..., .top_level = FALSE, .formatter) {
   }
 }
 
-# This should escape basic symbols
-escape_dbl_quotes <- function(x) {
-  stri_replace_all_regex(x, "([\"])", r"(\\$1)")
-}
-
 #' @export
 format_toml.character <- function(
   x,
@@ -215,7 +206,11 @@ format_toml.character <- function(
   if (isTRUE(.str_as_literal)) {
     .formatter <- \(.x) glue("'{.x}'")
   } else {
-    .formatter <- \(.x) glue("\"{escape_dbl_quotes(.x)}\"")
+    .formatter <- \(.x) {
+      # This should escape basic symbols
+      escaped <- stri_replace_all_regex(.x, "([\"])", r"(\\$1)")
+      glue("\"{escaped}\"")
+    }
   }
   format_toml_atomic(
     x,
