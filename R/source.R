@@ -234,7 +234,128 @@ rust_source <- function(
     ))
   } else {
     if (opts[["generate_module_macro"]]) {
-      code <- c(code, make_module_macro(code, opts[["module_name"]]))
+      # Simple regular expressions are used to find functions or
+      # implementations with the `#[extendr]` attribute, which can get confused
+      # by valid Rust code, e.g. implementations for generics.
+      lns <- stringi::stri_split_lines(code, omit_empty = TRUE)[[1]]
+      lns <- remove_empty_or_whitespace(lns)
+
+      # Replace each `/* block comment */` with a line break rather than deleting it.
+      txt <- paste0(lns, collapse = "\n")
+
+      # One pass finds both delimiters without overlaps: in `/*/**/*/`,
+      # matching is left-to-right, so `/*/` can't yield both `/*` and `*/`.
+      pos <- stringi::stri_locate_all_regex(txt, "/\\*|\\*/")[[1]]
+
+      if (!is.na(pos[1, "start"])) {
+        delims <- stringi::stri_sub(txt, pos[, "start"], pos[, "end"])
+        depth <- cumsum(ifelse(delims == "/*", 1L, -1L))
+
+        if (depth[length(depth)] != 0L) {
+          n_open <- sum(delims == "/*") # nolint
+          n_close <- sum(delims == "*/") # nolint
+          cli::cli_abort(
+            c(
+              "Malformed comments.",
+              "x" = "Number of start {.code /*} and end {.code */} \\
+                     delimiters are not equal.",
+              "i" = "Found {n_open} occurrence{?s} of {.code /*}.",
+              "i" = "Found {n_close} occurrence{?s} of {.code */}."
+            ),
+            class = "rextendr_error"
+          )
+        }
+
+        if (any(depth < 0L)) {
+          cli::cli_abort(
+            c(
+              "Malformed comments.",
+              "x" = "{.code /*} and {.code */} are not paired correctly.",
+              "i" = "This error may be caused by a code fragment like \\
+                     {.code */ ... /*}."
+            ),
+            class = "rextendr_error"
+          )
+        }
+
+        # A top-level block spans from a delimiter entered at depth 0
+        # to the delimiter that returns to depth 0.
+        prev_depth <- c(0L, depth[-length(depth)])
+        txt <- stringi::stri_sub_replace_all(
+          txt,
+          pos[prev_depth == 0L, "start"],
+          pos[depth == 0L, "end"],
+          replacement = "\n"
+        )
+      }
+
+      lns <- stringi::stri_split_lines(txt, omit_empty = TRUE)[[1]]
+      lns <- stringi::stri_replace_first_regex(lns, "//.*$", "")
+      lns <- remove_empty_or_whitespace(lns)
+
+      # Finds lines which contain #[extendr] (allowing additional spaces)
+      # Excludes #[extendr(default=...)] which is used for function arguments
+      ids <- which(stringi::stri_detect_regex(
+        lns,
+        r"{#\s*\[\s*extendr(\s*\((?!.*default\s*=).*\))?\s*\]}"
+      ))
+      ends <- c(ids[-1], length(lns) + 1L) - 1L
+      exports <- character(0)
+
+      for (i in seq_along(ids)) {
+        item <- lns[ids[i]:ends[i]]
+
+        # Matches first occurrence of struct|enum|fn|impl<'a> item_name.
+        # Columns are match, struct, enum, fn, impl, lifetime, name.
+        meta <- stringi::stri_match_first_regex(
+          glue_collapse(item, sep = "\n"),
+          "(?:(?<struct>struct)|(?<enum>enum)|(?<fn>fn)|(?<impl>impl)(?:\\s*<(?<lifetime>.+?)>)?)\\s+(?<name>(?:r#)?(?:_\\w+|[A-z]\\w*))" # nolint: line_length_linter
+        )
+
+        # If no matches have been found, then the attribute is misplaced
+        if (is.na(meta[1, 1])) {
+          # This unfortunately does not provide
+          # meaningful output or source line numbers.
+          code_sample <- stringi::stri_sub(
+            glue_collapse(item, sep = "\n  "),
+            1,
+            80
+          )
+
+          rlang::abort(
+            cli::cli_fmt({
+              cli::cli_text(
+                "Rust code contains invalid attribute macros."
+              )
+              cli::cli_alert_danger(
+                "No valid {.code fn} or {.code impl} block found in the \\
+                following sample:"
+              )
+              cli::cli_code(code_sample)
+              cli::cli_alert_info(
+                "If {.code #[extendr]} is used inside {.code macro_rules!}, set \\
+                {.arg generate_module_macro = FALSE} and write the \\
+                {.code extendr_module!} block by hand."
+              )
+            }),
+            class = "rextendr_error"
+          )
+        }
+
+        # structs and enums are not registered in the module
+        item_type <- if (is.na(meta[1, 5])) meta[1, 4] else meta[1, 5]
+        if (!is.na(item_type)) {
+          exports <- c(exports, glue("{item_type} {meta[1, 7]};"))
+        }
+      }
+
+      code <- c(
+        code,
+        "extendr_module! {",
+        glue("mod {opts[['module_name']]};"),
+        exports,
+        "}"
+      )
     }
 
     if (opts[["use_extendr_api"]]) {
@@ -257,12 +378,61 @@ rust_source <- function(
   }
 
   # generate Cargo.toml file and compile shared library
-  cargo.toml_content <- generate_cargo.toml(
-    libname = libname,
-    dependencies = opts[["dependencies"]],
-    patch.crates_io = opts[["patch.crates_io"]],
-    extendr_deps = opts[["extendr_deps"]],
-    features = opts[["features"]]
+  # create an empty list if no dependencies are provided
+  dependencies <- opts[["dependencies"]] %||% list()
+  extendr_deps <- opts[["extendr_deps"]]
+
+  # enabled extendr features that we need to impute into all of the
+  # dependencies
+  features <- setdiff(opts[["features"]], "graphics")
+
+  if (length(features) > 0L) {
+    extendr_api <- extendr_deps[["extendr-api"]]
+    if (is.null(extendr_api)) {
+      cli::cli_abort(
+        "{.arg extendr_deps} should contain a reference to {.code extendr-api} crate.",
+        class = "rextendr_error"
+      )
+    }
+
+    if (is.character(extendr_api)) {
+      extendr_api <- list(version = extendr_api, features = array(features))
+    } else if (is.list(extendr_api)) {
+      existing_features <- extendr_api[["features"]] %||% character(0)
+      extendr_api[["features"]] <- array(unique(c(existing_features, features)))
+    } else {
+      cli::cli_abort(
+        "{.arg extendr_deps} contains an invalid reference to {.code extendr-api} crate.",
+        class = "rextendr_error"
+      )
+    }
+
+    extendr_deps[["extendr-api"]] <- extendr_api
+  }
+
+  for (.name in names(extendr_deps)) {
+    dependencies[[.name]] <- extendr_deps[[.name]]
+  }
+
+  cargo.toml_content <- to_toml(
+    package = list(
+      name = libname,
+      version = "0.0.1",
+      edition = "2021",
+      resolver = "2"
+    ),
+    lib = list(
+      `crate-type` = array("cdylib", 1)
+    ),
+    dependencies = dependencies,
+    `patch.crates-io` = opts[["patch.crates_io"]],
+    `profile.perf` = list(
+      inherits = "release",
+      lto = "thin",
+      `opt-level` = 3,
+      panic = "abort",
+      `codegen-units` = 1
+    )
   )
 
   brio::write_lines(
@@ -271,7 +441,12 @@ rust_source <- function(
   )
 
   # add cargo configuration file to the package
-  cargo_config.toml_content <- generate_cargo_config.toml()
+  cargo_config.toml_content <- to_toml(
+    build = list(
+      rustflags = c("-C", "target-cpu=native"),
+      `target-dir` = "target"
+    )
+  )
 
   brio::write_lines(
     cargo_config.toml_content,
@@ -342,7 +517,21 @@ rust_source <- function(
   }
 
   # get target name, not null for Windows
-  specific_target <- get_specific_target_name()
+  sysinf <- Sys.info()
+  specific_target <- NULL
+
+  if (!rlang::is_null(sysinf) && sysinf["sysname"] == "Windows") {
+    specific_target <- switch(
+      R.version$arch,
+      aarch64 = "aarch64-pc-windows-gnullvm",
+      x86_64 = "x86_64-pc-windows-gnu",
+      i386 = "i686-pc-windows-gnu",
+      cli::cli_abort(
+        "Unknown Windows architecture",
+        class = "rextendr_error"
+      )
+    )
+  }
 
   # get args for cargo build command
   args <- c(
@@ -359,11 +548,17 @@ rust_source <- function(
   # try running cargo command
   cargo(args, echo = echo, wd = getwd())
 
-  # load shared library
-  libfilename <- as_rust_lib_file_name(paste0(
-    get_dynlib_name(libname),
-    get_dynlib_ext()
-  ))
+  # load shared library, replacing `-` with `_` in its name, as Rust does
+  # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
+  libfilename <- paste0(
+    if (.Platform$OS.type == "windows") "" else "lib",
+    stringi::stri_replace_all_fixed(libname, "-", "_"),
+    if (identical(unname(sysinf["sysname"]), "Darwin")) {
+      ".dylib"
+    } else {
+      .Platform$dynlib.ext
+    }
+  )
 
   target_folder <- ifelse(
     rlang::is_null(specific_target),
@@ -385,12 +580,31 @@ rust_source <- function(
   wrapper_file <- file.path(the$build_dir, "target", "extendr_wrappers.R")
 
   rlang::try_fetch(
-    make_wrappers(
-      module_name = as_valid_rust_name(opts[["module_name"]]),
-      package_name = dll_info[["name"]],
-      outfile = wrapper_file,
-      use_symbols = FALSE
-    ),
+    {
+      # Invokes `wrap__make_{module_name}_wrappers` exported from
+      # the Rust library and writes obtained R wrappers to `wrapper_file`.
+      module_name <- as_valid_rust_name(opts[["module_name"]])
+      wrappers <- .Call(
+        glue("wrap__make_{module_name}_wrappers"),
+        use_symbols = FALSE,
+        package_name = dll_info[["name"]],
+        PACKAGE = dll_info[["name"]]
+      )
+      wrappers <- stringi::stri_split_lines1(wrappers)
+
+      write_file(
+        text = c(
+          wrappers[1],
+          "",
+          "# nolint start",
+          "",
+          wrappers[-1],
+          "",
+          "# nolint end"
+        ),
+        path = wrapper_file
+      )
+    },
     error = function(cnd) {
       cli::cli_abort(
         "Failed to generate wrapper functions.",
@@ -447,13 +661,83 @@ rust_function <- function(
   # the macro call added before the function definition
   # note: only accepted values are logical and character
   if (!rlang::is_null(extendr_fn_options)) {
-    check_extendr_fn_options(
-      extendr_fn_options,
-      opts[["use_dev_extendr"]]
-    )
+    # check names
+    if (!rlang::is_named(extendr_fn_options)) {
+      cli::cli_abort(
+        "{.var extendr_fn_options} must be a named list!",
+        class = "rextendr_error"
+      )
+    }
 
     # get names and values
     nms <- names(extendr_fn_options)
+
+    # is known name?
+    unknown_names <- setdiff(nms, c("r_name", "mod_name", "use_rng"))
+    unknown_dev_names <- setdiff(unknown_names, "invisible")
+
+    if (length(unknown_dev_names) > 0L) {
+      cli::cli_abort(
+        c(
+          "Found unknown {.code extendr} function option{?s}: {.val {unknown_dev_names}}.",
+          "i" = "These are not available on release or development versions of extendr."
+        ),
+        class = "rextendr_error"
+      )
+    } else if (length(unknown_names) > 0L && !opts[["use_dev_extendr"]]) {
+      cli::cli_abort(
+        c(
+          "Found unknown {.code extendr} function option{?s}: {.val {unknown_names}}.",
+          "i" = inf_dev_extendr_used()
+        ),
+        class = "rextendr_error"
+      )
+    }
+
+    # is empty
+    empty <- vapply(
+      extendr_fn_options,
+      FUN = function(.x) {
+        rlang::is_na(.x) ||
+          rlang::is_null(.x) ||
+          rlang::is_empty(.x) ||
+          !nzchar(.x)
+      },
+      FUN.VALUE = logical(1)
+    )
+
+    if (any(empty)) {
+      null_values <- nms[which(empty)] # nolint: object_usage_linter
+      cli::cli_abort(
+        c(
+          x = "Null value{?s}: {.val {null_values}}.",
+          i = "{.code NULL} values are disallowed."
+        ),
+        class = "rextendr_error"
+      )
+    }
+
+    # check values
+    check_string(
+      extendr_fn_options[["r_name"]],
+      allow_null = TRUE,
+      class = "rextendr_error"
+    )
+    check_string(
+      extendr_fn_options[["mod_name"]],
+      allow_null = TRUE,
+      class = "rextendr_error"
+    )
+    check_bool(
+      extendr_fn_options[["use_rng"]],
+      allow_null = TRUE,
+      class = "rextendr_error"
+    )
+    check_bool(
+      extendr_fn_options[["invisible"]],
+      allow_null = TRUE,
+      class = "rextendr_error"
+    )
 
     vls <- vapply(
       extendr_fn_options,
@@ -522,10 +806,35 @@ extendr_options <- function(
   check_bool(use_extendr_api, class = "rextendr_error")
   check_bool(use_rtools, class = "rextendr_error")
 
-  features <- validate_extendr_features(
+  features <- features %||% character(0)
+
+  if (!vctrs::vec_is(features, character())) {
+    cli::cli_abort(
+      c(
+        "!" = "{.arg features} expected to be a vector of type {.cls character}, but got {.cls {class(features)}}."
+      ),
+      class = "rextendr_error"
+    )
+  }
+
+  features <- unique(features)
+
+  unknown_features <- setdiff(
     features,
-    suppress_warnings = use_dev_extendr
+    c("ndarray", "faer", "serde", "either", "num-complex", "graphics")
   )
+  unknown_features <- unknown_features[nzchar(unknown_features)]
+
+  if (!use_dev_extendr && length(unknown_features) > 0) {
+    # alerts are to be short 1 liners
+    # these are called separately
+    cli::cli_warn(
+      c(
+        "Found unknown {.code extendr} feature{?s}: {.val {unknown_features}}.",
+        "i" = inf_dev_extendr_used()
+      )
+    ) # nolint: object_usage_linter
+  }
 
   if (rlang::is_null(extendr_deps)) {
     if (use_dev_extendr) {
@@ -581,165 +890,4 @@ check_extendr_opts <- function(opts, call = rlang::caller_call()) {
       class = "rextendr_error"
     )
   }
-}
-
-#' Check For `extendr_fn_options` List
-#'
-#' @noRd
-check_extendr_fn_options <- function(
-  extendr_fn_options,
-  use_dev_extendr,
-  call = rlang::caller_call()
-) {
-  # check names
-  if (!rlang::is_named(extendr_fn_options)) {
-    cli::cli_abort(
-      "{.var extendr_fn_options} must be a named list!",
-      call = call,
-      class = "rextendr_error"
-    )
-  }
-
-  nms <- names(extendr_fn_options)
-
-  # is known name?
-  unknown_names <- setdiff(nms, c("r_name", "mod_name", "use_rng"))
-  unknown_dev_names <- setdiff(unknown_names, "invisible")
-
-  if (length(unknown_dev_names) > 0L) {
-    cli::cli_abort(
-      c(
-        "Found unknown {.code extendr} function option{?s}: {.val {unknown_dev_names}}.",
-        "i" = "These are not available on release or development versions of extendr."
-      ),
-      call = call,
-      class = "rextendr_error"
-    )
-  } else if (length(unknown_names) > 0L && !use_dev_extendr) {
-    cli::cli_abort(
-      c(
-        "Found unknown {.code extendr} function option{?s}: {.val {unknown_names}}.",
-        "i" = inf_dev_extendr_used()
-      ),
-      call = call,
-      class = "rextendr_error"
-    )
-  }
-
-  # is empty
-  empty <- vapply(
-    extendr_fn_options,
-    FUN = function(.x) {
-      rlang::is_na(.x) ||
-        rlang::is_null(.x) ||
-        rlang::is_empty(.x) ||
-        !nzchar(.x)
-    },
-    FUN.VALUE = logical(1)
-  )
-
-  if (any(empty)) {
-    null_values <- nms[which(empty)] # nolint: object_usage_linter
-    cli::cli_abort(
-      c(
-        x = "Null value{?s}: {.val {null_values}}.",
-        i = "{.code NULL} values are disallowed."
-      ),
-      call = call,
-      class = "rextendr_error"
-    )
-  }
-
-  # check values
-  check_string(
-    extendr_fn_options[["r_name"]],
-    allow_null = TRUE,
-    call = call,
-    class = "rextendr_error"
-  )
-  check_string(
-    extendr_fn_options[["mod_name"]],
-    allow_null = TRUE,
-    call = call,
-    class = "rextendr_error"
-  )
-  check_bool(
-    extendr_fn_options[["use_rng"]],
-    allow_null = TRUE,
-    call = call,
-    class = "rextendr_error"
-  )
-  check_bool(
-    extendr_fn_options[["invisible"]],
-    allow_null = TRUE,
-    call = call,
-    class = "rextendr_error"
-  )
-
-  invisible(extendr_fn_options)
-}
-
-#' Generates valid rust library path given file_name.
-#'
-#' Internally calls [as_valid_rust_name()], but also replaces `-` with `_`, as Rust does.
-#'
-#' @param file_name_no_parent \[string\] File name, no parent.
-#' @returns Sanitized and corrected name.
-#' @noRd
-as_rust_lib_file_name <- function(file_name_no_parent) {
-  ext <- tools::file_ext(file_name_no_parent)
-
-  file_name_no_parent <- tools::file_path_sans_ext(file_name_no_parent)
-  file_name_no_parent <- as_valid_rust_name(file_name_no_parent)
-
-  paste(
-    stringi::stri_replace_all_fixed(file_name_no_parent, "-", "_"),
-    ext,
-    sep = "."
-  )
-}
-
-get_dynlib_ext <- function() {
-  # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
-  sysinf <- Sys.info()
-  if (!rlang::is_null(sysinf)) {
-    os <- sysinf["sysname"]
-    if (os == "Darwin") {
-      return(".dylib")
-    }
-  }
-  .Platform$dynlib.ext
-}
-
-get_dynlib_name <- function(libname) {
-  if (.Platform$OS.type == "windows") {
-    libname
-  } else {
-    paste0("lib", libname)
-  }
-}
-
-get_specific_target_name <- function() {
-  sysinf <- Sys.info()
-
-  if (!rlang::is_null(sysinf) && sysinf["sysname"] == "Windows") {
-    if (R.version$arch == "aarch64") {
-      return("aarch64-pc-windows-gnullvm")
-    }
-
-    if (R.version$arch == "x86_64") {
-      return("x86_64-pc-windows-gnu")
-    }
-
-    if (R.version$arch == "i386") {
-      return("i686-pc-windows-gnu")
-    }
-
-    cli::cli_abort(
-      "Unknown Windows architecture",
-      class = "rextendr_error"
-    )
-  }
-
-  NULL
 }
