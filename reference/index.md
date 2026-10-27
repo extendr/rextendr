@@ -58,3 +58,6 @@
 
 - [`update_scaffold()`](https://extendr.github.io/rextendr/reference/update_scaffold.md)
   : Update extendr scaffolding
+
+- [`cargo()`](https://extendr.github.io/rextendr/reference/cargo.md) :
+  Run Cargo subcommands

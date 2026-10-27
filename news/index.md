@@ -4,6 +4,10 @@
 
 ### Added
 
+- The internal `run_cargo()` has been exported as
+  [`cargo()`](https://extendr.github.io/rextendr/reference/cargo.md) so
+  that `cargo("test")` can be used
+  (<https://github.com/extendr/rextendr/pull/564>)
 - knitr engines now print compile errors if chunk option `error = TRUE`
   ([\#546](https://github.com/extendr/rextendr/pull/546))
 - knitr engines now return early rather than compiling when
