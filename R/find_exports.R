@@ -70,6 +70,11 @@ extract_meta <- function(lns) {
           following sample:"
         )
         cli::cli_code(code_sample)
+        cli::cli_alert_info(
+          "If {.code #[extendr]} is used inside {.code macro_rules!}, set \\
+          {.arg generate_module_macro = FALSE} and write the \\
+          {.code extendr_module!} block by hand."
+        )
       }),
       class = "rextendr_error"
     )
