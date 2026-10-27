@@ -584,8 +584,9 @@ rust_source <- function(
       # Invokes `wrap__make_{module_name}_wrappers` exported from
       # the Rust library and writes obtained R wrappers to `wrapper_file`.
       module_name <- as_valid_rust_name(opts[["module_name"]])
+      wrapper_function <- glue("wrap__make_{module_name}_wrappers")
       wrappers <- .Call(
-        glue("wrap__make_{module_name}_wrappers"),
+        wrapper_function,
         use_symbols = FALSE,
         package_name = dll_info[["name"]],
         PACKAGE = dll_info[["name"]]
