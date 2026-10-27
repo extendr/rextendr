@@ -41,7 +41,9 @@ the$count <- 1L
 #' @param generate_module_macro logical scalar, whether the Rust module
 #'   macro should be automatically generated from the code. Default is `TRUE`.
 #'   Ignored for Rust source provided via `file`. Note that macro generation may
-#'   fail in complex cases.
+#'   fail in complex cases, for example, if `#[extendr]` is used inside
+#'   `macro_rules!`. In that case, set `generate_module_macro = FALSE` and
+#'   write the `extendr_module!` block by hand.
 #' @param module_name character scalar, name of the module defined in the Rust source via
 #'   `extendr_module!`. Default is `"rextendr"`. If `generate_module_macro` is `FALSE`
 #'    or if `file` is specified, should *match exactly* the name of the module defined in the source.
