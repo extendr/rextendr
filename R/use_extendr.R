@@ -74,7 +74,9 @@ use_extendr <- function(
   }
 
   # Root path computed from user input
-  root_path <- try_get_root_path(path)
+  root_path <- try_get_normalized_path(
+    function() rprojroot::find_package_root_file(path = path)
+  )
   # Root path computed from `{usethis}`
   usethis_proj_path <- try_get_proj_path()
 
@@ -261,8 +263,19 @@ use_extendr <- function(
     overwrite = overwrite
   )
 
-  # create settings.json file
-  if (is_vscode() || is_positron()) {
+  # create settings.json file when running in VS Code or Positron
+  ide_envvars <- Sys.getenv(c(
+    "VSCODE_PID",
+    "VSCODE_CWD",
+    "VSCODE_IPC_HOOK_CLI",
+    "POSITRON",
+    "POSITRON_LONG_VERSION",
+    "POSITRON_MODE",
+    "POSITRON_VERSION"
+  ))
+  if (
+    any(nzchar(ide_envvars)) || tolower(Sys.getenv("TERM_PROGRAM")) == "vscode"
+  ) {
     use_vscode()
   }
 
@@ -326,24 +339,6 @@ try_get_proj_path <- function() {
   try_get_normalized_path(usethis::proj_get)
 }
 
-try_get_root_path <- function(path) {
-  try_get_normalized_path(
-    function() rprojroot::find_package_root_file(path = path)
-  )
-}
-
-#' Checks if provided name is a valid Rust name (identifier)
-#'
-#' @param name \[ character(n) \] Names to test.
-#' @return \[ logical(n) \] `TRUE` if the name is valid, otherwise `FALSE`.
-#' @noRd
-is_valid_rust_name <- function(name) {
-  # We require the name starts with a letter,
-  # ends with a letter or digit,
-  # and contains only alphanumeric ASCII chars, `-` or `_`.
-  stringi::stri_detect_regex(name, "^[A-z][\\A-z0-9_-]*[A-z0-9]$")
-}
-
 #' Convert R package name into equivalent valid Rust name.
 #'
 #' @param name \[ character(n) \] R names to convert.
@@ -365,7 +360,13 @@ as_valid_rust_name <- function(name) {
 #' @noRd
 throw_if_invalid_rust_name <- function(name, call = caller_env()) {
   quo <- rlang::enquo(name) # nolint: object_usage_linter
-  if (!rlang::is_scalar_character(name) || !is_valid_rust_name(name)) {
+  # We require the name starts with a letter,
+  # ends with a letter or digit,
+  # and contains only alphanumeric ASCII chars, `-` or `_`.
+  if (
+    !rlang::is_scalar_character(name) ||
+      !stringi::stri_detect_regex(name, "^[A-z][\\A-z0-9_-]*[A-z0-9]$")
+  ) {
     cli::cli_abort(
       c(
         "Argument {.arg {as_name(quo)}} is invalid.",

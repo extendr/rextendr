@@ -104,7 +104,17 @@ write_license_note <- function(
   # remove email addresses and special characters and combine all authors
   # of a crate into a single character scalar
   packages[["authors"]] <- unlist(Map(
-    prep_authors,
+    function(authors, package) {
+      authors <- ifelse(
+        is.na(authors),
+        paste0(package, " authors"),
+        authors
+      )
+
+      authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
+
+      paste0(authors, collapse = ", ")
+    },
     packages[["authors"]],
     packages[["name"]]
   ))
@@ -143,16 +153,4 @@ write_license_note <- function(
     search_root_from = path,
     overwrite = force
   )
-}
-
-prep_authors <- function(authors, package) {
-  authors <- ifelse(
-    is.na(authors),
-    paste0(package, " authors"),
-    authors
-  )
-
-  authors <- stringi::stri_replace_all_regex(authors, r"(\ <.+?>)", "")
-
-  paste0(authors, collapse = ", ")
 }

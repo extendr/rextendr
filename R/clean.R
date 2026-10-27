@@ -21,7 +21,19 @@ clean <- function(path = ".", echo = TRUE) {
   check_string(path, class = "rextendr_error")
   check_bool(echo, class = "rextendr_error")
 
-  manifest_path <- find_extendr_manifest(path = path)
+  manifest_path <- rprojroot::find_package_root_file(
+    "src",
+    "rust",
+    "Cargo.toml",
+    path = path
+  )
+
+  if (!file.exists(manifest_path)) {
+    cli::cli_abort(
+      "Could not find Cargo manifest at {.path manifest_path}.",
+      class = "rextendr_error"
+    )
+  }
 
   # Note: This should be adjusted if `TARGET_DIR` changes in `Makevars`
   target_dir <- rprojroot::find_package_root_file(
