@@ -167,7 +167,9 @@ Unknown features will produce a warning if <code>quiet</code> is not <code>TRUE<
 <dd><p>logical scalar, whether the Rust module
 macro should be automatically generated from the code. Default is <code>TRUE</code>.
 Ignored for Rust source provided via <code>file</code>. Note that macro generation may
-fail in complex cases.</p></dd>
+fail in complex cases, for example, if <code>#[extendr]</code> is used inside
+<code>macro_rules!</code>. In that case, set <code>generate_module_macro = FALSE</code> and
+write the <code>extendr_module!</code> block by hand.</p></dd>
 
 
 <dt id="arg-module-name">module_name<a class="anchor" aria-label="anchor" href="#arg-module-name"></a></dt>

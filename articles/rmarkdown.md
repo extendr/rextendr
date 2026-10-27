@@ -314,3 +314,43 @@ md_to_html(md_text)
 ```
 
     ## [1] "<h1>The story of the fox</h1>\n<p>The quick brown fox <strong>jumps over</strong> the lazy dog.\nThe quick <em>brown fox</em> jumps over the lazy dog.</p>\n"
+
+By default, `extendrsrc` chunks generate the `extendr_module!` block by
+scanning the code for `#[extendr]` attributes. This fails if
+`#[extendr]` is used inside `macro_rules!`. In that case, set
+`generate_module_macro = FALSE` via `engine.opts` and write the
+`extendr_module!` block by hand:
+
+```` markdown
+```{extendrsrc engine.opts = list(generate_module_macro = FALSE)}
+macro_rules! make_adder {
+    ($fn_name:ident, $n:expr) => {
+        #[extendr]
+        fn $fn_name(x: i32) -> i32 {
+            x + $n
+        }
+    };
+}
+
+make_adder!(add_one, 1);
+make_adder!(add_two, 2);
+
+extendr_module! {
+    mod rextendr;
+    fn add_one;
+    fn add_two;
+}
+```
+````
+
+``` r
+add_one(1L)
+```
+
+    ## [1] 2
+
+``` r
+add_two(1L)
+```
+
+    ## [1] 3

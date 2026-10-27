@@ -311,6 +311,38 @@ the <code>engine.opts</code> chunk option, like so:</p>
 <span></span>
 <span><span class="fu">md_to_html</span><span class="op">(</span><span class="va">md_text</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "&lt;h1&gt;The story of the fox&lt;/h1&gt;\n&lt;p&gt;The quick brown fox &lt;strong&gt;jumps over&lt;/strong&gt; the lazy dog.\nThe quick &lt;em&gt;brown fox&lt;/em&gt; jumps over the lazy dog.&lt;/p&gt;\n"</span></span></code></pre>
+<p>By default, <code>extendrsrc</code> chunks generate the
+<code>extendr_module!</code> block by scanning the code for
+<code>#[extendr]</code> attributes. This fails if
+<code>#[extendr]</code> is used inside <code>macro_rules!</code>. In
+that case, set <code>generate_module_macro = FALSE</code> via
+<code>engine.opts</code> and write the <code>extendr_module!</code>
+block by hand:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="in">```{extendrsrc engine.opts = list(generate_module_macro = FALSE)}</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="in">macro_rules! make_adder {</span></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a><span class="in">    ($fn_name:ident, $n:expr) =&gt; {</span></span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a><span class="in">        #[extendr]</span></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a><span class="in">        fn $fn_name(x: i32) -&gt; i32 {</span></span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a><span class="in">            x + $n</span></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a><span class="in">        }</span></span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a><span class="in">    };</span></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a><span class="in">make_adder!(add_one, 1);</span></span>
+<span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a><span class="in">make_adder!(add_two, 2);</span></span>
+<span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="#cb34-14" tabindex="-1"></a><span class="in">extendr_module! {</span></span>
+<span id="cb34-15"><a href="#cb34-15" tabindex="-1"></a><span class="in">    mod rextendr;</span></span>
+<span id="cb34-16"><a href="#cb34-16" tabindex="-1"></a><span class="in">    fn add_one;</span></span>
+<span id="cb34-17"><a href="#cb34-17" tabindex="-1"></a><span class="in">    fn add_two;</span></span>
+<span id="cb34-18"><a href="#cb34-18" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb34-19"><a href="#cb34-19" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">add_one</span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 2</span></span></code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">add_two</span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

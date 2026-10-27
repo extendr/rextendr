@@ -120,7 +120,9 @@ print(x, ...)
   logical scalar, whether the Rust module macro should be automatically
   generated from the code. Default is `TRUE`. Ignored for Rust source
   provided via `file`. Note that macro generation may fail in complex
-  cases.
+  cases, for example, if `#[extendr]` is used inside `macro_rules!`. In
+  that case, set `generate_module_macro = FALSE` and write the
+  `extendr_module!` block by hand.
 
 - module_name:
 
