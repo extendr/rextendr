@@ -12,9 +12,6 @@ use_extendr_badge(path = ".")
 \description{
 Add the version of extendr being used by an R package to its README.
 }
-\details{
-Requires \code{usethis} to be available.
-}
 \examples{
 \dontrun{
 use_extendr_badge()

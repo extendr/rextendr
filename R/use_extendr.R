@@ -73,8 +73,6 @@ use_extendr <- function(
     overwrite <- overwrite %||% FALSE
   }
 
-  rlang::check_installed("usethis")
-
   # Root path computed from user input
   root_path <- try_get_root_path(path)
   # Root path computed from `{usethis}`
@@ -381,13 +379,13 @@ throw_if_invalid_rust_name <- function(name, call = caller_env()) {
 #' Write templates from `inst/templates`
 #'
 #' `use_rextendr_template()` is a wrapper around `usethis::use_template()` when
-#' it's available and otherwise implements a simple version of `use_template()`.
+#' `overwrite` is `NULL` and otherwise implements a simple version of `use_template()`.
 #'
 #' @inheritParams usethis::use_template
 #' @inheritParams use_extendr
 #' @param overwrite Logical scalar or `NULL` indicating whether the file in the `path` should be overwritten.
 #' If `FALSE` and the file already exists, the function will do nothing.
-#' If `NULL` and the `usethis` package is installed, the function will ask the user whether the file should
+#' If `NULL`, the function will ask the user whether the file should
 #' be overwritten in an interactive session or do nothing in a non-interactive session.
 #' Otherwise, the file will be overwritten.
 #' @noRd
@@ -404,7 +402,7 @@ use_rextendr_template <- function(
     return(invisible(NULL))
   }
 
-  if (is_installed("usethis") && is.null(overwrite)) {
+  if (is.null(overwrite)) {
     created <- usethis::use_template(
       template,
       save_as = save_as,
@@ -441,11 +439,6 @@ use_rextendr_template <- function(
   )
 
   invisible(TRUE)
-}
-
-# Wrap `rlang::is_installed()` for ease of mocking installed packages
-is_installed <- function(pkg) {
-  rlang::is_installed(pkg)
 }
 
 pkg_name <- function(path = ".") {

@@ -5,8 +5,6 @@
 # in which case `pretty_rel_path` should return absolute path of itr
 # first argument.
 test_that("Find relative path from package root, trivial case", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -20,8 +18,6 @@ test_that("Find relative path from package root, trivial case", {
 })
 
 test_that("Find relative path starting from a subdirectory of package", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -35,8 +31,6 @@ test_that("Find relative path starting from a subdirectory of package", {
 })
 
 test_that("Find relative path starting outside of package directory, return absolute path", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -53,8 +47,6 @@ test_that("Find relative path starting outside of package directory, return abso
 })
 
 test_that("Find relative path providing no input for the package directory, return absolute path", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -71,8 +63,6 @@ test_that("Find relative path providing no input for the package directory, retu
 })
 
 test_that("Find relative path providing NA as input for the package directory, return absolute path", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -89,8 +79,6 @@ test_that("Find relative path providing NA as input for the package directory, r
 })
 
 test_that("Find relative path providing empty character vector as input for the package directory, return absolute path", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 
@@ -107,8 +95,6 @@ test_that("Find relative path providing empty character vector as input for the 
 })
 
 test_that("Test path to non-existent file", {
-  skip_if_not_installed("usethis")
-
   pkg_root <- local_package("testpkg")
   use_extendr()
 

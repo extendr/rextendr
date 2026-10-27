@@ -14,9 +14,6 @@
 create_extendr_package <- function(path, ...) {
   check_string(path, class = "rextendr_error")
 
-  # error if usethis is not installed
-  rlang::check_installed("usethis")
-
   args <- rlang::list2(...)
 
   # hunch is that rstudio project text input widgets return empty strings

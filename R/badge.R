@@ -2,8 +2,6 @@
 #'
 #' Add the version of extendr being used by an R package to its README.
 #'
-#' Requires `usethis` to be available.
-#'
 #' @examples
 #' \dontrun{
 #' use_extendr_badge()
@@ -13,7 +11,6 @@
 #' @export
 use_extendr_badge <- function(path = ".") {
   check_string(path, class = "rextendr_error")
-  rlang::check_installed("usethis")
   meta <- read_cargo_metadata(path)
   deps <- meta[[c("packages", "dependencies")]][[1]]
 

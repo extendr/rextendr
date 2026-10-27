@@ -31,16 +31,6 @@ local_quiet_cli <- function(quiet, env = rlang::caller_env()) {
   }
 }
 
-#' Helper function for checking cargo sub-commands.
-#'
-#' @param args Character vector, arguments to the `cargo` command. Passed to [processx::run()]'s args param.
-#' @return Logical scalar indicating if the command was available.
-#'
-#' @noRd
-cargo_command_available <- function(args = "--help") {
-  !anyNA(try_exec_cmd("cargo", args))
-}
-
 #' Helper function for executing commands.
 #'
 #' @param cmd Character scalar, command to execute.

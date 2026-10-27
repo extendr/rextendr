@@ -1,6 +1,4 @@
 test_that("use_vscode creates .vscode and writes settings.json", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
   withr::local_options(usethis.quiet = FALSE)
 
@@ -15,8 +13,6 @@ test_that("use_vscode creates .vscode and writes settings.json", {
 })
 
 test_that("use_vscode is idempotent and does not duplicate entries", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
   withr::local_options(usethis.quiet = FALSE)
 
@@ -28,8 +24,6 @@ test_that("use_vscode is idempotent and does not duplicate entries", {
 })
 
 test_that("overwrite = TRUE replaces existing settings.json", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
   withr::local_options(usethis.quiet = FALSE)
 
