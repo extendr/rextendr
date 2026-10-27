@@ -14,10 +14,6 @@ use_extendr_badge(path = ".")
 
   File path to the package for which to generate wrapper code.
 
-## Details
-
-Requires `usethis` to be available.
-
 ## Examples
 
 ``` r
