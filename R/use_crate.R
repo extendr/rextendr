@@ -92,7 +92,7 @@ use_crate <- function(
     optional
   )
 
-  run_cargo(
+  cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = echo

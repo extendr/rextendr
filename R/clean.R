@@ -48,7 +48,7 @@ clean <- function(path = ".", echo = TRUE) {
     glue::glue("--target-dir={target_dir}")
   )
 
-  run_cargo(
+  cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = echo

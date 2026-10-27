@@ -47,7 +47,7 @@ read_cargo_metadata <- function(
     }
   )
 
-  run_cargo(
+  cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = echo,

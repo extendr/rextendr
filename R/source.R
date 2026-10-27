@@ -355,7 +355,7 @@ rust_source <- function(
   )
 
   # try running cargo command
-  run_cargo(args, echo = echo, wd = NULL)
+  cargo(args, echo = echo, wd = getwd())
 
   # load shared library
   libfilename <- as_rust_lib_file_name(paste0(

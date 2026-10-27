@@ -46,7 +46,7 @@ write_license_note <- function(
     "--format-version=1"
   )
 
-  metadata <- run_cargo(
+  metadata <- cargo(
     args,
     wd = find_extendr_crate(path = path),
     echo = FALSE,

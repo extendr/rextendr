@@ -34,3 +34,4 @@ reference:
   - read_cargo_metadata
   - use_extendr_badge
   - update_scaffold
+  - cargo
