@@ -1,5 +1,4 @@
 test_that("Running `document` after adding multiple files", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -16,7 +15,6 @@ test_that("Running `document` after adding multiple files", {
 })
 
 test_that("Warn if using older rextendr", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -33,7 +31,6 @@ test_that("Warn if using older rextendr", {
 })
 
 test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -56,7 +53,6 @@ test_that("Update the Config/rextendr/version field in DESCRIPTION file", {
 })
 
 test_that("document() warns if NAMESPACE file is malformed", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -72,7 +68,6 @@ test_that("document() warns if NAMESPACE file is malformed", {
 })
 
 test_that("document() is deprecated", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -83,7 +78,6 @@ test_that("document() is deprecated", {
 })
 
 test_that("register_extendr() is deprecated", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -94,7 +88,6 @@ test_that("register_extendr() is deprecated", {
 })
 
 test_that("devtools::document() builds lib", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -113,7 +106,6 @@ test_that("devtools::document() builds lib", {
 })
 
 test_that("devtools::document() generates wrappers", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -125,7 +117,6 @@ test_that("devtools::document() generates wrappers", {
 })
 
 test_that("devtools::document() works for paths with spaces", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -144,7 +135,6 @@ test_that("devtools::document() works for paths with spaces", {
 })
 
 test_that("devtools::document() does not re-compile an unchanged crate", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()

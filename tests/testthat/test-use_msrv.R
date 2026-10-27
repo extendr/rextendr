@@ -1,6 +1,4 @@
 test_that("use_msrv() modifies the MSRV in the DESCRIPTION", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
 
   # capture setup messages

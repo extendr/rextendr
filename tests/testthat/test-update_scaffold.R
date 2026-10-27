@@ -1,5 +1,4 @@
 test_that("update_scaffold() rewrites scaffolding files", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   withr::local_options(
@@ -23,7 +22,6 @@ test_that("update_scaffold() rewrites scaffolding files", {
 })
 
 test_that("update_scaffold() substitutes crate_name and lib_name correctly", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   withr::local_options(

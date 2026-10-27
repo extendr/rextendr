@@ -1,5 +1,4 @@
 test_that("use_crate() adds dependency to package or workspace", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -27,7 +26,6 @@ test_that("use_crate() adds dependency to package or workspace", {
 })
 
 test_that("use_crate() errors when user passes git and version arguments", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -49,7 +47,6 @@ test_that("use_crate() errors when user passes git and version arguments", {
 })
 
 test_that("use_crate(optional = TRUE) adds optional dependency", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -74,7 +71,6 @@ test_that("use_crate(optional = TRUE) adds optional dependency", {
 })
 
 test_that("use_crate(git = <url>) adds dependency with git source", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")

@@ -1,6 +1,4 @@
 test_that("find_extendr_crate() returns path to Rust crate", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
 
   # capture setup messages
@@ -16,8 +14,6 @@ test_that("find_extendr_crate() returns path to Rust crate", {
 })
 
 test_that("find_extendr_manifest() returns path to Cargo manifest", {
-  skip_if_not_installed("usethis")
-
   path <- local_package("testpkg")
 
   # capture setup messages

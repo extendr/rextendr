@@ -1,5 +1,4 @@
 test_that("use_extendr() sets up extendr files correctly", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -46,7 +45,6 @@ test_that("use_extendr() sets up extendr files correctly", {
 })
 
 test_that("use_extendr() quiet if quiet=TRUE", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("quiet")
@@ -54,7 +52,6 @@ test_that("use_extendr() quiet if quiet=TRUE", {
 })
 
 test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg.wrap")
@@ -64,7 +61,6 @@ test_that("use_extendr() skip pre-existing files in non-interactive sessions", {
 })
 
 test_that("use_extendr() can overwrite files in non-interactive sessions", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -78,41 +74,7 @@ test_that("use_extendr() can overwrite files in non-interactive sessions", {
   expect_snapshot(cat_file("src", "rust", "Cargo.toml"))
 })
 
-test_that("use_rextendr_template() works when usethis not available", {
-  skip_if_not_installed("usethis")
-  skip_on_cran()
-
-  path <- local_package("testpkg.wrap")
-  # mock that usethis installed
-  with_mocked_bindings(
-    {
-      use_rextendr_template(
-        "_gitignore",
-        save_as = file.path("installed")
-      )
-    },
-    is_installed = function(...) TRUE
-  )
-
-  # mock that usethis not installed
-  with_mocked_bindings(
-    {
-      use_rextendr_template(
-        "_gitignore",
-        save_as = file.path("not_installed")
-      )
-    },
-    is_installed = function(...) FALSE
-  )
-
-  expect_identical(
-    brio::read_file(file.path("installed")),
-    brio::read_file(file.path("not_installed"))
-  )
-})
-
 test_that("use_rextendr_template() can overwrite existing files", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg.wrap")
@@ -140,7 +102,6 @@ test_that("use_rextendr_template() can overwrite existing files", {
 # The check is performed by compiling the sample package and checking that
 # `hello("world")` template function is available and works.
 test_that("use_extendr() handles R packages with dots in the name", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -154,7 +115,6 @@ test_that("use_extendr() handles R packages with dots in the name", {
 })
 
 test_that("use_extendr() handles R packages with capital letters in the name", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -169,7 +129,6 @@ test_that("use_extendr() handles R packages with capital letters in the name", {
 
 # Specify crate name and library names explicitly
 test_that("use_extendr() handles R package name, crate name and library name separately", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("devtools")
   skip_on_cran()
   skip_if_cargo_unavailable()
@@ -184,7 +143,6 @@ test_that("use_extendr() handles R package name, crate name and library name sep
 
 # Pass unsupported values to `crate_name` and `lib_name` and expect errors.
 test_that("use_extendr() does not allow invalid rust names", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testPackage")
@@ -193,7 +151,6 @@ test_that("use_extendr() does not allow invalid rust names", {
 })
 
 test_that("R/ folder is created when not present", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_temp_dir("my.pkg")
@@ -207,7 +164,6 @@ test_that("R/ folder is created when not present", {
 })
 
 test_that("Message if the SystemRequirements field is already set.", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -226,7 +182,6 @@ test_that("Message if the SystemRequirements field is already set.", {
 })
 
 test_that("`use_extendr()` works correctly when path is specified explicitly", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   local_temp_dir("temp_dir")
@@ -238,7 +193,6 @@ test_that("`use_extendr()` works correctly when path is specified explicitly", {
 
 
 test_that("`use_extendr()` passes R CMD check", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
   skip_on_cran()
   withr::local_options(lifecycle_verbosity = "quiet")

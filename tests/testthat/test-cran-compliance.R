@@ -1,5 +1,4 @@
 test_that("vendor_crates() vendors dependencies", {
-  skip_if_not_installed("usethis")
   skip_on_cran()
 
   path <- local_package("testpkg")
@@ -18,7 +17,6 @@ test_that("vendor_crates() vendors dependencies", {
 
 
 test_that("rextendr passes CRAN checks", {
-  skip_if_not_installed("usethis")
   skip_if_not_installed("rcmdcheck")
   skip_on_cran()
   withr::local_options(lifecycle_verbosity = "quiet")
