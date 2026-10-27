@@ -26,6 +26,7 @@
 
 ## Changed
 * `dplyr` has been removed as a dependency ([#530](https://github.com/extendr/rextendr/pull/530)).
+* `usethis` is an explicit dependency <ttps://github.com/extendr/rextendr/pull/566>
 
 # rextendr 0.5.0
 
