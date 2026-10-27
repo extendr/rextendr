@@ -29,6 +29,9 @@
 ## Changed
 * `dplyr` has been removed as a dependency ([#530](https://github.com/extendr/rextendr/pull/530)).
 * `usethis` is an explicit dependency <ttps://github.com/extendr/rextendr/pull/566>
+* Internal helpers called from a single place in `clean()`, `document()`,
+  `rust_eval()`, `to_toml()`, `update_scaffold()`, `use_extendr()`, and
+  `write_license_note()` have been inlined ([#568](https://github.com/extendr/rextendr/pull/568)).
 
 # rextendr 0.5.0
 
