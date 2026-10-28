@@ -147,10 +147,15 @@ write_license_note <- function(
     separator
   )
 
-  write_file(
-    text = c(note_header, note_body),
-    path = outfile,
-    search_root_from = path,
-    overwrite = force
-  )
+  if (!force && file.exists(outfile)) {
+    cli::cli_alert(
+      "File {.path {outfile}} already exists. Skip writing the file."
+    )
+    return(invisible(NULL))
+  }
+
+  output <- brio::write_lines(text = c(note_header, note_body), path = outfile)
+  rel_path <- pretty_rel_path(outfile, search_from = path) # nolint: object_usage_linter
+  cli::cli_alert_success("Writing {.path {rel_path}}")
+  invisible(output)
 }
