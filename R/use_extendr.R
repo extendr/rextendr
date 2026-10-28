@@ -403,44 +403,19 @@ use_rextendr_template <- function(
     return(invisible(NULL))
   }
 
-  if (is.null(overwrite)) {
-    created <- usethis::use_template(
-      template,
-      save_as = save_as,
-      data = data,
-      open = FALSE,
-      package = "rextendr"
-    )
-
-    return(invisible(created))
+  if (isTRUE(overwrite)) {
+    unlink(save_as)
   }
 
-  template_path <- system.file(
-    "templates",
+  usethis::use_template(
     template,
-    package = "rextendr",
-    mustWork = TRUE
+    save_as = save_as,
+    data = data,
+    open = FALSE,
+    package = "rextendr"
   )
-
-  template_content <- brio::read_file(template_path)
-
-  template_content <- glue::glue_data(
-    template_content,
-    .x = data,
-    .open = "{{{",
-    .close = "}}}",
-    .trim = FALSE
-  )
-
-  write_file(
-    stringi::stri_trim(template_content),
-    path = save_as,
-    search_root_from = rprojroot::find_package_root_file(),
-    overwrite = overwrite
-  )
-
-  invisible(TRUE)
 }
+
 
 pkg_name <- function(path = ".") {
   x <- desc::desc(rprojroot::find_package_root_file("DESCRIPTION", path = path))

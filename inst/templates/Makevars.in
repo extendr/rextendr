@@ -13,8 +13,8 @@ CARGOTMP = $(CURDIR)/.cargo
 VENDOR_DIR = $(CURDIR)/vendor
 
 
-# RUSTFLAGS appends --print=native-static-libs to ensure that 
-# the correct linkers are used. Use this for debugging if need. 
+# RUSTFLAGS appends --print=native-static-libs to ensure that
+# the correct linkers are used. Use this for debugging if need.
 #
 # CRAN note: Cargo and Rustc versions are reported during
 # configure via tools/msrv.R.

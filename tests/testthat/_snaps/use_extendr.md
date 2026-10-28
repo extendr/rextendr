@@ -210,8 +210,8 @@
       VENDOR_DIR = $(CURDIR)/vendor
       
       
-      # RUSTFLAGS appends --print=native-static-libs to ensure that 
-      # the correct linkers are used. Use this for debugging if need. 
+      # RUSTFLAGS appends --print=native-static-libs to ensure that
+      # the correct linkers are used. Use this for debugging if need.
       #
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.
@@ -443,21 +443,21 @@
     Code
       use_extendr(crate_name = "foo", lib_name = "bar", overwrite = TRUE)
     Message
-      v Writing 'src/entrypoint.c'
-      v Writing 'src/Makevars.in'
-      v Writing 'src/Makevars.win.in'
-      v Writing 'cleanup'
-      v Writing 'cleanup.win'
-      v Writing 'src/.gitignore'
-      v Writing 'src/rust/Cargo.toml'
-      v Writing 'src/rust/src/lib.rs'
-      v Writing 'src/testpkg-win.def'
+      v Writing 'src/entrypoint.c'.
+      v Writing 'src/Makevars.in'.
+      v Writing 'src/Makevars.win.in'.
+      v Writing 'cleanup'.
+      v Writing 'cleanup.win'.
+      v Writing 'src/.gitignore'.
+      v Writing 'src/rust/Cargo.toml'.
+      v Writing 'src/rust/src/lib.rs'.
+      v Writing 'src/testpkg-win.def'.
       > File 'R/extendr-wrappers.R' already exists. Skip writing the file.
-      v Writing 'tools/document.R'
-      v Writing 'tools/msrv.R'
-      v Writing 'tools/config.R'
-      v Writing 'configure'
-      v Writing 'configure.win'
+      v Writing 'tools/document.R'.
+      v Writing 'tools/msrv.R'.
+      v Writing 'tools/config.R'.
+      v Writing 'configure'.
+      v Writing 'configure.win'.
       v Finished configuring extendr for package testpkg.
       * Please run `devtools::document()` for changes to take effect.
       i Call `use_extendr_badge()` to add an extendr badge to your 'README'
@@ -505,8 +505,8 @@
       VENDOR_DIR = $(CURDIR)/vendor
       
       
-      # RUSTFLAGS appends --print=native-static-libs to ensure that 
-      # the correct linkers are used. Use this for debugging if need. 
+      # RUSTFLAGS appends --print=native-static-libs to ensure that
+      # the correct linkers are used. Use this for debugging if need.
       #
       # CRAN note: Cargo and Rustc versions are reported during
       # configure via tools/msrv.R.

@@ -592,19 +592,20 @@ rust_source <- function(
         PACKAGE = dll_info[["name"]]
       )
       wrappers <- stringi::stri_split_lines1(wrappers)
-
-      write_file(
-        text = c(
-          wrappers[1],
-          "",
-          "# nolint start",
-          "",
-          wrappers[-1],
-          "",
-          "# nolint end"
-        ),
-        path = wrapper_file
+      text <- c(
+        wrappers[1],
+        "",
+        "# nolint start",
+        "",
+        wrappers[-1],
+        "",
+        "# nolint end"
       )
+
+      output <- brio::write_lines(text = text, path = wrapper_file)
+      rel_path <- pretty_rel_path(wrapper_file) # nolint: object_usage_linter
+      cli::cli_alert_success("Writing {.path {rel_path}}")
+      invisible(output)
     },
     error = function(cnd) {
       cli::cli_abort(
