@@ -64,7 +64,7 @@ rust_sitrep <- function() {
     } else {
       default_toolchain_index <- stringi::stri_detect_fixed(
         toolchains,
-        "(default)"
+        "default"
       )
       if (
         isTRUE(stringi::stri_detect_fixed(
