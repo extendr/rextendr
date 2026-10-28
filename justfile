@@ -19,8 +19,8 @@ export POSITRON_VERSION := ""
 check:
     R --quiet -e "devtools::check()"
 
-test:
-    R --quiet -e "devtools::test()"
+test filter="":
+    Rscript -e 'devtools::test(filter = commandArgs(TRUE)[[1]])' {{ quote(filter) }}
 
 update-snaps:
     R --quiet -e "testthat::snapshot_accept()"
