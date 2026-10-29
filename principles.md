@@ -10,13 +10,13 @@ generally then routed through
 [`rlang::inform()`](https://rlang.r-lib.org/reference/abort.html). Most
 UI will happen through `ui_*()` functions:
 
-| function                                                                     | purpose                                                                                                       |
-|------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| [`cli::cli_alert_success()`](https://cli.r-lib.org/reference/cli_alert.html) | communicate that rextendr has done something successfully, such as wrote a file                               |
-| [`cli::cli_alert_info()`](https://cli.r-lib.org/reference/cli_alert.html)    | provide extra information to the user                                                                         |
-| [`cli::cli_alert_warning()`](https://cli.r-lib.org/reference/cli_alert.html) | warn the user about something (note: this is still condition of class `message`, not `warning`)               |
-| [`cli::cli_ul()`](https://cli.r-lib.org/reference/cli_ul.html)               | indicate that the user has something to do                                                                    |
-| [`cli::cli_alert_danger()`](https://cli.r-lib.org/reference/cli_alert.html)  | tell the user that something has gone wrong (note: this still is a condition of class `message`, not `error`) |
+| function | purpose |
+|----|----|
+| [`cli::cli_alert_success()`](https://cli.r-lib.org/reference/cli_alert.html) | communicate that rextendr has done something successfully, such as wrote a file |
+| [`cli::cli_alert_info()`](https://cli.r-lib.org/reference/cli_alert.html) | provide extra information to the user |
+| [`cli::cli_alert_warning()`](https://cli.r-lib.org/reference/cli_alert.html) | warn the user about something (note: this is still condition of class `message`, not `warning`) |
+| [`cli::cli_ul()`](https://cli.r-lib.org/reference/cli_ul.html) | indicate that the user has something to do |
+| [`cli::cli_alert_danger()`](https://cli.r-lib.org/reference/cli_alert.html) | tell the user that something has gone wrong (note: this still is a condition of class `message`, not `error`) |
 
 [`{cli}`](https://cli.r-lib.org/) supports [glue-based
 interpolation](https://cli.r-lib.org/articles/semantic-cli.html#interpolation)
