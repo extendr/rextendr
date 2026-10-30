@@ -32,6 +32,8 @@
 * Internal helpers called from a single place in `clean()`, `document()`,
   `rust_eval()`, `to_toml()`, `update_scaffold()`, `use_extendr()`, and
   `write_license_note()` have been inlined ([#568](https://github.com/extendr/rextendr/pull/568)).
+* `update_scaffold()` no longer accepts `crate_name`, which had no effect because
+  the function does not edit `Cargo.toml` (<https://github.com/extendr/rextendr/pull/576>).
 
 # rextendr 0.5.0
 
