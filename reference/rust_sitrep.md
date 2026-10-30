@@ -11,4 +11,4 @@ rust_sitrep()
 
 ## Value
 
-Nothing
+NULL (invisibly)
