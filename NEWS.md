@@ -25,6 +25,8 @@
   and [extendr/extendr#1102](https://github.com/extendr/extendr/pull/1102).
 * Moved from document.c to document.R to avoid having to compile C executable. [#552](https://github.com/extendr/rextendr/pull/552)
 * Unexported `make_module_macro()` ([#562][https://github.com/extendr/rextendr/pull/562])
+* `rust_source()` now shows cargo warnings from successful builds when
+  `echo = FALSE`, unless `quiet = TRUE` (<https://github.com/extendr/rextendr/pull/577>).
 
 ## Changed
 * `dplyr` has been removed as a dependency ([#530](https://github.com/extendr/rextendr/pull/530)).
