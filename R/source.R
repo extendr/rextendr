@@ -546,7 +546,12 @@ rust_source <- function(
   )
 
   # try running cargo command
-  cargo(args, echo = echo, wd = getwd())
+  out <- cargo(args, echo = echo, wd = getwd())
+
+  # check for warnings
+  if (!echo && nzchar(out[["stderr"]])) {
+    cli::cli_verbatim(out[["stderr"]])
+  }
 
   # load shared library, replacing `-` with `_` in its name, as Rust does
   # .Platform$dynlib.ext is not reliable on OS X, so need to work around it
