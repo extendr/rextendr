@@ -21,7 +21,7 @@ test_that("update_scaffold() rewrites scaffolding files", {
   expect_true(file.exists("configure.win"))
 })
 
-test_that("update_scaffold() substitutes crate_name and lib_name correctly", {
+test_that("update_scaffold() substitutes lib_name correctly", {
   skip_on_cran()
 
   withr::local_options(
@@ -30,7 +30,7 @@ test_that("update_scaffold() substitutes crate_name and lib_name correctly", {
 
   path <- local_package("testpkg")
   use_extendr(quiet = TRUE)
-  update_scaffold(crate_name = "mycrate", lib_name = "mylib", quiet = TRUE)
+  update_scaffold(lib_name = "mylib", quiet = TRUE)
 
   makevars <- brio::read_file(file.path("src", "Makevars.in"))
   expect_true(grepl("mylib", makevars))
