@@ -62,6 +62,8 @@
 <li>
 <code>usethis</code> is an explicit dependency &lt;ttps://github.com/extendr/rextendr/pull/566&gt;</li>
 <li>Internal helpers called from a single place in <code><a href="../reference/clean.html">clean()</a></code>, <code><a href="../reference/document.html">document()</a></code>, <code><a href="../reference/rust_eval.html">rust_eval()</a></code>, <code><a href="../reference/to_toml.html">to_toml()</a></code>, <code><a href="../reference/update_scaffold.html">update_scaffold()</a></code>, <code><a href="../reference/use_extendr.html">use_extendr()</a></code>, and <code><a href="../reference/write_license_note.html">write_license_note()</a></code> have been inlined (<a href="https://github.com/extendr/rextendr/pull/568" class="external-link">#568</a>).</li>
+<li>
+<code><a href="../reference/update_scaffold.html">update_scaffold()</a></code> no longer accepts <code>crate_name</code>, which had no effect because the function does not edit <code>Cargo.toml</code> (<a href="https://github.com/extendr/rextendr/pull/576" class="external-link uri">https://github.com/extendr/rextendr/pull/576</a>).</li>
 </ul></div>
 </div>
     <div class="section level2">

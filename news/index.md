@@ -62,6 +62,10 @@
   [`write_license_note()`](https://extendr.github.io/rextendr/reference/write_license_note.md)
   have been inlined
   ([\#568](https://github.com/extendr/rextendr/pull/568)).
+- [`update_scaffold()`](https://extendr.github.io/rextendr/reference/update_scaffold.md)
+  no longer accepts `crate_name`, which had no effect because the
+  function does not edit `Cargo.toml`
+  (<https://github.com/extendr/rextendr/pull/576>).
 
 ## rextendr 0.5.0
 

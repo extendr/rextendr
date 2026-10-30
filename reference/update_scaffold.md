@@ -6,7 +6,7 @@ updates relevant scaffolding files to the new specification.
 ## Usage
 
 ``` r
-update_scaffold(path = ".", crate_name = NULL, lib_name = NULL, quiet = FALSE)
+update_scaffold(path = ".", lib_name = NULL, quiet = FALSE)
 ```
 
 ## Arguments
@@ -14,12 +14,6 @@ update_scaffold(path = ".", crate_name = NULL, lib_name = NULL, quiet = FALSE)
 - path:
 
   File path to the package for which to generate wrapper code.
-
-- crate_name:
-
-  String that is used as the name of the Rust crate, specifically
-  `[package] name` in `Cargon.toml`. If `NULL` (default), sanitized R
-  package name is used instead.
 
 - lib_name:
 
