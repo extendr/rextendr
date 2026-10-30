@@ -4,14 +4,10 @@
 \alias{update_scaffold}
 \title{Update extendr scaffolding}
 \usage{
-update_scaffold(path = ".", crate_name = NULL, lib_name = NULL, quiet = FALSE)
+update_scaffold(path = ".", lib_name = NULL, quiet = FALSE)
 }
 \arguments{
 \item{path}{File path to the package for which to generate wrapper code.}
-
-\item{crate_name}{String that is used as the name of the Rust crate,
-specifically \verb{[package] name} in \code{Cargon.toml}. If \code{NULL} (default),
-sanitized R package name is used instead.}
 
 \item{lib_name}{String that is used as the name of the Rust library,
 specifically \verb{[lib] name} in \code{Cargo.toml}. If \code{NULL} (default), sanitized R

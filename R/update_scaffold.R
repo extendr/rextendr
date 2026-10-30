@@ -35,13 +35,10 @@
 #' @export
 update_scaffold <- function(
   path = ".",
-  crate_name = NULL,
   lib_name = NULL,
   quiet = FALSE
 ) {
   check_string(path, class = "rextendr_error")
-
-  check_string(crate_name, allow_null = TRUE, class = "rextendr_error")
 
   check_string(lib_name, allow_null = TRUE, class = "rextendr_error")
 
@@ -51,12 +48,6 @@ update_scaffold <- function(
 
   pkg_name <- pkg_name()
   mod_name <- as_valid_rust_name(pkg_name)
-
-  if (rlang::is_null(crate_name)) {
-    crate_name <- mod_name
-  } else {
-    throw_if_invalid_rust_name(crate_name)
-  }
 
   if (rlang::is_null(lib_name)) {
     lib_name <- mod_name
@@ -143,8 +134,8 @@ update_scaffold <- function(
   cli::cli_bullets(c(
     "v" = "Scaffolding updated successfully.",
     " " = "",
-    "!" = "If your crate or library name differs from the R package name, please",
-    " " = "re-run {.fn update_scaffold} with explicit {.arg lib_name} and {.arg crate_name}.",
+    "!" = "If your library name differs from the R package name, please",
+    " " = "re-run {.fn update_scaffold} with an explicit {.arg lib_name}.",
     "!" = "Also make sure crate type is set to 'staticlib' in `Cargo.toml`, no 'rlib'.",
     " " = "It should look like this:"
   ))
