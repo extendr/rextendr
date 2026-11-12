@@ -131,3 +131,24 @@ test_that("`rust_function()` supports `r#` prefix in rust function names", {
 
   expect_equal(true(), "Specially-named function has been called")
 })
+
+test_that("`rust_source()` shows cargo warnings unless `quiet = TRUE`", {
+  skip_if_cargo_unavailable()
+  skip_on_cran()
+
+  rust_src <- "
+    #[extendr]
+    fn unused_var() {
+      let x = 1;
+    }
+  "
+
+  expect_message(
+    rust_source(code = rust_src),
+    "unused variable"
+  )
+  expect_no_message(
+    rust_source(code = rust_src, quiet = TRUE),
+    message = "unused variable"
+  )
+})
