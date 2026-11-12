@@ -44,6 +44,10 @@
   executable. [\#552](https://github.com/extendr/rextendr/pull/552)
 - Unexported `make_module_macro()`
   (\[#562\]\[<https://github.com/extendr/rextendr/pull/562>\])
+- [`rust_source()`](https://extendr.github.io/rextendr/reference/rust_source.md)
+  now shows cargo warnings from successful builds when `echo = FALSE`,
+  unless `quiet = TRUE`
+  (<https://github.com/extendr/rextendr/pull/577>).
 
 ### Changed
 
