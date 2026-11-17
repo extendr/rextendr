@@ -215,3 +215,18 @@ test_that("`use_extendr()` passes R CMD check", {
   expect_length(res$errors, 0)
   expect_length(res$warnings, 0)
 })
+
+test_that("use_extendr() links synchronization after the staticlib on Windows", {
+  skip_on_cran()
+
+  path <- local_package("testpkg")
+  use_extendr(quiet = TRUE)
+
+  makevars_win <- brio::read_lines(file.path("src", "Makevars.win.in"))
+  pkg_libs <- makevars_win[startsWith(makevars_win, "PKG_LIBS")]
+
+  expect_identical(
+    pkg_libs,
+    "PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll -lsynchronization"
+  )
+})

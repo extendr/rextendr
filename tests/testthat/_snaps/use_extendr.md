@@ -272,7 +272,7 @@
       TARGET_DIR = ./rust/target
       LIBDIR = $(TARGET_DIR)/$(TARGET)/@LIBDIR@
       STATLIB = $(LIBDIR)/libtestpkg.a
-      PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+      PKG_LIBS = -L$(LIBDIR) -ltestpkg -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll -lsynchronization
       
       all: $(SHLIB) wrappers rust_clean
       
