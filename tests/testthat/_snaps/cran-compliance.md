@@ -12,23 +12,3 @@
       
       [source.vendored-sources]
       directory = "vendor"
-
----
-
-    Code
-      package_versions
-    Output
-                  crate version
-      1     extendr-api   *.*.*
-      2     extendr-ffi   *.*.*
-      3  extendr-macros   *.*.*
-      4     lazy_static   *.*.*
-      5       once_cell  *.*.*
-      6           paste  *.*.*
-      7     proc-macro2 *.*.*
-      8           quote  *.*.*
-      9        readonly  *.*.*
-      10            syn *.*.*
-      11            syn   *.*.*
-      12  unicode-ident  *.*.*
-
