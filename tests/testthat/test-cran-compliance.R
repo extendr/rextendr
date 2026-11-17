@@ -13,7 +13,8 @@ test_that("vendor_crates() vendors dependencies", {
   expect_snapshot(cat_file("src", "rust", "vendor-config.toml"))
   expect_identical(names(package_versions), c("crate", "version"))
   expect_true(all(
-    c("extendr-api", "extendr-ffi", "extendr-macros") %in% package_versions$crate
+    c("extendr-api", "extendr-ffi", "extendr-macros") %in%
+      package_versions$crate
   ))
   expect_true(all(grepl("^[0-9]+\\.[0-9]+\\.[0-9]+", package_versions$version)))
   expect_true(file.exists(file.path("src", "rust", "vendor.tar.xz")))
