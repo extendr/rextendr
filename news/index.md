@@ -17,6 +17,10 @@
 
 ### Fixed
 
+- The `Makevars.win.in` template now links `-lsynchronization`. Rust
+  1.100.0 and later need it for `WaitOnAddress()` and
+  `WakeByAddress*()`, and windows-gnu builds failed without it
+  ([\#578](https://github.com/extendr/rextendr/issues/578)).
 - The `libgcc_eh` mock in the `Makevars.win.in` template moved from the
   cargo target directory to the temporary `.cargo` directory.
   Pre-creating the target directory kept cargo from writing its

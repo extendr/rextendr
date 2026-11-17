@@ -48,7 +48,7 @@ cargo(
 
   Default `FALSE`. A logical scalar, whether to parse JSON-structured
   standard output using
-  [`jsonlite::parse_json()`](https://jeroen.r-universe.dev/jsonlite/reference/read_json.html)
+  [`jsonlite::parse_json()`](https://rdrr.io/pkg/jsonlite/man/read_json.html)
   with `simplifyDataFrame = TRUE`.
 
 - error_call:
